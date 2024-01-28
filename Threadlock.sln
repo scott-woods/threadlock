@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nez.FNA", "Nez\Nez.Portable
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FNA.Core", "FNA\FNA.Core.csproj", "{3AC50E3F-E674-4B63-9FD6-B7A49DFB4119}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nez.FNA.Persistence", "Nez\Nez.Persistence\Nez.FNA.Persistence.csproj", "{FCE37130-97F7-47F8-859F-324C67978AD2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{3AC50E3F-E674-4B63-9FD6-B7A49DFB4119}.Debug|Any CPU.Build.0 = Debug|x64
 		{3AC50E3F-E674-4B63-9FD6-B7A49DFB4119}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3AC50E3F-E674-4B63-9FD6-B7A49DFB4119}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCE37130-97F7-47F8-859F-324C67978AD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCE37130-97F7-47F8-859F-324C67978AD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCE37130-97F7-47F8-859F-324C67978AD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCE37130-97F7-47F8-859F-324C67978AD2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

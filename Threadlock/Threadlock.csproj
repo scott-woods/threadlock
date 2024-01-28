@@ -23,10 +23,46 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Remove="content\effects\JItterFree.fx\**" />
+    <Content Remove="content\effects\JItterFree.fx\**" />
+    <EmbeddedResource Remove="content\effects\JItterFree.fx\**" />
+    <None Remove="content\effects\JItterFree.fx\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Content\Effects\JitterDestroyer.fx" />
+    <None Remove="Content\Textures\Characters\Player\gun1.png" />
+    <None Remove="Content\Textures\Characters\Player\player_gun_projectile.png" />
+    <None Remove="Content\Textures\Characters\Player\sci_fi_player_no_sword.png" />
+    <None Remove="Content\Textures\Characters\Player\sci_fi_player_with_sword.png" />
+    <None Remove="Content\Textures\Tilesets\dungeon_prison_props.png" />
+    <None Remove="Content\Textures\Tilesets\dungeon_prison_tileset.png" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\FNA\FNA.Core.csproj">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </ProjectReference>
+    <ProjectReference Include="..\Nez\Nez.Persistence\Nez.FNA.Persistence.csproj" />
     <ProjectReference Include="..\Nez\Nez.Portable\Nez.FNA.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="ContentPathGenerator.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ContentPathGenerator.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="ContentPathGenerator.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ContentPathGenerator.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Content\Tiled\Tilesets\" />
+    <Folder Include="Content\Tiled\Tilemaps\" />
   </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
     <Message Text="Restoring dotnet tools" Importance="High" />

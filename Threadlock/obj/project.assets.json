@@ -81,6 +81,19 @@
         "runtime": {
           "bin/placeholder/Nez.dll": {}
         }
+      },
+      "Nez.Persistence/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "FNA": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Nez.Persistence.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Nez.Persistence.dll": {}
+        }
       }
     },
     "net7.0/win-x64": {
@@ -148,6 +161,19 @@
         },
         "runtime": {
           "bin/placeholder/Nez.dll": {}
+        }
+      },
+      "Nez.Persistence/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "FNA": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Nez.Persistence.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Nez.Persistence.dll": {}
         }
       }
     }
@@ -247,12 +273,18 @@
       "type": "project",
       "path": "../Nez/Nez.Portable/Nez.FNA.csproj",
       "msbuildProject": "../Nez/Nez.Portable/Nez.FNA.csproj"
+    },
+    "Nez.Persistence/1.0.0": {
+      "type": "project",
+      "path": "../Nez/Nez.Persistence/Nez.FNA.Persistence.csproj",
+      "msbuildProject": "../Nez/Nez.Persistence/Nez.FNA.Persistence.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net7.0": [
       "FNA >= 1.0.0",
-      "Nez >= 1.0.0"
+      "Nez >= 1.0.0",
+      "Nez.Persistence >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -293,6 +325,9 @@
           "projectReferences": {
             "C:\\Users\\scott\\Desktop\\Game-Dev\\FNA\\Threadlock\\FNA\\FNA.Core.csproj": {
               "projectPath": "C:\\Users\\scott\\Desktop\\Game-Dev\\FNA\\Threadlock\\FNA\\FNA.Core.csproj"
+            },
+            "C:\\Users\\scott\\Desktop\\Game-Dev\\FNA\\Threadlock\\Nez\\Nez.Persistence\\Nez.FNA.Persistence.csproj": {
+              "projectPath": "C:\\Users\\scott\\Desktop\\Game-Dev\\FNA\\Threadlock\\Nez\\Nez.Persistence\\Nez.FNA.Persistence.csproj"
             },
             "C:\\Users\\scott\\Desktop\\Game-Dev\\FNA\\Threadlock\\Nez\\Nez.Portable\\Nez.FNA.csproj": {
               "projectPath": "C:\\Users\\scott\\Desktop\\Game-Dev\\FNA\\Threadlock\\Nez\\Nez.Portable\\Nez.FNA.csproj"

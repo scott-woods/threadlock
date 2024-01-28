@@ -3,8 +3,6 @@ C:\Users\scott\Desktop\Game-Dev\FNA\Threadlock\Threadlock\obj\Debug\net7.0\win-x
 C:\Users\scott\Desktop\Game-Dev\FNA\Threadlock\Threadlock\obj\Debug\net7.0\win-x64\Threadlock.AssemblyInfoInputs.cache
 C:\Users\scott\Desktop\Game-Dev\FNA\Threadlock\Threadlock\obj\Debug\net7.0\win-x64\Threadlock.AssemblyInfo.cs
 C:\Users\scott\Desktop\Game-Dev\FNA\Threadlock\Threadlock\obj\Debug\net7.0\win-x64\Threadlock.csproj.CoreCompileInputs.cache
-C:\Users\scott\Desktop\Game-Dev\FNA\Threadlock\Threadlock\bin\Debug\net7.0\win-x64\Content\Content.mgcb
-C:\Users\scott\Desktop\Game-Dev\FNA\Threadlock\Threadlock\bin\Debug\net7.0\win-x64\Content\obj\DesktopGL\net7.0\Content\.mgstats
 C:\Users\scott\Desktop\Game-Dev\FNA\Threadlock\Threadlock\bin\Debug\net7.0\win-x64\Threadlock.exe
 C:\Users\scott\Desktop\Game-Dev\FNA\Threadlock\Threadlock\bin\Debug\net7.0\win-x64\Threadlock.deps.json
 C:\Users\scott\Desktop\Game-Dev\FNA\Threadlock\Threadlock\bin\Debug\net7.0\win-x64\Threadlock.runtimeconfig.json
@@ -205,3 +203,17 @@ C:\Users\scott\Desktop\Game-Dev\FNA\Threadlock\Threadlock\obj\Debug\net7.0\win-x
 C:\Users\scott\Desktop\Game-Dev\FNA\Threadlock\Threadlock\obj\Debug\net7.0\win-x64\Threadlock.pdb
 C:\Users\scott\Desktop\Game-Dev\FNA\Threadlock\Threadlock\obj\Debug\net7.0\win-x64\Threadlock.genruntimeconfig.cache
 C:\Users\scott\Desktop\Game-Dev\FNA\Threadlock\Threadlock\obj\Debug\net7.0\win-x64\ref\Threadlock.dll
+C:\Users\scott\Desktop\Game-Dev\FNA\Threadlock\Threadlock\bin\Debug\net7.0\win-x64\Nez.Persistence.dll
+C:\Users\scott\Desktop\Game-Dev\FNA\Threadlock\Threadlock\bin\Debug\net7.0\win-x64\Nez.Persistence.pdb
+C:\Users\scott\Desktop\Game-Dev\FNA\Threadlock\Threadlock\bin\Debug\net7.0\win-x64\Content\Textures\Characters\Player\gun1.png
+C:\Users\scott\Desktop\Game-Dev\FNA\Threadlock\Threadlock\bin\Debug\net7.0\win-x64\Content\Textures\Characters\Player\player_gun_projectile.png
+C:\Users\scott\Desktop\Game-Dev\FNA\Threadlock\Threadlock\bin\Debug\net7.0\win-x64\Content\Textures\Characters\Player\sci_fi_player_no_sword.png
+C:\Users\scott\Desktop\Game-Dev\FNA\Threadlock\Threadlock\bin\Debug\net7.0\win-x64\Content\Textures\Characters\Player\sci_fi_player_with_sword.png
+C:\Users\scott\Desktop\Game-Dev\FNA\Threadlock\Threadlock\bin\Debug\net7.0\win-x64\Content\Textures\Tilesets\dungeon_prison_props.png
+C:\Users\scott\Desktop\Game-Dev\FNA\Threadlock\Threadlock\bin\Debug\net7.0\win-x64\Content\Textures\Tilesets\dungeon_prison_tileset.png
+C:\Users\scott\Desktop\Game-Dev\FNA\Threadlock\Threadlock\bin\Debug\net7.0\win-x64\Content\Tiled\threadlock.tiled-project
+C:\Users\scott\Desktop\Game-Dev\FNA\Threadlock\Threadlock\bin\Debug\net7.0\win-x64\Content\Tiled\threadlock.tiled-session
+C:\Users\scott\Desktop\Game-Dev\FNA\Threadlock\Threadlock\bin\Debug\net7.0\win-x64\Content\Tiled\Tilemaps\test.tmx
+C:\Users\scott\Desktop\Game-Dev\FNA\Threadlock\Threadlock\bin\Debug\net7.0\win-x64\Content\Tiled\Tilesets\dungeon_prison.tsx
+C:\Users\scott\Desktop\Game-Dev\FNA\Threadlock\Threadlock\bin\Debug\net7.0\win-x64\Content\CompiledEffects\JitterDestroyer.fxb
+C:\Users\scott\Desktop\Game-Dev\FNA\Threadlock\Threadlock\bin\Debug\net7.0\win-x64\Content\Effects\JitterDestroyer.fx
