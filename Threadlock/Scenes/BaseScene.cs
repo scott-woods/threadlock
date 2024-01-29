@@ -27,7 +27,8 @@ namespace Threadlock.Scenes
 
             ClearColor = Color.Blue;
 
-            //AddPostProcessor(new JitterPostProcessor(0));
+            Camera.MaximumZoom = 7;
+            Camera.Zoom = .5f;
 
             _gameRenderer = new RenderLayerExcludeRenderer(0, RenderLayers.ScreenSpaceRenderLayer, RenderLayers.Cursor);
             //var size = Game1.ResolutionManager.DesignResolution;

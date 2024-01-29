@@ -13,6 +13,8 @@ namespace Threadlock.Components
         public Vector2 ActualPosition;
         public Vector2 RoundedPosition;
 
+        float _lerpFactor = 15f;
+        float _minDistance = .05f;
         Entity _targetEntity;
         Camera _camera;
 
@@ -34,7 +36,7 @@ namespace Threadlock.Components
 
         public void Update()
         {
-            if (Vector2.Distance(ActualPosition, _targetEntity.Position) < .05f)
+            if (Vector2.Distance(ActualPosition, _targetEntity.Position) < _minDistance)
             {
                 _camera.Position = _targetEntity.Position;
                 ActualPosition = _camera.Position;
@@ -42,10 +44,10 @@ namespace Threadlock.Components
                 return;
             }
 
-            ActualPosition = Vector2.Lerp(ActualPosition, _targetEntity.Position, Time.DeltaTime * 10);
+            ActualPosition = Vector2.Lerp(ActualPosition, _targetEntity.Position, Time.DeltaTime * _lerpFactor);
             RoundedPosition = new Vector2((int)ActualPosition.X, (int)ActualPosition.Y);
 
-            _camera.Position = RoundedPosition;
+            _camera.Position = ActualPosition;
         }
     }
 }

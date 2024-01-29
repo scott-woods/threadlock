@@ -10,7 +10,9 @@ namespace Threadlock.GlobalManagers
 {
     public class ResolutionManager : GlobalManager
     {
-        public Point DesignResolution = new Point(484, 274);
+        public Point DesignResolution = new Point(1920, 1080);
+        public Point BleedArea = new Point(4, 4);
+        public Point DesignResolutionWithBleed { get => DesignResolution + BleedArea; }
 
         public List<Vector2> ScreenSizes = new List<Vector2>()
         {

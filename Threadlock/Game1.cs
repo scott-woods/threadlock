@@ -29,8 +29,9 @@ namespace Threadlock
             SDL.SDL_GetCurrentDisplayMode(SDL.SDL_GetWindowDisplayIndex(Game1.Instance.Window.Handle), out var mode);
             var refreshRate = mode.refresh_rate == 0 ? 60 : mode.refresh_rate;
             TargetElapsedTime = System.TimeSpan.FromSeconds((double)1 / refreshRate);
+            Graphics.Instance.Batcher.ShouldRoundDestinations = false;
 
-            Scene.SetDefaultDesignResolution(ResolutionManager.DesignResolution.X, ResolutionManager.DesignResolution.Y, Scene.SceneResolutionPolicy.LinearBleed, 4, 4);
+            Scene.SetDefaultDesignResolution(ResolutionManager.DesignResolutionWithBleed.X, ResolutionManager.DesignResolutionWithBleed.Y, Scene.SceneResolutionPolicy.LinearBleed, 4, 4);
             Screen.SetSize(1920, 1080);
             Screen.ApplyChanges();
 
