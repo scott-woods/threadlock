@@ -35,8 +35,6 @@ namespace Threadlock.Scenes
             var playerPos = mapEntity.Position + (new Vector2(map.Width / 2, map.Height / 2) * map.TileWidth);
             player.SetPosition(playerPos);
 
-            var chaser = AddEntity(new TestChaser());
-
             var chainBot = AddEntity(new ChainBot());
 
             var followCam = Camera.AddComponent(new CustomFollowCamera(player));

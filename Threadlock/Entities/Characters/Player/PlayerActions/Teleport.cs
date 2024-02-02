@@ -33,8 +33,6 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
         {
             base.Prepare(prepFinishedCallback);
 
-            SetEnabled(true);
-
             _simPlayer = Entity.Scene.AddEntity(new SimPlayer());
         }
 
@@ -49,6 +47,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
 
         IEnumerator ExecutionCoroutine()
         {
+            //fade player out
             var animator = Player.Instance.GetComponent<SpriteAnimator>();
             animator.SetColor(Color.White);
             var tween = animator.TweenColorTo(Color.Transparent, .15f);
@@ -56,17 +55,22 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             tween.Start();
             _tweenCoroutine = Game1.StartCoroutine(tween.WaitForCompletion());
             yield return _tweenCoroutine;
-            //yield return tween.WaitForCompletion();
+            _tweenCoroutine = null;
 
+            //play sound
             Game1.AudioManager.PlaySound(Content.Audio.Sounds.Player_teleport);
 
+            //move entity to target position
             Entity.Position = _targetPosition;
 
+            //fade in
             tween = animator.TweenColorTo(Color.White, .1f);
             tween.Start();
             _tweenCoroutine = Game1.StartCoroutine(tween.WaitForCompletion());
             yield return _tweenCoroutine;
-            //yield return tween.WaitForCompletion();
+            _tweenCoroutine = null;
+
+            _executionCoroutine = null;
 
             HandleExecutionFinished();
         }
@@ -119,8 +123,10 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
         {
             base.Abort();
 
+            _executionCoroutine?.Stop();
+            _executionCoroutine = null;
+
             _simPlayer?.Destroy();
-            SetEnabled(false);
         }
 
         Vector2 GetDesiredPosition()

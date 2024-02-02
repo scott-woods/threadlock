@@ -75,7 +75,7 @@ namespace Threadlock.Entities.Characters.Player
             hurtboxCollider.IsTrigger = true;
             Flags.SetFlagExclusive(ref hurtboxCollider.PhysicsLayer, PhysicsLayers.PlayerHurtbox);
             Flags.SetFlagExclusive(ref hurtboxCollider.CollidesWithLayers, PhysicsLayers.EnemyHitbox);
-            _hurtbox = AddComponent(new Hurtbox(hurtboxCollider));
+            _hurtbox = AddComponent(new Hurtbox(hurtboxCollider, 1f, Nez.Content.Audio.Sounds._64_Get_hit_03));
 
             _knockbackComponent = AddComponent(new KnockbackComponent(_velocityComponent, 110, .5f));
 

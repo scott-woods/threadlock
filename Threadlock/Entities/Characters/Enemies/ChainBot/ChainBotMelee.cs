@@ -76,6 +76,7 @@ namespace Threadlock.Entities.Characters.Enemies.ChainBot
             //transition to charge
             _waitForCharge = Game1.StartCoroutine(CoroutineHelper.WaitForAnimation(_animator, "TransitionRight"));
             yield return _waitForCharge;
+            _waitForCharge = null;
 
             //charge
             _animator.Play("ChargeRight");
@@ -92,6 +93,7 @@ namespace Threadlock.Entities.Characters.Enemies.ChainBot
             _animator.OnAnimationCompletedEvent += OnAnimationCompleted;
             _attack = Game1.StartCoroutine(CoroutineHelper.WaitForAnimation(_animator, "AttackRight"));
             yield return _attack;
+            _attack = null;
 
             _soundCounter = 0;
         }

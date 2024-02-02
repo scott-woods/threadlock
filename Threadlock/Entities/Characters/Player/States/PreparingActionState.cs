@@ -15,7 +15,7 @@ namespace Threadlock.Entities.Characters.Player.States
     {
         //consts
         const float _slowDuration = 1f;
-        const float _speedUpDuration = 1f;
+        const float _speedUpDuration = .5f;
         const float _slowTimeScale = .25f;
         const float _normalTimeScale = 1f;
 
@@ -30,8 +30,12 @@ namespace Threadlock.Entities.Characters.Player.States
         {
             base.Begin();
 
+            //stop previous coroutines if necessary
+            _normalSpeedCoroutine?.Stop();
+            _normalSpeedCoroutine = null;
+
             //transition to slowmo
-            _slowMoCoroutine = Core.StartCoroutine(SlowMoCoroutine());
+            _slowMoCoroutine = Game1.StartCoroutine(SlowMoCoroutine());
 
             _currentAction.Prepare(ExecutionStartedCallback);
         }
@@ -65,7 +69,7 @@ namespace Threadlock.Entities.Characters.Player.States
 
             _slowMoCoroutine?.Stop();
             _slowMoCoroutine = null;
-            _normalSpeedCoroutine = Core.StartCoroutine(NormalSpeedCoroutine());
+            _normalSpeedCoroutine = Game1.StartCoroutine(NormalSpeedCoroutine());
 
             _currentAction?.Abort();
             _currentAction = null;

@@ -25,6 +25,8 @@ namespace Threadlock.Components
                 _stateStack.Push(priority);
                 return true;
             }
+            else if (priority == CurrentStatusPriority)
+                return true;
 
             return false;
         }

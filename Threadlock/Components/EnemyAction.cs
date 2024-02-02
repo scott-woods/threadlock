@@ -18,6 +18,9 @@ namespace Threadlock.Components
         ICoroutine _startExecutionCoroutine;
         ICoroutine _executionCoroutine;
 
+        bool _executionStarted = false;
+        bool _executionFinished = false;
+
         public EnemyAction(T enemy)
         {
             _enemy = enemy;
@@ -26,31 +29,52 @@ namespace Threadlock.Components
         public TaskStatus Execute()
         {
             //if execution hasn't started yet, start it here
-            if (_startExecutionCoroutine == null)
+            if (!_executionStarted)
             {
                 _startExecutionCoroutine = Game1.StartCoroutine(StartExecution());
+                return TaskStatus.Running;
             }
-
-            //if we've started executing and the execution coroutine is null, that means we've finished. return success
-            if (_startExecutionCoroutine != null && _executionCoroutine == null)
+            else if (!_executionFinished)
             {
-                _startExecutionCoroutine = null;
+                return TaskStatus.Running;
+            }
+            else
+            {
+                _executionStarted = false;
+                _executionFinished = false;
                 return TaskStatus.Success;
             }
 
-            return TaskStatus.Running;
+            //if we've started executing and the execution coroutine is null, that means we've finished. return success
+            //if (_startExecutionCoroutine != null && _executionCoroutine == null)
+            //{
+            //    _startExecutionCoroutine = null;
+            //    return TaskStatus.Success;
+            //}
+
+            //return TaskStatus.Running;
         }
 
         IEnumerator StartExecution()
         {
+            //update states
+            _executionStarted = true;
+            _executionFinished = false;
+
+            //wait for execution
             _executionCoroutine = Game1.StartCoroutine(ExecutionCoroutine());
             yield return _executionCoroutine;
+            _executionFinished = true;
 
+            _startExecutionCoroutine = null;
             _executionCoroutine = null;
         }
 
         public virtual void Abort()
         {
+            _executionStarted = false;
+            _executionFinished = false;
+
             _executionCoroutine?.Stop();
             _executionCoroutine = null;
             _startExecutionCoroutine?.Stop();

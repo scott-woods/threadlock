@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Nez;
+using Nez.Sprites;
 using Nez.Tweens;
 using System;
 using System.Collections;
@@ -57,6 +58,8 @@ namespace Threadlock.Components
 
         void OnHurtboxHit(HurtboxHit hit)
         {
+            Debug.Log("Hurtbox hit, knockback starting");
+
             //handle status component
             if (Entity.TryGetComponent<StatusComponent>(out var statusComponent))
             {
@@ -74,8 +77,14 @@ namespace Threadlock.Components
                 dir.Normalize();
             }
 
+            //determine knockback speed
             var initialSpeed = _baseSpeed * hit.Hitbox.PushForce;
 
+            //if already in knockback, cancel the original
+            _knockbackCoroutine?.Stop();
+            _knockbackCoroutine = null;
+
+            //start knockback
             _knockbackCoroutine = Game1.StartCoroutine(Knockback(dir, initialSpeed));
         }
 
@@ -86,6 +95,11 @@ namespace Threadlock.Components
             _knockbackCoroutine?.Stop();
             _knockbackCoroutine = null;
 
+            //if (Entity.TryGetComponent<SpriteAnimator>(out var animator))
+            //{
+            //    animator.Stop();
+            //}
+
             if (Entity.TryGetComponent<StatusComponent>(out var statusComponent))
                 statusComponent.PopStatus(_statusPriority);
         }
@@ -94,6 +108,15 @@ namespace Threadlock.Components
 
         IEnumerator Knockback(Vector2 direction, float speed)
         {
+            //play animation if possible
+            if (Entity.TryGetComponent<SpriteAnimator>(out var animator))
+            {
+                if (animator.Animations.ContainsKey("Hit") && !animator.IsAnimationActive("Hit"))
+                {
+                    animator.Play("Hit");
+                }
+            }
+
             var time = 0f;
             while (time < _knockbackDuration)
             {

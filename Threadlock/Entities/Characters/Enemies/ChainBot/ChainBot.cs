@@ -53,7 +53,7 @@ namespace Threadlock.Entities.Characters.Enemies.ChainBot
             hurtboxCollider.IsTrigger = true;
             Flags.SetFlagExclusive(ref hurtboxCollider.PhysicsLayer, PhysicsLayers.EnemyHurtbox);
             Flags.SetFlagExclusive(ref hurtboxCollider.CollidesWithLayers, PhysicsLayers.PlayerHitbox);
-            _hurtbox = AddComponent(new Hurtbox(hurtboxCollider));
+            _hurtbox = AddComponent(new Hurtbox(hurtboxCollider, 0f, Nez.Content.Audio.Sounds.Chain_bot_damaged));
 
             _collider = AddComponent(new BoxCollider(10, 5));
             _collider.SetLocalOffset(new Vector2(-1, 7));

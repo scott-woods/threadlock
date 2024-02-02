@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Threadlock.Components.Hitboxes;
 using Threadlock.StaticData;
 
 namespace Threadlock.Entities.Characters.Player.PlayerActions
@@ -15,6 +16,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
     {
         //constants
         const int _range = 48;
+        const int _damage = 4;
 
         //states
         bool _isAnimationFinished = false;
@@ -23,16 +25,25 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
         SpriteAnimator _animator;
 
         //added components
-        List<Component> _components = new List<Component>();
         PrototypeSpriteRenderer _target;
+        BoxHitbox _hitbox;
+
+        Entity _hitboxEntity;
+
+        //coroutines
+        ICoroutine _executionCoroutine;
 
         public override void Initialize()
         {
             base.Initialize();
 
-            _target = AddComponent(new PrototypeSpriteRenderer(4, 4));
+            _target = Entity.AddComponent(new PrototypeSpriteRenderer(4, 4));
+            _target.SetEnabled(false);
 
-            SetEnabled(false);
+            _hitbox = new BoxHitbox(_damage, 16, 8);
+            Flags.SetFlagExclusive(ref _hitbox.PhysicsLayer, PhysicsLayers.PlayerHitbox);
+            Flags.SetFlagExclusive(ref _hitbox.CollidesWithLayers, PhysicsLayers.EnemyHurtbox);
+            _hitbox.SetEnabled(false);
         }
 
         public override void OnAddedToEntity()
@@ -42,20 +53,12 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             _animator = Entity.GetComponent<SpriteAnimator>();
         }
 
-        public override void OnEnabled()
-        {
-            base.OnEnabled();
-
-            foreach (var component in _components)
-                component.SetEnabled(true);
-        }
-
         public override void OnDisabled()
         {
             base.OnDisabled();
 
-            foreach (var component in _components)
-                component.SetEnabled(false);
+            _target.SetEnabled(false);
+            _hitbox.SetEnabled(false);
         }
 
         public override void Prepare(Action prepFinishedCallback)
@@ -65,8 +68,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             //handle direction once before enabling
             HandleDirection();
 
-            //enable
-            SetEnabled(true);
+            _target.SetEnabled(true);
         }
 
         public override void Execute(Action executionCompletedCallback)
@@ -74,10 +76,10 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             base.Execute(executionCompletedCallback);
 
             //start coroutine
-            Core.StartCoroutine(ExecuteCoroutine());
+            _executionCoroutine = Game1.StartCoroutine(ExecuteCoroutine());
         }
 
-        public IEnumerator ExecuteCoroutine()
+        IEnumerator ExecuteCoroutine()
         {
             //get animation by angle
             var angle = MathHelper.ToDegrees(Mathf.AngleBetweenVectors(Entity.Position, Entity.Position + _target.LocalOffset));
@@ -93,6 +95,12 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
 
             //play sound
             Game1.AudioManager.PlaySound(Content.Audio.Sounds._20_Slash_02);
+
+            //enable hitbox
+            _hitboxEntity = Entity.Scene.CreateEntity("dash-hitbox", Entity.Position);
+            _hitboxEntity.AddComponent(_hitbox);
+            _hitboxEntity.SetRotationDegrees(angle);
+            _hitbox.SetEnabled(true);
 
             //determine total amount of time needed to move to target 
             var secondsPerFrame = 1 / (_animator.CurrentAnimation.FrameRates[0] * _animator.Speed);
@@ -111,6 +119,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
                 var progress = (totalMovementTime - movementTimeRemaining) / totalMovementTime;
                 var lerpPosition = Vector2.Lerp(initialPosition, finalPosition, progress);
                 Entity.Position = lerpPosition;
+                _hitboxEntity.Position = lerpPosition;
 
                 yield return null;
             }
@@ -162,21 +171,26 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
         {
             base.Abort();
 
-            SetEnabled(false);
+            _executionCoroutine?.Stop();
+            _executionCoroutine = null;
+
+            _target.SetEnabled(false);
+            _hitbox.SetEnabled(false);
+            _hitboxEntity?.Destroy();
+            _hitboxEntity = null;
         }
 
         public override void HandleExecutionFinished()
         {
-            SetEnabled(false);
+            _executionCoroutine?.Stop();
+            _executionCoroutine = null;
+
+            _target.SetEnabled(false);
+            _hitbox.SetEnabled(false);
+            _hitboxEntity.Destroy();
+            _hitboxEntity = null;
 
             base.HandleExecutionFinished();
-        }
-
-        T AddComponent<T>(T component) where T : Component
-        {
-            Entity.AddComponent(component);
-            _components.Add(component);
-            return component;
         }
 
         void OnAnimationFinished(string animationName)
