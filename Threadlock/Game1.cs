@@ -46,6 +46,7 @@ namespace Threadlock
             Physics.SpatialHashCellSize = 32;
 
             //resolution settings
+            Scene.UIRenderTargetSize = new Point(ResolutionManager.UIResolution.X, ResolutionManager.UIResolution.Y);
             Scene.SetDefaultDesignResolution(ResolutionManager.DesignResolutionWithBleed.X, ResolutionManager.DesignResolutionWithBleed.Y, Scene.SceneResolutionPolicy.LinearBleed, 4, 4);
             Screen.SetSize(1920, 1080);
             Screen.ApplyChanges();

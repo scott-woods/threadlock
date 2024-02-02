@@ -38,16 +38,17 @@ namespace Threadlock.Scenes
             Camera.Zoom = .5f;
 
             _gameRenderer = new RenderLayerExcludeRenderer(0, RenderLayers.ScreenSpaceRenderLayer, RenderLayers.Cursor);
-            //var size = Game1.ResolutionManager.DesignResolution;
-            //var mainRenderTarget = new RenderTexture(size.X, size.Y);
-            //_gameRenderer.RenderTexture = mainRenderTarget;
+            var size = Game1.ResolutionManager.DesignResolution;
+            var mainRenderTarget = new RenderTexture(size.X, size.Y);
+            _gameRenderer.RenderTexture = mainRenderTarget;
             AddRenderer(_gameRenderer);
 
-            //_uiRenderer = new ScreenSpaceRenderer(1, (int)RenderLayers.ScreenSpaceRenderLayer);
-            //var uiRenderTarget = new RenderTexture(Game1.UIResolution.X, Game1.UIResolution.Y);
-            //uiRenderTarget.ResizeBehavior = RenderTexture.RenderTextureResizeBehavior.None;
-            //_uiRenderer.RenderTexture = uiRenderTarget;
-            //AddRenderer(_uiRenderer);
+            _uiRenderer = new ScreenSpaceRenderer(1, RenderLayers.ScreenSpaceRenderLayer);
+            var uiRenderTarget = new RenderTexture(Game1.ResolutionManager.UIResolution.X, Game1.ResolutionManager.UIResolution.Y);
+            //var uiRenderTarget = new RenderTexture(Game1.ResolutionManager.DesignResolution.X, Game1.ResolutionManager.DesignResolution.Y);
+            uiRenderTarget.ResizeBehavior = RenderTexture.RenderTextureResizeBehavior.None;
+            _uiRenderer.RenderTexture = uiRenderTarget;
+            AddRenderer(_uiRenderer);
 
             _cursorRenderer = new ScreenSpaceRenderer(2, RenderLayers.Cursor);
             var cursorRenderTarget = new RenderTexture(Game1.ResolutionManager.DesignResolution.X, Game1.ResolutionManager.DesignResolution.Y);
@@ -67,9 +68,9 @@ namespace Threadlock.Scenes
         public void OnSceneBackBufferSizeChanged(int newWidth, int newHeight)
         {
             _gameRenderer.OnSceneBackBufferSizeChanged(newWidth, newHeight);
-            //_uiRenderer.OnSceneBackBufferSizeChanged(newWidth, newHeight);
-            //_cursorRenderer.OnSceneBackBufferSizeChanged(newWidth, newHeight);
-            //_cursorRenderer.RenderTexture.Resize(Screen.Width, Screen.Height);
+            _uiRenderer.OnSceneBackBufferSizeChanged(newWidth, newHeight);
+            _cursorRenderer.OnSceneBackBufferSizeChanged(newWidth, newHeight);
+            _cursorRenderer.RenderTexture.Resize(Screen.Width, Screen.Height);
         }
 
         public void HandleFinalRender(RenderTarget2D finalRenderTarget, Color letterboxColor, RenderTarget2D source,
@@ -93,13 +94,11 @@ namespace Threadlock.Scenes
             Graphics.Instance.Batcher.Draw(source, finalRenderDestinationRect, Color.White);
 
             //draw game
-            //Graphics.Instance.Batcher.Draw(_gameRenderer.RenderTexture, finalRenderDestinationRect, Color.White);
+            Graphics.Instance.Batcher.Draw(_gameRenderer.RenderTexture, finalRenderDestinationRect, Color.White);
 
-            ////render ui
-            ////Graphics.Instance.Batcher.Draw(_uiRenderer.RenderTexture, finalRenderDestinationRect, Color.White);
+            //render ui
             var uiRect = new Rectangle(0, 0, finalRenderDestinationRect.Width, finalRenderDestinationRect.Height);
-            ////var uiRect = finalRenderDestinationRect;
-            //Graphics.Instance.Batcher.Draw(_uiRenderer.RenderTexture, uiRect, Color.White);
+            Graphics.Instance.Batcher.Draw(_uiRenderer.RenderTexture, uiRect, Color.White);
 
             //render cursor
             Graphics.Instance.Batcher.Draw(_cursorRenderer.RenderTexture, uiRect, Color.White);

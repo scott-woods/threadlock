@@ -39,6 +39,7 @@ namespace Threadlock.Entities.Characters.Player
         Hurtbox _hurtbox;
         KnockbackComponent _knockbackComponent;
         StatusComponent _statusComponent;
+        HealthComponent _healthComponent;
 
         //actions
         public PlayerAction OffensiveAction1;
@@ -80,6 +81,8 @@ namespace Threadlock.Entities.Characters.Player
             _knockbackComponent = AddComponent(new KnockbackComponent(_velocityComponent, 110, .5f));
 
             _statusComponent = AddComponent(new StatusComponent(StatusPriority.Normal));
+
+            _healthComponent = AddComponent(new HealthComponent(10, 10));
 
             //actions
             OffensiveAction1 = AddComponent(Activator.CreateInstance(PlayerData.Instance.OffensiveAction1.ToType()) as PlayerAction);

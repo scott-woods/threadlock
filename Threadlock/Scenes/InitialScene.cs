@@ -11,6 +11,7 @@ using Threadlock.Entities.Characters;
 using Threadlock.Entities.Characters.Enemies.ChainBot;
 using Threadlock.Entities.Characters.Player;
 using Threadlock.StaticData;
+using Threadlock.UI.Canvases;
 
 namespace Threadlock.Scenes
 {
@@ -31,11 +32,13 @@ namespace Threadlock.Scenes
             frontMapRenderer.SetLayersToRender(new[] { "Front", "AboveFront" }.Where(l => map.Layers.Contains(l)).ToArray());
             frontMapRenderer.RenderLayer = RenderLayers.Front;
 
+            var ui = CreateEntity("ui").AddComponent(new CombatUI());
+
             var player = AddEntity(new Player());
             var playerPos = mapEntity.Position + (new Vector2(map.Width / 2, map.Height / 2) * map.TileWidth);
             player.SetPosition(playerPos);
 
-            var chainBot = AddEntity(new ChainBot());
+            //var chainBot = AddEntity(new ChainBot());
 
             var followCam = Camera.AddComponent(new CustomFollowCamera(player));
         }

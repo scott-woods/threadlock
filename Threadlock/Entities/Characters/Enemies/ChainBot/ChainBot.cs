@@ -43,7 +43,7 @@ namespace Threadlock.Entities.Characters.Enemies.ChainBot
 
             _mover = AddComponent(new Mover());
 
-            _healthComponent = AddComponent(new HealthComponent());
+            _healthComponent = AddComponent(new HealthComponent(12, 12));
 
             _velocityComponent = AddComponent(new VelocityComponent(_mover));
 

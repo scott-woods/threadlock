@@ -34,6 +34,12 @@ namespace Threadlock.Components
 
         public int MaxHealth;
 
+        public HealthComponent(int maxHealth, int health)
+        {
+            MaxHealth = maxHealth;
+            Health = health;
+        }
+
         #region LIFECYCLE
 
         public override void OnAddedToEntity()
