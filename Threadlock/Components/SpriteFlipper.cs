@@ -11,7 +11,7 @@ namespace Threadlock.Components
 {
     public class SpriteFlipper : Component, IUpdatable
     {
-        bool _flipped = false;
+        public bool Flipped = false;
         VelocityComponent _velocityComponent;
         List<SpriteRenderer> _renderers;
 
@@ -26,9 +26,9 @@ namespace Threadlock.Components
         {
             var flip = _velocityComponent.Direction.X < 0;
 
-            if (_flipped != flip)
+            if (Flipped != flip)
             {
-                _flipped = flip;
+                Flipped = flip;
 
                 foreach (var renderer in _renderers)
                 {

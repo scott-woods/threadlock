@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Threadlock.PostProcessors;
 using Threadlock.Components;
+using Threadlock.Entities;
 
 namespace Threadlock.Scenes
 {
@@ -25,9 +26,15 @@ namespace Threadlock.Scenes
         {
             base.Initialize();
 
-            ClearColor = Color.Blue;
+            ClearColor = Color.Black;
 
-            Camera.MaximumZoom = 7;
+            //add cursor
+            var mouseCursor = AddEntity(new MouseCursor());
+
+            //handle camera
+            Camera.Entity.SetUpdateOrder(int.MaxValue);
+            var scale = Game1.ResolutionManager.ResolutionScale.X;
+            Camera.MaximumZoom = (scale * 2) - 1;
             Camera.Zoom = .5f;
 
             _gameRenderer = new RenderLayerExcludeRenderer(0, RenderLayers.ScreenSpaceRenderLayer, RenderLayers.Cursor);
@@ -42,21 +49,16 @@ namespace Threadlock.Scenes
             //_uiRenderer.RenderTexture = uiRenderTarget;
             //AddRenderer(_uiRenderer);
 
-            //_cursorRenderer = new ScreenSpaceRenderer(2, (int)RenderLayers.Cursor);
-            ////var cursorRenderTarget = new RenderTexture(Game1.DesignResolution.X, Game1.DesignResolution.Y);
-            //var cursorRenderTarget = new RenderTexture(Game1.UIResolution.X, Game1.UIResolution.Y);
-            //cursorRenderTarget.ResizeBehavior = RenderTexture.RenderTextureResizeBehavior.None;
-            //_cursorRenderer.RenderTexture = cursorRenderTarget;
-            //AddRenderer(_cursorRenderer);
-
-            //_uiRenderer = new ScreenSpaceRenderer(100, (int)RenderLayers.ScreenSpaceRenderLayer);
-            //_cursorRenderer = new RenderLayerRenderer(100, (int)RenderLayers.Cursor);
-            //AddRenderer(_cursorRenderer);
-
-            //AddRenderer(new RenderLayerExcludeRenderer(0, (int)RenderLayers.ScreenSpaceRenderLayer, (int)RenderLayers.Cursor));
+            _cursorRenderer = new ScreenSpaceRenderer(2, RenderLayers.Cursor);
+            var cursorRenderTarget = new RenderTexture(Game1.ResolutionManager.DesignResolution.X, Game1.ResolutionManager.DesignResolution.Y);
+            cursorRenderTarget.ResizeBehavior = RenderTexture.RenderTextureResizeBehavior.None;
+            _cursorRenderer.RenderTexture = cursorRenderTarget;
+            AddRenderer(_cursorRenderer);
 
             FinalRenderDelegate = this;
         }
+
+        #region FINAL RENDER DELEGATE
 
         private Scene _scene;
 
@@ -95,17 +97,16 @@ namespace Threadlock.Scenes
 
             ////render ui
             ////Graphics.Instance.Batcher.Draw(_uiRenderer.RenderTexture, finalRenderDestinationRect, Color.White);
-            //var uiRect = new Rectangle(0, 0, finalRenderDestinationRect.Width, finalRenderDestinationRect.Height);
+            var uiRect = new Rectangle(0, 0, finalRenderDestinationRect.Width, finalRenderDestinationRect.Height);
             ////var uiRect = finalRenderDestinationRect;
             //Graphics.Instance.Batcher.Draw(_uiRenderer.RenderTexture, uiRect, Color.White);
 
-            ////render cursor
-            //Graphics.Instance.Batcher.Draw(_cursorRenderer.RenderTexture, uiRect, Color.White);
+            //render cursor
+            Graphics.Instance.Batcher.Draw(_cursorRenderer.RenderTexture, uiRect, Color.White);
 
             Graphics.Instance.Batcher.End();
-
-            //_uiRenderer.Render(_scene);
-            //_cursorRenderer.Render(_scene);
         }
+
+        #endregion
     }
 }

@@ -67,6 +67,14 @@ namespace Threadlock.StaticData
             new VirtualButton.GamePadButton(0, Buttons.B)
             );
 
+        public VirtualButton Action1 = new VirtualButton(
+            new VirtualButton.KeyboardKey(Keys.Q)
+            );
+
+        public VirtualButton SupportAction = new VirtualButton(
+            new VirtualButton.KeyboardKey(Keys.F)
+            );
+
         public VirtualIntegerAxis XAxisIntegerInput = new VirtualIntegerAxis(
             new VirtualAxis.GamePadDpadLeftRight(),
             new VirtualAxis.GamePadLeftStickX(),

@@ -13,7 +13,7 @@ namespace Threadlock.Components
     {
         public Vector2 Direction = new Vector2(1, 0);
 
-        SubpixelVector2 _subPixelV2 = new SubpixelVector2();
+        //SubpixelVector2 _subPixelV2 = new SubpixelVector2();
 
         Mover _mover;
 
@@ -29,7 +29,7 @@ namespace Threadlock.Components
 
             var movement = Direction * speed * Time.DeltaTime;
             _mover.CalculateMovement(ref movement, out var result);
-            _subPixelV2.Update(ref movement);
+            //_subPixelV2.Update(ref movement);
 
             _mover.ApplyMovement(movement);
         }
