@@ -28,11 +28,11 @@ namespace Threadlock.Entities.Characters.Player
         public StateMachine<Player> StateMachine { get; set; }
 
         //components
-        Mover _mover { get; set; }
-        SpriteAnimator _animator { get; set; }
+        Mover _mover;
+        SpriteAnimator _animator;
         SpriteTrail _spriteTrail;
-        VelocityComponent _velocityComponent { get; set; }
-        SpriteFlipper _spriteFlipper { get; set; }
+        VelocityComponent _velocityComponent;
+        SpriteFlipper _spriteFlipper;
         SwordAttack _swordAttack;
         Dash _dash;
         BoxCollider _collider;
@@ -40,6 +40,8 @@ namespace Threadlock.Entities.Characters.Player
         KnockbackComponent _knockbackComponent;
         StatusComponent _statusComponent;
         HealthComponent _healthComponent;
+        DeathComponent _deathComponent;
+        OriginComponent _originComponent;
 
         //actions
         public PlayerAction OffensiveAction1;
@@ -67,11 +69,14 @@ namespace Threadlock.Entities.Characters.Player
             _dash = AddComponent(new Dash(1));
             _spriteTrail = AddComponent(new SpriteTrail());
             _spriteTrail.DisableSpriteTrail();
-            _collider = AddComponent(new BoxCollider());
+
+            //collider
+            _collider = AddComponent(new BoxCollider(-4, 4, 8, 5));
             Flags.SetFlagExclusive(ref _collider.PhysicsLayer, PhysicsLayers.PlayerCollider);
             _collider.CollidesWithLayers = 0;
             Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.Environment);
 
+            //hurtbox
             var hurtboxCollider = AddComponent(new BoxCollider(9, 16));
             hurtboxCollider.IsTrigger = true;
             Flags.SetFlagExclusive(ref hurtboxCollider.PhysicsLayer, PhysicsLayers.PlayerHurtbox);
@@ -83,6 +88,10 @@ namespace Threadlock.Entities.Characters.Player
             _statusComponent = AddComponent(new StatusComponent(StatusPriority.Normal));
 
             _healthComponent = AddComponent(new HealthComponent(10, 10));
+
+            _deathComponent = AddComponent(new DeathComponent("Die", Nez.Content.Audio.Sounds._69_Die_02));
+
+            _originComponent = AddComponent(new OriginComponent(_collider));
 
             //actions
             OffensiveAction1 = AddComponent(Activator.CreateInstance(PlayerData.Instance.OffensiveAction1.ToType()) as PlayerAction);

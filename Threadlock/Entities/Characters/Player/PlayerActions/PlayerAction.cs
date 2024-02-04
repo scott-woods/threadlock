@@ -10,22 +10,17 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
 {
     public abstract class PlayerAction : Component, IUpdatable
     {
-        [JsonExclude]
         public PlayerActionState State = PlayerActionState.None;
-        [JsonExclude]
-        public Action PrepFinishedCallback;
-        [JsonExclude]
-        public Action ExecutionFinishedCallback;
+        public event Action OnPreparationFinished;
+        public event Action OnExecutionFinished;
 
-        public virtual void Prepare(Action prepFinishedCallback)
+        public virtual void Prepare()
         {
-            PrepFinishedCallback = prepFinishedCallback;
             State = PlayerActionState.Preparing;
         }
 
-        public virtual void Execute(Action executionFinishedCallback)
+        public virtual void Execute()
         {
-            ExecutionFinishedCallback = executionFinishedCallback;
             State = PlayerActionState.Executing;
         }
 
@@ -34,21 +29,21 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
 
         }
 
-        public virtual void HandlePrepFinished()
+        public virtual void Abort()
         {
             State = PlayerActionState.None;
-            PrepFinishedCallback?.Invoke();
+        }
+
+        public virtual void HandlePreparationFinished()
+        {
+            State = PlayerActionState.None;
+            OnPreparationFinished?.Invoke();
         }
 
         public virtual void HandleExecutionFinished()
         {
             State = PlayerActionState.None;
-            ExecutionFinishedCallback?.Invoke();
-        }
-
-        public virtual void Abort()
-        {
-            State = PlayerActionState.None;
+            OnExecutionFinished?.Invoke();
         }
     }
 

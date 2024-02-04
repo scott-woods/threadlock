@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Nez;
 using System;
 using System.Collections.Generic;
@@ -7,9 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
-using Threadlock.Components.TiledComponents;
-using Threadlock.Entities.Characters;
-using Threadlock.Entities.Characters.Enemies.ChainBot;
 using Threadlock.Entities.Characters.Player;
 using Threadlock.Helpers;
 using Threadlock.SceneComponents;
@@ -18,19 +14,18 @@ using Threadlock.UI.Canvases;
 
 namespace Threadlock.Scenes
 {
-    public class InitialScene : BaseScene
+    public class Hub : BaseScene
     {
         public override void Initialize()
         {
             base.Initialize();
 
             var mapEntity = CreateEntity("map");
-            var map = Content.LoadTiledMap(Nez.Content.Tiled.Tilemaps.Test);
+            var map = Content.LoadTiledMap(Nez.Content.Tiled.Tilemaps.HubMaps.Hub);
             var mapRenderer = mapEntity.AddComponent(new TiledMapRenderer(map, "Walls"));
             mapRenderer.SetLayersToRender(new[] { "Back", "Walls" }.Where(l => map.Layers.Contains(l)).ToArray());
             mapRenderer.RenderLayer = RenderLayers.DefaultMapLayer;
-            Flags.SetFlagExclusive(ref mapRenderer.PhysicsLayer, PhysicsLayers.Environment);
-
+            Flags.SetFlagExclusive(ref mapRenderer.PhysicsLayer, PhysicsLayers.None);
             TiledHelper.CreateEntitiesForTiledObjects(mapRenderer);
 
             var frontMapRenderer = mapEntity.AddComponent(new TiledMapRenderer(map));
@@ -42,17 +37,9 @@ namespace Threadlock.Scenes
             var playerSpawner = AddSceneComponent(new PlayerSpawner());
             var player = playerSpawner.SpawnPlayer();
 
-            var enemySpawns = FindComponentsOfType<EnemySpawnPoint>();
-            if (enemySpawns != null && enemySpawns.Count > 0)
-            {
-                var enemySpawn = enemySpawns.First();
-                var chainBot = AddEntity(new ChainBot());
-                chainBot.SetPosition(enemySpawn.Entity.Position);
-            }
+            //var chainBot = AddEntity(new ChainBot());
 
             var followCam = Camera.AddComponent(new CustomFollowCamera(player));
-
-            AddSceneComponent(new GridGraphManager());
         }
     }
 }

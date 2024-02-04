@@ -29,16 +29,16 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
         ICoroutine _executionCoroutine;
         ICoroutine _tweenCoroutine;
 
-        public override void Prepare(Action prepFinishedCallback)
+        public override void Prepare()
         {
-            base.Prepare(prepFinishedCallback);
+            base.Prepare();
 
             _simPlayer = Entity.Scene.AddEntity(new SimPlayer());
         }
 
-        public override void Execute(Action executionFinishedCallback)
+        public override void Execute()
         {
-            base.Execute(executionFinishedCallback);
+            base.Execute();
 
             _simPlayer?.Destroy();
 
@@ -114,7 +114,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
                 if (Controls.Instance.Confirm.IsPressed)
                 {
                     _targetPosition = _simPlayer.Position;
-                    HandlePrepFinished();
+                    HandlePreparationFinished();
                 }
             }
         }

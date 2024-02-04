@@ -3,11 +3,14 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "Tilemaps/test.tmx",
+    "activeFile": "Tilemaps/HubMaps/hub.tmx",
     "expandedProjectPaths": [
+        "Tilemaps/HubMaps",
+        "Templates",
+        "Tilesets",
         ".",
-        "Tilemaps",
-        "Tilesets"
+        "Tilemaps/Hub",
+        "Tilemaps"
     ],
     "fileStates": {
         "C:/Users/scott/Desktop/Game-Dev/MonoGame/Personal-Projects/PuppetRogueliteFNA/puppet-roguelite/PuppetRoguelite/Content/Tiled/Tilemaps/DungeonPrison/dp_b_1.tmx": {
@@ -24,31 +27,58 @@
         "C:/Users/scott/Desktop/Game-Dev/MonoGame/Personal-Projects/PuppetRogueliteFNA/puppet-roguelite/PuppetRoguelite/Content/Tiled/Tilesets/prototype_tileset.tsx": {
             "scaleInDock": 1
         },
-        "Tilemaps/test.tmx": {
+        "Tilemaps/Hub/hub.tmx": {
             "scale": 1,
-            "selectedLayer": 0,
+            "selectedLayer": 3,
             "viewCenter": {
-                "x": 227.5,
-                "y": 173
+                "x": 212.5,
+                "y": 205
+            }
+        },
+        "Tilemaps/HubMaps/hub.tmx": {
+            "expandedObjectLayers": [
+                5
+            ],
+            "scale": 2,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 246.75,
+                "y": 191.75
+            }
+        },
+        "Tilemaps/test.tmx": {
+            "expandedObjectLayers": [
+                4
+            ],
+            "scale": 1.5,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 250.99999999999997,
+                "y": 159.66666666666666
             }
         },
         "Tilesets/dungeon_prison.tsx": {
-            "scaleInDock": 2,
-            "scaleInEditor": 4
+            "scaleInDock": 1.5,
+            "scaleInEditor": 3
         }
     },
     "last.imagePath": "C:/Users/scott/Desktop/Game-Dev/FNA/Threadlock/Threadlock/Content/Textures/Tilesets",
+    "last.objectTemplatePath": "C:/Users/scott/Desktop/Game-Dev/FNA/Threadlock/Threadlock/Content/Tiled/Templates",
+    "map.fixedSize": false,
     "map.lastUsedFormat": "tmx",
     "map.tileHeight": 16,
     "map.tileWidth": 16,
     "openFiles": [
         "Tilemaps/test.tmx",
-        "Tilesets/dungeon_prison.tsx"
+        "Tilesets/dungeon_prison.tsx",
+        "Tilemaps/HubMaps/hub.tmx"
     ],
     "project": "threadlock.tiled-project",
     "recentFiles": [
-        "Tilesets/dungeon_prison.tsx",
         "Tilemaps/test.tmx",
+        "Tilesets/dungeon_prison.tsx",
+        "Tilemaps/HubMaps/hub.tmx",
+        "Tilemaps/Hub/hub.tmx",
         "C:/Users/scott/Desktop/Game-Dev/MonoGame/Personal-Projects/PuppetRogueliteFNA/puppet-roguelite/PuppetRoguelite/Content/Tiled/Tilemaps/DungeonPrison/dp_b_1.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",

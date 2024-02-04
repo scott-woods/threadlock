@@ -16,5 +16,7 @@ namespace Threadlock.StaticData
         public const int EnemyCollider = 5;
         public const int EnemyHitbox = 6;
         public const int PlayerHurtbox = 7;
+        public const int Trigger = 8;
+        public const int CombatArea = 9;
     }
 }

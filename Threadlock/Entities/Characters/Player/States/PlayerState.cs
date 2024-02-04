@@ -33,7 +33,7 @@ namespace Threadlock.Entities.Characters.Player.States
 
             if (_statusComponent != null)
             {
-                if (_statusComponent.CurrentStatusPriority == StatusPriority.Stunned && _machine.CurrentState.GetType() != typeof(StunnedState))
+                if ((int)_statusComponent.CurrentStatusPriority > (int)StatusPriority.Normal && _machine.CurrentState.GetType() != typeof(StunnedState))
                 {
                     _machine.ChangeState<StunnedState>();
                 }

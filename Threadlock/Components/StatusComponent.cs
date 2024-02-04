@@ -43,6 +43,7 @@ namespace Threadlock.Components
     public enum StatusPriority
     {
         Normal = 0,
-        Stunned = 1
+        Stunned = 1,
+        Death = 2
     }
 }

@@ -15,6 +15,8 @@ namespace Threadlock.Components
         /// </summary>
         public event Action<int, int> OnHealthChanged;
 
+        public event Action OnHealthDepleted;
+
         int _health;
         public int Health
         {
@@ -29,6 +31,9 @@ namespace Threadlock.Components
 
                 if (prevHealth != newHealth)
                     OnHealthChanged?.Invoke(prevHealth, newHealth);
+
+                if (newHealth == 0)
+                    OnHealthDepleted?.Invoke();
             }
         }
 
@@ -64,7 +69,7 @@ namespace Threadlock.Components
 
         void OnHurtboxHit(HurtboxHit hit)
         {
-
+            Health -= hit.Hitbox.Damage;
         }
 
         #endregion

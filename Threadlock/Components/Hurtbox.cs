@@ -37,6 +37,24 @@ namespace Threadlock.Components
             _damageSound = damageSound;
         }
 
+        #region LIFECYCLE
+
+        public override void OnAddedToEntity()
+        {
+            base.OnAddedToEntity();
+
+            if (Entity.TryGetComponent<DeathComponent>(out var dc))
+                dc.Emitter.AddObserver(DeathEventTypes.Started, OnDeathStarted);
+        }
+
+        public override void OnRemovedFromEntity()
+        {
+            base.OnRemovedFromEntity();
+
+            if (Entity.TryGetComponent<DeathComponent>(out var dc))
+                dc.Emitter.RemoveObserver(DeathEventTypes.Started, OnDeathStarted);
+        }
+
         public void Update()
         {
             var hitboxes = Physics.BoxcastBroadphaseExcludingSelf(_collider, _collider.CollidesWithLayers).ToList();
@@ -52,6 +70,8 @@ namespace Threadlock.Components
                 }
             }
         }
+
+        #endregion
 
         void HandleHit(IHitbox hitbox)
         {
@@ -85,6 +105,11 @@ namespace Threadlock.Components
                 //emit hit signal
                 Emitter.Emit(HurtboxEventTypes.Hit, new HurtboxHit(collisionResult, hitbox));
             }
+        }
+
+        void OnDeathStarted()
+        {
+            SetEnabled(false);
         }
     }
 

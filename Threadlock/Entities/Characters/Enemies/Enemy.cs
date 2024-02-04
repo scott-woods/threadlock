@@ -152,6 +152,13 @@ namespace Threadlock.Entities.Characters.Enemies
             return status;
         }
 
+        public virtual TaskStatus MoveToTarget(Entity target)
+        {
+            if (target.TryGetComponent<OriginComponent>(out var originComponent))
+                return MoveToTarget(originComponent.Origin);
+            else return MoveToTarget(target.Position);
+        }
+
         public virtual TaskStatus MoveToTarget(Vector2 target)
         {
             //handle animation
@@ -189,11 +196,14 @@ namespace Threadlock.Entities.Characters.Enemies
             //Pathfinder.FollowPath(finalTarget, true);
             //VelocityComponent.Move();
 
-            var dir = Player.Player.Instance.Position - Position;
-            dir.Normalize();
-
-            if (TryGetComponent<VelocityComponent>(out var velocityComponent))
+            if (TryGetComponent<Pathfinder>(out var pathfinder))
             {
+                pathfinder.FollowPath(target, _speed);
+            }
+            else if (TryGetComponent<VelocityComponent>(out var velocityComponent))
+            {
+                var dir = target - Position;
+                dir.Normalize();
                 velocityComponent.Move(dir, _speed);
             }
 

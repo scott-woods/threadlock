@@ -33,6 +33,8 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
         //coroutines
         ICoroutine _executionCoroutine;
 
+        #region LIFECYCLE
+
         public override void Initialize()
         {
             base.Initialize();
@@ -61,9 +63,27 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             _hitbox.SetEnabled(false);
         }
 
-        public override void Prepare(Action prepFinishedCallback)
+        public override void Update()
         {
-            base.Prepare(prepFinishedCallback);
+            base.Update();
+
+            if (State == PlayerActionState.Preparing)
+            {
+                if (Controls.Instance.Confirm.IsPressed)
+                {
+                    HandlePreparationFinished();
+                    return;
+                }
+
+                HandleDirection();
+            }
+        }
+
+        #endregion
+
+        public override void Prepare()
+        {
+            base.Prepare();
 
             //handle direction once before enabling
             HandleDirection();
@@ -71,9 +91,9 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             _target.SetEnabled(true);
         }
 
-        public override void Execute(Action executionCompletedCallback)
+        public override void Execute()
         {
-            base.Execute(executionCompletedCallback);
+            base.Execute();
 
             //start coroutine
             _executionCoroutine = Game1.StartCoroutine(ExecuteCoroutine());
@@ -132,23 +152,14 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             }
             //Log.Debug("ExecuteDash finished");
 
+            _executionCoroutine = null;
+
+            _target.SetEnabled(false);
+            _hitbox.SetEnabled(false);
+            _hitboxEntity.Destroy();
+            _hitboxEntity = null;
+
             HandleExecutionFinished();
-        }
-
-        public override void Update()
-        {
-            base.Update();
-
-            if (State == PlayerActionState.Preparing)
-            {
-                if (Controls.Instance.Confirm.IsPressed)
-                {
-                    HandlePrepFinished();
-                    return;
-                }
-
-                HandleDirection();
-            }
         }
 
         void HandleDirection()
@@ -178,19 +189,6 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             _hitbox.SetEnabled(false);
             _hitboxEntity?.Destroy();
             _hitboxEntity = null;
-        }
-
-        public override void HandleExecutionFinished()
-        {
-            _executionCoroutine?.Stop();
-            _executionCoroutine = null;
-
-            _target.SetEnabled(false);
-            _hitbox.SetEnabled(false);
-            _hitboxEntity.Destroy();
-            _hitboxEntity = null;
-
-            base.HandleExecutionFinished();
         }
 
         void OnAnimationFinished(string animationName)

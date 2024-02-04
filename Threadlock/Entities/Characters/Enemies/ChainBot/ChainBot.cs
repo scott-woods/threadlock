@@ -28,6 +28,9 @@ namespace Threadlock.Entities.Characters.Enemies.ChainBot
         Hurtbox _hurtbox;
         BoxCollider _collider;
         SpriteFlipper _flipper;
+        DeathComponent _deathComponent;
+        Pathfinder _pathfinder;
+        OriginComponent _originComponent;
 
         //actions
         ChainBotMelee _chainBotMelee;
@@ -64,6 +67,12 @@ namespace Threadlock.Entities.Characters.Enemies.ChainBot
 
             _flipper = AddComponent(new SpriteFlipper());
 
+            _deathComponent = AddComponent(new DeathComponent("Die", Nez.Content.Audio.Sounds.Enemy_death_1));
+
+            _pathfinder = AddComponent(new Pathfinder(_collider));
+
+            _originComponent = AddComponent(new OriginComponent(_collider));
+
             _chainBotMelee = AddComponent(new ChainBotMelee(this));
         }
 
@@ -81,7 +90,7 @@ namespace Threadlock.Entities.Characters.Enemies.ChainBot
                             .Action(c => c.ExecuteAction(_chainBotMelee))
                         .EndComposite()
                         .Sequence(AbortTypes.LowerPriority)
-                            .Action(c => c.MoveToTarget(Player.Player.Instance.Position))
+                            .Action(c => c.MoveToTarget(Player.Player.Instance))
                         .EndComposite()
                     .EndComposite()
                 .EndComposite()

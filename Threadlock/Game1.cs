@@ -13,6 +13,7 @@ namespace Threadlock
     {
         public static ResolutionManager ResolutionManager { get; private set; } = new ResolutionManager();
         public static AudioManager AudioManager { get; private set; } = new AudioManager();
+        public static SceneManager SceneManager { get; private set; } = new SceneManager();
 
         public Game1() : base()
         {
@@ -29,6 +30,7 @@ namespace Threadlock
             //global managers
             RegisterGlobalManager(ResolutionManager);
             RegisterGlobalManager(AudioManager);
+            RegisterGlobalManager(SceneManager);
 
             //misc settings
             IsMouseVisible = false;
@@ -44,6 +46,8 @@ namespace Threadlock
 
             //physics config
             Physics.SpatialHashCellSize = 32;
+            Physics.RaycastsStartInColliders = true;
+            Physics.RaycastsHitTriggers = true;
 
             //resolution settings
             Scene.UIRenderTargetSize = new Point(ResolutionManager.UIResolution.X, ResolutionManager.UIResolution.Y);
@@ -51,7 +55,7 @@ namespace Threadlock
             Screen.SetSize(1920, 1080);
             Screen.ApplyChanges();
 
-            Scene = new InitialScene();
+            Scene = new Hub();
         }
     }
 }

@@ -15,7 +15,8 @@ namespace Threadlock.Entities.Characters.Player.States
         {
             base.Begin();
 
-            _currentAction.Execute(ExecutionCompletedCallback);
+            _currentAction.OnExecutionFinished += OnExecutionFinished;
+            _currentAction.Execute();
         }
 
         public void SetCurrentAction(PlayerAction action)
@@ -23,7 +24,7 @@ namespace Threadlock.Entities.Characters.Player.States
             _currentAction = action;
         }
 
-        void ExecutionCompletedCallback()
+        void OnExecutionFinished()
         {
             _machine.ChangeState<Idle>();
         }

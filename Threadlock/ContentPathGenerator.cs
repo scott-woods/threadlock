@@ -130,8 +130,17 @@ namespace Nez
 
 		public static class Tiled
 		{
+			public static class Templates
+			{
+			}
+
 			public static class Tilemaps
 			{
+				public static class HubMaps
+				{
+					public const string Hub = @"Content\Tiled\Tilemaps\HubMaps\hub.tmx";
+				}
+
 				public const string Test = @"Content\Tiled\Tilemaps\test.tmx";
 			}
 

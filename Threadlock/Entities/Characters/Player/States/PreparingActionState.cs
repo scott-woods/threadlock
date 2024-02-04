@@ -26,6 +26,8 @@ namespace Threadlock.Entities.Characters.Player.States
         ICoroutine _slowMoCoroutine;
         ICoroutine _normalSpeedCoroutine;
 
+        #region LIFECYCLE
+
         public override void Begin()
         {
             base.Begin();
@@ -37,7 +39,9 @@ namespace Threadlock.Entities.Characters.Player.States
             //transition to slowmo
             _slowMoCoroutine = Game1.StartCoroutine(SlowMoCoroutine());
 
-            _currentAction.Prepare(ExecutionStartedCallback);
+            //start preparing action
+            _currentAction.OnPreparationFinished += OnPreparationFinished;
+            _currentAction.Prepare();
         }
 
         public override void Reason()
@@ -58,14 +62,11 @@ namespace Threadlock.Entities.Characters.Player.States
             }
         }
 
-        void HandleButtonReleased()
-        {
-            _machine.ChangeState<Idle>();
-        }
-
         public override void End()
         {
             base.End();
+
+            _currentAction.OnPreparationFinished -= OnPreparationFinished;
 
             _slowMoCoroutine?.Stop();
             _slowMoCoroutine = null;
@@ -74,6 +75,13 @@ namespace Threadlock.Entities.Characters.Player.States
             _currentAction?.Abort();
             _currentAction = null;
             _currentButton = null;
+        }
+
+        #endregion
+
+        void HandleButtonReleased()
+        {
+            _machine.ChangeState<Idle>();
         }
 
         public void SetCurrentButton(VirtualButton button)
@@ -86,7 +94,7 @@ namespace Threadlock.Entities.Characters.Player.States
             _currentAction = action;
         }
 
-        void ExecutionStartedCallback()
+        void OnPreparationFinished()
         {
             var executingState = _machine.GetState<ExecutingActionState>();
             executingState.SetCurrentAction(_currentAction);
