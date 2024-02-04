@@ -16,7 +16,7 @@ namespace Threadlock.GlobalManagers
         public Point DesignResolutionWithBleed { get => DesignResolution + BleedArea; }
         public Point ResolutionScale { get => DesignResolution / TrueDesignResolution; }
 
-        public Point UIResolution = new Point(480, 270);
+        public Point UIResolution = new Point(1280, 720);
 
         public List<Vector2> ScreenSizes = new List<Vector2>()
         {

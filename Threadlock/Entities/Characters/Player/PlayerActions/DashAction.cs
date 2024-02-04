@@ -12,6 +12,7 @@ using Threadlock.StaticData;
 
 namespace Threadlock.Entities.Characters.Player.PlayerActions
 {
+    [PlayerActionInfo("Dash", 2, "Slice along a straight line, damaging any enemies in your way.", "005")]
     public class DashAction : PlayerAction
     {
         //constants

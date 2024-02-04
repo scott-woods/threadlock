@@ -7,7 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
 using Threadlock.Entities.Characters.Player;
+using Threadlock.Entities.Characters.Player.PlayerActions;
 using Threadlock.StaticData;
+using Threadlock.UI.Elements;
 
 namespace Threadlock.UI.Canvases
 {
@@ -20,6 +22,7 @@ namespace Threadlock.UI.Canvases
         Table _baseTable;
         ProgressBar _healthBar;
         ProgressBar _apBar;
+        Table _iconsTable;
 
         public override void Initialize()
         {
@@ -29,23 +32,27 @@ namespace Threadlock.UI.Canvases
 
             SetRenderLayer(RenderLayers.ScreenSpaceRenderLayer);
 
-            _skin = Skin.CreateDefaultSkin();
+            _skin = Skins.Skins.GetDefaultSkin();
 
             _baseTable = Stage.AddElement(new Table());
             _baseTable.SetWidth(Game1.ResolutionManager.UIResolution.X);
             _baseTable.SetHeight(Game1.ResolutionManager.UIResolution.Y);
-            _baseTable.Pad(Value.PercentWidth(.025f));
+            _baseTable.SetFillParent(false).Pad(Value.PercentWidth(.025f));
 
             var topLeftTable = new Table();
-            _baseTable.Add(topLeftTable).Expand().Top().Left();
+            _baseTable.Add(topLeftTable).Top().Left();
 
-            _healthBar = new ProgressBar(_skin);
-            topLeftTable.Add(_healthBar).SetSpaceBottom(Value.PercentHeight(.025f, _baseTable));
+            _healthBar = new PlayerHealthbar(_skin, "playerHealthBar");
+            topLeftTable.Add(_healthBar).Width(Value.PercentWidth(.15f, _baseTable));
 
-            topLeftTable.Row();
+            _baseTable.Row();
 
-            _apBar = new ProgressBar(_skin);
-            topLeftTable.Add(_apBar);
+            var bottomTable = new Table();
+            _baseTable.Add(bottomTable).Grow();
+
+            _iconsTable = new Table();
+            _iconsTable.Defaults().SetSpaceRight(Value.PercentWidth(.01f, _baseTable));
+            bottomTable.Add(_iconsTable).Expand().Bottom().Left();
         }
 
         public override void OnAddedToEntity()
@@ -57,6 +64,31 @@ namespace Threadlock.UI.Canvases
                 _healthBar.SetMinMax(0, hc.MaxHealth);
                 _healthBar.Value = hc.Health;
                 hc.OnHealthChanged += OnHealthChanged;
+            }
+
+            if (Player.Instance.OffensiveAction1 != null)
+            {
+                var table = new Table();
+                _iconsTable.Add(table);
+                var icon = new ActionIcon(_skin, PlayerActionUtils.GetIconName(Player.Instance.OffensiveAction1.GetType()));
+                table.Add(icon);
+
+                table.Row();
+
+                var label = new Label("Q", _skin, "abaddon_24");
+                table.Add(label);
+            }
+            if (Player.Instance.SupportAction != null)
+            {
+                var table = new Table();
+                _iconsTable.Add(table);
+                var icon = new ActionIcon(_skin, PlayerActionUtils.GetIconName(Player.Instance.SupportAction.GetType()));
+                table.Add(icon);
+
+                table.Row();
+
+                var label = new Label("F", _skin, "abaddon_24");
+                table.Add(label);
             }
         }
 

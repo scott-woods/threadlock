@@ -13,6 +13,7 @@ using Threadlock.StaticData;
 
 namespace Threadlock.Entities.Characters.Player.PlayerActions
 {
+    [PlayerActionInfo("Blink", 2, "Instantly teleport to a short distance away.", "135")]
     public class Teleport : PlayerAction
     {
         //consts
