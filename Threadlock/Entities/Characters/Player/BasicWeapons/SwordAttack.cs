@@ -12,9 +12,9 @@ using Threadlock.Components;
 using Threadlock.Components.Hitboxes;
 using Threadlock.StaticData;
 
-namespace Threadlock.Entities.Characters.Player
+namespace Threadlock.Entities.Characters.Player.BasicWeapons
 {
-    public class SwordAttack : Component, IUpdatable
+    public class SwordAttack : BasicWeapon, IUpdatable
     {
         Action _completedCallback;
 
@@ -173,7 +173,7 @@ namespace Threadlock.Entities.Characters.Player
                     {
                         if (!_hitColliders.Contains(collider))
                         {
-                            //Emitter.Emit(MeleeAttackEvents.Hit, _damage);
+                            Emitter.Emit(BasicWeaponEventTypes.Hit, _damage);
                             _hitColliders.Add(collider);
                         }
                     }

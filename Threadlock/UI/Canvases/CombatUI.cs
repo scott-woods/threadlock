@@ -23,6 +23,9 @@ namespace Threadlock.UI.Canvases
         ProgressBar _healthBar;
         ProgressBar _apBar;
         Table _iconsTable;
+        Table _apTable;
+        List<ProgressBar> _apBars = new List<ProgressBar>();
+        List<ActionIcon> _actionIcons = new List<ActionIcon>();
 
         public override void Initialize()
         {
@@ -44,6 +47,12 @@ namespace Threadlock.UI.Canvases
 
             _healthBar = new PlayerHealthbar(_skin, "playerHealthBar");
             topLeftTable.Add(_healthBar).Width(Value.PercentWidth(.15f, _baseTable));
+
+            _baseTable.Row();
+
+            _apTable = new Table();
+            _apTable.Defaults().SetSpaceRight(Value.PercentWidth(.005f, _baseTable));
+            _baseTable.Add(_apTable).Top().Left();
 
             _baseTable.Row();
 
@@ -70,8 +79,9 @@ namespace Threadlock.UI.Canvases
             {
                 var table = new Table();
                 _iconsTable.Add(table);
-                var icon = new ActionIcon(_skin, PlayerActionUtils.GetIconName(Player.Instance.OffensiveAction1.GetType()));
+                var icon = new ActionIcon(_skin, PlayerActionUtils.GetIconName(Player.Instance.OffensiveAction1.GetType()), PlayerActionUtils.GetApCost(Player.Instance.OffensiveAction1.GetType()));
                 table.Add(icon);
+                _actionIcons.Add(icon);
 
                 table.Row();
 
@@ -82,13 +92,27 @@ namespace Threadlock.UI.Canvases
             {
                 var table = new Table();
                 _iconsTable.Add(table);
-                var icon = new ActionIcon(_skin, PlayerActionUtils.GetIconName(Player.Instance.SupportAction.GetType()));
+                var icon = new ActionIcon(_skin, PlayerActionUtils.GetIconName(Player.Instance.SupportAction.GetType()), PlayerActionUtils.GetApCost(Player.Instance.SupportAction.GetType()));
                 table.Add(icon);
+                _actionIcons.Add(icon);
 
                 table.Row();
 
                 var label = new Label("F", _skin, "abaddon_24");
                 table.Add(label);
+            }
+
+            if (Player.Instance.TryGetComponent<ApComponent>(out var ac))
+            {
+                ac.OnApChanged += OnApChanged;
+
+                for (int i = 0; i < ac.MaxActionPoints; i++)
+                {
+                    var bar = new ProgressBar(_skin, "apBar");
+                    bar.SetMinMax(0, 1);
+                    _apBars.Add(bar);
+                    _apTable.Add(bar);
+                }
             }
         }
 
@@ -100,11 +124,42 @@ namespace Threadlock.UI.Canvases
             {
                 hc.OnHealthChanged -= OnHealthChanged;
             }
+
+            if (Player.Instance.TryGetComponent<ApComponent>(out var ac))
+            {
+                ac.OnApChanged -= OnApChanged;
+            }
         }
 
         void OnHealthChanged(int oldValue, int newValue)
         {
             _healthBar.Value = newValue;
+        }
+
+        void OnApChanged(int totalAp, float progress)
+        {
+            //update ap bars
+            for (int i = 0; i < _apBars.Count; i++)
+            {
+                if (i < totalAp)
+                {
+                    _apBars[i].SetValue(1f);
+                }
+                else if (i == totalAp)
+                {
+                    _apBars[i].SetValue(progress);
+                }
+                else
+                {
+                    _apBars[i].SetValue(0);
+                }
+            }
+
+            //update icons
+            foreach (var icon in _actionIcons)
+            {
+                icon.UpdateDisplay(totalAp);
+            }
         }
     }
 }

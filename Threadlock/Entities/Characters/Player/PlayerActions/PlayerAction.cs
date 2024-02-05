@@ -22,6 +22,11 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
         public virtual void Execute()
         {
             State = PlayerActionState.Executing;
+            if (Entity.TryGetComponent<ApComponent>(out var apComponent))
+            {
+                var cost = PlayerActionUtils.GetApCost(this.GetType());
+                apComponent.ActionPoints -= cost;
+            }
         }
 
         public virtual void Update()

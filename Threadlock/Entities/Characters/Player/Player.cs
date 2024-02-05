@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
+using Threadlock.Entities.Characters.Player.BasicWeapons;
 using Threadlock.Entities.Characters.Player.PlayerActions;
 using Threadlock.Entities.Characters.Player.States;
 using Threadlock.Helpers;
@@ -42,6 +43,7 @@ namespace Threadlock.Entities.Characters.Player
         HealthComponent _healthComponent;
         DeathComponent _deathComponent;
         OriginComponent _originComponent;
+        ApComponent _apComponent;
 
         //actions
         public PlayerAction OffensiveAction1;
@@ -92,6 +94,8 @@ namespace Threadlock.Entities.Characters.Player
             _deathComponent = AddComponent(new DeathComponent("Die", Nez.Content.Audio.Sounds._69_Die_02));
 
             _originComponent = AddComponent(new OriginComponent(_collider));
+
+            _apComponent = AddComponent(new ApComponent(5));
 
             //actions
             OffensiveAction1 = AddComponent(Activator.CreateInstance(PlayerData.Instance.OffensiveAction1.ToType()) as PlayerAction);

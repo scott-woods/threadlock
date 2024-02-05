@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
+using Threadlock.Entities.Characters.Player.PlayerActions;
 using Threadlock.SaveData;
 using Threadlock.StaticData;
 
@@ -14,6 +15,7 @@ namespace Threadlock.Entities.Characters.Player.States
     public class PlayerState : State<Player>
     {
         protected StatusComponent _statusComponent;
+        protected ApComponent _apComponent;
 
         public override void OnInitialized()
         {
@@ -21,6 +23,9 @@ namespace Threadlock.Entities.Characters.Player.States
 
             if (_context.TryGetComponent<StatusComponent>(out var statusComponent))
                 _statusComponent = statusComponent;
+
+            if (_context.TryGetComponent<ApComponent>(out var apComponent))
+                _apComponent = apComponent;
         }
 
         public override void Update(float deltaTime)
@@ -75,7 +80,7 @@ namespace Threadlock.Entities.Characters.Player.States
 
         public bool TryAction()
         {
-            if (Player.Instance.OffensiveAction1 != null && Controls.Instance.Action1.IsPressed)
+            if (Player.Instance.OffensiveAction1 != null && Controls.Instance.Action1.IsPressed && CanAffordAction(Player.Instance.OffensiveAction1))
             {
                 var prepState = _machine.GetState<PreparingActionState>();
                 prepState.SetCurrentButton(Controls.Instance.Action1);
@@ -83,7 +88,7 @@ namespace Threadlock.Entities.Characters.Player.States
                 _machine.ChangeState<PreparingActionState>();
                 return true;
             }
-            else if (Player.Instance.SupportAction != null && Controls.Instance.SupportAction.IsPressed)
+            else if (Player.Instance.SupportAction != null && Controls.Instance.SupportAction.IsPressed && CanAffordAction(Player.Instance.SupportAction))
             {
                 var prepState = _machine.GetState<PreparingActionState>();
                 prepState.SetCurrentButton(Controls.Instance.SupportAction);
@@ -93,6 +98,12 @@ namespace Threadlock.Entities.Characters.Player.States
             }
 
             return false;
+        }
+
+        bool CanAffordAction(PlayerAction action)
+        {
+            var cost = PlayerActionUtils.GetApCost(action.GetType());
+            return cost <= _apComponent.ActionPoints;
         }
 
         public bool TryDash()

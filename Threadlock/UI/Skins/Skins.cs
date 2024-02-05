@@ -46,6 +46,23 @@ namespace Threadlock.UI.Skins
                 KnobBefore = playerHealthKnobBefore,
             });
 
+            //ap bar
+            var apBarTexture = Game1.Content.LoadTexture(Nez.Content.Textures.UI.ProgressBar);
+            var apBarBgSprite = new Sprite(apBarTexture, new Rectangle(0, 0, 64, 16));
+            var apBarKnobBeforeSprite = new Sprite(apBarTexture, new Rectangle(0, 16, 64, 16));
+            var apBarBg = new SpriteDrawable(apBarBgSprite);
+            apBarBg.MinHeight = 48;
+            apBarBg.LeftWidth = 1;
+            apBarBg.RightWidth = 1;
+            var apBarKnobBefore = new SpriteDrawable(apBarKnobBeforeSprite);
+            apBarKnobBefore.MinHeight = 48;
+            apBarKnobBefore.MinWidth = 0;
+            skin.Add("apBar", new ProgressBarStyle()
+            {
+                Background = apBarBg,
+                KnobBefore = apBarKnobBefore,
+            });
+
             //labels
             List<int> fontSizes = new List<int> { 12, 18, 24, 36, 48, 60, 72 };
             foreach (var size in fontSizes)

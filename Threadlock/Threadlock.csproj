@@ -45,6 +45,8 @@
     <None Remove="Content\Textures\Tilesets\dungeon_prison_props.png" />
     <None Remove="Content\Textures\Tilesets\dungeon_prison_tileset.png" />
     <None Remove="Content\Textures\UI\crosshair038.png" />
+    <None Remove="Content\Textures\UI\progressBar.png" />
+    <None Remove="Content\Textures\UI\progressBarGlow.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FNA\FNA.Core.csproj">

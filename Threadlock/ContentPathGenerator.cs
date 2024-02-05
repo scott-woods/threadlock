@@ -864,6 +864,8 @@ namespace Nez
 
 				public const string Crosshair038 = @"Content\Textures\UI\crosshair038.png";
 				public const string PlayerHealthBar = @"Content\Textures\UI\playerHealthBar.png";
+				public const string ProgressBar = @"Content\Textures\UI\progressBar.png";
+				public const string ProgressBarGlow = @"Content\Textures\UI\progressBarGlow.png";
 			}
 
 		}
