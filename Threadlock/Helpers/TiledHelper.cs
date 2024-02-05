@@ -20,6 +20,7 @@ namespace Threadlock.Helpers
                 var type = Type.GetType("Threadlock.Components.TiledComponents." + obj.Type);
                 var instance = Activator.CreateInstance(type) as TiledComponent;
                 instance.TmxObject = obj;
+                instance.MapEntity = mapRenderer.Entity;
 
                 var position = new Vector2();
                 switch (obj.ObjectType)

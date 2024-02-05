@@ -13,6 +13,11 @@ namespace Nez
     {
 		public static class Audio
 		{
+			public static class Music
+			{
+				public const string Meltingidols = @"Content\Audio\Music\melting idols.ogg";
+			}
+
 			public static class Sounds
 			{
 				public const string _002_Hover_02 = @"Content\Audio\Sounds\002_Hover_02.wav";
@@ -140,6 +145,8 @@ namespace Nez
 			{
 				public const string Dungeon_prison_props = @"Content\Textures\Tilesets\dungeon_prison_props.png";
 				public const string Dungeon_prison_tileset = @"Content\Textures\Tilesets\dungeon_prison_tileset.png";
+				public const string Forge_tileset = @"Content\Textures\Tilesets\forge_tileset.png";
+				public const string Prototype_tileset = @"Content\Textures\Tilesets\prototype_tileset.png";
 			}
 
 			public static class UI
@@ -878,6 +885,46 @@ namespace Nez
 
 			public static class Tilemaps
 			{
+				public static class Forge
+				{
+					public static class Doorways
+					{
+						public const string Forge_bottom_closed = @"Content\Tiled\Tilemaps\Forge\Doorways\forge_bottom_closed.tmx";
+						public const string Forge_bottom_open = @"Content\Tiled\Tilemaps\Forge\Doorways\forge_bottom_open.tmx";
+						public const string Forge_left_closed = @"Content\Tiled\Tilemaps\Forge\Doorways\forge_left_closed.tmx";
+						public const string Forge_left_open = @"Content\Tiled\Tilemaps\Forge\Doorways\forge_left_open.tmx";
+						public const string Forge_right_closed = @"Content\Tiled\Tilemaps\Forge\Doorways\forge_right_closed.tmx";
+						public const string Forge_right_open = @"Content\Tiled\Tilemaps\Forge\Doorways\forge_right_open.tmx";
+						public const string Forge_top_closed = @"Content\Tiled\Tilemaps\Forge\Doorways\forge_top_closed.tmx";
+						public const string Forge_top_open = @"Content\Tiled\Tilemaps\Forge\Doorways\forge_top_open.tmx";
+					}
+
+					public static class Halls
+					{
+						public const string Forge_bottom_left_cornerCopyCopyCopy = @"Content\Tiled\Tilemaps\Forge\Halls\forge_bottom_left_corner - Copy - Copy - Copy.tmx";
+						public const string Forge_bottom_left_cornerCopyCopy = @"Content\Tiled\Tilemaps\Forge\Halls\forge_bottom_left_corner - Copy - Copy.tmx";
+						public const string Forge_bottom_left_cornerCopy = @"Content\Tiled\Tilemaps\Forge\Halls\forge_bottom_left_corner - Copy.tmx";
+						public const string Forge_bottom_left_corner = @"Content\Tiled\Tilemaps\Forge\Halls\forge_bottom_left_corner.tmx";
+						public const string Forge_bottom_right_cornerCopyCopyCopy = @"Content\Tiled\Tilemaps\Forge\Halls\forge_bottom_right_corner - Copy - Copy - Copy.tmx";
+						public const string Forge_bottom_right_cornerCopyCopy = @"Content\Tiled\Tilemaps\Forge\Halls\forge_bottom_right_corner - Copy - Copy.tmx";
+						public const string Forge_bottom_right_cornerCopy = @"Content\Tiled\Tilemaps\Forge\Halls\forge_bottom_right_corner - Copy.tmx";
+						public const string Forge_bottom_right_corner = @"Content\Tiled\Tilemaps\Forge\Halls\forge_bottom_right_corner.tmx";
+						public const string Forge_horizontal = @"Content\Tiled\Tilemaps\Forge\Halls\forge_horizontal.tmx";
+						public const string Forge_top_left_cornerCopyCopy = @"Content\Tiled\Tilemaps\Forge\Halls\forge_top_left_corner - Copy - Copy.tmx";
+						public const string Forge_top_left_cornerCopy = @"Content\Tiled\Tilemaps\Forge\Halls\forge_top_left_corner - Copy.tmx";
+						public const string Forge_top_left_corner = @"Content\Tiled\Tilemaps\Forge\Halls\forge_top_left_corner.tmx";
+						public const string Forge_top_right_corner = @"Content\Tiled\Tilemaps\Forge\Halls\forge_top_right_corner.tmx";
+						public const string Forge_vertical = @"Content\Tiled\Tilemaps\Forge\Halls\forge_vertical.tmx";
+						public const string Testinggak = @"Content\Tiled\Tilemaps\Forge\Halls\testing gak.tmx";
+					}
+
+					public const string Forge_pre_boss = @"Content\Tiled\Tilemaps\Forge\forge_pre_boss.tmx";
+					public const string Forge_simple = @"Content\Tiled\Tilemaps\Forge\forge_simple.tmx";
+					public const string Forge_test = @"Content\Tiled\Tilemaps\Forge\forge_test.tmx";
+					public const string Forge_test_2 = @"Content\Tiled\Tilemaps\Forge\forge_test_2.tmx";
+					public const string Rules = @"Content\Tiled\Tilemaps\Forge\rules.txt";
+				}
+
 				public static class HubMaps
 				{
 					public const string Hub = @"Content\Tiled\Tilemaps\HubMaps\hub.tmx";
@@ -889,6 +936,8 @@ namespace Nez
 			public static class Tilesets
 			{
 				public const string Dungeon_prison = @"Content\Tiled\Tilesets\dungeon_prison.tsx";
+				public const string Forge_tileset = @"Content\Tiled\Tilesets\forge_tileset.tsx";
+				public const string Prototype_tileset = @"Content\Tiled\Tilesets\prototype_tileset.tsx";
 			}
 
 			public const string Threadlock = @"Content\Tiled\threadlock.tiled-project";

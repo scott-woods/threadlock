@@ -88,7 +88,7 @@
  <objectgroup id="5" name="Entities">
   <object id="9" type="ExitArea" x="144" y="16" width="32" height="16">
    <properties>
-    <property name="TargetScene" value="InitialScene"/>
+    <property name="TargetScene" value="ForgeDungeon"/>
     <property name="TargetSpawn" value="0"/>
    </properties>
   </object>

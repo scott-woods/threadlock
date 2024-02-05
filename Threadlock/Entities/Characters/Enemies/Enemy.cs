@@ -13,7 +13,7 @@ using TaskStatus = Nez.AI.BehaviorTrees.TaskStatus;
 
 namespace Threadlock.Entities.Characters.Enemies
 {
-    public abstract class Enemy<T> : Entity where T : Enemy<T>
+    public abstract class Enemy<T> : BaseEnemy where T : Enemy<T>
     {
         Entity _targetEntity;
         public Entity TargetEntity {

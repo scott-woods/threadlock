@@ -1,0 +1,5 @@
+..\..\RuleMaps\forge_floor_rules.tmx
+..\..\RuleMaps\forge_trim_rules.tmx
+..\..\RuleMaps\forge_lava_rules.tmx
+..\..\RuleMaps\forge_walls_rules.tmx
+..\..\RuleMaps\forge_clutter_rules.tmx

@@ -30,6 +30,7 @@
     <None Remove="content\effects\JItterFree.fx\**" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Content\Audio\Music\melting idols.ogg" />
     <None Remove="Content\Effects\JitterDestroyer.fx" />
     <None Remove="Content\Textures\Characters\ChainBot\attack.png" />
     <None Remove="Content\Textures\Characters\ChainBot\charge.png" />
@@ -44,9 +45,13 @@
     <None Remove="Content\Textures\Characters\Player\sci_fi_player_with_sword.png" />
     <None Remove="Content\Textures\Tilesets\dungeon_prison_props.png" />
     <None Remove="Content\Textures\Tilesets\dungeon_prison_tileset.png" />
+    <None Remove="Content\Textures\Tilesets\forge_tileset.png" />
+    <None Remove="Content\Textures\Tilesets\prototype_tileset.png" />
     <None Remove="Content\Textures\UI\crosshair038.png" />
     <None Remove="Content\Textures\UI\progressBar.png" />
     <None Remove="Content\Textures\UI\progressBarGlow.png" />
+    <None Remove="Content\Tiled\Tilesets\forge_tileset.tsx" />
+    <None Remove="Content\Tiled\Tilesets\prototype_tileset.tsx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FNA\FNA.Core.csproj">
@@ -63,10 +68,6 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Content\Tiled\Tilesets\" />
-    <Folder Include="Content\Tiled\Tilemaps\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="ContentPathGenerator.cs">

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="5" height="1" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="1">
+ <properties>
+  <property name="PathfindingOffset" value="2 0"/>
+ </properties>
+ <tileset firstgid="1" source="../../../Tilesets/forge_tileset.tsx"/>
+ <layer id="1" name="Back" width="5" height="1">
+  <data encoding="csv">
+0,202,203,204,0
+</data>
+ </layer>
+ <layer id="2" name="Walls" width="5" height="1">
+  <data encoding="csv">
+55,0,0,0,51
+</data>
+ </layer>
+ <layer id="3" name="Front" width="5" height="1">
+  <data encoding="csv">
+0,0,0,0,0
+</data>
+ </layer>
+</map>

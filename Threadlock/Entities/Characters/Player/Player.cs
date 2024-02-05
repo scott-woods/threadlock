@@ -37,6 +37,7 @@ namespace Threadlock.Entities.Characters.Player
         SwordAttack _swordAttack;
         Dash _dash;
         BoxCollider _collider;
+        public BoxCollider Collider { get => _collider; }
         Hurtbox _hurtbox;
         KnockbackComponent _knockbackComponent;
         StatusComponent _statusComponent;
