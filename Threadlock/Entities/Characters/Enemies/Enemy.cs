@@ -42,8 +42,6 @@ namespace Threadlock.Entities.Characters.Enemies
             }
         }
 
-        protected abstract float _speed { get; }
-
         BehaviorTree<T> _tree;
         BehaviorTree<T> _subTree;
 
@@ -120,6 +118,11 @@ namespace Threadlock.Entities.Characters.Enemies
             return tree;
         }
 
+        public virtual Entity GetTarget()
+        {
+            return Player.Player.Instance;
+        }
+
         #endregion
 
         #region ABSTRACT METHODS
@@ -152,14 +155,14 @@ namespace Threadlock.Entities.Characters.Enemies
             return status;
         }
 
-        public virtual TaskStatus MoveToTarget(Entity target)
+        public virtual TaskStatus MoveToTarget(Entity target, float speed)
         {
             if (target.TryGetComponent<OriginComponent>(out var originComponent))
-                return MoveToTarget(originComponent.Origin);
-            else return MoveToTarget(target.Position);
+                return MoveToTarget(originComponent.Origin, speed);
+            else return MoveToTarget(target.Position, speed);
         }
 
-        public virtual TaskStatus MoveToTarget(Vector2 target)
+        public virtual TaskStatus MoveToTarget(Vector2 target, float speed)
         {
             //handle animation
             if (TryGetComponent<SpriteAnimator>(out var animator))
@@ -198,13 +201,55 @@ namespace Threadlock.Entities.Characters.Enemies
 
             if (TryGetComponent<Pathfinder>(out var pathfinder))
             {
-                pathfinder.FollowPath(target, _speed);
+                pathfinder.FollowPath(target, speed);
             }
             else if (TryGetComponent<VelocityComponent>(out var velocityComponent))
             {
                 var dir = target - Position;
                 dir.Normalize();
-                velocityComponent.Move(dir, _speed);
+                velocityComponent.Move(dir, speed);
+            }
+
+            return TaskStatus.Running;
+        }
+
+        public virtual TaskStatus MoveAway(Entity target, float speed)
+        {
+            if (target.TryGetComponent<OriginComponent>(out var originComponent))
+                return MoveAway(originComponent.Origin, speed);
+            else return MoveAway(target.Position, speed);
+        }
+
+        public virtual TaskStatus MoveAway(Vector2 target, float speed)
+        {
+            //handle animation
+            if (TryGetComponent<SpriteAnimator>(out var animator))
+            {
+                if (animator.Animations.ContainsKey("Run") && !animator.IsAnimationActive("Run"))
+                {
+                    animator.Play("Run");
+                }
+            }
+
+            var enemyPos = Position;
+            if (TryGetComponent<OriginComponent>(out var enemyOrigin))
+                enemyPos = enemyOrigin.Origin;
+
+            var dir = enemyPos - target;
+            dir.Normalize();
+
+            if (TryGetComponent<VelocityComponent>(out var velocityComponent))
+                velocityComponent.Move(dir, speed);
+
+            return TaskStatus.Running;
+        }
+
+        public virtual TaskStatus Idle()
+        {
+            if (TryGetComponent<SpriteAnimator>(out var animator))
+            {
+                if (!animator.IsAnimationActive("Idle"))
+                    animator.Play("Idle");
             }
 
             return TaskStatus.Running;

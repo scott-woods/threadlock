@@ -68,8 +68,13 @@ namespace Threadlock.Components
 
             _startExecutionCoroutine = null;
             _executionCoroutine = null;
+
+            Reset();
         }
 
+        /// <summary>
+        /// called when knocked out of action early
+        /// </summary>
         public virtual void Abort()
         {
             _executionStarted = false;
@@ -80,6 +85,11 @@ namespace Threadlock.Components
             _startExecutionCoroutine?.Stop();
             _startExecutionCoroutine = null;
         }
+
+        /// <summary>
+        /// called after execution successfully finishes, do any cleanup here
+        /// </summary>
+        protected abstract void Reset();
 
         protected abstract IEnumerator ExecutionCoroutine();
     }

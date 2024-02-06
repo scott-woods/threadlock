@@ -10,6 +10,7 @@ using Threadlock.Components;
 using Threadlock.Components.TiledComponents;
 using Threadlock.Entities.Characters;
 using Threadlock.Entities.Characters.Enemies.ChainBot;
+using Threadlock.Entities.Characters.Enemies.OrbMage;
 using Threadlock.Entities.Characters.Player;
 using Threadlock.Helpers;
 using Threadlock.SceneComponents;
@@ -41,14 +42,6 @@ namespace Threadlock.Scenes
 
             var playerSpawner = AddSceneComponent(new PlayerSpawner());
             var player = playerSpawner.SpawnPlayer();
-
-            var enemySpawns = FindComponentsOfType<EnemySpawnPoint>();
-            if (enemySpawns != null && enemySpawns.Count > 0)
-            {
-                var enemySpawn = enemySpawns.First();
-                var chainBot = AddEntity(new ChainBot());
-                chainBot.SetPosition(enemySpawn.Entity.Position);
-            }
 
             var followCam = Camera.AddComponent(new CustomFollowCamera(player));
 

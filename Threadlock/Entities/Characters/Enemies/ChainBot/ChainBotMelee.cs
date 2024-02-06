@@ -27,6 +27,7 @@ namespace Threadlock.Entities.Characters.Enemies.ChainBot
 
         //misc
         int _soundCounter = 0;
+        AnimationWaiter _animationWaiter;
 
         //coroutines
         ICoroutine _waitForCharge, _attack;
@@ -46,6 +47,8 @@ namespace Threadlock.Entities.Characters.Enemies.ChainBot
             Flags.SetFlagExclusive(ref _hitbox.CollidesWithLayers, PhysicsLayers.PlayerHurtbox);
             _hitbox.SetLocalOffset(_offset);
             _hitbox.SetEnabled(false);
+
+            _animationWaiter = new AnimationWaiter(_animator);
         }
 
         public void Update()
@@ -73,8 +76,10 @@ namespace Threadlock.Entities.Characters.Enemies.ChainBot
 
         protected override IEnumerator ExecutionCoroutine()
         {
+            var animationWaiter = new AnimationWaiter(_animator);
+
             //transition to charge
-            _waitForCharge = Game1.StartCoroutine(CoroutineHelper.WaitForAnimation(_animator, "TransitionRight"));
+            _waitForCharge = Game1.StartCoroutine(animationWaiter.WaitForAnimation("TransitionRight"));
             yield return _waitForCharge;
             _waitForCharge = null;
 
@@ -90,12 +95,9 @@ namespace Threadlock.Entities.Characters.Enemies.ChainBot
                     hitboxOffset.X *= -1;
             }
             _hitbox.SetLocalOffset(hitboxOffset);
-            _animator.OnAnimationCompletedEvent += OnAnimationCompleted;
-            _attack = Game1.StartCoroutine(CoroutineHelper.WaitForAnimation(_animator, "AttackRight"));
+            _attack = Game1.StartCoroutine(animationWaiter.WaitForAnimation("AttackRight"));
             yield return _attack;
             _attack = null;
-
-            _soundCounter = 0;
         }
 
         public override void Abort()
@@ -110,15 +112,22 @@ namespace Threadlock.Entities.Characters.Enemies.ChainBot
 
             _hitbox.SetEnabled(false);
 
-            _animator.OnAnimationCompletedEvent -= OnAnimationCompleted;
+            _animationWaiter.Cancel();
 
             _soundCounter = 0;
         }
 
-        void OnAnimationCompleted(string animationName)
+        protected override void Reset()
         {
-            _animator.SetSprite(_animator.CurrentAnimation.Sprites.Last());
-            _animator.OnAnimationCompletedEvent -= OnAnimationCompleted;
+            //values
+            _soundCounter = 0;
+
+            //make sure coroutines are null
+            _waitForCharge = null;
+            _attack = null;
+
+            //disable hitbox
+            _hitbox.SetEnabled(false);
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Entities.Characters.Enemies.ChainBot;
+using Threadlock.Entities.Characters.Enemies.OrbMage;
 using Threadlock.Models;
 
 namespace Threadlock.StaticData
@@ -14,7 +15,7 @@ namespace Threadlock.StaticData
         private static readonly Lazy<DungeonArea> _forge = new Lazy<DungeonArea>(() => new DungeonArea
         {
             Name = "Forge",
-            EnemyTypes = new List<Type> { typeof(ChainBot) }
+            EnemyTypes = new List<Type> { typeof(OrbMage), typeof(OrbMage) }
         });
         public static DungeonArea Forge => _forge.Value;
 

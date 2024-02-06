@@ -131,6 +131,20 @@ namespace Nez
 					public const string Transitiontocharge = @"Content\Textures\Characters\ChainBot\transition to charge.png";
 				}
 
+				public static class OrbMage
+				{
+					public const string Attack = @"Content\Textures\Characters\OrbMage\attack .png";
+					public const string Attackvfx = @"Content\Textures\Characters\OrbMage\attack vfx .png";
+					public const string Death = @"Content\Textures\Characters\OrbMage\death.png";
+					public const string HealwithVFX = @"Content\Textures\Characters\OrbMage\heal with VFX.png";
+					public const string Hit = @"Content\Textures\Characters\OrbMage\hit.png";
+					public const string Idle = @"Content\Textures\Characters\OrbMage\idle.png";
+					public const string Move = @"Content\Textures\Characters\OrbMage\move.png";
+					public const string SweepAttackwithVFX = @"Content\Textures\Characters\OrbMage\Sweep Attack with VFX.png";
+					public const string Sweepattack = @"Content\Textures\Characters\OrbMage\sweep attack.png";
+					public const string VFXforSweep = @"Content\Textures\Characters\OrbMage\VFX for Sweep.png";
+				}
+
 				public static class Player
 				{
 					public const string Gun1 = @"Content\Textures\Characters\Player\gun1.png";

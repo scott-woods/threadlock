@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
+using Threadlock.Entities.Characters.Enemies.OrbMage;
 using Threadlock.Entities.Characters.Player;
 using Threadlock.Helpers;
 using Threadlock.SceneComponents;
@@ -36,8 +37,6 @@ namespace Threadlock.Scenes
 
             var playerSpawner = AddSceneComponent(new PlayerSpawner());
             var player = playerSpawner.SpawnPlayer();
-
-            //var chainBot = AddEntity(new ChainBot());
 
             var followCam = Camera.AddComponent(new CustomFollowCamera(player));
         }

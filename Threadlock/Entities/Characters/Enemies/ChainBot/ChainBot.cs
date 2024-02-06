@@ -17,7 +17,7 @@ namespace Threadlock.Entities.Characters.Enemies.ChainBot
     public class ChainBot : Enemy<ChainBot>
     {
         //property overrides
-        protected override float _speed => 75f;
+        const float _speed = 75f;
 
         //components
         SpriteAnimator _animator;
@@ -90,7 +90,7 @@ namespace Threadlock.Entities.Characters.Enemies.ChainBot
                             .Action(c => c.ExecuteAction(_chainBotMelee))
                         .EndComposite()
                         .Sequence(AbortTypes.LowerPriority)
-                            .Action(c => c.MoveToTarget(Player.Player.Instance))
+                            .Action(c => c.MoveToTarget(GetTarget(), _speed))
                         .EndComposite()
                     .EndComposite()
                 .EndComposite()

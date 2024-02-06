@@ -217,15 +217,6 @@
    </properties>
   </object>
   <object id="13" type="CombatTrigger" x="16" y="64" width="320" height="304"/>
-  <object id="14" type="EnemySpawnPoint" x="96" y="128">
-   <point/>
-  </object>
-  <object id="15" type="EnemySpawnPoint" x="256" y="128">
-   <point/>
-  </object>
-  <object id="16" type="EnemySpawnPoint" x="96" y="288">
-   <point/>
-  </object>
   <object id="17" type="EnemySpawnPoint" x="256" y="288">
    <point/>
   </object>
