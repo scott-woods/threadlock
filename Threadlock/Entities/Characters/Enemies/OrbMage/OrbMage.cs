@@ -40,6 +40,7 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
 
         //actions
         OrbMageAttack _orbMageAttack;
+        OrbMageSweepAttack _orbMageSweepAttack;
 
         float _attackPrepTimer = 0f;
 
@@ -51,6 +52,7 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
 
             //actions
             _orbMageAttack = AddComponent(new OrbMageAttack(this));
+            _orbMageSweepAttack = AddComponent(new OrbMageSweepAttack(this));
 
             _mover = AddComponent(new Mover());
 
@@ -148,10 +150,10 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
                     .EndComposite()
                     //select and perform attaack
                     .Selector()
-                        //.Sequence()
-                        //    .Conditional(o => EntityHelper.DistanceToEntity(this, o.GetTarget()) < _sweepAttackRange)
-                        //    .Action(o => o.ExecuteAction(_sweepAttack))
-                        //.EndComposite()
+                        .Sequence()
+                            .Conditional(o => EntityHelper.DistanceToEntity(this, o.GetTarget()) < _sweepAttackRange)
+                            .Action(o => o.ExecuteAction(_orbMageSweepAttack))
+                        .EndComposite()
                         .Sequence()
                             .Action(o => o.ExecuteAction(_orbMageAttack))
                         .EndComposite()

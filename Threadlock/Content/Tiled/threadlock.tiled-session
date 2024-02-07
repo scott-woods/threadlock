@@ -3,16 +3,17 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "Tilemaps/Forge/Doorways/forge_left_open.tmx",
+    "activeFile": "Tilemaps/Forge/forge_simple.tmx",
     "expandedProjectPaths": [
-        "Tilemaps/Hub",
+        "Tilemaps/HubMaps",
         ".",
+        "Tilemaps/Forge/Halls",
+        "Tilemaps/Forge/Doorways",
         "Tilemaps/Forge",
-        "Tilemaps",
+        "Tilemaps/Hub",
         "Tilesets",
         "Templates",
-        "Tilemaps/Forge/Doorways",
-        "Tilemaps/HubMaps"
+        "Tilemaps"
     ],
     "fileStates": {
         "C:/Users/scott/Desktop/Game-Dev/MonoGame/Personal-Projects/PuppetRogueliteFNA/puppet-roguelite/PuppetRoguelite/Content/Tiled/Tilemaps/DungeonPrison/dp_b_1.tmx": {
@@ -164,11 +165,14 @@
             }
         },
         "Tilemaps/Forge/forge_simple.tmx": {
+            "expandedObjectLayers": [
+                45
+            ],
             "scale": 1,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 266.5,
-                "y": 200
+                "x": 95.5,
+                "y": 126
             }
         },
         "Tilemaps/Forge/forge_test.tmx": {
@@ -227,28 +231,29 @@
     "map.tileHeight": 16,
     "map.tileWidth": 16,
     "openFiles": [
-        "Tilemaps/test.tmx",
-        "Tilesets/dungeon_prison.tsx",
-        "Tilemaps/HubMaps/hub.tmx",
-        "Tilemaps/Forge/forge_pre_boss.tmx",
         "Tilemaps/Forge/Doorways/forge_bottom_open.tmx",
+        "Tilemaps/Forge/Doorways/forge_left_open.tmx",
+        "Tilemaps/Forge/Doorways/forge_right_open.tmx",
+        "Tilemaps/Forge/forge_simple.tmx",
         "Tilemaps/Forge/Doorways/forge_bottom_closed.tmx",
-        "Tilemaps/Forge/Doorways/forge_left_open.tmx"
+        "Tilemaps/Forge/Doorways/forge_top_open.tmx",
+        "Tilemaps/Forge/forge_pre_boss.tmx",
+        "Tilemaps/Forge/Halls/testing gak.tmx"
     ],
     "project": "threadlock.tiled-project",
     "recentFiles": [
+        "Tilemaps/Forge/Doorways/forge_bottom_open.tmx",
+        "Tilemaps/Forge/Doorways/forge_left_open.tmx",
+        "Tilemaps/Forge/Doorways/forge_right_open.tmx",
+        "Tilemaps/Forge/Halls/testing gak.tmx",
+        "Tilemaps/Forge/forge_pre_boss.tmx",
+        "Tilemaps/Forge/Doorways/forge_top_open.tmx",
+        "Tilemaps/Forge/Doorways/forge_bottom_closed.tmx",
+        "Tilemaps/Forge/forge_simple.tmx",
         "Tilemaps/Forge/Halls/forge_bottom_right_corner.tmx",
         "Tilemaps/Forge/Halls/forge_bottom_left_corner.tmx",
         "Tilemaps/Forge/Halls/forge_bottom_right_corner - Copy - Copy - Copy.tmx",
-        "Tilemaps/Forge/Halls/forge_bottom_right_corner - Copy - Copy.tmx",
-        "Tilemaps/Forge/Halls/forge_bottom_right_corner - Copy.tmx",
-        "C:/Users/scott/Desktop/Game-Dev/MonoGame/Personal-Projects/PuppetRogueliteFNA/puppet-roguelite/PuppetRoguelite/Content/Tiled/Tilemaps/Forge/more testing gak.tmx",
-        "Tilemaps/test.tmx",
-        "Tilesets/dungeon_prison.tsx",
-        "Tilemaps/HubMaps/hub.tmx",
-        "Tilemaps/Forge/forge_pre_boss.tmx",
-        "Tilemaps/Forge/Doorways/forge_bottom_open.tmx",
-        "Tilemaps/Forge/Doorways/forge_left_open.tmx"
+        "Tilemaps/Forge/Halls/forge_bottom_right_corner - Copy - Copy.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
+using Threadlock.DebugTools;
 using Threadlock.Entities.Characters.Player.PlayerActions;
 using Threadlock.SaveData;
 using Threadlock.StaticData;
@@ -102,6 +103,8 @@ namespace Threadlock.Entities.Characters.Player.States
 
         bool CanAffordAction(PlayerAction action)
         {
+            if (DebugSettings.FreeActions)
+                return true;
             var cost = PlayerActionUtils.GetApCost(action.GetType());
             return cost <= _apComponent.ActionPoints;
         }

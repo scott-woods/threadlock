@@ -1,10 +1,12 @@
 ﻿using Nez;
 using Nez.Persistence;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Threadlock.DebugTools;
 
 namespace Threadlock.Entities.Characters.Player.PlayerActions
 {
@@ -21,11 +23,17 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
 
         public virtual void Execute()
         {
+            //update state
             State = PlayerActionState.Executing;
-            if (Entity.TryGetComponent<ApComponent>(out var apComponent))
+
+            //remove ap points
+            if (!DebugSettings.FreeActions)
             {
-                var cost = PlayerActionUtils.GetApCost(this.GetType());
-                apComponent.ActionPoints -= cost;
+                if (Entity.TryGetComponent<ApComponent>(out var apComponent))
+                {
+                    var cost = PlayerActionUtils.GetApCost(this.GetType());
+                    apComponent.ActionPoints -= cost;
+                }
             }
         }
 
@@ -48,8 +56,14 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
         public virtual void HandleExecutionFinished()
         {
             State = PlayerActionState.None;
+            Reset();
             OnExecutionFinished?.Invoke();
         }
+
+        /// <summary>
+        /// called after successful execution
+        /// </summary>
+        public abstract void Reset();
     }
 
     public enum PlayerActionState

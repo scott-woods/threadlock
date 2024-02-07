@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components.Hitboxes;
+using Threadlock.Helpers;
 using Threadlock.StaticData;
 
 namespace Threadlock.Entities.Characters.Player.PlayerActions
@@ -18,9 +19,6 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
         //constants
         const int _range = 48;
         const int _damage = 4;
-
-        //states
-        bool _isAnimationFinished = false;
 
         //other components
         SpriteAnimator _animator;
@@ -33,6 +31,8 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
 
         //coroutines
         ICoroutine _executionCoroutine;
+
+        AnimationWaiter _animationWaiter;
 
         #region LIFECYCLE
 
@@ -54,6 +54,8 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             base.OnAddedToEntity();
 
             _animator = Entity.GetComponent<SpriteAnimator>();
+
+            _animationWaiter = new AnimationWaiter(_animator);
         }
 
         public override void OnDisabled()
@@ -82,6 +84,8 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
 
         #endregion
 
+        #region PLAYER ACTION
+
         public override void Prepare()
         {
             base.Prepare();
@@ -100,6 +104,26 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             _executionCoroutine = Game1.StartCoroutine(ExecuteCoroutine());
         }
 
+        public override void Abort()
+        {
+            base.Abort();
+
+            Reset();
+        }
+
+        public override void Reset()
+        {
+            _executionCoroutine?.Stop();
+            _executionCoroutine = null;
+
+            _target.SetEnabled(false);
+            _hitbox.SetEnabled(false);
+            _hitboxEntity?.Destroy();
+            _hitboxEntity = null;
+        }
+
+        #endregion
+
         IEnumerator ExecuteCoroutine()
         {
             //get animation by angle
@@ -110,9 +134,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             else if (angle >= 225 && angle < 315) animation = "ThrustUp";
 
             //play animation
-            _animator.Play(animation, SpriteAnimator.LoopMode.Once);
-            _animator.OnAnimationCompletedEvent += OnAnimationFinished;
-            _isAnimationFinished = false;
+            Game1.StartCoroutine(_animationWaiter.WaitForAnimation(animation));
 
             //play sound
             Game1.AudioManager.PlaySound(Content.Audio.Sounds._20_Slash_02);
@@ -147,18 +169,9 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             //Log.Debug($"ExecuteDash: Finished waiting");
 
             //Log.Debug($"ExecuteDash: Waiting for _isAttacking to be false");
-            while (!_isAnimationFinished)
-            {
+            while (_animator.IsAnimationActive(animation) && _animator.AnimationState == SpriteAnimator.State.Running)
                 yield return null;
-            }
             //Log.Debug("ExecuteDash finished");
-
-            _executionCoroutine = null;
-
-            _target.SetEnabled(false);
-            _hitbox.SetEnabled(false);
-            _hitboxEntity.Destroy();
-            _hitboxEntity = null;
 
             HandleExecutionFinished();
         }
@@ -177,25 +190,6 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             }
 
             _target.SetLocalOffset(newFinalPos - Entity.Position);
-        }
-
-        public override void Abort()
-        {
-            base.Abort();
-
-            _executionCoroutine?.Stop();
-            _executionCoroutine = null;
-
-            _target.SetEnabled(false);
-            _hitbox.SetEnabled(false);
-            _hitboxEntity?.Destroy();
-            _hitboxEntity = null;
-        }
-
-        void OnAnimationFinished(string animationName)
-        {
-            _animator.SetSprite(_animator.CurrentAnimation.Sprites.Last());
-            _isAnimationFinished = true;
         }
     }
 }

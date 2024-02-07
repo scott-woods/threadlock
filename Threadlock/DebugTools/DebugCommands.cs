@@ -20,6 +20,12 @@ namespace Threadlock.DebugTools
                 Player.Instance.Collider.SetEnabled(!Player.Instance.Collider.Enabled);
             }
         }
+
+        [Command("tgm", "Makes actions cost no AP")]
+        static void ToggleFreeActions()
+        {
+            DebugSettings.FreeActions = !DebugSettings.FreeActions;
+        }
     }
 }
 #endif

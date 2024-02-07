@@ -30,51 +30,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
         ICoroutine _executionCoroutine;
         ICoroutine _tweenCoroutine;
 
-        public override void Prepare()
-        {
-            base.Prepare();
-
-            _simPlayer = Entity.Scene.AddEntity(new SimPlayer());
-        }
-
-        public override void Execute()
-        {
-            base.Execute();
-
-            _simPlayer?.Destroy();
-
-            _executionCoroutine = Game1.StartCoroutine(ExecutionCoroutine());
-        }
-
-        IEnumerator ExecutionCoroutine()
-        {
-            //fade player out
-            var animator = Player.Instance.GetComponent<SpriteAnimator>();
-            animator.SetColor(Color.White);
-            var tween = animator.TweenColorTo(Color.Transparent, .15f);
-            tween.SetEaseType(EaseType.QuintIn);
-            tween.Start();
-            _tweenCoroutine = Game1.StartCoroutine(tween.WaitForCompletion());
-            yield return _tweenCoroutine;
-            _tweenCoroutine = null;
-
-            //play sound
-            Game1.AudioManager.PlaySound(Content.Audio.Sounds.Player_teleport);
-
-            //move entity to target position
-            Entity.Position = _targetPosition;
-
-            //fade in
-            tween = animator.TweenColorTo(Color.White, .1f);
-            tween.Start();
-            _tweenCoroutine = Game1.StartCoroutine(tween.WaitForCompletion());
-            yield return _tweenCoroutine;
-            _tweenCoroutine = null;
-
-            _executionCoroutine = null;
-
-            HandleExecutionFinished();
-        }
+        #region LIFECYCLE
 
         public override void Update()
         {
@@ -120,15 +76,76 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             }
         }
 
+        #endregion
+
+        #region PLAYER ACTION OVERRIDES
+
+        public override void Prepare()
+        {
+            base.Prepare();
+
+            _simPlayer = Entity.Scene.AddEntity(new SimPlayer());
+        }
+
+        public override void Execute()
+        {
+            base.Execute();
+
+            _simPlayer?.Destroy();
+
+            _executionCoroutine = Game1.StartCoroutine(ExecutionCoroutine());
+        }
+
         public override void Abort()
         {
             base.Abort();
 
+            Reset();
+        }
+
+        public override void Reset()
+        {
             _executionCoroutine?.Stop();
             _executionCoroutine = null;
 
             _simPlayer?.Destroy();
         }
+
+        #endregion
+
+        #region COROUTINES
+
+        IEnumerator ExecutionCoroutine()
+        {
+            //fade player out
+            var animator = Player.Instance.GetComponent<SpriteAnimator>();
+            animator.SetColor(Color.White);
+            var tween = animator.TweenColorTo(Color.Transparent, .15f);
+            tween.SetEaseType(EaseType.QuintIn);
+            tween.Start();
+            _tweenCoroutine = Game1.StartCoroutine(tween.WaitForCompletion());
+            yield return _tweenCoroutine;
+            _tweenCoroutine = null;
+
+            //play sound
+            Game1.AudioManager.PlaySound(Content.Audio.Sounds.Player_teleport);
+
+            //move entity to target position
+            Entity.Position = _targetPosition;
+
+            //fade in
+            tween = animator.TweenColorTo(Color.White, .1f);
+            tween.Start();
+            _tweenCoroutine = Game1.StartCoroutine(tween.WaitForCompletion());
+            yield return _tweenCoroutine;
+            _tweenCoroutine = null;
+
+            _executionCoroutine = null;
+
+            HandleExecutionFinished();
+        }
+
+        #endregion        
 
         Vector2 GetDesiredPosition()
         {
