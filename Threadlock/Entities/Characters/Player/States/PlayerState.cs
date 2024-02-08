@@ -17,6 +17,7 @@ namespace Threadlock.Entities.Characters.Player.States
     {
         protected StatusComponent _statusComponent;
         protected ApComponent _apComponent;
+        protected ActionManager _actionManager;
 
         public override void OnInitialized()
         {
@@ -27,6 +28,9 @@ namespace Threadlock.Entities.Characters.Player.States
 
             if (_context.TryGetComponent<ApComponent>(out var apComponent))
                 _apComponent = apComponent;
+
+            if (_context.TryGetComponent<ActionManager>(out var actionManager))
+                _actionManager = actionManager;
         }
 
         public override void Update(float deltaTime)
@@ -81,32 +85,13 @@ namespace Threadlock.Entities.Characters.Player.States
 
         public bool TryAction()
         {
-            if (Player.Instance.OffensiveAction1 != null && Controls.Instance.Action1.IsPressed && CanAffordAction(Player.Instance.OffensiveAction1))
+            if (_actionManager.CanPerformAction())
             {
-                var prepState = _machine.GetState<PreparingActionState>();
-                prepState.SetCurrentButton(Controls.Instance.Action1);
-                prepState.SetCurrentAction(Player.Instance.OffensiveAction1);
-                _machine.ChangeState<PreparingActionState>();
-                return true;
-            }
-            else if (Player.Instance.SupportAction != null && Controls.Instance.SupportAction.IsPressed && CanAffordAction(Player.Instance.SupportAction))
-            {
-                var prepState = _machine.GetState<PreparingActionState>();
-                prepState.SetCurrentButton(Controls.Instance.SupportAction);
-                prepState.SetCurrentAction(Player.Instance.SupportAction);
-                _machine.ChangeState<PreparingActionState>();
+                _machine.ChangeState<ActionState>();
                 return true;
             }
 
             return false;
-        }
-
-        bool CanAffordAction(PlayerAction action)
-        {
-            if (DebugSettings.FreeActions)
-                return true;
-            var cost = PlayerActionUtils.GetApCost(action.GetType());
-            return cost <= _apComponent.ActionPoints;
         }
 
         public bool TryDash()

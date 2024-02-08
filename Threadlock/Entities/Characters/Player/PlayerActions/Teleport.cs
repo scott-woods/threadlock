@@ -27,96 +27,30 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
         Vector2 _targetPosition;
 
         //coroutines
-        ICoroutine _executionCoroutine;
         ICoroutine _tweenCoroutine;
-
-        #region LIFECYCLE
-
-        public override void Update()
-        {
-            base.Update();
-
-            if (State == PlayerActionState.Preparing)
-            {
-                //get desired position
-                var desiredPos = GetDesiredPosition();
-
-                //first, distance to mouse must be within radius
-                var dist = Vector2.Distance(desiredPos, Entity.Position);
-                if (dist >= _maxRadius)
-                {
-                    var dir = desiredPos - Entity.Position;
-                    dir.Normalize();
-                    desiredPos = Entity.Position + (dir * _maxRadius);
-                }
-
-                _simPlayer.Position = desiredPos;
-
-                ////get relative position by origin if possible
-                //var relativePosition = desiredPos;
-                //if (TryGetComponent<OriginComponent>(out var originComponent))
-                //{
-                //    var diff = Position - originComponent.Origin;
-                //    relativePosition -= diff;
-                //}
-
-                ////next, check that we are in a combat area
-                //if (CombatArea.IsPointInCombatArea(relativePosition))
-                //{
-                //    //set position
-                //    Position = desiredPos;
-                //}
-
-                //if left click at any point, continue using last valid position
-                if (Controls.Instance.Confirm.IsPressed)
-                {
-                    _targetPosition = _simPlayer.Position;
-                    HandlePreparationFinished();
-                }
-            }
-        }
-
-        #endregion
 
         #region PLAYER ACTION OVERRIDES
 
-        public override void Prepare()
+        public override IEnumerator PreparationCoroutine()
         {
-            base.Prepare();
-
+            //create sim player
             _simPlayer = Entity.Scene.AddEntity(new SimPlayer());
+
+            UpdateSimPlayerPosition();
+
+            while (!Controls.Instance.Confirm.IsPressed)
+            {
+                UpdateSimPlayerPosition();
+                yield return null;
+            }
+
+            _targetPosition = _simPlayer.Position;
         }
 
-        public override void Execute()
+        public override IEnumerator ExecutionCoroutine()
         {
-            base.Execute();
-
             _simPlayer?.Destroy();
 
-            _executionCoroutine = Game1.StartCoroutine(ExecutionCoroutine());
-        }
-
-        public override void Abort()
-        {
-            base.Abort();
-
-            Reset();
-        }
-
-        public override void Reset()
-        {
-            _executionCoroutine?.Stop();
-            _executionCoroutine = null;
-
-            _simPlayer?.Destroy();
-        }
-
-        #endregion
-
-        #region COROUTINES
-
-        IEnumerator ExecutionCoroutine()
-        {
             //fade player out
             var animator = Player.Instance.GetComponent<SpriteAnimator>();
             animator.SetColor(Color.White);
@@ -139,13 +73,24 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             _tweenCoroutine = Game1.StartCoroutine(tween.WaitForCompletion());
             yield return _tweenCoroutine;
             _tweenCoroutine = null;
-
-            _executionCoroutine = null;
-
-            HandleExecutionFinished();
         }
 
-        #endregion        
+        public override void Reset()
+        {
+            base.Reset();
+
+            _tweenCoroutine?.Stop();
+            _tweenCoroutine = null;
+
+            _targetPosition = Vector2.Zero;
+
+            var animator = Player.Instance.GetComponent<SpriteAnimator>();
+            animator.SetColor(Color.White);
+
+            _simPlayer?.Destroy();
+        }
+
+        #endregion      
 
         Vector2 GetDesiredPosition()
         {
@@ -165,6 +110,23 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             //}
 
             return Entity.Scene.Camera.MouseToWorldPoint();
+        }
+
+        void UpdateSimPlayerPosition()
+        {
+            //get desired position
+            var desiredPos = GetDesiredPosition();
+
+            //first, distance to mouse must be within radius
+            var dist = Vector2.Distance(desiredPos, Entity.Position);
+            if (dist >= _maxRadius)
+            {
+                var dir = desiredPos - Entity.Position;
+                dir.Normalize();
+                desiredPos = Entity.Position + (dir * _maxRadius);
+            }
+
+            _simPlayer.Position = desiredPos;
         }
     }
 }

@@ -58,73 +58,27 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             _animationWaiter = new AnimationWaiter(_animator);
         }
 
-        public override void OnDisabled()
-        {
-            base.OnDisabled();
-
-            _target.SetEnabled(false);
-            _hitbox.SetEnabled(false);
-        }
-
-        public override void Update()
-        {
-            base.Update();
-
-            if (State == PlayerActionState.Preparing)
-            {
-                if (Controls.Instance.Confirm.IsPressed)
-                {
-                    HandlePreparationFinished();
-                    return;
-                }
-
-                HandleDirection();
-            }
-        }
-
         #endregion
 
         #region PLAYER ACTION
 
-        public override void Prepare()
+        public override IEnumerator PreparationCoroutine()
         {
-            base.Prepare();
-
             //handle direction once before enabling
             HandleDirection();
 
             _target.SetEnabled(true);
-        }
 
-        public override void Execute()
-        {
-            base.Execute();
-
-            //start coroutine
-            _executionCoroutine = Game1.StartCoroutine(ExecuteCoroutine());
-        }
-
-        public override void Abort()
-        {
-            base.Abort();
-
-            Reset();
-        }
-
-        public override void Reset()
-        {
-            _executionCoroutine?.Stop();
-            _executionCoroutine = null;
+            while (!Controls.Instance.Confirm.IsPressed)
+            {
+                HandleDirection();
+                yield return null;
+            }
 
             _target.SetEnabled(false);
-            _hitbox.SetEnabled(false);
-            _hitboxEntity?.Destroy();
-            _hitboxEntity = null;
         }
 
-        #endregion
-
-        IEnumerator ExecuteCoroutine()
+        public override IEnumerator ExecutionCoroutine()
         {
             //get animation by angle
             var angle = MathHelper.ToDegrees(Mathf.AngleBetweenVectors(Entity.Position, Entity.Position + _target.LocalOffset));
@@ -172,9 +126,22 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             while (_animator.IsAnimationActive(animation) && _animator.AnimationState == SpriteAnimator.State.Running)
                 yield return null;
             //Log.Debug("ExecuteDash finished");
-
-            HandleExecutionFinished();
         }
+
+        public override void Reset()
+        {
+            base.Reset();
+
+            _executionCoroutine?.Stop();
+            _executionCoroutine = null;
+
+            _target.SetEnabled(false);
+            _hitbox.SetEnabled(false);
+            _hitboxEntity?.Destroy();
+            _hitboxEntity = null;
+        }
+
+        #endregion
 
         void HandleDirection()
         {

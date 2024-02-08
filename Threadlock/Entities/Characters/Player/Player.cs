@@ -45,6 +45,7 @@ namespace Threadlock.Entities.Characters.Player
         DeathComponent _deathComponent;
         OriginComponent _originComponent;
         ApComponent _apComponent;
+        ActionManager _actionManager;
 
         //actions
         public PlayerAction OffensiveAction1;
@@ -101,6 +102,17 @@ namespace Threadlock.Entities.Characters.Player
             //actions
             OffensiveAction1 = AddComponent(Activator.CreateInstance(PlayerData.Instance.OffensiveAction1.ToType()) as PlayerAction);
             SupportAction = AddComponent(Activator.CreateInstance(PlayerData.Instance.SupportAction.ToType()) as PlayerAction);
+            _actionManager = AddComponent(new ActionManager(new Dictionary<VirtualButton, PlayerAction>()
+            {
+                {
+                    Controls.Instance.Action1,
+                    OffensiveAction1
+                },
+                {
+                    Controls.Instance.SupportAction,
+                    SupportAction
+                }
+            }));
 
             //add animations
             AddAnimations();
@@ -109,8 +121,7 @@ namespace Threadlock.Entities.Characters.Player
             StateMachine = new StateMachine<Player>(this, new Idle());
             StateMachine.AddState(new Move());
             StateMachine.AddState(new BasicAttackState());
-            StateMachine.AddState(new PreparingActionState());
-            StateMachine.AddState(new ExecutingActionState());
+            StateMachine.AddState(new ActionState());
             StateMachine.AddState(new DashState());
             StateMachine.AddState(new StunnedState());
         }

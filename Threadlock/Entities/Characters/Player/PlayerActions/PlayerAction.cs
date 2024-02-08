@@ -13,15 +13,29 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
     public abstract class PlayerAction : Component, IUpdatable
     {
         public PlayerActionState State = PlayerActionState.None;
-        public event Action OnPreparationFinished;
-        public event Action OnExecutionFinished;
 
-        public virtual void Prepare()
+        ICoroutine _prepareCoroutine;
+        ICoroutine _executeCoroutine;
+
+        #region LIFECYCLE
+
+        public virtual void Update()
         {
-            State = PlayerActionState.Preparing;
+
         }
 
-        public virtual void Execute()
+        #endregion
+
+        public IEnumerator Prepare()
+        {
+            State = PlayerActionState.Preparing;
+            _prepareCoroutine = Game1.StartCoroutine(PreparationCoroutine());
+            yield return _prepareCoroutine;
+            _prepareCoroutine = null;
+            State = PlayerActionState.None;
+        }
+
+        public IEnumerator Execute()
         {
             //update state
             State = PlayerActionState.Executing;
@@ -35,35 +49,29 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
                     apComponent.ActionPoints -= cost;
                 }
             }
-        }
 
-        public virtual void Update()
-        {
+            _executeCoroutine = Game1.StartCoroutine(ExecutionCoroutine());
+            yield return _executeCoroutine;
+            _executeCoroutine = null;
 
-        }
-
-        public virtual void Abort()
-        {
             State = PlayerActionState.None;
         }
 
-        public virtual void HandlePreparationFinished()
-        {
-            State = PlayerActionState.None;
-            OnPreparationFinished?.Invoke();
-        }
+        public abstract IEnumerator ExecutionCoroutine();
 
-        public virtual void HandleExecutionFinished()
-        {
-            State = PlayerActionState.None;
-            Reset();
-            OnExecutionFinished?.Invoke();
-        }
+        public abstract IEnumerator PreparationCoroutine();
 
         /// <summary>
-        /// called after successful execution
+        /// called when the action ends, successfully or not. do any cleanup here
         /// </summary>
-        public abstract void Reset();
+        public virtual void Reset()
+        {
+            _prepareCoroutine?.Stop();
+            _prepareCoroutine = null;
+
+            _executeCoroutine?.Stop();
+            _executeCoroutine = null;
+        }
     }
 
     public enum PlayerActionState
