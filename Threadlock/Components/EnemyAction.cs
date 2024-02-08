@@ -84,6 +84,8 @@ namespace Threadlock.Components
             _executionCoroutine = null;
             _startExecutionCoroutine?.Stop();
             _startExecutionCoroutine = null;
+
+            Reset();
         }
 
         /// <summary>

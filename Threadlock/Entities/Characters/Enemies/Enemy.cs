@@ -96,20 +96,32 @@ namespace Threadlock.Entities.Characters.Enemies
         public virtual BehaviorTree<T> CreateBehaviorTree()
         {
             var tree = BehaviorTreeBuilder<T>.Begin(this as T)
-                .Selector(AbortTypes.Self)
-                    .ConditionalDecorator(c => c.ShouldAbort(), true)
+                .Selector()
+                    .Sequence(AbortTypes.LowerPriority)
+                        .Conditional(c => c.ShouldAbort())
                         .Action(c => c.AbortActions())
-                    //.ConditionalDecorator(c =>
-                    //{
-                    //    var gameStateManager = Game1.GameStateManager;
-                    //    return gameStateManager.GameState != GameState.Combat;
-                    //}, true)
-                    //    .Sequence()
-                    //        .Action(c => c.AbortActions())
-                    //        .Action(c => c.Idle())
-                    //    .EndComposite()
-                    .ConditionalDecorator(c => c.ShouldRunSubTree(), true)
+                    .EndComposite()
+                    .Sequence(AbortTypes.LowerPriority)
+                        .Conditional(c => c.ShouldRunSubTree())
                         .SubTree(_subTree)
+                    .EndComposite()
+                    .Sequence(AbortTypes.LowerPriority)
+                        .Action(c => c.Idle())
+                    .EndComposite()
+                    //.ConditionalDecorator(c => c.ShouldAbort(), true)
+                    //    .Action(c => c.AbortActions())
+                    ////.ConditionalDecorator(c =>
+                    ////{
+                    ////    var gameStateManager = Game1.GameStateManager;
+                    ////    return gameStateManager.GameState != GameState.Combat;
+                    ////}, true)
+                    ////    .Sequence()
+                    ////        .Action(c => c.AbortActions())
+                    ////        .Action(c => c.Idle())
+                    ////    .EndComposite()
+                    //.ConditionalDecorator(c => c.ShouldRunSubTree(), true)
+                    //    .SubTree(_subTree)
+
                 .EndComposite()
                 .Build();
 

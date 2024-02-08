@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Threadlock.Components;
 using Nez.Sprites;
 using Microsoft.Xna.Framework;
+using Threadlock.Helpers;
 
 namespace Threadlock.Entities.Characters.Enemies.OrbMage
 {
@@ -17,15 +18,28 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
         //constants
         const int _showVfxFrame = 6;
 
-        //coroutines
-        CoroutineManager _coroutineManager = new CoroutineManager();
-        ICoroutine _orbMageAttackExecutionCoroutine;
-
         //entities
         OrbMageAttackVfx _attackVfx;
 
+        //components
+        SpriteAnimator _animator;
+
+        //misc
+        AnimationWaiter _animationWaiter;
+
         public OrbMageAttack(OrbMage enemy) : base(enemy)
         {
+        }
+
+        public override void OnAddedToEntity()
+        {
+            base.OnAddedToEntity();
+
+            if (Entity.TryGetComponent<SpriteAnimator>(out var animator))
+            {
+                _animator = animator;
+                _animationWaiter = new AnimationWaiter(animator);
+            }
         }
 
         protected override IEnumerator ExecutionCoroutine()
@@ -38,16 +52,13 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
             targetPos += new Vector2(0, -17);
             _attackVfx.SetPosition(targetPos);
 
-            if (_enemy.TryGetComponent<SpriteAnimator>(out var animator))
-            {
-                //play attack animation
-                animator.Play("Attack", Nez.Sprites.SpriteAnimator.LoopMode.Once);
-                animator.OnAnimationCompletedEvent += OnAnimationCompleted;
+            //play animation
+            if (_animationWaiter != null)
+                Game1.StartCoroutine(_animationWaiter.WaitForAnimation("Attack"));
 
-                //wait until show vfx frame
-                while (animator.CurrentFrame < _showVfxFrame)
-                    yield return null;
-            }
+            //wait for vfx frame
+            while (_animator.IsAnimationActive("Attack") && _animator.CurrentFrame < _showVfxFrame)
+                yield return null;
 
             //wait for vfx to finish
             yield return _attackVfx.Play();
@@ -55,20 +66,7 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
 
         protected override void Reset()
         {
-            _orbMageAttackExecutionCoroutine?.Stop();
-            _orbMageAttackExecutionCoroutine = null;
-
-            if (_enemy.TryGetComponent<SpriteAnimator>(out var animator))
-                animator.OnAnimationCompletedEvent -= OnAnimationCompleted;
-        }
-
-        void OnAnimationCompleted(string animationName)
-        {
-            if (_enemy.TryGetComponent<SpriteAnimator>(out var animator))
-            {
-                animator.OnAnimationCompletedEvent -= OnAnimationCompleted;
-                animator.SetSprite(animator.CurrentAnimation.Sprites.Last());
-            }
+            _animationWaiter?.Cancel();
         }
     }
 }

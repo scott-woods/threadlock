@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Threadlock.DebugTools;
 using Threadlock.SceneComponents;
 using Threadlock.StaticData;
 
@@ -13,9 +14,6 @@ namespace Threadlock.Components
 {
     public class Pathfinder : Component
     {
-        //settings
-        bool _debugMode = false;
-
         //consts
         List<Vector2> _directions = new List<Vector2>()
         {
@@ -79,11 +77,11 @@ namespace Threadlock.Components
             }
 
             //debug points
-            if (_debugMode)
+            foreach (var point in _debugPoints)
+                point.Destroy();
+            _debugPoints.Clear();
+            if (Game1.DebugRenderEnabled)
             {
-                foreach (var point in _debugPoints)
-                    point.Destroy();
-                _debugPoints.Clear();
                 foreach (var point in _path)
                 {
                     var ent = Entity.Scene.CreateEntity("path-point");

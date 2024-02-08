@@ -131,6 +131,11 @@ namespace Nez
 					public const string Transitiontocharge = @"Content\Textures\Characters\ChainBot\transition to charge.png";
 				}
 
+				public static class Ghoul
+				{
+					public const string Ghoul_sprites = @"Content\Textures\Characters\Ghoul\ghoul_sprites.png";
+				}
+
 				public static class OrbMage
 				{
 					public const string Attack = @"Content\Textures\Characters\OrbMage\attack .png";
@@ -151,6 +156,12 @@ namespace Nez
 					public const string Player_gun_projectile = @"Content\Textures\Characters\Player\player_gun_projectile.png";
 					public const string Sci_fi_player_no_sword = @"Content\Textures\Characters\Player\sci_fi_player_no_sword.png";
 					public const string Sci_fi_player_with_sword = @"Content\Textures\Characters\Player\sci_fi_player_with_sword.png";
+				}
+
+				public static class Spitter
+				{
+					public const string Spitter_projectile = @"Content\Textures\Characters\Spitter\spitter_projectile.png";
+					public const string Spitter_sheet = @"Content\Textures\Characters\Spitter\spitter_sheet.png";
 				}
 
 			}

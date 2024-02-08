@@ -26,9 +26,6 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
         SpriteAnimator _animator;
         BoxHitbox _hitbox;
 
-        //misc
-        bool _hasPlayedSound = false;
-
         public override void OnAddedToScene()
         {
             base.OnAddedToScene();
@@ -51,44 +48,43 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
 
         public IEnumerator Play()
         {
-            //sound
-            Game1.AudioManager.PlaySound(Nez.Content.Audio.Sounds.Orb_mage_telegraph);
-
             //enable animator
             _animator.SetEnabled(true);
 
             var animationWaiter = new AnimationWaiter(_animator);
 
             //telegraph
+            Game1.AudioManager.PlaySound(Nez.Content.Audio.Sounds.Orb_mage_telegraph);
             yield return animationWaiter.WaitForAnimation("Telegraph");
 
             //delay
             yield return Coroutine.WaitForSeconds(_delay);
 
             //strike animation
-            yield return animationWaiter.WaitForAnimation("Attack");
+            Game1.StartCoroutine(animationWaiter.WaitForAnimation("Attack"));
+            bool hasPlayedSound = false;
+            while (_animator.IsAnimationActive("Attack") && _animator.AnimationState == SpriteAnimator.State.Running)
+            {
+                if (_animator.CurrentFrame == _hitboxActiveFrame)
+                {
+                    //play sound if haven't yet
+                    if (!hasPlayedSound)
+                    {
+                        hasPlayedSound = true;
+                        Game1.AudioManager.PlaySound(Nez.Content.Audio.Sounds.Orb_mage_attack);
+                    }
+                    _hitbox.SetEnabled(true);
+                }
+                else
+                    _hitbox.SetEnabled(false);
+
+                yield return null;
+            }
 
             //cleanup
             _animator.SetEnabled(false);
             _hitbox.SetEnabled(false);
             Destroy();
-        }
-
-        public override void Update()
-        {
-            base.Update();
-
-            if (_animator.IsAnimationActive("Attack") && _animator.CurrentFrame == _hitboxActiveFrame)
-            {
-                _hitbox.SetEnabled(true);
-                if (!_hasPlayedSound)
-                {
-                    Game1.AudioManager.PlaySound(Nez.Content.Audio.Sounds.Orb_mage_attack);
-                    _hasPlayedSound = true;
-                }
-            }
-            else
-                _hitbox.SetEnabled(false);
         }
     }
 }
