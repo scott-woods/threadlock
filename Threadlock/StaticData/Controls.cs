@@ -27,7 +27,6 @@ namespace Threadlock.StaticData
         public Buttons UIActionButton = Buttons.A;
 
         public VirtualButton Confirm = new VirtualButton(
-            new VirtualButton.KeyboardKey(Keys.E),
             new VirtualButton.GamePadButton(0, Buttons.A),
             new VirtualButton.MouseLeftButton()
             );
@@ -69,6 +68,10 @@ namespace Threadlock.StaticData
 
         public VirtualButton Action1 = new VirtualButton(
             new VirtualButton.KeyboardKey(Keys.Q)
+            );
+
+        public VirtualButton Action2 = new VirtualButton(
+            new VirtualButton.KeyboardKey(Keys.E)
             );
 
         public VirtualButton SupportAction = new VirtualButton(

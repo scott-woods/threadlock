@@ -101,12 +101,17 @@ namespace Threadlock.Entities.Characters.Player
 
             //actions
             OffensiveAction1 = AddComponent(Activator.CreateInstance(PlayerData.Instance.OffensiveAction1.ToType()) as PlayerAction);
+            OffensiveAction2 = AddComponent(Activator.CreateInstance(PlayerData.Instance.OffensiveAction2.ToType()) as PlayerAction);
             SupportAction = AddComponent(Activator.CreateInstance(PlayerData.Instance.SupportAction.ToType()) as PlayerAction);
             _actionManager = AddComponent(new ActionManager(new Dictionary<VirtualButton, PlayerAction>()
             {
                 {
                     Controls.Instance.Action1,
                     OffensiveAction1
+                },
+                {
+                    Controls.Instance.Action2,
+                    OffensiveAction2
                 },
                 {
                     Controls.Instance.SupportAction,

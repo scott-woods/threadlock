@@ -116,7 +116,7 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
 
             var deathTexture = Scene.Content.LoadTexture(Nez.Content.Textures.Characters.OrbMage.Death);
             var deathSprites = Sprite.SpritesFromAtlas(deathTexture, 119, 34);
-            _animator.AddAnimation("Death", deathSprites.ToArray());
+            _animator.AddAnimation("Die", deathSprites.ToArray());
         }
 
         #endregion

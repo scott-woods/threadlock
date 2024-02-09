@@ -166,6 +166,18 @@ namespace Nez
 
 			}
 
+			public static class Effects
+			{
+				public const string Electric_hit_1 = @"Content\Textures\Effects\electric_hit_1.png";
+				public const string Electric_hit_2 = @"Content\Textures\Effects\electric_hit_2.png";
+				public const string Hit1 = @"Content\Textures\Effects\hit 1.png";
+				public const string Hit2 = @"Content\Textures\Effects\hit 2.png";
+				public const string Hit3 = @"Content\Textures\Effects\hit 3.png";
+				public const string Hit4 = @"Content\Textures\Effects\hit 4.png";
+				public const string Shadow = @"Content\Textures\Effects\shadow.png";
+				public const string Spritelight = @"Content\Textures\Effects\sprite-light.png";
+			}
+
 			public static class Tilesets
 			{
 				public const string Dungeon_prison_props = @"Content\Textures\Tilesets\dungeon_prison_props.png";

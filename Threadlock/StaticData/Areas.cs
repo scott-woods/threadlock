@@ -17,7 +17,7 @@ namespace Threadlock.StaticData
         private static readonly Lazy<DungeonArea> _forge = new Lazy<DungeonArea>(() => new DungeonArea
         {
             Name = "Forge",
-            EnemyTypes = new List<Type> { typeof(Spitter), typeof(Spitter) }
+            EnemyTypes = new List<Type> { typeof(ChainBot), typeof(Spitter), typeof(Ghoul), typeof(OrbMage) }
         });
         public static DungeonArea Forge => _forge.Value;
 

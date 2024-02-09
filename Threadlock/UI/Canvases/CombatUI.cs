@@ -88,6 +88,19 @@ namespace Threadlock.UI.Canvases
                 var label = new Label("Q", _skin, "abaddon_24");
                 table.Add(label);
             }
+            if (Player.Instance.OffensiveAction2 != null)
+            {
+                var table = new Table();
+                _iconsTable.Add(table);
+                var icon = new ActionIcon(_skin, PlayerActionUtils.GetIconName(Player.Instance.OffensiveAction2.GetType()), PlayerActionUtils.GetApCost(Player.Instance.OffensiveAction2.GetType()));
+                table.Add(icon);
+                _actionIcons.Add(icon);
+
+                table.Row();
+
+                var label = new Label("E", _skin, "abaddon_24");
+                table.Add(label);
+            }
             if (Player.Instance.SupportAction != null)
             {
                 var table = new Table();
