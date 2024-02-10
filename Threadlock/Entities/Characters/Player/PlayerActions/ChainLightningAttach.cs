@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Threadlock.Components;
 using Threadlock.Components.Hitboxes;
 using Threadlock.Entities.Characters.Enemies;
 using Threadlock.StaticData;
@@ -38,12 +39,10 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             _hitEntities = hitEntities;
 
             //set position
-            if (entityToHit.TryGetComponent<BoxHitbox>(out var boxHitbox))
-                Position = boxHitbox.Bounds.Center;
-            else if (entityToHit.TryGetComponent<CircleHitbox>(out var circleHitbox))
-                Position = circleHitbox.Bounds.Center;
-            else if (entityToHit.TryGetComponent<PolygonHitbox>(out var polygonHitbox))
-                Position = polygonHitbox.Bounds.Center;
+            if (entityToHit.TryGetComponent<OriginComponent>(out var origin))
+                Position = origin.Origin;
+            else if (entityToHit.TryGetComponent<Hurtbox>(out var hurtbox))
+                Position = hurtbox.Collider.AbsolutePosition;
             else
                 Position = entityToHit.Position;
         }
@@ -59,6 +58,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             var sprites = Sprite.SpritesFromAtlas(texture, 82, 65);
             _animator.AddAnimation("Hit", sprites.ToArray(), 13);
             _animator.OnAnimationCompletedEvent += OnAnimationCompleted;
+            _animator.SetEnabled(false);
 
             _hitbox = AddComponent(new CircleHitbox(_baseDamage + _chainCount * _damageAddedPerChain, 1));
             Flags.SetFlagExclusive(ref _hitbox.PhysicsLayer, (int)PhysicsLayers.PlayerHitbox);
@@ -75,6 +75,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             if (_chainCount > 0)
             {
                 //play animation
+                _animator.SetEnabled(true);
                 _animator.Play("Hit", SpriteAnimator.LoopMode.Once);
 
                 //enable hitbox
@@ -88,7 +89,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             var allEnemies = Scene.EntitiesOfType<BaseEnemy>();
             if (allEnemies.Count > 0)
             {
-                var unhitEnemies = allEnemies.Where(e => !_hitEntities.Contains(e));
+                var unhitEnemies = allEnemies.Where(e => !_hitEntities.Contains(e)).ToList();
 
                 List<Entity> entitiesToHit = new List<Entity>();
                 foreach (var unhitEnemy in unhitEnemies)

@@ -8,7 +8,7 @@ namespace Threadlock.StaticData
 {
     public static class RenderLayers
     {
-        public const int DefaultMapLayer = 1;
+        public const int Back = 1;
         public const int Front = -10;
         public const int ScreenSpaceRenderLayer = -10000;
         public const int Cursor = -20000;

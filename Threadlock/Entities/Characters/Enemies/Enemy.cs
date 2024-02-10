@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
+using Threadlock.DebugTools;
 using Threadlock.StaticData;
 using TaskStatus = Nez.AI.BehaviorTrees.TaskStatus;
 
@@ -88,6 +89,9 @@ namespace Threadlock.Entities.Characters.Enemies
             //if (gameStateManager.GameState != GameState.Combat) return false;
             //if (c.StatusComponent.CurrentStatus.Type != Status.StatusType.Normal) return false;
             //return true;
+
+            if (!DebugSettings.EnemyAIEnabled)
+                return false;
 
             if (_statusComponent.CurrentStatusPriority != StatusPriority.Normal) return false;
             return true;

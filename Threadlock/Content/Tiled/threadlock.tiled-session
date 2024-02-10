@@ -171,8 +171,8 @@
             "scale": 1,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 214.5,
-                "y": 190
+                "x": 255.5,
+                "y": 286
             }
         },
         "Tilemaps/Forge/forge_test.tmx": {

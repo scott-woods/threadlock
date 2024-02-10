@@ -9,5 +9,7 @@ namespace Threadlock.DebugTools
     public class DebugSettings
     {
         public static bool FreeActions { get; set; } = false;
+        public static bool PlayerHurtboxEnabled { get; set; } = true;
+        public static bool EnemyAIEnabled { get; set; } = true;
     }
 }

@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components.Hitboxes;
+using Threadlock.DebugTools;
+using Threadlock.Entities.Characters.Player;
 using Threadlock.Models;
 
 namespace Threadlock.Components
@@ -19,6 +21,7 @@ namespace Threadlock.Components
         const float _attackLifespan = 2f;
 
         Collider _collider;
+        public Collider Collider { get => _collider; }
 
         float _recoveryTime;
         string _damageSound;
@@ -57,6 +60,9 @@ namespace Threadlock.Components
 
         public void Update()
         {
+            if (Entity.GetType() == typeof(Player) && !DebugSettings.PlayerHurtboxEnabled)
+                return;
+
             var hitboxes = Physics.BoxcastBroadphaseExcludingSelf(_collider, _collider.CollidesWithLayers).ToList();
             for (int i = 0; i < hitboxes.Count; i++)
             {

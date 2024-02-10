@@ -21,10 +21,17 @@ namespace Threadlock.DebugTools
             }
         }
 
-        [Command("tgm", "Makes actions cost no AP")]
-        static void ToggleFreeActions()
+        [Command("tgm", "Toggle god mode (free actions, don't take damage)")]
+        static void ToggleGodMode()
         {
             DebugSettings.FreeActions = !DebugSettings.FreeActions;
+            DebugSettings.PlayerHurtboxEnabled = !DebugSettings.PlayerHurtboxEnabled;
+        }
+
+        [Command("tai", "Toggle enemy AI")]
+        static void ToggleEnemyAI()
+        {
+            DebugSettings.EnemyAIEnabled = !DebugSettings.EnemyAIEnabled;
         }
     }
 }

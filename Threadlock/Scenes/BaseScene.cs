@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Threadlock.PostProcessors;
 using Threadlock.Components;
 using Threadlock.Entities;
+using Threadlock.Renderers;
 
 namespace Threadlock.Scenes
 {
@@ -37,7 +38,7 @@ namespace Threadlock.Scenes
             Camera.MaximumZoom = (scale * 2) - 1;
             Camera.Zoom = .5f;
 
-            _gameRenderer = new RenderLayerExcludeRenderer(0, RenderLayers.ScreenSpaceRenderLayer, RenderLayers.Cursor);
+            _gameRenderer = new YSortRenderer(0, RenderLayers.ScreenSpaceRenderLayer, RenderLayers.Cursor);
             var size = Game1.ResolutionManager.DesignResolution;
             var mainRenderTarget = new RenderTexture(size.X, size.Y);
             _gameRenderer.RenderTexture = mainRenderTarget;

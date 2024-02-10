@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Nez;
 using Nez.Sprites;
+using Nez.Textures;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -27,6 +28,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
         //components
         SpriteAnimator _animator;
         CircleHitbox _hitbox;
+        VelocityComponent _velocityComponent;
 
         AnimationWaiter _animationWaiter;
 
@@ -53,6 +55,27 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             {
                 _animator = animator;
                 _animationWaiter = new AnimationWaiter(_animator);
+
+                var texture = Entity.Scene.Content.LoadTexture(Content.Textures.Characters.Player.Sci_fi_player_with_sword);
+                var sprites = Sprite.SpritesFromAtlas(texture, 64, 65);
+                _animator.AddAnimation("ChargeChainLightning", new Sprite[] { sprites[147] });
+                _animator.AddAnimation("ChargeChainLightningUp", new Sprite[] { sprites[209] });
+                _animator.AddAnimation("ChargeChainLightningDown", new Sprite[] { sprites[53] });
+            }
+
+            if (Entity.TryGetComponent<VelocityComponent>(out var velocityComponent))
+                _velocityComponent = velocityComponent;
+        }
+
+        public override void OnRemovedFromEntity()
+        {
+            base.OnRemovedFromEntity();
+
+            if (Entity.TryGetComponent<SpriteAnimator>(out var animator))
+            {
+                animator.Animations.Remove("ChargeChainLightning");
+                animator.Animations.Remove("ChargeChainLightningUp");
+                animator.Animations.Remove("ChargeChainLightningDown");
             }
         }
 
@@ -119,11 +142,11 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             //start chain
             foreach (var ent in hitEntities)
             {
-                if (ent.TryGetComponent<StatusComponent>(out var sc))
-                {
-                    if (sc.CurrentStatusPriority == StatusPriority.Death)
-                        continue;
-                }
+                //if (ent.TryGetComponent<StatusComponent>(out var sc))
+                //{
+                //    if (sc.CurrentStatusPriority == StatusPriority.Death)
+                //        continue;
+                //}
 
                 var attach = Entity.Scene.AddEntity(new ChainLightningAttach(0, ent, ref hitEntities));
             }
@@ -145,6 +168,14 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             _direction = Player.Instance.GetFacingDirection();
 
             _hitbox.SetLocalOffset(_direction * _hitboxDistFromPlayer);
+
+            //animation
+            var animation = $"ChargeChainLightning{DirectionHelper.GetDirectionStringByVector(_direction)}";
+            if (!_animator.IsAnimationActive(animation))
+                _animator.Play(animation);
+
+            //call move with no speed, just so sprite flipper updates properly
+            _velocityComponent.Move(_direction, 0);
         }
     }
 }

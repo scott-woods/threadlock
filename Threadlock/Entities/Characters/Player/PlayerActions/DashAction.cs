@@ -1,12 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using Nez;
 using Nez.Sprites;
+using Nez.Textures;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Threadlock.Components;
 using Threadlock.Components.Hitboxes;
 using Threadlock.Helpers;
 using Threadlock.StaticData;
@@ -22,6 +24,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
 
         //other components
         SpriteAnimator _animator;
+        VelocityComponent _velocityComponent;
 
         //added components
         PrototypeSpriteRenderer _target;
@@ -33,6 +36,8 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
         ICoroutine _executionCoroutine;
 
         AnimationWaiter _animationWaiter;
+
+        Vector2 _direction;
 
         #region LIFECYCLE
 
@@ -53,9 +58,33 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
         {
             base.OnAddedToEntity();
 
-            _animator = Entity.GetComponent<SpriteAnimator>();
+            if (Entity.TryGetComponent<SpriteAnimator>(out var animator))
+            {
+                _animator = animator;
 
-            _animationWaiter = new AnimationWaiter(_animator);
+                _animationWaiter = new AnimationWaiter(_animator);
+
+                var texture = Entity.Scene.Content.LoadTexture(Content.Textures.Characters.Player.Sci_fi_player_with_sword);
+                var sprites = Sprite.SpritesFromAtlas(texture, 64, 65);
+                _animator.AddAnimation("ChargeDash", AnimatedSpriteHelper.GetSpriteArray(sprites, new List<int> { 145 }));
+                _animator.AddAnimation("ChargeDashDown", AnimatedSpriteHelper.GetSpriteArray(sprites, new List<int> { 57 }));
+                _animator.AddAnimation("ChargeDashUp", AnimatedSpriteHelper.GetSpriteArray(sprites, new List<int> { 212 }));
+            }
+
+            if (Entity.TryGetComponent<VelocityComponent>(out var velocityComponent))
+                _velocityComponent = velocityComponent;
+        }
+
+        public override void OnRemovedFromEntity()
+        {
+            base.OnRemovedFromEntity();
+
+            if (Entity.TryGetComponent<SpriteAnimator>(out var animator))
+            {
+                animator.Animations.Remove("ChargeDash");
+                animator.Animations.Remove("ChargeDashDown");
+                animator.Animations.Remove("ChargeDashUp");
+            }
         }
 
         #endregion
@@ -67,6 +96,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             //handle direction once before enabling
             HandleDirection();
 
+            //show target
             _target.SetEnabled(true);
 
             while (!Controls.Instance.Confirm.IsPressed)
@@ -145,8 +175,10 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
 
         void HandleDirection()
         {
+            //get direction player is aiming
             var dir = Player.Instance.GetFacingDirection();
 
+            //validate the target position
             var newFinalPos = Entity.Position;
             var range = _range;
             while (range > 0)
@@ -156,7 +188,19 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
                 break;
             }
 
+            //animation
+            var animation = $"ChargeDash{DirectionHelper.GetDirectionStringByVector(dir)}";
+            if (!_animator.IsAnimationActive(animation))
+                _animator.Play(animation);
+
+            //call move with no speed, just so sprite flipper updates properly
+            _velocityComponent.Move(dir, 0);
+
+            //update the target's position
             _target.SetLocalOffset(newFinalPos - Entity.Position);
+
+            //update direction
+            _direction = dir;
         }
     }
 }

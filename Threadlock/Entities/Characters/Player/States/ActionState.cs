@@ -14,7 +14,7 @@ namespace Threadlock.Entities.Characters.Player.States
     {
         //consts
         const float _slowDuration = 1f;
-        const float _speedUpDuration = .5f;
+        const float _speedUpDuration = .1f;
         const float _slowTimeScale = .25f;
         const float _normalTimeScale = 1f;
 

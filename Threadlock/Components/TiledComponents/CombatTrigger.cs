@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Threadlock.Entities.Characters.Enemies.ChainBot;
 using Threadlock.StaticData;
 
 namespace Threadlock.Components.TiledComponents
@@ -75,7 +76,7 @@ namespace Threadlock.Components.TiledComponents
                                 typesPicked.Add(enemyType);
 
                                 //spawn enemy
-                                spawn.SpawnEnemy(enemyType);
+                                spawn.SpawnEnemy(typeof(ChainBot));
 
                                 //wait a moment before spawning next enemy
                                 yield return Coroutine.WaitForSeconds(.2f);

@@ -120,7 +120,7 @@ namespace Threadlock.Entities.Characters.Enemies.ChainBot
             var idleTexture = Scene.Content.LoadTexture(Content.Textures.Characters.ChainBot.Idle);
             var idleSprites = Sprite.SpritesFromAtlas(idleTexture, 126, 39);
             _animator.AddAnimation("IdleLeft", AnimatedSpriteHelper.GetSpriteArray(idleSprites, new List<int> { 1, 3, 5, 7, 9 }));
-            _animator.AddAnimation("IdleRight", AnimatedSpriteHelper.GetSpriteArray(idleSprites, new List<int> { 0, 2, 4, 6, 8 }));
+            _animator.AddAnimation("Idle", AnimatedSpriteHelper.GetSpriteArray(idleSprites, new List<int> { 0, 2, 4, 6, 8 }));
 
             //Run
             var runTexture = Scene.Content.LoadTexture(Content.Textures.Characters.ChainBot.Run);

@@ -18,6 +18,7 @@ namespace Threadlock.Entities.Characters
         {
             base.OnAddedToScene();
 
+            //create animator, slightly transparent
             _animator = AddComponent(new SpriteAnimator());
             _animator.SetColor(new Microsoft.Xna.Framework.Color(255, 255, 255, 128));
 
