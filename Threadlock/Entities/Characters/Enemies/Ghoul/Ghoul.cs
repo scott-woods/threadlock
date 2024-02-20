@@ -122,7 +122,7 @@ namespace Threadlock.Entities.Characters.Enemies.Ghoul
                             .EndComposite()
                         .EndComposite()
                         .Sequence(AbortTypes.LowerPriority)
-                            .Action(c => c.MoveToTarget(GetTarget(), _speed))
+                            .Action(c => c.MoveToTarget(TargetEntity, _speed))
                         .EndComposite()
                     .EndComposite()
                 .EndComposite()
@@ -137,7 +137,7 @@ namespace Threadlock.Entities.Characters.Enemies.Ghoul
 
         bool IsInAttackRange()
         {
-            var target = GetTarget();
+            var target = TargetEntity;
             var distance = EntityHelper.DirectionToEntity(this, target, false);
             if (Math.Abs(distance.X) <= 16 && Math.Abs(distance.Y) <= 8)
                 return true;

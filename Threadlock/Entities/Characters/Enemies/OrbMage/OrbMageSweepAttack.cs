@@ -43,7 +43,7 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
             while (_animator.CurrentFrame < _pickDirectionFrame)
                 yield return null;
 
-            var dir = EntityHelper.DirectionToEntity(_enemy, _enemy.GetTarget());
+            var dir = EntityHelper.DirectionToEntity(_enemy, _enemy.TargetEntity);
 
             while (_animator.CurrentFrame < _startFrame)
                 yield return null;

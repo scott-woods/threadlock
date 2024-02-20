@@ -33,8 +33,33 @@
         {
             "color": "#ffa0a0a4",
             "drawFill": true,
+            "id": 5,
+            "members": [
+            ],
+            "name": "CombatTrigger",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
             "id": 4,
             "members": [
+                {
+                    "name": "EnemyType",
+                    "type": "string",
+                    "value": ""
+                }
             ],
             "name": "EnemySpawnPoint",
             "type": "class",
@@ -92,26 +117,6 @@
                 }
             ],
             "name": "PlayerSpawnPoint",
-            "type": "class",
-            "useAs": [
-                "property",
-                "map",
-                "layer",
-                "object",
-                "tile",
-                "tileset",
-                "wangcolor",
-                "wangset",
-                "project"
-            ]
-        },
-        {
-            "color": "#ffa0a0a4",
-            "drawFill": true,
-            "id": 5,
-            "members": [
-            ],
-            "name": "CombatTrigger",
             "type": "class",
             "useAs": [
                 "property",

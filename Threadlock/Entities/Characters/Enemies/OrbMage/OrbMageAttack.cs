@@ -46,8 +46,8 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
         {
             //create vfx entity
             _attackVfx = Entity.Scene.AddEntity(new OrbMageAttackVfx());
-            var targetPos = _enemy.GetTarget().Position;
-            if (_enemy.GetTarget().TryGetComponent<OriginComponent>(out var origin))
+            var targetPos = _enemy.TargetEntity.Position;
+            if (_enemy.TargetEntity.TryGetComponent<OriginComponent>(out var origin))
                 targetPos = origin.Origin;
             targetPos += new Vector2(0, -17);
             _attackVfx.SetPosition(targetPos);

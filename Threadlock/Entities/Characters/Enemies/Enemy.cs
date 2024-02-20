@@ -17,11 +17,16 @@ namespace Threadlock.Entities.Characters.Enemies
     public abstract class Enemy<T> : BaseEnemy where T : Enemy<T>
     {
         Entity _targetEntity;
-        public Entity TargetEntity {
+        public virtual Entity TargetEntity {
             get
             {
                 //get all entities with the enemy target tag
                 var targets = Scene.FindEntitiesWithTag(EntityTags.EnemyTarget);
+
+                //where to consider enemy position from
+                var enemyPos = Position;
+                if (TryGetComponent<OriginComponent>(out var enemyOc))
+                    enemyPos = enemyOc.Origin;
 
                 //loop through potential targets and determine the closest one
                 var minDistance = float.MaxValue;
@@ -29,9 +34,11 @@ namespace Threadlock.Entities.Characters.Enemies
                 foreach (var target in targets)
                 {
                     //get position
-                    Vector2 pos = target.Position;
+                    Vector2 targetPos = target.Position;
+                    if (target.TryGetComponent<OriginComponent>(out var oc))
+                        targetPos = oc.Origin;
 
-                    var dist = Vector2.Distance(Position, target.Position);
+                    var dist = Vector2.Distance(enemyPos, targetPos);
                     if (dist < minDistance)
                     {
                         minDistance = dist;
@@ -134,10 +141,10 @@ namespace Threadlock.Entities.Characters.Enemies
             return tree;
         }
 
-        public virtual Entity GetTarget()
-        {
-            return Player.Player.Instance;
-        }
+        //public virtual Entity GetTarget()
+        //{
+        //    return Player.Player.Instance;
+        //}
 
         #endregion
 

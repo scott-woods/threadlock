@@ -107,7 +107,7 @@ namespace Threadlock.Entities.Characters.Enemies.Spitter
         {
             var tree = BehaviorTreeBuilder<Spitter>.Begin(this)
                 .Selector(AbortTypes.Self)
-                    .ConditionalDecorator(s => !EntityHelper.HasLineOfSight(this, s.GetTarget(), false) || !s.CanAttack(), false)
+                    .ConditionalDecorator(s => !EntityHelper.HasLineOfSight(this, s.TargetEntity, false) || !s.CanAttack(), false)
                         .Sequence()
                             .Action(s => s.Move())
                             .ParallelSelector()
@@ -141,20 +141,20 @@ namespace Threadlock.Entities.Characters.Enemies.Spitter
                 return TaskStatus.Success;
 
             //get distance to player
-            var distanceToPlayer = EntityHelper.DistanceToEntity(this, GetTarget());
+            var distanceToPlayer = EntityHelper.DistanceToEntity(this, TargetEntity);
 
             //invalid firing situations
             if (distanceToPlayer < _minDistance)
-                return MoveAway(GetTarget(), _moveSpeed);
-            if (distanceToPlayer > _maxDistance || !EntityHelper.HasLineOfSight(this, GetTarget(), false))
-                return MoveToTarget(GetTarget(), _moveSpeed);
+                return MoveAway(TargetEntity, _moveSpeed);
+            if (distanceToPlayer > _maxDistance || !EntityHelper.HasLineOfSight(this, TargetEntity, false))
+                return MoveToTarget(TargetEntity, _moveSpeed);
 
             //decrement timer
             _cooldownTimer -= Time.DeltaTime;
 
             //valid firing situations
             if (distanceToPlayer > _preferredDistance)
-                return MoveToTarget(GetTarget(), _slowMoveSpeed);
+                return MoveToTarget(TargetEntity, _slowMoveSpeed);
 
             return Idle();
         }

@@ -131,19 +131,19 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
                     //pre attack
                     .Selector(AbortTypes.Self)
                         //if player too close, move away from player
-                        .ConditionalDecorator(o => EntityHelper.DistanceToEntity(o, o.GetTarget()) <= _minDistanceToPlayer, true)
+                        .ConditionalDecorator(o => EntityHelper.DistanceToEntity(o, o.TargetEntity) <= _minDistanceToPlayer, true)
                             .Sequence()
-                                .Action(o => o.MoveAway(o.GetTarget(), _speed))
+                                .Action(o => o.MoveAway(o.TargetEntity, _speed))
                             .EndComposite()
 
                         //if not in attack range, move towards player
-                        .ConditionalDecorator(o => EntityHelper.DistanceToEntity(o, o.GetTarget()) > _attackRange, true)
+                        .ConditionalDecorator(o => EntityHelper.DistanceToEntity(o, o.TargetEntity) > _attackRange, true)
                             .Sequence()
-                                .Action(o => o.MoveToTarget(o.GetTarget(), _speed))
+                                .Action(o => o.MoveToTarget(o.TargetEntity, _speed))
                             .EndComposite()
                         
                         //if in attack range, increment attack timer
-                        .ConditionalDecorator(o => EntityHelper.DistanceToEntity(o, o.GetTarget()) <= _attackRange, true)
+                        .ConditionalDecorator(o => EntityHelper.DistanceToEntity(o, o.TargetEntity) <= _attackRange, true)
                             .Sequence()
                                 .Action(o => o.WaitToAttack())
                             .EndComposite()
@@ -151,7 +151,7 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
                     //select and perform attaack
                     .Selector()
                         .Sequence()
-                            .Conditional(o => EntityHelper.DistanceToEntity(this, o.GetTarget()) < _sweepAttackRange)
+                            .Conditional(o => EntityHelper.DistanceToEntity(this, o.TargetEntity) < _sweepAttackRange)
                             .Action(o => o.ExecuteAction(_orbMageSweepAttack))
                         .EndComposite()
                         .Sequence()
@@ -192,12 +192,12 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
             }
 
             //get distance and direction to player
-            var distToPlayer = EntityHelper.DistanceToEntity(this, GetTarget());
+            var distToPlayer = EntityHelper.DistanceToEntity(this, TargetEntity);
 
             //slowly move towards player if not at preferred distance
             if (distToPlayer > _preferredDistanceToPlayer)
             {
-                MoveToTarget(GetTarget(), _speed);
+                MoveToTarget(TargetEntity, _speed);
             }
             else
             {

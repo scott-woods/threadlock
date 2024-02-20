@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Nez;
 using Nez.Sprites;
 using Nez.Tweens;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Threadlock.Entities.Characters.Player;
 using Threadlock.Models;
 
 namespace Threadlock.Components
@@ -100,6 +102,15 @@ namespace Threadlock.Components
             //    animator.Stop();
             //}
 
+            var renderables = Entity.GetComponents<RenderableComponent>();
+            foreach (var renderable in renderables)
+            {
+                if (renderable.Material != null)
+                {
+                    renderable.Material.Dispose();
+                }
+            }
+
             if (Entity.TryGetComponent<StatusComponent>(out var statusComponent))
                 statusComponent.PopStatus(_statusPriority);
         }
@@ -115,6 +126,15 @@ namespace Threadlock.Components
                 {
                     animator.Play("Hit");
                 }
+            }
+
+            //apply effect
+            var blinkEffect = new SpriteBlinkEffect();
+            blinkEffect.BlinkColor = Entity.GetType() == typeof(Player) ? Color.White : Color.Red;
+            var renderables = Entity.GetComponents<RenderableComponent>();
+            foreach (var renderable in renderables)
+            {
+                renderable.Material = new Material(BlendState.NonPremultiplied, blinkEffect);
             }
 
             var time = 0f;

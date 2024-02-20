@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Nez;
 using Nez.AI.FSM;
 using Nez.Sprites;
@@ -62,6 +63,8 @@ namespace Threadlock.Entities.Characters.Player
         public override void OnAddedToScene()
         {
             base.OnAddedToScene();
+
+            SetTag(EntityTags.EnemyTarget);
 
             //add components
             _mover = AddComponent(new Mover());

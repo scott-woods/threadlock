@@ -90,7 +90,7 @@ namespace Threadlock.Entities.Characters.Enemies.ChainBot
                             .Action(c => c.ExecuteAction(_chainBotMelee))
                         .EndComposite()
                         .Sequence(AbortTypes.LowerPriority)
-                            .Action(c => c.MoveToTarget(GetTarget(), _speed))
+                            .Action(c => c.MoveToTarget(TargetEntity, _speed))
                         .EndComposite()
                     .EndComposite()
                 .EndComposite()

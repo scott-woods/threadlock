@@ -53,7 +53,7 @@ namespace Threadlock.Entities.Characters.Enemies.Spitter
                 {
                     Game1.AudioManager.PlaySound(Nez.Content.Audio.Sounds.Spitter_fire);
 
-                    var dir = EntityHelper.DirectionToEntity(_enemy, _enemy.GetTarget());
+                    var dir = EntityHelper.DirectionToEntity(_enemy, _enemy.TargetEntity);
 
                     CreateProjectile(dir);
 
