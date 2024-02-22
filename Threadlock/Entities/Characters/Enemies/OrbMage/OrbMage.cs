@@ -58,6 +58,7 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
 
             _animator = AddComponent(new SpriteAnimator());
             _animator.SetLocalOffset(new Vector2(38, -5));
+            _animator.SetRenderLayer(RenderLayers.YSort);
             AddAnimations();
 
             //hurtbox

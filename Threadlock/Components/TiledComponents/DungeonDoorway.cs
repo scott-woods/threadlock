@@ -110,24 +110,25 @@ namespace Threadlock.Components.TiledComponents
         {
             if (DungeonRoom.Map.TmxMap.Properties.TryGetValue("Area", out var area))
             {
-                var doorwayStatus = HasConnection ? "open" : "closed";
-                var mapName = $"{area.ToLower()}_{Direction.ToLower()}_{doorwayStatus}";
+                var doorwayStatus = HasConnection ? "Open" : "Closed";
+                var mapName = $"{area.ToLower()}_{Direction.ToLower()}";
                 _map = base.Entity.Scene.Content.LoadTiledMap($@"Content\Tiled\Tilemaps\{area}\Doorways\{mapName}.tmx");
 
                 //create main map renderer
-                var mapRenderer = Entity.AddComponent(new TiledMapRenderer(_map, "Walls"));
-                mapRenderer.SetLayersToRender(new[] { "Back", "Walls" });
+                var mapRenderer = Entity.AddComponent(new TiledMapRenderer(_map));
+                if (_map.TileLayers.TryGetValue($"{doorwayStatus}Walls", out var wallLayer))
+                    mapRenderer.CollisionLayer = wallLayer;
+                mapRenderer.SetLayersToRender(_map.Layers
+                    .Where(l => new[] { $"{doorwayStatus}Back", $"{doorwayStatus}Walls" }.Contains(l.Name))
+                    .Select(l => l.Name).ToArray());
                 mapRenderer.RenderLayer = 10;
                 Flags.SetFlagExclusive(ref mapRenderer.PhysicsLayer, PhysicsLayers.Environment);
 
                 //create above map renderer
                 var tiledMapDetailsRenderer = Entity.AddComponent(new TiledMapRenderer(_map));
-                var layersToRender = new List<string>();
-                if (_map.Layers.Contains("Front"))
-                    layersToRender.Add("Front");
-                if (_map.Layers.Contains("AboveFront"))
-                    layersToRender.Add("AboveFront");
-                tiledMapDetailsRenderer.SetLayersToRender(layersToRender.ToArray());
+                tiledMapDetailsRenderer.SetLayersToRender(_map.Layers
+                    .Where(l => new[] { $"{doorwayStatus}Front", $"{doorwayStatus}AboveFront" }.Contains(l.Name))
+                    .Select(l => l.Name).ToArray());
                 tiledMapDetailsRenderer.RenderLayer = RenderLayers.Front;
                 //tiledMapDetailsRenderer.Material = Material.StencilWrite();
 
@@ -135,6 +136,28 @@ namespace Threadlock.Components.TiledComponents
 
                 _mapRenderers.Add(mapRenderer);
                 _mapRenderers.Add(tiledMapDetailsRenderer);
+
+                ////create main map renderer
+                //var mapRenderer = Entity.AddComponent(new TiledMapRenderer(_map, "Walls"));
+                //mapRenderer.SetLayersToRender(new[] { "Back", "Walls" });
+                //mapRenderer.RenderLayer = 10;
+                //Flags.SetFlagExclusive(ref mapRenderer.PhysicsLayer, PhysicsLayers.Environment);
+
+                ////create above map renderer
+                //var tiledMapDetailsRenderer = Entity.AddComponent(new TiledMapRenderer(_map));
+                //var layersToRender = new List<string>();
+                //if (_map.Layers.Contains("Front"))
+                //    layersToRender.Add("Front");
+                //if (_map.Layers.Contains("AboveFront"))
+                //    layersToRender.Add("AboveFront");
+                //tiledMapDetailsRenderer.SetLayersToRender(layersToRender.ToArray());
+                //tiledMapDetailsRenderer.RenderLayer = RenderLayers.Front;
+                ////tiledMapDetailsRenderer.Material = Material.StencilWrite();
+
+                //TiledHelper.CreateEntitiesForTiledObjects(mapRenderer);
+
+                //_mapRenderers.Add(mapRenderer);
+                //_mapRenderers.Add(tiledMapDetailsRenderer);
             }
         }
     }

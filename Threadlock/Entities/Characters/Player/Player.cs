@@ -70,6 +70,7 @@ namespace Threadlock.Entities.Characters.Player
             _mover = AddComponent(new Mover());
             _animator = AddComponent(new SpriteAnimator());
             _animator.SetLocalOffset(SpriteOffset);
+            _animator.SetRenderLayer(RenderLayers.YSort);
             _velocityComponent = AddComponent(new VelocityComponent(_mover));
             _spriteFlipper = AddComponent(new SpriteFlipper());
             _swordAttack = AddComponent(new SwordAttack());

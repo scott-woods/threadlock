@@ -52,6 +52,7 @@ namespace Threadlock.Entities.Characters.Enemies.Spitter
 
             _animator = AddComponent(new SpriteAnimator());
             _animator.SetLocalOffset(new Vector2(2, -6));
+            _animator.SetRenderLayer(RenderLayers.YSort);
             AddAnimations();
 
             //hurtbox

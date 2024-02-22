@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="5" height="5" tilewidth="16" tileheight="16" infinite="0" nextlayerid="12" nextobjectid="1">
+ <tileset firstgid="1" source="../../../Tilesets/forge_tileset.tsx"/>
+ <layer id="1" name="OpenBack" width="5" height="5">
+  <data encoding="csv">
+228,182,203,180,228,
+0,202,203,204,0,
+0,202,203,204,0,
+0,202,203,204,0,
+0,202,203,204,0
+</data>
+ </layer>
+ <layer id="9" name="ClosedBack" width="5" height="5">
+  <data encoding="csv">
+228,228,228,228,228,
+0,0,0,0,0,
+0,0,0,0,0,
+0,0,0,0,0,
+0,0,0,0,0
+</data>
+ </layer>
+ <layer id="2" name="OpenWalls" width="5" height="5">
+  <data encoding="csv">
+0,0,0,0,0,
+144,0,0,0,148,
+55,0,0,0,51,
+55,0,0,0,51,
+55,0,0,0,51
+</data>
+ </layer>
+ <layer id="10" name="ClosedWalls" width="5" height="5">
+  <data encoding="csv">
+0,0,0,0,0,
+28,28,28,28,28,
+0,0,0,0,0,
+0,0,0,0,0,
+0,0,0,0,0
+</data>
+ </layer>
+ <layer id="6" name="GateWalls" width="5" height="5">
+  <data encoding="csv">
+0,0,0,0,0,
+0,0,0,0,0,
+0,194,194,194,0,
+0,219,219,219,0,
+0,244,244,244,0
+</data>
+ </layer>
+ <layer id="3" name="OpenFront" width="5" height="5">
+  <data encoding="csv">
+4,0,0,0,2,
+0,0,0,0,0,
+0,0,0,0,0,
+0,0,0,0,0,
+0,0,0,0,0
+</data>
+ </layer>
+ <layer id="11" name="ClosedFront" width="5" height="5">
+  <data encoding="csv">
+3,3,3,3,3,
+0,0,0,0,0,
+0,0,0,0,0,
+0,0,0,0,0,
+0,0,0,0,0
+</data>
+ </layer>
+ <layer id="4" name="GateFront" width="5" height="5">
+  <data encoding="csv">
+0,0,0,0,0,
+0,169,169,169,0,
+0,0,0,0,0,
+0,0,0,0,0,
+0,0,0,0,0
+</data>
+ </layer>
+ <layer id="5" name="OpenAboveFront" width="5" height="5">
+  <data encoding="csv">
+0,0,0,0,0,
+0,145,146,147,0,
+0,0,0,0,0,
+0,0,0,0,0,
+0,0,0,0,0
+</data>
+ </layer>
+</map>

@@ -73,6 +73,7 @@ namespace Threadlock.Entities.Characters.Enemies.Ghoul
 
             //animator
             _animator = AddComponent(new SpriteAnimator());
+            _animator.SetRenderLayer(RenderLayers.YSort);
             AddAnimations();
 
             //sprite flipper

@@ -129,7 +129,7 @@ namespace Threadlock.SceneComponents
                 //create main map renderer
                 var mapRenderer = mapEntity.AddComponent(new TiledMapRenderer(tmxMap, "Walls"));
                 mapRenderer.SetLayersToRender(new[] { "Back", "Walls" });
-                mapRenderer.RenderLayer = 10;
+                mapRenderer.RenderLayer = RenderLayers.Back;
                 Flags.SetFlagExclusive(ref mapRenderer.PhysicsLayer, (int)PhysicsLayers.Environment);
 
                 //create above map renderer

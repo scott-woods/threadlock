@@ -42,6 +42,7 @@ namespace Threadlock.Entities.Characters.Enemies.ChainBot
             base.OnAddedToScene();
 
             _animator = AddComponent(new SpriteAnimator());
+            _animator.SetRenderLayer(RenderLayers.YSort);
             AddAnimations();
 
             _mover = AddComponent(new Mover());
