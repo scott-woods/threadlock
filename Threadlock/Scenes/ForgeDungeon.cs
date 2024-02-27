@@ -15,6 +15,7 @@ namespace Threadlock.Scenes
     public class ForgeDungeon : BaseScene
     {
         BSPDungenerator _generator;
+        Dungenerator _dungenerator;
         PlayerSpawner _playerSpawner;
 
         public override void Initialize()
@@ -24,6 +25,7 @@ namespace Threadlock.Scenes
             CreateEntity("ui").AddComponent(new CombatUI());
 
             _generator = AddSceneComponent(new BSPDungenerator());
+            _dungenerator = AddSceneComponent(new Dungenerator());
             _playerSpawner = AddSceneComponent(new PlayerSpawner());
         }
 
@@ -31,7 +33,8 @@ namespace Threadlock.Scenes
         {
             base.Begin();
 
-            _generator.Generate();
+            //_generator.Generate();
+            _dungenerator.Generate();
 
             //var map = DoorwayMaps.ForgeRightOpen.TmxMap;
             //var mapRenderer = CreateEntity("map").AddComponent(new TiledMapRenderer(map, "Walls"));

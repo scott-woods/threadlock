@@ -41,8 +41,8 @@ namespace Threadlock.Scenes
 
             var followCam = Camera.AddComponent(new CustomFollowCamera(player));
 
-            var enemySpawns = FindComponentsOfType<EnemySpawnPoint>();
-            enemySpawns.First().SpawnEnemy();
+            //var enemySpawns = FindComponentsOfType<EnemySpawnPoint>();
+            //enemySpawns.First().SpawnEnemy();
         }
     }
 }

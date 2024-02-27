@@ -90,6 +90,11 @@ namespace Nez
 			public const string JitterDestroyer = @"Content\CompiledEffects\JitterDestroyer.fxb";
 		}
 
+		public static class Data
+		{
+			public const string DungeonFlows = @"Content\Data\DungeonFlows.json";
+		}
+
 		public static class Effects
 		{
 			public const string JitterDestroyer = @"Content\Effects\JitterDestroyer.fx";
@@ -114,6 +119,55 @@ namespace Nez
 			public const string Font_abaddon_light_48_0 = @"Content\Fonts\font_abaddon_light_48_0.png";
 			public const string M57_12 = @"Content\Fonts\m57_12.fnt";
 			public const string M57_12_0 = @"Content\Fonts\m57_12_0.png";
+		}
+
+		public static class Nez
+		{
+			public static class Effects
+			{
+				public static class Transitions
+				{
+					public const string Squares = @"Content\nez\effects\transitions\Squares.fxb";
+					public const string TextureWipe = @"Content\nez\effects\transitions\TextureWipe.fxb";
+					public const string Wind = @"Content\nez\effects\transitions\Wind.fxb";
+				}
+
+				public const string Bevels = @"Content\nez\effects\Bevels.fxb";
+				public const string BloomCombine = @"Content\nez\effects\BloomCombine.fxb";
+				public const string BloomExtract = @"Content\nez\effects\BloomExtract.fxb";
+				public const string Crosshatch = @"Content\nez\effects\Crosshatch.fxb";
+				public const string DeferredLighting = @"Content\nez\effects\DeferredLighting.fxb";
+				public const string DeferredSprite = @"Content\nez\effects\DeferredSprite.fxb";
+				public const string Dissolve = @"Content\nez\effects\Dissolve.fxb";
+				public const string Dots = @"Content\nez\effects\Dots.fxb";
+				public const string ForwardLighting = @"Content\nez\effects\ForwardLighting.fxb";
+				public const string GaussianBlur = @"Content\nez\effects\GaussianBlur.fxb";
+				public const string Grayscale = @"Content\nez\effects\Grayscale.fxb";
+				public const string HeatDistortion = @"Content\nez\effects\HeatDistortion.fxb";
+				public const string Invert = @"Content\nez\effects\Invert.fxb";
+				public const string Letterbox = @"Content\nez\effects\Letterbox.fxb";
+				public const string MultiTexture = @"Content\nez\effects\MultiTexture.fxb";
+				public const string MultiTextureOverlay = @"Content\nez\effects\MultiTextureOverlay.fxb";
+				public const string Noise = @"Content\nez\effects\Noise.fxb";
+				public const string PaletteCycler = @"Content\nez\effects\PaletteCycler.fxb";
+				public const string PixelGlitch = @"Content\nez\effects\PixelGlitch.fxb";
+				public const string PolygonLight = @"Content\nez\effects\PolygonLight.fxb";
+				public const string Reflection = @"Content\nez\effects\Reflection.fxb";
+				public const string Scanlines = @"Content\nez\effects\Scanlines.fxb";
+				public const string Sepia = @"Content\nez\effects\Sepia.fxb";
+				public const string SpriteAlphaTest = @"Content\nez\effects\SpriteAlphaTest.fxb";
+				public const string SpriteBlinkEffect = @"Content\nez\effects\SpriteBlinkEffect.fxb";
+				public const string SpriteEffect = @"Content\nez\effects\SpriteEffect.fxb";
+				public const string SpriteLightMultiply = @"Content\nez\effects\SpriteLightMultiply.fxb";
+				public const string SpriteLines = @"Content\nez\effects\SpriteLines.fxb";
+				public const string Squares = @"Content\nez\effects\Squares.fxb";
+				public const string StencilLight = @"Content\nez\effects\StencilLight.fxb";
+				public const string TextureWipe = @"Content\nez\effects\TextureWipe.fxb";
+				public const string Twist = @"Content\nez\effects\Twist.fxb";
+				public const string Vignette = @"Content\nez\effects\Vignette.fxb";
+				public const string Wind = @"Content\nez\effects\Wind.fxb";
+			}
+
 		}
 
 		public static class Textures
@@ -916,8 +970,17 @@ namespace Nez
 
 		public static class Tiled
 		{
-			public static class Templates
+			public static class RuleMaps
 			{
+				public const string Collision_rules = @"Content\Tiled\RuleMaps\collision_rules.tmx";
+				public const string Forge_clutter_rules = @"Content\Tiled\RuleMaps\forge_clutter_rules.tmx";
+				public const string Forge_floor_rules = @"Content\Tiled\RuleMaps\forge_floor_rules.tmx";
+				public const string Forge_lava_rules = @"Content\Tiled\RuleMaps\forge_lava_rules.tmx";
+				public const string Forge_trim_rules = @"Content\Tiled\RuleMaps\forge_trim_rules.tmx";
+				public const string Forge_walls_rules = @"Content\Tiled\RuleMaps\forge_walls_rules.tmx";
+				public const string Prison_floor_rules_one_overlap = @"Content\Tiled\RuleMaps\prison_floor_rules_one_overlap.tmx";
+				public const string Prison_walls_rules_one_overlap_3 = @"Content\Tiled\RuleMaps\prison_walls_rules_one_overlap_3.tmx";
+				public const string Wooden_floor_rules_2 = @"Content\Tiled\RuleMaps\wooden_floor_rules_2.tmx";
 			}
 
 			public static class Tilemaps
@@ -926,12 +989,16 @@ namespace Nez
 				{
 					public static class Doorways
 					{
+						public const string Forge_bottom = @"Content\Tiled\Tilemaps\Forge\Doorways\forge_bottom.tmx";
 						public const string Forge_bottom_closed = @"Content\Tiled\Tilemaps\Forge\Doorways\forge_bottom_closed.tmx";
 						public const string Forge_bottom_open = @"Content\Tiled\Tilemaps\Forge\Doorways\forge_bottom_open.tmx";
+						public const string Forge_left = @"Content\Tiled\Tilemaps\Forge\Doorways\forge_left.tmx";
 						public const string Forge_left_closed = @"Content\Tiled\Tilemaps\Forge\Doorways\forge_left_closed.tmx";
 						public const string Forge_left_open = @"Content\Tiled\Tilemaps\Forge\Doorways\forge_left_open.tmx";
+						public const string Forge_right = @"Content\Tiled\Tilemaps\Forge\Doorways\forge_right.tmx";
 						public const string Forge_right_closed = @"Content\Tiled\Tilemaps\Forge\Doorways\forge_right_closed.tmx";
 						public const string Forge_right_open = @"Content\Tiled\Tilemaps\Forge\Doorways\forge_right_open.tmx";
+						public const string Forge_top = @"Content\Tiled\Tilemaps\Forge\Doorways\forge_top.tmx";
 						public const string Forge_top_closed = @"Content\Tiled\Tilemaps\Forge\Doorways\forge_top_closed.tmx";
 						public const string Forge_top_open = @"Content\Tiled\Tilemaps\Forge\Doorways\forge_top_open.tmx";
 					}
@@ -957,6 +1024,8 @@ namespace Nez
 
 					public const string Forge_pre_boss = @"Content\Tiled\Tilemaps\Forge\forge_pre_boss.tmx";
 					public const string Forge_simple = @"Content\Tiled\Tilemaps\Forge\forge_simple.tmx";
+					public const string Forge_simple_2 = @"Content\Tiled\Tilemaps\Forge\forge_simple_2.tmx";
+					public const string Forge_simple_3 = @"Content\Tiled\Tilemaps\Forge\forge_simple_3.tmx";
 					public const string Forge_test = @"Content\Tiled\Tilemaps\Forge\forge_test.tmx";
 					public const string Forge_test_2 = @"Content\Tiled\Tilemaps\Forge\forge_test_2.tmx";
 					public const string Rules = @"Content\Tiled\Tilemaps\Forge\rules.txt";

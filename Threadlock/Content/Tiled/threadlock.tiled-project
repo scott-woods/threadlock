@@ -53,6 +53,55 @@
         {
             "color": "#ffa0a0a4",
             "drawFill": true,
+            "id": 6,
+            "members": [
+                {
+                    "name": "Direction",
+                    "type": "string",
+                    "value": ""
+                },
+                {
+                    "name": "PathfindingOffset",
+                    "type": "string",
+                    "value": ""
+                }
+            ],
+            "name": "DungeonDoorway",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 7,
+            "members": [
+                {
+                    "name": "Area",
+                    "type": "string",
+                    "value": ""
+                }
+            ],
+            "name": "DungeonMap",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
             "id": 4,
             "members": [
                 {

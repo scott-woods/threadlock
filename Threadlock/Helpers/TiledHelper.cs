@@ -28,18 +28,22 @@ namespace Threadlock.Helpers
                     case TmxObjectType.Basic:
                     case TmxObjectType.Ellipse:
                     case TmxObjectType.Tile:
-                        position = mapRenderer.Entity.Position + new Vector2(obj.X + obj.Width / 2, obj.Y + obj.Height / 2);
+                        //position = mapRenderer.Entity.Position + new Vector2(obj.X + obj.Width / 2, obj.Y + obj.Height / 2);
+                        position = new Vector2(obj.X, obj.Y);
                         break;
                     case TmxObjectType.Polygon:
-                        position = mapRenderer.Entity.Position + new Vector2(obj.X, obj.Y);
+                        //position = mapRenderer.Entity.Position + new Vector2(obj.X, obj.Y);
+                        position = new Vector2(obj.X, obj.Y);
                         break;
                     default:
-                        position = mapRenderer.Entity.Position + new Vector2(obj.X, obj.Y);
+                        //position = mapRenderer.Entity.Position + new Vector2(obj.X, obj.Y);
+                        position = new Vector2(obj.X, obj.Y);
                         break;
 
                 }
 
                 var entity = mapRenderer.Entity.Scene.CreateEntity(obj.Name, position);
+                entity.SetParent(mapRenderer.Entity);
                 entity.AddComponent(instance);
             }
         }

@@ -22,7 +22,9 @@ namespace Threadlock.Components.TiledComponents
 
         List<TiledMapRenderer> _mapRenderers = new List<TiledMapRenderer>();
         TmxMap _map;
+        TmxMap _parentMap;
         TiledMapRenderer _gateRenderer;
+        bool _processed = false;
 
         public override void Initialize()
         {
@@ -48,9 +50,21 @@ namespace Threadlock.Components.TiledComponents
                 dungeonRoom.Doorways.Add(this);
             }
 
-            CreateMap();
+            //parent dungeon map
+            if (MapEntity.TryGetComponent<TiledMapRenderer>(out var mapRenderer))
+            {
+                _parentMap = mapRenderer.TiledMap;
+            }
 
-            Entity.SetPosition(new Microsoft.Xna.Framework.Vector2(base.Entity.Position.X - (_map.Width * _map.TileWidth) / 2, base.Entity.Position.Y - (_map.Height * _map.TileHeight) / 2));
+            //Entity.SetPosition(new Microsoft.Xna.Framework.Vector2(base.Entity.Position.X - (_map.Width * _map.TileWidth) / 2, base.Entity.Position.Y - (_map.Height * _map.TileHeight) / 2));
+        }
+
+        public override void OnAddedToEntity()
+        {
+            base.OnAddedToEntity();
+
+            if (!_processed)
+                CreateMap();
         }
 
         public void SetOpen(bool open)
@@ -103,23 +117,40 @@ namespace Threadlock.Components.TiledComponents
             }
         }
 
+        public bool IsDirectMatch(DungeonDoorway doorway)
+        {
+            switch (doorway.Direction)
+            {
+                case "Top":
+                    return Direction == "Bottom";
+                case "Bottom":
+                    return Direction == "Top";
+                case "Left":
+                    return Direction == "Right";
+                case "Right":
+                    return Direction == "Left";
+                default:
+                    return false;
+            }
+        }
+
         /// <summary>
         /// create the actual map entity. will be open if IsConnection is true, and closed if it is false
         /// </summary>
         void CreateMap()
         {
-            if (DungeonRoom.Map.TmxMap.Properties.TryGetValue("Area", out var area))
+            if (_parentMap != null && _parentMap.Properties != null && _parentMap.Properties.TryGetValue("Area", out var area))
             {
                 var doorwayStatus = HasConnection ? "Open" : "Closed";
-                var mapName = $"{area.ToLower()}_{Direction.ToLower()}";
+                var mapName = $"{area.ToLower()}_{Direction.ToLower()}_{doorwayStatus.ToLower()}";
                 _map = base.Entity.Scene.Content.LoadTiledMap($@"Content\Tiled\Tilemaps\{area}\Doorways\{mapName}.tmx");
 
                 //create main map renderer
                 var mapRenderer = Entity.AddComponent(new TiledMapRenderer(_map));
-                if (_map.TileLayers.TryGetValue($"{doorwayStatus}Walls", out var wallLayer))
+                if (_map.TileLayers.TryGetValue($"Walls", out var wallLayer))
                     mapRenderer.CollisionLayer = wallLayer;
                 mapRenderer.SetLayersToRender(_map.Layers
-                    .Where(l => new[] { $"{doorwayStatus}Back", $"{doorwayStatus}Walls" }.Contains(l.Name))
+                    .Where(l => new[] { $"Back", $"Walls" }.Contains(l.Name))
                     .Select(l => l.Name).ToArray());
                 mapRenderer.RenderLayer = 10;
                 Flags.SetFlagExclusive(ref mapRenderer.PhysicsLayer, PhysicsLayers.Environment);
@@ -127,7 +158,7 @@ namespace Threadlock.Components.TiledComponents
                 //create above map renderer
                 var tiledMapDetailsRenderer = Entity.AddComponent(new TiledMapRenderer(_map));
                 tiledMapDetailsRenderer.SetLayersToRender(_map.Layers
-                    .Where(l => new[] { $"{doorwayStatus}Front", $"{doorwayStatus}AboveFront" }.Contains(l.Name))
+                    .Where(l => new[] { $"Front", $"AboveFront" }.Contains(l.Name))
                     .Select(l => l.Name).ToArray());
                 tiledMapDetailsRenderer.RenderLayer = RenderLayers.Front;
                 //tiledMapDetailsRenderer.Material = Material.StencilWrite();
@@ -136,6 +167,8 @@ namespace Threadlock.Components.TiledComponents
 
                 _mapRenderers.Add(mapRenderer);
                 _mapRenderers.Add(tiledMapDetailsRenderer);
+
+                _processed = true;
 
                 ////create main map renderer
                 //var mapRenderer = Entity.AddComponent(new TiledMapRenderer(_map, "Walls"));

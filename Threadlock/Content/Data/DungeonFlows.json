@@ -1,0 +1,147 @@
+{
+  "Nodes": [
+    {
+      "Id": 1,
+      "Type": "start",
+      "Children": [
+        {
+          "ChildNodeId": 2,
+          "Type": "corridor"
+        }
+      ]
+    },
+    {
+      "Id": 2,
+      "Type": "normal",
+      "Children": [
+        {
+          "ChildNodeId": 3,
+          "Type": "corridor"
+        }
+      ]
+    },
+    {
+      "Id": 3,
+      "Type": "normal",
+      "Children": [
+        {
+          "ChildNodeId": 4,
+          "Type": "corridor"
+        }
+      ]
+    },
+    {
+      "Id": 4,
+      "Type": "hub",
+      "Children": [
+        {
+          "ChildNodeId": 5,
+          "Type": "corridor"
+        },
+        {
+          "ChildNodeId": 7,
+          "Type": "corridor"
+        }
+      ]
+    },
+    {
+      "Id": 5,
+      "Type": "normal",
+      "Children": [
+        {
+          "ChildNodeId": 6,
+          "Type": "corridor"
+        }
+      ]
+    },
+    {
+      "Id": 6,
+      "Type": "reward",
+      "Children": [
+        {
+          "ChildNodeId": 2,
+          "Type": "corridor"
+        }
+      ]
+    },
+    {
+      "Id": 7,
+      "Type": "normal",
+      "Children": [
+        {
+          "ChildNodeId": 8,
+          "Type": "corridor"
+        },
+        {
+          "ChildNodeId": 9,
+          "Type": "corridor"
+        }
+      ]
+    },
+    {
+      "Id": 8,
+      "Type": "preBoss",
+      "Children": [
+        {
+          "ChildNodeId": 10,
+          "Type": "corridor"
+        }
+      ]
+    },
+    {
+      "Id": 9,
+      "Type": "hub",
+      "Children": [
+        {
+          "ChildNodeId": 12,
+          "Type": "corridor"
+        }
+      ]
+    },
+    {
+      "Id": 10,
+      "Type": "boss",
+      "Children": [
+        {
+          "ChildNodeId": 11,
+          "Type": "corridor"
+        }
+      ]
+    },
+    {
+      "Id": 11,
+      "Type": "exit",
+      "Children": []
+    },
+    {
+      "Id": 12,
+      "Type": "normal",
+      "Children": [
+        {
+          "ChildNodeId": 13,
+          "Type": "corridor"
+        }
+      ]
+    },
+    {
+      "Id": 13,
+      "Type": "normal",
+      "Children": [
+        {
+          "ChildNodeId": 14,
+          "Type": "corridor"
+        }
+      ]
+    },
+    {
+      "Id": 14,
+      "Type": "reward",
+      "Children": [
+        {
+          "ChildNodeId": 9,
+          "Type": "corridor"
+        }
+      ]
+    }
+  ]
+}

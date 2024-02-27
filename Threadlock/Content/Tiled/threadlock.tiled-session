@@ -14,6 +14,7 @@
         "Tilemaps/Hub",
         "Tilemaps/Forge/Doorways"
     ],
+    "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "C:/Users/scott/Desktop/Game-Dev/MonoGame/Personal-Projects/PuppetRogueliteFNA/puppet-roguelite/PuppetRoguelite/Content/Tiled/Tilemaps/DungeonPrison/dp_b_1.tmx": {
             "scale": 1.3705729166666665,
@@ -70,8 +71,8 @@
         },
         "Tilemaps/Forge/Doorways/forge_left.tmx": {
             "expandedGroupLayers": [
-                6,
-                7
+                7,
+                6
             ],
             "scale": 4,
             "selectedLayer": 0,
@@ -98,22 +99,30 @@
         },
         "Tilemaps/Forge/Doorways/forge_right.tmx": {
             "expandedGroupLayers": [
-                6,
-                7
+                7,
+                6
             ],
             "scale": 5.482291666666666,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 16.142884286528595,
-                "y": 48.06384191525746
+                "x": 15.960478814364429,
+                "y": 47.97263917917538
+            }
+        },
+        "Tilemaps/Forge/Doorways/forge_right_closed.tmx": {
+            "scale": 5.482291666666666,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 16.142884286528606,
+                "y": 48.155044651339544
             }
         },
         "Tilemaps/Forge/Doorways/forge_right_open.tmx": {
             "scale": 2,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 16.25,
-                "y": 48.25
+                "x": 15.75,
+                "y": 48
             }
         },
         "Tilemaps/Forge/Doorways/forge_top.tmx": {
@@ -220,25 +229,33 @@
             }
         },
         "Tilemaps/Forge/forge_simple.tmx": {
-            "expandedObjectLayers": [
-                45
-            ],
             "scale": 1,
-            "selectedLayer": 6,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 176.5,
-                "y": 216.5
+                "x": 200.5,
+                "y": 227
             }
         },
         "Tilemaps/Forge/forge_simple_2.tmx": {
             "expandedGroupLayers": [
                 7
             ],
-            "scale": 3,
+            "scale": 1.5,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 239.83333333333331,
-                "y": 159.83333333333331
+                "x": 235.66666666666663,
+                "y": 173.33333333333334
+            }
+        },
+        "Tilemaps/Forge/forge_simple_3.tmx": {
+            "expandedObjectLayers": [
+                11
+            ],
+            "scale": 1,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 281.5,
+                "y": 261
             }
         },
         "Tilemaps/Forge/forge_test.tmx": {
@@ -264,8 +281,8 @@
             "scale": 1.5,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 247.66666666666666,
-                "y": 191.66666666666666
+                "x": 318.3333333333333,
+                "y": 142.66666666666663
             }
         },
         "Tilemaps/test.tmx": {
@@ -287,15 +304,18 @@
             "scaleInDock": 3
         },
         "Tilesets/prototype_tileset.tsx": {
-            "scaleInDock": 1
+            "scaleInDock": 1,
+            "scaleInEditor": 1
         }
     },
     "last.imagePath": "C:/Users/scott/Desktop/Game-Dev/FNA/Threadlock/Threadlock/Content/Textures/Tilesets",
     "last.objectTemplatePath": "C:/Users/scott/Desktop/Game-Dev/FNA/Threadlock/Threadlock/Content/Tiled/Templates",
     "map.fixedSize": true,
+    "map.height": 32,
     "map.lastUsedFormat": "tmx",
     "map.tileHeight": 16,
     "map.tileWidth": 16,
+    "map.width": 32,
     "openFiles": [
         "Tilemaps/Forge/Doorways/forge_bottom_open.tmx",
         "Tilemaps/Forge/Doorways/forge_left_open.tmx",
@@ -317,18 +337,18 @@
     ],
     "project": "threadlock.tiled-project",
     "recentFiles": [
+        "Tilesets/prototype_tileset.tsx",
+        "Tilemaps/Forge/Doorways/forge_right_closed.tmx",
+        "Tilemaps/Forge/forge_simple_2.tmx",
+        "Tilemaps/Forge/Doorways/forge_right.tmx",
         "Tilemaps/Forge/Doorways/forge_bottom_open.tmx",
+        "Tilemaps/HubMaps/hub.tmx",
         "Tilemaps/Forge/Doorways/forge_left_open.tmx",
         "Tilemaps/Forge/Doorways/forge_right_open.tmx",
         "Tilemaps/Forge/forge_simple.tmx",
         "Tilemaps/Forge/Doorways/forge_bottom_closed.tmx",
         "Tilemaps/Forge/Doorways/forge_top_open.tmx",
-        "Tilemaps/Forge/forge_pre_boss.tmx",
-        "Tilemaps/Forge/Halls/testing gak.tmx",
-        "Tilemaps/Forge/Doorways/forge_right.tmx",
-        "Tilemaps/Forge/Doorways/forge_left.tmx",
-        "Tilemaps/Forge/Doorways/forge_bottom.tmx",
-        "Tilemaps/Forge/Doorways/forge_top.tmx"
+        "Tilemaps/Forge/forge_pre_boss.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
