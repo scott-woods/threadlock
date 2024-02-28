@@ -27,7 +27,7 @@ namespace Threadlock.Scenes
         {
             base.Initialize();
 
-            ClearColor = Color.Black;
+            ClearColor = Color.Blue;
 
             //add cursor
             var mouseCursor = AddEntity(new MouseCursor());
@@ -78,7 +78,7 @@ namespace Threadlock.Scenes
                                       Rectangle finalRenderDestinationRect, SamplerState samplerState)
         {
             Core.GraphicsDevice.SetRenderTarget(null);
-            Core.GraphicsDevice.Clear(letterboxColor);
+            Core.GraphicsDevice.Clear(ClearColor);
 
             Vector2 offset = Vector2.Zero;
             if (Camera.Entity.TryGetComponent<CustomFollowCamera>(out var cam))

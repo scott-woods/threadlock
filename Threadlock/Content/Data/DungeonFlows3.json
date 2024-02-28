@@ -1,0 +1,69 @@
+{
+  "Nodes": [
+    {
+      "Id": 1,
+      "Type": "start",
+      "Children": [
+        {
+          "ChildNodeId": 2,
+          "Type": "corridor"
+        }
+      ]
+    },
+    {
+      "Id": 2,
+      "Type": "normal",
+      "Children": [
+        {
+          "ChildNodeId": 3,
+          "Type": "corridor"
+        }
+      ]
+    },
+    {
+      "Id": 3,
+      "Type": "normal",
+      "Children": [
+        {
+          "ChildNodeId": 4,
+          "Type": "corridor"
+        },
+        {
+          "ChildNodeId": 6,
+          "Type": "corridor"
+        }
+      ]
+    },
+    {
+      "Id": 4,
+      "Type": "hub",
+      "Children": [
+        {
+          "ChildNodeId": 5,
+          "Type": "corridor"
+        }
+      ]
+    },
+    {
+      "Id": 5,
+      "Type": "normal",
+      "Children": [
+      ]
+    },
+    {
+      "Id": 6,
+      "Type": "normal",
+      "Children": [
+        {
+          "ChildNodeId": 7,
+          "Type": "corridor"
+        }
+      ]
+    },
+    {
+      "Id": 7,
+      "Type": "normal",
+      "Children": []
+    }
+  ]
+}

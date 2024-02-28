@@ -32,6 +32,7 @@
   <ItemGroup>
     <None Remove="Content\Audio\Music\melting idols.ogg" />
     <None Remove="Content\Data\DungeonFlows2.json" />
+    <None Remove="Content\Data\DungeonFlows3.json" />
     <None Remove="Content\Effects\JitterDestroyer.fx" />
     <None Remove="Content\Textures\Characters\ChainBot\attack.png" />
     <None Remove="Content\Textures\Characters\ChainBot\charge.png" />
