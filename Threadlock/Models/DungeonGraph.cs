@@ -28,9 +28,9 @@ namespace Threadlock.Models
             _visited.Clear();
 
             //find trees
-            foreach (var node in _allNodes)
+            foreach (var node in _allNodes.Where(n => !IsInAnyLoop(n)))
             {
-                if (!_visited.Contains(node) && !IsInAnyLoop(node))
+                if (!_visited.Contains(node))
                 {
                     List<DungeonNode> tree = new List<DungeonNode>();
                     FindTree(node, tree);
@@ -91,13 +91,20 @@ namespace Threadlock.Models
             _visited.Add(node);
             currentTree.Add(node);
 
-            foreach (var child in node.Children)
+            var children = node.Children.Where(c => !IsInAnyLoop(_allNodes.First(n => n.Id == c.ChildNodeId)));
+            if (children.Count() == 1)
             {
-                var childNode = _allNodes.Find(n => n.Id == child.ChildNodeId);
-
-                if (!_visited.Contains(childNode) && !IsInAnyLoop(childNode))
+                var childNode = _allNodes.Find(n => n.Id == children.First().ChildNodeId);
+                FindTree(childNode, currentTree);
+            }
+            else if (children.Count() > 1)
+            {
+                foreach (var child in children)
                 {
-                    FindTree(childNode, currentTree);
+                    var childNode = _allNodes.Find(n => n.Id == child.ChildNodeId);
+                    var newTree = new List<DungeonNode>();
+                    FindTree(childNode, newTree);
+                    _trees.Add(newTree);
                 }
             }
         }

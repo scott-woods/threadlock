@@ -23,9 +23,9 @@ namespace Threadlock.SceneComponents
         {
             //read flow file
             DungeonFlow flow = new DungeonFlow();
-            if (File.Exists("Content/Data/DungeonFlows3.json"))
+            if (File.Exists("Content/Data/DungeonFlows4.json"))
             {
-                var json = File.ReadAllText("Content/Data/DungeonFlows3.json");
+                var json = File.ReadAllText("Content/Data/DungeonFlows4.json");
                 flow = Json.FromJson<DungeonFlow>(json);
             }
             else return;
@@ -35,31 +35,34 @@ namespace Threadlock.SceneComponents
             dungeonGraph.ProcessGraph(flow.Nodes);
             var loops = dungeonGraph.Loops;
             var trees = dungeonGraph.Trees;
+            var allComposites = loops.Concat(trees);
 
             //all map entities in the dungeon
             List<DungeonRoomEntity> allMapEntities = new List<DungeonRoomEntity>();
 
-            //loop through tree composites
+            //handle tree composites
             foreach (var tree in trees)
             {
                 //list of all maps in this tree
                 var mapEntities = new List<DungeonRoomEntity>();
-
+                
                 DungeonRoomEntity prevMapEntity = null;
                 foreach (var node in tree)
                 {
                     //get potential maps
                     var possibleMaps = GetPossibleMapsByNode(node);
 
+                    //create map entity
+                    var mapEntity = Scene.AddEntity(new DungeonRoomEntity(node.Id));
+
+                    //try maps until a valid one is found
                     while (possibleMaps.Count > 0)
                     {
                         //pick a random map
                         var map = possibleMaps.RandomItem();
-
-                        //create map entity
-                        var mapEntity = Scene.AddEntity(new DungeonRoomEntity(node.Id));
+                        
+                        //create map
                         mapEntity.CreateMap(map);
-                        mapEntities.Add(mapEntity);
 
                         //only validate for previous node if it isn't null (ie this isn't the first in composite)
                         if (prevMapEntity != null)
@@ -154,66 +157,243 @@ namespace Threadlock.SceneComponents
                                 //try again
                                 continue;
                             }
-
-                            //map validation successful
-                            break;
                         }
 
-                        //update prev map entity for next loop iteration
-                        prevMapEntity = mapEntity;
+                        //map validation successful
+                        break;
                     }
+
+                    //add entity to list
+                    mapEntities.Add(mapEntity);
+
+                    //update prev map entity for next loop iteration
+                    prevMapEntity = mapEntity;
                 }
 
                 //finished with tree. add all map entities from this tree to the total list
                 allMapEntities.AddRange(mapEntities);
             }
 
-            //connect composites
-            foreach (var tree in trees)
+            //handle loop composites
+            foreach (var loop in loops)
             {
-                foreach (var node in tree)
+                //list of all maps in this loop
+                var mapEntities = new List<DungeonRoomEntity>();
+
+                DungeonRoomEntity prevMapEntity = null;
+                for (int i = 0; i < loop.Count; i++)
                 {
-                    var mapEntity = allMapEntities.Find(e => e.Id == node.Id);
+                    var node = loop[i];
 
-                    foreach (var child in node.Children)
+                    //get potential maps
+                    var possibleMaps = GetPossibleMapsByNode(node);
+
+                    //create map entity
+                    var mapEntity = Scene.AddEntity(new DungeonRoomEntity(node.Id));
+
+                    //try maps until a valid one is found
+                    while (possibleMaps.Count > 0)
                     {
-                        if (!tree.Any(n => n.Id == child.ChildNodeId))
+                        //pick a random map
+                        var map = possibleMaps.RandomItem();
+
+                        //create map
+                        mapEntity.CreateMap(map);
+
+                        //only validate for previous node if it isn't null (ie this isn't the first in composite)
+                        if (prevMapEntity != null)
                         {
-                            //make connection between composites
-                            var connectingMapEntity = allMapEntities.Find(e => e.Id == child.ChildNodeId);
+                            //get doorways
+                            var prevNodeDoorways = prevMapEntity.FindComponentsOnMap<DungeonDoorway>();
+                            var newNodeDoorways = mapEntity.FindComponentsOnMap<DungeonDoorway>();
 
-                            var connectingMapDoorways = Scene.FindComponentsOfType<DungeonDoorway>()
-                                .Where(d => d.MapEntity == connectingMapEntity && !d.HasConnection);
-                            var currentMapDoorways = Scene.FindComponentsOfType<DungeonDoorway>()
-                                .Where(d => d.MapEntity == mapEntity && !d.HasConnection);
+                            //get possible doorway pairs
+                            var pairsList = GetValidDoorwayPairs(prevNodeDoorways, newNodeDoorways);
 
-                            var pairs = from d1 in currentMapDoorways.Where(d => !d.HasConnection)
-                                        from d2 in connectingMapDoorways.Where(d => !d.HasConnection)
-                                        where d1.IsDirectMatch(d2)
-                                        select new { PrevDoorway = d1, NextDoorway = d2 };
-
-                            var pairsList = pairs.ToList();
-
-                            var pair = pairsList.RandomItem();
-
-                            var pos = GetRoomPositionByDoorwayPair(pair.PrevDoorway, pair.NextDoorway);
-
-                            var diff = pos - connectingMapEntity.Position;
-
-                            //move all maps in the other composite
-                            foreach (var tree2 in trees)
+                            //sort by distance to starting room
+                            if (i > 0)
                             {
-                                if (tree2.Any(t => t.Id == child.ChildNodeId))
+                                pairsList = pairsList.OrderBy(p => Vector2.Distance(p.Item1.Entity.Position, mapEntities.First().Position)).ToList();
+                            }
+
+                            bool roomPlaced = false;
+                            while (pairsList.Count > 0)
+                            {
+                                Tuple<DungeonDoorway, DungeonDoorway> pair = null;
+                                if (i < loop.Count / 2)
+                                    pair = pairsList.Last();
+                                else if (i >= loop.Count / 2)
+                                    pair = pairsList.First();
+                                else
+                                    pair = pairsList.RandomItem();
+
+                                //get the ideal position for the new room entity based on the pair
+                                var entityPos = GetRoomPositionByDoorwayPair(pair.Item1, pair.Item2);
+
+                                //set the map's position
+                                mapEntity.SetPosition(entityPos);
+
+                                //get rectangle of this map
+                                var newMapRect = new RectangleF(mapEntity.Position.X, mapEntity.Position.Y, map.Width * map.TileWidth, map.Height * map.TileHeight);
+
+                                //loop through previously placed maps
+                                bool isInvalidPair = false;
+                                foreach (var mapEnt in mapEntities.Where(e => e != mapEntity))
                                 {
-                                    foreach (var tree2child in tree2)
+                                    //get rectangle of the previously placed map
+                                    var prevMapRenderer = mapEnt.GetComponent<TiledMapRenderer>();
+                                    var prevMap = prevMapRenderer.TiledMap;
+                                    var prevMapRect = new RectangleF(mapEnt.Position.X, mapEnt.Position.Y, prevMap.Width * prevMap.TileWidth, prevMap.Height * prevMap.TileHeight);
+
+                                    //if there is no overlap, continue
+                                    if (!newMapRect.Intersects(prevMapRect))
+                                        continue;
+
+                                    //if there is some overlap, check each tile on the new map
+                                    foreach (var layer in map.TileLayers)
                                     {
-                                        var ent = allMapEntities.First(e => e.RoomId == tree2child.Id);
-                                        ent.Position += diff;
-                                    }    
+                                        //check each non-null tile
+                                        foreach (var tile in layer.Tiles.Where(t => t != null))
+                                        {
+                                            //get bounds of this tile
+                                            var tileBounds = new RectangleF(tile.X * map.TileWidth, tile.Y * map.TileHeight, map.TileWidth, map.TileHeight);
+                                            tileBounds.X += mapEntity.Position.X;
+                                            tileBounds.Y += mapEntity.Position.Y;
+
+                                            //check if bounds of this tile overlaps any layers in previously placed maps
+                                            if (prevMapRenderer.TiledMap.TileLayers.Any(l => l.GetTilesIntersectingBounds(tileBounds).Count > 0))
+                                            {
+                                                //new map would overlap a previously placed map, this pair is invalid
+                                                isInvalidPair = true;
+                                                break;
+                                            }
+                                        }
+
+                                        if (isInvalidPair)
+                                            break;
+                                    }
+
+                                    if (isInvalidPair)
+                                        break;
                                 }
+
+                                //invalid pair. remove from list and try again
+                                if (isInvalidPair)
+                                {
+                                    pairsList.Remove(pair);
+                                    continue;
+                                }
+
+                                //pair successfully validated. Set doorways as open
+                                pair.Item1.SetOpen(true);
+                                pair.Item2.SetOpen(true);
+
+                                roomPlaced = true;
+                                break;
+                            }
+
+                            //room not placed for any pair. map is invalid.
+                            if (!roomPlaced)
+                            {
+                                //destroy map entity
+                                mapEntity.Destroy();
+
+                                //remove the invalid map from possible maps list
+                                possibleMaps.Remove(map);
+
+                                //try again
+                                continue;
                             }
                         }
+
+                        //map validation successful
+                        break;
                     }
+
+                    //add entity to list
+                    mapEntities.Add(mapEntity);
+
+                    //update prev map entity for next loop iteration
+                    prevMapEntity = mapEntity;
+                }
+
+                //handle connecting end of loop to beginning
+                var startEntity = mapEntities.First();
+                var endEntity = mapEntities.Last();
+
+                //get pairs and order by distance between each other
+                var pairs = GetValidDoorwayPairs(endEntity.FindComponentsOnMap<DungeonDoorway>(), startEntity.FindComponentsOnMap<DungeonDoorway>(), false);
+                pairs = pairs.OrderBy(p => Vector2.Distance(p.Item1.Entity.Position, p.Item2.Entity.Position)).ToList();
+
+                //open pair
+                var finalPair = pairs.First();
+                finalPair.Item1.SetOpen(true);
+                finalPair.Item2.SetOpen(true);
+
+                //finished with loop. add all map entities from this loop to the total list
+                allMapEntities.AddRange(mapEntities);
+            }
+
+            //connect composites
+            //get nodes that have children that aren't in their own composite
+            var compositeParentNodes = flow.Nodes
+                .Where(n =>
+                {
+                    var composite = allComposites.First(t => t.Contains(n));
+                    return n.Children.Any(c => !composite.Any(comp => comp.Id == c.ChildNodeId));
+                })
+                .OrderByDescending(n => n.Children.Count());
+
+            foreach (var parentNode in compositeParentNodes)
+            {
+                //get the map entity this node is associated with
+                var parentMapEntity = allMapEntities.First(m => m.RoomId == parentNode.Id);
+
+                //get composite this node is part of
+                var composite = allComposites.First(t => t.Contains(parentNode));
+
+                //get children that aren't in this composite
+                var childMapEntities = allMapEntities
+                    .Where(m =>
+                    {
+                        var childNodeIds = parentNode.Children
+                            .Where(c => !composite.Any(comp => comp.Id == c.ChildNodeId))
+                            .Select(conn => conn.ChildNodeId);
+                        return childNodeIds.Contains(m.RoomId);
+                    });
+
+                //loop through children that aren't in this composite
+                foreach (var childEntity in childMapEntities)
+                {
+                    //get doorways
+                    var parentNodeDoorways = parentMapEntity.FindComponentsOnMap<DungeonDoorway>();
+                    var childNodeDoorways = childEntity.FindComponentsOnMap<DungeonDoorway>();
+
+                    //get possible doorway pairs
+                    var pairsList = GetValidDoorwayPairs(parentNodeDoorways, childNodeDoorways);
+
+                    //pick random pair
+                    var pair = pairsList.RandomItem();
+
+                    //get ideal position for connecting room
+                    var pos = GetRoomPositionByDoorwayPair(pair.Item1, pair.Item2);
+
+                    //get distance we need to move each room in this composite
+                    var diff = pos - childEntity.Position;
+
+                    //get the composite this child node is part of
+                    var childNodeComposite = allComposites.First(t => t.Contains(flow.Nodes.First(n => n.Id == childEntity.RoomId)));
+
+                    //move each map in the child node composite
+                    foreach (var childCompNode in childNodeComposite)
+                    {
+                        var childCompNodeEnt = allMapEntities.First(m => m.RoomId == childCompNode.Id);
+                        childCompNodeEnt.Position += diff;
+                    }
+
+                    //successfully moved, set doorways as open
+                    pair.Item1.SetOpen(true);
+                    pair.Item2.SetOpen(true);
                 }
             }
         }
