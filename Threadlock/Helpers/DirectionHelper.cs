@@ -11,6 +11,61 @@ namespace Threadlock.Helpers
     public static class DirectionHelper
     {
         /// <summary>
+        /// all directions around a point (both horizontal and diagonal)
+        /// </summary>
+        public static List<Vector2> PrincipleDirections
+        {
+            get
+            {
+                return new List<Vector2>()
+                {
+                    new Vector2(0, -1),
+                    new Vector2(1, -1),
+                    new Vector2(1, 0),
+                    new Vector2(1, 1),
+                    new Vector2(0, 1),
+                    new Vector2(-1, 1),
+                    new Vector2(-1, 0),
+                    new Vector2(-1, -1)
+                };
+            }
+        }
+        
+        /// <summary>
+        /// four horizontal directions
+        /// </summary>
+        public static List<Vector2> CardinalDirections
+        {
+            get
+            {
+                return new List<Vector2>()
+                {
+                    new Vector2(0, -1),
+                    new Vector2(1, 0),
+                    new Vector2(0, 1),
+                    new Vector2(-1, 0)
+                };
+            }
+        }
+
+        /// <summary>
+        /// four diagonal directions
+        /// </summary>
+        public static List<Vector2> OrdinalDirections
+        {
+            get
+            {
+                return new List<Vector2>()
+                {
+                    new Vector2(1, -1),
+                    new Vector2(1, 1),
+                    new Vector2(-1, 1),
+                    new Vector2(-1, -1)
+                };
+            }
+        }
+
+        /// <summary>
         /// given a direction, returns an empty string for left and right, Down for an angle facing down, and Up for an angle facing up
         /// </summary>
         /// <param name="direction"></param>

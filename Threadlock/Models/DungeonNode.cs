@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components.TiledComponents;
+using Threadlock.Entities;
 
 namespace Threadlock.Models
 {
@@ -15,5 +16,6 @@ namespace Threadlock.Models
         public int Id;
         public string Type;
         public List<DungeonConnection> Children;
+        public DungeonRoomEntity RoomEntity;
     }
 }

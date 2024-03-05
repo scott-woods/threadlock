@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="5" height="5" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="1">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="5" height="5" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="2">
  <tileset firstgid="1" source="../../../Tilesets/forge_tileset.tsx"/>
  <tileset firstgid="626" source="../../../Tilesets/dungeon_prison.tsx"/>
  <layer id="1" name="Back" width="5" height="5">
@@ -56,4 +56,9 @@
 0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="7" name="Entities">
+  <object id="1" name="PathfindingOrigin" x="32" y="0">
+   <point/>
+  </object>
+ </objectgroup>
 </map>

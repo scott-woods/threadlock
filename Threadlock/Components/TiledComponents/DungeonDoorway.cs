@@ -16,12 +16,34 @@ namespace Threadlock.Components.TiledComponents
     public class DungeonDoorway : TiledComponent
     {
         public bool HasConnection = false;
-        public Vector2 PathfindingOffset;
+        public Vector2 PathfindingOffset
+        {
+            get
+            {
+                if (_parentMap != null && _parentMap.Properties != null && _parentMap.Properties.TryGetValue("Area", out var area))
+                {
+                    var mapName = $"{area.ToLower()}_{Direction.ToLower()}_open";
+                    var openMap = base.Entity.Scene.Content.LoadTiledMap($@"Content\Tiled\Tilemaps\{area}\Doorways\{mapName}.tmx");
+
+                    if (openMap != null && openMap.ObjectGroups != null && openMap.ObjectGroups.SelectMany(g => g.Objects) != null)
+                    {
+                        var offsetObj = openMap.ObjectGroups.SelectMany(g => g.Objects).First(o => o.Name == "PathfindingOrigin");
+                        if (offsetObj != null)
+                        {
+                            return new Vector2(offsetObj.X / openMap.TileWidth, offsetObj.Y / openMap.TileHeight);
+                        }
+                    }
+                }
+                
+                return Vector2.Zero;
+            }
+        }
         public string Direction;
         public DungeonRoom DungeonRoom;
 
         List<TiledMapRenderer> _mapRenderers = new List<TiledMapRenderer>();
         TmxMap _map;
+        public TmxMap Map { get { return _map; } }
         TmxMap _parentMap;
         TiledMapRenderer _gateRenderer;
         bool _processed = false;
@@ -31,11 +53,11 @@ namespace Threadlock.Components.TiledComponents
             base.Initialize();
 
             //get pathfinding offset
-            if (TmxObject.Properties.TryGetValue("PathfindingOffset", out var pathfindingOffset))
-            {
-                var offsetValues = pathfindingOffset.Split(' ');
-                PathfindingOffset = new Vector2(Convert.ToInt32(offsetValues[0]), Convert.ToInt32(offsetValues[1]));
-            }
+            //if (TmxObject.Properties.TryGetValue("PathfindingOffset", out var pathfindingOffset))
+            //{
+            //    var offsetValues = pathfindingOffset.Split(' ');
+            //    PathfindingOffset = new Vector2(Convert.ToInt32(offsetValues[0]), Convert.ToInt32(offsetValues[1]));
+            //}
 
             //get direction exit is facing
             if (TmxObject.Properties.TryGetValue("Direction", out var direction))
