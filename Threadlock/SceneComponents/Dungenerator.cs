@@ -8,12 +8,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Xml.Linq;
 using Threadlock.Components;
 using Threadlock.Components.TiledComponents;
 using Threadlock.Entities;
 using Threadlock.Helpers;
 using Threadlock.Models;
+using Threadlock.StaticData;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using RectangleF = Nez.RectangleF;
@@ -22,6 +24,7 @@ namespace Threadlock.SceneComponents
 {
     public class Dungenerator : SceneComponent
     {
+        const int _maxAttempts = 100;
         List<DungeonRoomEntity> _allMapEntities = new List<DungeonRoomEntity>();
         List<DungeonComposite> _allComposites = new List<DungeonComposite>();
 
@@ -29,9 +32,9 @@ namespace Threadlock.SceneComponents
         {
             //read flow file
             DungeonFlow flow = new DungeonFlow();
-            if (File.Exists("Content/Data/DungeonFlows4.json"))
+            if (File.Exists("Content/Data/DungeonFlows.json"))
             {
-                var json = File.ReadAllText("Content/Data/DungeonFlows4.json");
+                var json = File.ReadAllText("Content/Data/DungeonFlows.json");
                 flow = Json.FromJson<DungeonFlow>(json);
             }
             else return;
@@ -50,417 +53,717 @@ namespace Threadlock.SceneComponents
                 _allComposites.Add(composite);
             }
 
-            //handle tree composites
-            HandleTrees(_allComposites.Where(c => c.CompositeType == DungeonCompositeType.Tree).ToList());
+            var attempts = 0;
+            while (attempts < _maxAttempts)
+            {
+                //increment attempts
+                attempts++;
 
-            //handle loop composites
-            HandleLoops(_allComposites.Where(c => c.CompositeType == DungeonCompositeType.Loop).ToList());
+                //handle tree composites
+                var treeSuccess = HandleTrees(_allComposites.Where(c => c.CompositeType == DungeonCompositeType.Tree).ToList());
+                if (!treeSuccess)
+                {
+                    foreach (var composite in _allComposites)
+                    {
+                        foreach (var tileRenderer in composite.SingleTileRenderers)
+                        {
+                            tileRenderer.Entity.Destroy();
+                        }
+                        composite.SingleTileRenderers.Clear();
+                    }
+                    foreach (var map in _allMapEntities)
+                        map.ClearMap();
+                    _allMapEntities.Clear();
+                    continue;
+                }
 
-            //foreach (var comp in _allComposites)
-            //{
-            //    var compositeMapEntities = _allMapEntities.Where(e => comp.Any(c => c.Id == e.RoomId)).ToList();
-            //}
+                //handle loop composites
+                var loopSuccess = HandleLoops(_allComposites.Where(c => c.CompositeType == DungeonCompositeType.Loop).ToList());
+                if (!loopSuccess)
+                {
+                    foreach (var composite in _allComposites)
+                    {
+                        foreach (var tileRenderer in composite.SingleTileRenderers)
+                        {
+                            tileRenderer.Entity.Destroy();
+                        }
+                        composite.SingleTileRenderers.Clear();
+                    }
+                    foreach (var map in _allMapEntities)
+                        map.ClearMap();
+                    _allMapEntities.Clear();
+                    continue;
+                }
 
-            //var graph = CreatePathfindingGraph();
+                //connect composites
+                var connectionSuccessful = ConnectComposites();
+                if (!connectionSuccessful)
+                {
+                    foreach (var composite in _allComposites)
+                    {
+                        foreach (var tileRenderer in composite.SingleTileRenderers)
+                        {
+                            tileRenderer.Entity.Destroy();
+                        }
+                        composite.SingleTileRenderers.Clear();
+                    }
+                    foreach (var map in _allMapEntities)
+                        map.ClearMap();
+                    _allMapEntities.Clear();
+                    continue;
+                }
 
-            //connect composites
-            ConnectComposites();
+                break;
+            }
         }
 
         #region HANDLE LOOPS/TREES
 
-        void HandleTrees(List<DungeonComposite> trees)
+        bool HandleTrees(List<DungeonComposite> trees)
         {
             foreach (var tree in trees)
             {
                 //rooms that have been processed
                 var processedRooms = new List<DungeonRoomEntity>();
 
-                DungeonRoomEntity prevMapEntity = null;
-                foreach (var roomEntity in tree.RoomEntities)
+                var attempts = 0;
+                while (attempts < _maxAttempts)
                 {
-                    //get potential maps
-                    var possibleMaps = roomEntity.GetPossibleMaps();
+                    attempts++;
 
-                    //try maps until a valid one is found
-                    while (possibleMaps.Count > 0)
+                    DungeonRoomEntity prevMapEntity = null;
+                    bool treeSuccess = true;
+                    foreach (var roomEntity in tree.RoomEntities)
                     {
-                        //pick a random map
-                        var map = possibleMaps.RandomItem();
+                        //get potential maps
+                        var possibleMaps = roomEntity.GetPossibleMaps();
 
-                        //create map
-                        roomEntity.CreateMap(map);
-
-                        //only validate for previous node if it isn't null (ie this isn't the first in composite)
-                        if (prevMapEntity != null)
+                        //try maps until a valid one is found
+                        while (possibleMaps.Count > 0)
                         {
-                            //get doorways
-                            var prevNodeDoorways = prevMapEntity.FindComponentsOnMap<DungeonDoorway>();
-                            var newNodeDoorways = roomEntity.FindComponentsOnMap<DungeonDoorway>();
+                            //pick a random map
+                            var map = possibleMaps.RandomItem();
 
-                            //get possible doorway pairs
-                            var pairsList = GetValidDoorwayPairs(prevNodeDoorways, newNodeDoorways);
+                            //create map
+                            roomEntity.CreateMap(map);
 
-                            bool roomPlaced = false;
-                            while (pairsList.Count > 0)
+                            //only validate for previous node if it isn't null (ie this isn't the first in composite)
+                            if (prevMapEntity != null)
                             {
-                                //pick a random doorway pair
-                                var pair = pairsList.RandomItem();
+                                //get doorways
+                                var prevNodeDoorways = prevMapEntity.FindComponentsOnMap<DungeonDoorway>();
+                                var newNodeDoorways = roomEntity.FindComponentsOnMap<DungeonDoorway>();
 
-                                //get the ideal position for the new room entity based on the pair
-                                var entityPos = GetRoomPositionByDoorwayPair(pair.Item1, pair.Item2);
+                                //get possible doorway pairs
+                                var pairsList = GetValidDoorwayPairs(prevNodeDoorways, newNodeDoorways);
 
-                                //set the map's position
-                                roomEntity.SetPosition(entityPos);
-
-                                //check for overlap with already processed rooms
-                                if (processedRooms.Any(r => roomEntity.OverlapsRoom(r)))
+                                while (pairsList.Count > 0)
                                 {
-                                    //overlap found, remove pair and try again
-                                    pairsList.Remove(pair);
-                                    continue;
+                                    //pick a random doorway pair
+                                    var pair = pairsList.RandomItem();
+
+                                    //get the ideal position for the new room entity based on the pair
+                                    var movement = GetMovementToAlignDoorways(pair.Item1, pair.Item2);
+
+                                    //set the map's position
+                                    roomEntity.Position += movement;
+
+                                    //check for overlap with already processed rooms
+                                    if (processedRooms.Any(r => roomEntity.OverlapsRoom(r)))
+                                    {
+                                        //overlap found, remove pair and try again
+                                        pairsList.Remove(pair);
+                                        continue;
+                                    }
+
+                                    //pair successfully validated. Set doorways as open
+                                    pair.Item1.SetOpen(true);
+                                    pair.Item2.SetOpen(true);
+
+                                    break;
                                 }
 
-                                //pair successfully validated. Set doorways as open
-                                pair.Item1.SetOpen(true);
-                                pair.Item2.SetOpen(true);
+                                //room not placed for any pair. map is invalid.
+                                if (pairsList.Count == 0)
+                                {
+                                    //destroy map entity
+                                    roomEntity.ClearMap();
 
-                                roomPlaced = true;
-                                break;
+                                    //remove the invalid map from possible maps list
+                                    possibleMaps.Remove(map);
+
+                                    //try again
+                                    continue;
+                                }
                             }
 
-                            //room not placed for any pair. map is invalid.
-                            if (!roomPlaced)
-                            {
-                                //destroy map entity
-                                roomEntity.ClearMap();
-
-                                //remove the invalid map from possible maps list
-                                possibleMaps.Remove(map);
-
-                                //try again
-                                continue;
-                            }
+                            //map validation successful
+                            break;
                         }
 
-                        //map validation successful
-                        break;
+                        //no maps were valid, try making tree again
+                        if (possibleMaps.Count == 0)
+                        {
+                            treeSuccess = false;
+                            break;
+                        }
+
+                        //add entity to list
+                        processedRooms.Add(roomEntity);
+
+                        //update prev map entity for next loop iteration
+                        prevMapEntity = roomEntity;
                     }
 
-                    //add entity to list
-                    processedRooms.Add(roomEntity);
+                    if (!treeSuccess)
+                    {
+                        foreach (var room in processedRooms)
+                            room.ClearMap();
 
-                    //update prev map entity for next loop iteration
-                    prevMapEntity = roomEntity;
+                        processedRooms.Clear();
+
+                        continue;
+                    }
+
+                    //finished with tree. add all map entities from this tree to the total list
+                    _allMapEntities.AddRange(processedRooms);
+
+                    break;
                 }
 
-                //finished with tree. add all map entities from this tree to the total list
-                _allMapEntities.AddRange(processedRooms);
+                if (attempts == _maxAttempts)
+                    return false;
             }
+
+            return true;
         }
 
-        void HandleLoops(List<DungeonComposite> loops)
+        bool HandleLoops(List<DungeonComposite> loops)
         {
+            //loop through each loop composite
             foreach (var loop in loops)
             {
                 //processed rooms
                 var processedRooms = new List<DungeonRoomEntity>();
 
-                //create rooms/maps
-                DungeonRoomEntity prevMapEntity = null;
-                for (int i = 0; i < loop.RoomEntities.Count; i++)
+                //try creating the loop
+                var attempts = 0;
+                while (attempts < _maxAttempts)
                 {
-                    var roomEntity = loop.RoomEntities[i];
+                    //increment attempts
+                    attempts++;
 
-                    //get potential maps
-                    var possibleMaps = roomEntity.GetPossibleMaps();
-
-                    //try maps until a valid one is found
-                    while (possibleMaps.Count > 0)
+                    //create rooms/maps
+                    bool roomsSuccessfullyCreated = true;
+                    DungeonRoomEntity prevMapEntity = null;
+                    for (int i = 0; i < loop.RoomEntities.Count; i++)
                     {
-                        //pick a random map
-                        var map = possibleMaps.RandomItem();
+                        //grab room entity
+                        var roomEntity = loop.RoomEntities[i];
 
-                        //create map
-                        roomEntity.CreateMap(map);
+                        //get potential maps
+                        var possibleMaps = roomEntity.GetPossibleMaps();
 
-                        //only validate for previous node if it isn't null (ie this isn't the first in composite)
-                        if (prevMapEntity != null)
+                        //try maps until a valid one is found
+                        while (possibleMaps.Count > 0)
                         {
-                            //get doorways
-                            var prevNodeDoorways = prevMapEntity.FindComponentsOnMap<DungeonDoorway>();
-                            var newNodeDoorways = roomEntity.FindComponentsOnMap<DungeonDoorway>();
+                            //pick a random map
+                            var map = possibleMaps.RandomItem();
 
-                            //get possible doorway pairs
-                            var pairsList = GetValidDoorwayPairs(prevNodeDoorways, newNodeDoorways);
+                            //create map
+                            roomEntity.CreateMap(map);
 
-                            //sort by distance to starting room
-                            if (i > 0)
+                            //validate for previous node if it isn't null (ie this isn't the first in composite)
+                            if (prevMapEntity != null)
                             {
-                                pairsList = pairsList.OrderBy(p => Vector2.Distance(p.Item1.Entity.Position, processedRooms.First().Position)).ToList();
-                            }
+                                //get doorways
+                                var prevNodeDoorways = prevMapEntity.FindComponentsOnMap<DungeonDoorway>();
+                                var newNodeDoorways = roomEntity.FindComponentsOnMap<DungeonDoorway>();
 
-                            bool roomPlaced = false;
-                            while (pairsList.Count > 0)
-                            {
-                                Tuple<DungeonDoorway, DungeonDoorway> pair = null;
-                                if (i == 0)
-                                    pair = pairsList.RandomItem();
-                                else if (i < loop.RoomEntities.Count / 2)
-                                    pair = pairsList.Last();
-                                else if (i >= loop.RoomEntities.Count / 2)
-                                    pair = pairsList.First();
-                                else
-                                    pair = pairsList.RandomItem();
+                                //get possible doorway pairs
+                                var pairsList = GetValidDoorwayPairs(prevNodeDoorways, newNodeDoorways);
 
-                                //get the ideal position for the new room entity based on the pair
-                                var entityPos = GetRoomPositionByDoorwayPair(pair.Item1, pair.Item2);
-
-                                //set the map's position
-                                roomEntity.SetPosition(entityPos);
-
-                                //check if the new room would overlap any previously processed rooms
-                                if (processedRooms.Any(r => roomEntity.OverlapsRoom(r)))
+                                //sort by distance to starting room
+                                if (i > 0)
                                 {
-                                    //overlap found, remove pair and try again
-                                    pairsList.Remove(pair);
-                                    continue;
+                                    pairsList = pairsList.OrderBy(p => Vector2.Distance(p.Item1.Entity.Position, processedRooms.First().Position)).ToList();
                                 }
 
-                                //pair successfully validated. Set doorways as open
-                                pair.Item1.SetOpen(true);
-                                pair.Item2.SetOpen(true);
+                                //try to find a valid pair
+                                while (pairsList.Count > 0)
+                                {
+                                    //pick a pair based on where we are in the loop
+                                    Tuple<DungeonDoorway, DungeonDoorway> pair = null;
+                                    if (i == 0)
+                                        pair = pairsList.RandomItem();
+                                    else if (i < loop.RoomEntities.Count / 2)
+                                        pair = pairsList.Last();
+                                    else if (i >= loop.RoomEntities.Count / 2)
+                                        pair = pairsList.First();
+                                    else
+                                        pair = pairsList.RandomItem();
 
-                                roomPlaced = true;
-                                break;
+                                    //get the ideal position for the new room entity based on the pair
+                                    var movement = GetMovementToAlignDoorways(pair.Item1, pair.Item2);
+
+                                    //set the map's position
+                                    roomEntity.Position += movement;
+
+                                    //check if the new room would overlap any previously processed rooms
+                                    if (processedRooms.Any(r => roomEntity.OverlapsRoom(r)))
+                                    {
+                                        //overlap found, remove pair and try again
+                                        pairsList.Remove(pair);
+                                        continue;
+                                    }
+
+                                    //pair successfully validated. Set doorways as open
+                                    pair.Item1.SetOpen(true);
+                                    pair.Item2.SetOpen(true);
+
+                                    break;
+                                }
+
+                                //no pairs were valid, try another map
+                                if (pairsList.Count == 0)
+                                {
+                                    //destroy map entity
+                                    roomEntity.ClearMap();
+
+                                    //remove the invalid map from possible maps list
+                                    possibleMaps.Remove(map);
+
+                                    //try again
+                                    continue;
+                                }
                             }
 
-                            //room not placed for any pair. map is invalid.
-                            if (!roomPlaced)
-                            {
-                                //destroy map entity
-                                roomEntity.ClearMap();
-
-                                //remove the invalid map from possible maps list
-                                possibleMaps.Remove(map);
-
-                                //try again
-                                continue;
-                            }
+                            //map validation successful
+                            break;
                         }
 
-                        //map validation successful
-                        break;
-                    }
-
-                    //add entity to list
-                    processedRooms.Add(roomEntity);
-
-                    //update prev map entity for next loop iteration
-                    prevMapEntity = roomEntity;
-                }
-
-                //create pathfinding graph
-                //var graph = new AstarGridGraph((int)compositeBounds.Width, (int)compositeBounds.Height);
-                var graph = loop.GetPathfindingGraph();
-
-                //handle connecting end of loop to beginning
-                var startEntity = processedRooms.First();
-                var endEntity = processedRooms.Last();
-
-                //get pairs and order by distance between each other
-                var pairs = GetValidDoorwayPairs(endEntity.FindComponentsOnMap<DungeonDoorway>(), startEntity.FindComponentsOnMap<DungeonDoorway>(), false);
-                pairs = pairs.OrderBy(p => Vector2.Distance(p.Item1.Entity.Position, p.Item2.Entity.Position)).ToList();
-
-                //open pair
-                var finalPair = pairs.First();
-                finalPair.Item1.SetOpen(true);
-                finalPair.Item2.SetOpen(true);
-
-                var endDoorwayPos = new Vector2(finalPair.Item1.Entity.Position.X / 16, finalPair.Item1.Entity.Position.Y / 16).ToPoint();
-                var startDoorwayPos = new Vector2(finalPair.Item2.Entity.Position.X / 16, finalPair.Item2.Entity.Position.Y / 16).ToPoint();
-                endDoorwayPos += finalPair.Item1.PathfindingOffset.ToPoint();
-                startDoorwayPos += finalPair.Item2.PathfindingOffset.ToPoint();
-                switch (finalPair.Item1.Direction)
-                {
-                    case "Top":
-                        endDoorwayPos.Y -= 2;
-                        break;
-                    case "Bottom":
-                        endDoorwayPos.Y += 2;
-                        break;
-                    case "Left":
-                        endDoorwayPos.X -= 2;
-                        break;
-                    case "Right":
-                        endDoorwayPos.X += 2;
-                        break;
-                }
-                switch (finalPair.Item2.Direction)
-                {
-                    case "Top":
-                        startDoorwayPos.Y -= 2;
-                        break;
-                    case "Bottom":
-                        startDoorwayPos.Y += 2;
-                        break;
-                    case "Left":
-                        startDoorwayPos.X -= 2;
-                        break;
-                    case "Right":
-                        startDoorwayPos.X += 2;
-                        break;
-                }
-
-                var offsetPos = loop.Bounds.Location / 16;
-                var endDoorwayGraphPos = endDoorwayPos - offsetPos.ToPoint();
-                var startDoorwayGraphPos = startDoorwayPos - offsetPos.ToPoint();
-
-                graph.Walls.Remove(endDoorwayGraphPos);
-                graph.Walls.Remove(startDoorwayGraphPos);
-
-                var isPathValid = false;
-                while (!isPathValid)
-                {
-                    var path = graph.Search(endDoorwayGraphPos, startDoorwayGraphPos);
-
-                    if (path == null)
-                        break;
-
-                    var adjustedPath = path.Select(p =>
-                    {
-                        return (new Vector2(p.X, p.Y) * 16) + loop.Bounds.Location;
-                    }).ToList();
-
-                    var largerPath = IncreaseCorridorWidth(adjustedPath);
-
-                    //check all renderers. if any tile in the path would overlap, this path is invalid. add a wall there.
-                    var renderers = processedRooms.SelectMany(e => e.GetComponents<TiledMapRenderer>());
-                    bool arePointsRemoved = false;
-                    foreach (var renderer in renderers.Where(r => r.CollisionLayer != null))
-                    {
-                        foreach (var pathPair in largerPath)
+                        //no maps were valid
+                        if (possibleMaps.Count == 0)
                         {
-                            if (pathPair.Value.Any(p => renderer.GetTileAtWorldPosition(p) != null || DirectionHelper.CardinalDirections.Any(d => renderer.GetTileAtWorldPosition(p + (d * 16)) != null)))
-                            {
-                                var positionToAddToWalls = pathPair.Key - loop.Bounds.Location;
-                                positionToAddToWalls /= 16;
-                                if (!graph.Walls.Contains(positionToAddToWalls.ToPoint()))
-                                    graph.Walls.Add(positionToAddToWalls.ToPoint());
-                                arePointsRemoved = true;
-                                break;
-                            }
+                            roomsSuccessfullyCreated = false;
+                            break;
                         }
+
+                        //add entity to list
+                        processedRooms.Add(roomEntity);
+
+                        //update prev map entity for next loop iteration
+                        prevMapEntity = roomEntity;
                     }
 
-                    if (arePointsRemoved)
+                    //if error occurred while creating rooms, move to next attempt
+                    if (!roomsSuccessfullyCreated)
+                    {
+                        //clear any processed rooms
+                        foreach (var room in processedRooms)
+                        {
+                            room.ClearMap();
+                        }
+                        processedRooms.Clear();
+
                         continue;
-                    else
-                        isPathValid = true;
+                    }
 
-                    using (var stream = TitleContainer.OpenStream(Nez.Content.Tiled.Tilesets.Forge_tileset))
+                    //CLOSE THE LOOP
+
+                    //adjust room positions to prepare for pathfinding
+                    loop.AdjustForPathfinding(25);
+
+                    //handle connecting end of loop to beginning
+                    var startEntity = processedRooms.First();
+                    var endEntity = processedRooms.Last();
+
+                    //get pairs and order by distance between each other
+                    var pairs = GetValidDoorwayPairs(endEntity.FindComponentsOnMap<DungeonDoorway>(), startEntity.FindComponentsOnMap<DungeonDoorway>(), false);
+                    pairs = pairs.OrderBy(p => Vector2.Distance(p.Item1.Entity.Position, p.Item2.Entity.Position)).ToList();
+
+                    //try pairs
+                    while (pairs.Count > 0)
                     {
-                        var xDocTileset = XDocument.Load(stream);
+                        //pick first pair
+                        var pair = pairs.First();
 
-                        string tsxDir = Path.GetDirectoryName(Nez.Content.Tiled.Tilesets.Forge_tileset);
-                        var tileset = new TmxTileset().LoadTmxTileset(null, xDocTileset.Element("tileset"), 0, tsxDir);
-                        tileset.TmxDirectory = tsxDir;
+                        var graph = loop.GetPathfindingGraph();
 
-                        var tile = tileset.TileRegions[202];
-                        foreach (var centerPos in largerPath)
+                        //try to find a path between the doorways
+                        if (ConnectDoorways(pair.Item1, pair.Item2, graph, processedRooms, out var path))
                         {
-                            var allPositions = new List<Vector2>();
-                            allPositions.Add(centerPos.Key);
-                            allPositions.AddRange(centerPos.Value);
-                            allPositions = allPositions.Distinct().ToList();
+                            //found a valid path, set doorways as open
+                            pair.Item1.SetOpen(true);
+                            pair.Item2.SetOpen(true);
 
-                            foreach (var pos in centerPos.Value)
+                            //open tileset
+                            using (var stream = TitleContainer.OpenStream(Nez.Content.Tiled.Tilesets.Forge_tileset))
                             {
-                                var ent = Scene.CreateEntity("tile", pos);
-                                ent.SetParent(startEntity);
-                                ent.AddComponent(new SingleTileRenderer(tileset.Image.Texture, tile));
+                                var xDocTileset = XDocument.Load(stream);
+
+                                string tsxDir = Path.GetDirectoryName(Nez.Content.Tiled.Tilesets.Forge_tileset);
+                                var tileset = new TmxTileset().LoadTmxTileset(null, xDocTileset.Element("tileset"), 0, tsxDir);
+                                tileset.TmxDirectory = tsxDir;
+
+                                var pathPoints = path.Values.SelectMany(v => v).Distinct().ToList();
+                                var tileRenderers = PaintFloorTiles(pathPoints, tileset, endEntity);
+
+                                loop.SingleTileRenderers.AddRange(tileRenderers);
                             }
                         }
+                        else
+                        {
+                            //pair was invalid, remove and try again
+                            pairs.Remove(pair);
+                            continue;
+                        }
 
-                        //PaintFloorTiles(adjustedPath, tileset);
-                        //GenerateWalls(adjustedPath, tileset);
+                        break;
                     }
+
+                    //if no pairs were valid, try another map
+                    if (pairs.Count == 0)
+                    {
+                        //clear any processed rooms
+                        foreach (var room in processedRooms)
+                        {
+                            room.ClearMap();
+                        }
+                        processedRooms.Clear();
+
+                        continue;
+                    }
+
+                    break;
                 }
+
+                if (attempts == _maxAttempts)
+                    return false;
 
                 //finished with loop. add all map entities from this loop to the total list
                 _allMapEntities.AddRange(processedRooms);
             }
+
+            return true;
         }
 
         #endregion
 
         #region COMPOSITES
 
-        void ConnectComposites()
+        bool ConnectComposites()
         {
-            foreach (var room in _allMapEntities
-                .Where(r => r.ChildrenOutsideComposite != null && r.ChildrenOutsideComposite.Count > 0)
-                .OrderByDescending(r => r.ChildrenOutsideComposite.Count))
+            var compositesToCheck = new List<DungeonComposite>();
+
+            foreach (var composite in _allComposites.OrderByDescending(c => c.GetRoomsFromChildrenComposites().Count))
             {
-                //loop through children that aren't in this composite
-                foreach (var childEntity in room.ChildrenOutsideComposite)
+                compositesToCheck.Add(composite);
+
+                var parentRooms = composite.RoomEntities
+                    .Where(r => r.ChildrenOutsideComposite != null && r.ChildrenOutsideComposite.Count > 0)
+                    .OrderByDescending(r => r.ChildrenOutsideComposite.Count).ToList();
+
+                foreach (var room in parentRooms)
                 {
-                    //get doorways
-                    var parentNodeDoorways = room.FindComponentsOnMap<DungeonDoorway>();
-                    var childNodeDoorways = childEntity.FindComponentsOnMap<DungeonDoorway>();
+                    //handle connections in random order
+                    var children = room.ChildrenOutsideComposite;
+                    children.Shuffle();
 
-                    //get possible doorway pairs
-                    var pairsList = GetValidDoorwayPairs(parentNodeDoorways, childNodeDoorways);
+                    //loop through children that aren't in this composite
+                    foreach (var childEntity in children)
+                    {
+                        var roomsToCheck = compositesToCheck.SelectMany(c => c.RoomEntities).ToList();
 
-                    //pick random pair
-                    var pair = pairsList.RandomItem();
+                        //get doorways
+                        var parentNodeDoorways = room.FindComponentsOnMap<DungeonDoorway>();
+                        var childNodeDoorways = childEntity.FindComponentsOnMap<DungeonDoorway>();
 
-                    //get ideal position for connecting room
-                    var pos = GetRoomPositionByDoorwayPair(pair.Item1, pair.Item2);
+                        //get possible doorway pairs
+                        var pairsList = GetValidDoorwayPairs(parentNodeDoorways, childNodeDoorways, false)
+                            .Where(p => p.Item1.Direction != p.Item2.Direction)
+                            .OrderByDescending(p => p.Item1.IsDirectMatch(p.Item2)).ToList();
 
-                    //get distance we need to move each room in this composite
-                    var diff = pos - childEntity.Position;
+                        while (pairsList.Count > 0)
+                        {
+                            //pick random pair, preference for perfect pairs
+                            var pair = pairsList.Any(p => p.Item1.IsDirectMatch(p.Item2))
+                                ? pairsList.Where(p => p.Item1.IsDirectMatch(p.Item2)).ToList().RandomItem()
+                                : pairsList.RandomItem();
 
-                    childEntity.ParentComposite.MoveRooms(diff);
+                            //determine direction to try placing the composite based on the chosen doorway pair
+                            var dir = Vector2.Zero;
+                            switch (pair.Item1.Direction)
+                            {
+                                case "Top":
+                                    dir.Y = -1;
+                                    break;
+                                case "Bottom":
+                                    dir.Y = 1;
+                                    break;
+                                case "Left":
+                                    dir.X = -1;
+                                    break;
+                                case "Right":
+                                    dir.X = 1;
+                                    break;
+                            }
+                            switch (pair.Item2.Direction)
+                            {
+                                case "Top":
+                                    dir.Y = 1;
+                                    break;
+                                case "Bottom":
+                                    dir.Y = -1;
+                                    break;
+                                case "Left":
+                                    dir.X = 1;
+                                    break;
+                                case "Right":
+                                    dir.X = -1;
+                                    break;
+                            }
 
-                    //successfully moved, set doorways as open
-                    pair.Item1.SetOpen(true);
-                    pair.Item2.SetOpen(true);
+                            //try to position the composite between 8 and 25 tiles away
+                            var distance = 8;
+                            bool success = false;
+                            while (distance < 250)
+                            {
+                                //how far away to move from the first doorway
+                                var worldDistance = distance * dir * 16;
+
+                                //move child composite
+                                var idealDoorwayOriginPos = pair.Item1.PathfindingOrigin + worldDistance;
+                                var movementAmount = idealDoorwayOriginPos - pair.Item2.PathfindingOrigin;
+                                childEntity.ParentComposite.MoveRooms(movementAmount, false);
+
+                                //check for overlap
+                                if (roomsToCheck.Any(p => childEntity.ParentComposite.RoomEntities.Any(r => r.OverlapsRoom(p))))
+                                {
+                                    //increment distance and try again
+                                    distance += 1;
+                                    continue;
+                                }
+                                else
+                                {
+                                    //get pathfinding graph
+                                    var roomsForGraph = roomsToCheck.Concat(childEntity.ParentComposite.RoomEntities).ToList();
+                                    var graph = CreateDungeonGraph(roomsForGraph);
+
+                                    //try to find a path between the doorways
+                                    if (ConnectDoorways(pair.Item1, pair.Item2, graph, roomsForGraph, out var path))
+                                    {
+                                        //found a valid path, set doorways as open
+                                        pair.Item1.SetOpen(true);
+                                        pair.Item2.SetOpen(true);
+
+                                        //open tileset
+                                        using (var stream = TitleContainer.OpenStream(Nez.Content.Tiled.Tilesets.Forge_tileset))
+                                        {
+                                            var xDocTileset = XDocument.Load(stream);
+
+                                            string tsxDir = Path.GetDirectoryName(Nez.Content.Tiled.Tilesets.Forge_tileset);
+                                            var tileset = new TmxTileset().LoadTmxTileset(null, xDocTileset.Element("tileset"), 0, tsxDir);
+                                            tileset.TmxDirectory = tsxDir;
+
+                                            var pathPoints = path.Values.SelectMany(v => v).Distinct().ToList();
+                                            var tileRenderers = PaintFloorTiles(pathPoints, tileset, childEntity);
+                                            room.ParentComposite.SingleTileRenderers.AddRange(tileRenderers);
+
+                                            success = true;
+                                            break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        distance += 1;
+                                        continue;
+                                    }
+                                }
+                            }
+
+                            //no position was valid, this pair is invalid. remove from list and try again
+                            if (!success)
+                            {
+                                pairsList.Remove(pair);
+                                continue;
+                            }
+
+                            break;
+                        }
+
+                        if (pairsList.Count == 0)
+                            return false;
+                    }
                 }
             }
+
+            return true;
         }
 
         #endregion
 
         #region HELPERS
 
-        Vector2 GetRoomPositionByDoorwayPair(DungeonDoorway previousDoorway, DungeonDoorway nextDoorway)
+        AstarGridGraph CreateDungeonGraph(List<DungeonRoomEntity> roomsToCheck)
         {
-            //world position of the doorway in previous room
-            var prevDoorwayWorldPos = previousDoorway.MapEntity.Position + new Vector2(previousDoorway.TmxObject.X, previousDoorway.TmxObject.Y);
-            var idealNextDoorwayWorldPos = prevDoorwayWorldPos;
+            //prepare entire dungeon for pathfinding by moving bounds above 0, 0
+            var top = _allComposites.Select(c => c.Bounds.Top).Min();
+            var left = _allComposites.Select(c => c.Bounds.Left).Min();
+            var topLeft = new Vector2(left, top);
+            var desiredPos = Vector2.Zero + (new Vector2(1, 1) * 16 * 25);
+            var amountToMove = desiredPos - topLeft;
+            foreach (var composite in _allComposites)
+            {
+                composite.MoveRooms(amountToMove, false);
+            }
 
-            //determine world pos that new doorway should be based on direction
-            var vDiff = nextDoorway.TmxObject.Height;
-            var hDiff = nextDoorway.TmxObject.Width;
-            switch (previousDoorway.Direction)
+            var bottom = _allComposites.Select(c => c.Bounds.Bottom).Max();
+            var right = _allComposites.Select(c => c.Bounds.Right).Max();
+
+            var graph = new AstarGridGraph((int)right / 16, (int)bottom / 16);
+
+            foreach (var map in roomsToCheck)
+            {
+                var collisionRenderer = map.GetComponents<TiledMapRenderer>().FirstOrDefault(r => r.CollisionLayer != null);
+                if (collisionRenderer != null)
+                {
+                    foreach (var tile in collisionRenderer.CollisionLayer.Tiles.Where(t => t != null))
+                    {
+                        var tileWorldPos = map.Position + new Vector2(tile.X * 16, tile.Y * 16);
+                        var adjustedTilePos = tileWorldPos / 16;
+
+                        var tilePoint = adjustedTilePos.ToPoint();
+                        if (!graph.Walls.Contains(tilePoint))
+                            graph.Walls.Add(tilePoint);
+                    }
+                }
+
+                var doorways = map.FindComponentsOnMap<DungeonDoorway>();
+                foreach (var doorway in doorways)
+                {
+                    for (int y = 0; y < doorway.TmxObject.Height / 16; y++)
+                    {
+                        for (int x = 0; x < doorway.TmxObject.Width / 16; x++)
+                        {
+                            var doorwayTileWorldPos = doorway.Entity.Position + new Vector2(x * 16, y * 16);
+                            var adjustedDoorwayTilePos = doorwayTileWorldPos / 16;
+
+                            var doorwayPoint = adjustedDoorwayTilePos.ToPoint();
+                            if (!graph.Walls.Contains(doorwayPoint))
+                                graph.Walls.Add(doorwayPoint);
+                        }
+                    }
+                }
+            }
+            
+            return graph;
+        }
+
+        bool ConnectDoorways(DungeonDoorway startDoor, DungeonDoorway endDoor, AstarGridGraph graph, List<DungeonRoomEntity> roomsToCheck, out Dictionary<Vector2, List<Vector2>> largerPath)
+        {
+            largerPath = new Dictionary<Vector2, List<Vector2>>();
+
+            var startDoorwayGridPos = (startDoor.PathfindingOrigin / 16).ToPoint();
+            var endDoorwayGridPos = (endDoor.PathfindingOrigin / 16).ToPoint();
+
+            switch (startDoor.Direction)
             {
                 case "Top":
-                    idealNextDoorwayWorldPos.Y -= vDiff;
+                    startDoorwayGridPos.Y -= 2;
                     break;
                 case "Bottom":
-                    idealNextDoorwayWorldPos.Y += vDiff;
+                    startDoorwayGridPos.Y += 2;
                     break;
                 case "Left":
-                    idealNextDoorwayWorldPos.X -= hDiff;
+                    startDoorwayGridPos.X -= 2;
                     break;
                 case "Right":
-                    idealNextDoorwayWorldPos.X += hDiff;
+                    startDoorwayGridPos.X += 2;
+                    break;
+            }
+            switch (endDoor.Direction)
+            {
+                case "Top":
+                    endDoorwayGridPos.Y -= 2;
+                    break;
+                case "Bottom":
+                    endDoorwayGridPos.Y += 2;
+                    break;
+                case "Left":
+                    endDoorwayGridPos.X -= 2;
+                    break;
+                case "Right":
+                    endDoorwayGridPos.X += 2;
                     break;
             }
 
-            //determine ideal entity position for the new room based on the lined up doorway
-            return idealNextDoorwayWorldPos - new Vector2(nextDoorway.TmxObject.X, nextDoorway.TmxObject.Y);
+            graph.Walls.Remove(startDoorwayGridPos);
+            graph.Walls.Remove(endDoorwayGridPos);
+
+            var isPathValid = false;
+            while (!isPathValid)
+            {
+                isPathValid = true;
+
+                largerPath.Clear();
+
+                //try finding a path
+                var path = graph.Search(startDoorwayGridPos, endDoorwayGridPos);
+
+                //if no path found, connection failed
+                if (path == null)
+                    return false;
+
+                //get path in world space
+                var adjustedPath = path.Select(p =>
+                {
+                    return (new Vector2(p.X, p.Y) * 16);
+                }).ToList();
+
+                largerPath = IncreaseCorridorWidth(adjustedPath);
+
+                //check that all tiles in larger path are valid
+                foreach (var pathSet in largerPath.Where(p => p.Key != startDoorwayGridPos.ToVector2() * 16 && p.Key != endDoorwayGridPos.ToVector2() * 16))
+                {
+                    if (pathSet.Value.Any(p =>
+                    {
+                        if (roomsToCheck.Any(r => r.OverlapsRoom(p, false)))
+                            return true;
+                        //if (DirectionHelper.CardinalDirections.Any(d =>
+                        //{
+                        //    var posInDirection = p + (d * 16);
+                        //    return roomsToCheck.Any(r => r.OverlapsRoom(posInDirection, false));
+                        //}))
+                        //    return true;
+                        return false;
+                    }))
+                    {
+                        var posToAddToWalls = (pathSet.Key / 16).ToPoint();
+                        if (!graph.Walls.Contains(posToAddToWalls))
+                            graph.Walls.Add(posToAddToWalls);
+                        isPathValid = false;
+                        break;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        Vector2 GetMovementToAlignDoorways(DungeonDoorway previousDoorway, DungeonDoorway nextDoorway)
+        {
+            var desiredDoorwayPos = previousDoorway.PathfindingOrigin;
+            if (previousDoorway.Direction == "Top")
+                desiredDoorwayPos.Y -= 16;
+            else if (previousDoorway.Direction == "Bottom")
+                desiredDoorwayPos.Y += 16;
+            else if (previousDoorway.Direction == "Left")
+                desiredDoorwayPos.X -= 16;
+            else if (previousDoorway.Direction == "Right")
+                desiredDoorwayPos.X += 16;
+
+            return desiredDoorwayPos - nextDoorway.PathfindingOrigin;
         }
 
         List<Tuple<DungeonDoorway, DungeonDoorway>> GetValidDoorwayPairs(List<DungeonDoorway> room1Doorways, List<DungeonDoorway> room2Doorways, bool perfectMatchOnly = true)
@@ -477,24 +780,21 @@ namespace Threadlock.SceneComponents
             return pairsList;
         }
 
-        void PaintFloorTiles(List<Vector2> positions, TmxTileset tileset)
+        List<SingleTileRenderer> PaintFloorTiles(List<Vector2> positions, TmxTileset tileset, DungeonRoomEntity parentRoom)
         {
+            var renderers = new List<SingleTileRenderer>();
             var tile = tileset.TileRegions[202];
             //var tile = map.TileLayers.First().Tiles.First();
             foreach (var pos in positions)
             {
-                var ent = Scene.CreateEntity("tile", pos);
-                ent.AddComponent(new SingleTileRenderer(tileset.Image.Texture, tile));
+                var ent = Scene.CreateEntity("tile");
+                ent.SetPosition(pos);
+                var tileRenderer = ent.AddComponent(new SingleTileRenderer(tileset.Image.Texture, tile));
+                tileRenderer.RenderLayer = RenderLayers.Back;
+                renderers.Add(tileRenderer);
             }
-        }
 
-        void PaintFloorTiles(List<Vector2> positions, Texture2D tilesetTexture)
-        {
-            foreach (var pos in positions)
-            {
-                var ent = Scene.CreateEntity("tile", pos);
-                ent.AddComponent(new SingleTileRenderer(tilesetTexture, new Rectangle(32, 128, 16, 16)));
-            }
+            return renderers;
         }
 
         void GenerateWalls(List<Vector2> floorPositions, TmxTileset tileset)
@@ -532,11 +832,6 @@ namespace Threadlock.SceneComponents
                     {
                         var pos = new Vector2(x * 16, y * 16) + positions[i - 1];
                         posDictionary[positions[i - 1]].Add(pos);
-                        //if (!visitedPositions.Contains(pos))
-                        //{
-                        //    visitedPositions.Add(pos);
-                        //    posDictionary[positions[i - 1]].Add(pos);
-                        //}
                     }
                 }
             }

@@ -16,7 +16,7 @@ namespace Threadlock.Components.TiledComponents
     public class DungeonDoorway : TiledComponent
     {
         public bool HasConnection = false;
-        public Vector2 PathfindingOffset
+        public Vector2 PathfindingOrigin
         {
             get
             {
@@ -30,12 +30,12 @@ namespace Threadlock.Components.TiledComponents
                         var offsetObj = openMap.ObjectGroups.SelectMany(g => g.Objects).First(o => o.Name == "PathfindingOrigin");
                         if (offsetObj != null)
                         {
-                            return new Vector2(offsetObj.X / openMap.TileWidth, offsetObj.Y / openMap.TileHeight);
+                            return Entity.Position + new Vector2(offsetObj.X, offsetObj.Y);
                         }
                     }
                 }
-                
-                return Vector2.Zero;
+
+                return Entity.Position;
             }
         }
         public string Direction;

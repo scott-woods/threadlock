@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Threadlock.Components;
 using Threadlock.Components.TiledComponents;
 using Threadlock.Entities;
 
@@ -27,15 +28,16 @@ namespace Threadlock.Models
                         topLeft.X = room.Position.X;
                     if (room.Position.Y < topLeft.Y)
                         topLeft.Y = room.Position.Y;
-                    if (room.Position.X > bottomRight.X)
-                        bottomRight.X = room.Position.X;
-                    if (room.Position.Y > bottomRight.Y)
-                        bottomRight.Y = room.Position.Y;
+                    if (room.Bounds.Right > bottomRight.X)
+                        bottomRight.X = room.Bounds.Right;
+                    if (room.Bounds.Bottom > bottomRight.Y)
+                        bottomRight.Y = room.Bounds.Bottom;
                 }
 
                 return new RectangleF(topLeft, bottomRight - topLeft);
             }
         }
+        public List<SingleTileRenderer> SingleTileRenderers = new List<SingleTileRenderer>();
 
         public DungeonComposite(List<DungeonNode> roomNodes, DungeonCompositeType compositeType)
         {
@@ -48,13 +50,33 @@ namespace Threadlock.Models
             CompositeType = compositeType;
         }
 
+        public List<DungeonRoomEntity> GetRoomsFromChildrenComposites()
+        {
+            var allRooms = new List<DungeonRoomEntity>();
+            AddAllChildrenRecursive(allRooms);
+            return allRooms;
+        }
+
+        void AddAllChildrenRecursive(List<DungeonRoomEntity> allRooms)
+        {
+            allRooms.AddRange(RoomEntities);
+            foreach (var room in RoomEntities.Where(r => r.ChildrenOutsideComposite != null && r.ChildrenOutsideComposite.Count > 0))
+            {
+                foreach (var child in room.ChildrenOutsideComposite)
+                {
+                    child.ParentComposite.AddAllChildrenRecursive(allRooms);
+                }
+            }
+        }
+
         /// <summary>
         /// returns a pathfinding graph that is the size of the entire composite, with walls for all non-null tiles
         /// </summary>
         /// <returns></returns>
         public AstarGridGraph GetPathfindingGraph()
         {
-            var graph = new AstarGridGraph((int)Bounds.Width, (int)Bounds.Height);
+            //var graph = new AstarGridGraph((int)Bounds.Width / 16, (int)Bounds.Height / 16);
+            var graph = new AstarGridGraph((int)Bounds.Right / 16, (int)Bounds.Bottom / 16);
 
             foreach (var map in RoomEntities)
             {
@@ -64,19 +86,12 @@ namespace Threadlock.Models
                     {
                         foreach (var tile in layer.Tiles.Where(t => t != null))
                         {
-                            //get tile position in world space
-                            var tileWorldPos = new Vector2(map.Position.X + (tile.X * renderer.TiledMap.TileWidth), map.Position.Y + (tile.Y * renderer.TiledMap.TileHeight));
+                            var tilePos = new Vector2(tile.X, tile.Y);
+                            var adjustedTilePos = tilePos + (map.Position / 16);
 
-                            //adjusted position is the position relative to the top left of the composite
-                            var adjustedPos = tileWorldPos - Bounds.Location;
-
-                            //adjust for tile coords
-                            adjustedPos /= new Vector2(renderer.TiledMap.TileWidth, renderer.TiledMap.TileHeight);
-
-                            //add wall to graph
-                            var wallPoint = adjustedPos.ToPoint();
-                            if (!graph.Walls.Contains(wallPoint))
-                                graph.Walls.Add(wallPoint);
+                            var tilePoint = adjustedTilePos.ToPoint();
+                            if (!graph.Walls.Contains(tilePoint))
+                                graph.Walls.Add(tilePoint);
                         }
                     }
                 }
@@ -91,18 +106,12 @@ namespace Threadlock.Models
                         {
                             for (var x = 0; x < doorway.TmxObject.Width / 16; x++)
                             {
-                                var tileWorldPos = new Vector2(doorway.Entity.Position.X + (x * 16), doorway.Entity.Position.Y + (y * 16));
+                                var tilePos = new Vector2(x, y);
+                                var adjustedTilePos = tilePos + (doorway.Entity.Position / 16);
 
-                                //adjusted position is the position relative to the top left of the composite
-                                var adjustedPos = tileWorldPos - Bounds.Location;
-
-                                //adjust for tile coords
-                                adjustedPos /= new Vector2(16, 16);
-
-                                //add wall to graph
-                                var wallPoint = adjustedPos.ToPoint();
-                                if (!graph.Walls.Contains(wallPoint))
-                                    graph.Walls.Add(wallPoint);
+                                var tilePoint = adjustedTilePos.ToPoint();
+                                if (!graph.Walls.Contains(tilePoint))
+                                    graph.Walls.Add(tilePoint);
                             }
                         }
                     }
@@ -112,10 +121,32 @@ namespace Threadlock.Models
             return graph;
         }
 
-        public void MoveRooms(Vector2 movement)
+        public void MoveRooms(Vector2 movement, bool moveChildComposites = true)
         {
+            foreach (var tileRenderer in SingleTileRenderers)
+            {
+                tileRenderer.Entity.Position += movement;
+            }
+
             foreach (var room in RoomEntities)
+            {
                 room.Position += movement;
+                if (moveChildComposites)
+                {
+                    if (room.ChildrenOutsideComposite != null && room.ChildrenOutsideComposite.Count > 0)
+                    {
+                        foreach (var child in room.ChildrenOutsideComposite)
+                            child.ParentComposite.MoveRooms(movement);
+                    }
+                }
+            }
+        }
+
+        public void AdjustForPathfinding(int numberOfTiles)
+        {
+            var desiredPos = Vector2.Zero + (new Vector2(1, 1) * 16 * numberOfTiles);
+            var amountToMove = desiredPos - Bounds.Location;
+            MoveRooms(amountToMove, false);
         }
     }
 

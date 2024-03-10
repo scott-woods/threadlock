@@ -194,8 +194,8 @@ namespace Threadlock.SceneComponents
                     {
                         foreach (var doorway2 in rightChildDoorways)
                         {
-                            var pos1 = (doorway1.Entity.Position / 16) + doorway1.PathfindingOffset;
-                            var pos2 = (doorway2.Entity.Position / 16) + doorway2.PathfindingOffset;
+                            var pos1 = doorway1.PathfindingOrigin / 16;
+                            var pos2 = doorway2.PathfindingOrigin / 16;
                             var dist = Vector2.Distance(pos1, pos2);
                             if (dist < minDistance)
                             {

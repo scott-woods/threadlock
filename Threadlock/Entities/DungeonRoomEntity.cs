@@ -25,6 +25,8 @@ namespace Threadlock.Entities
         /// </summary>
         public string Type;
 
+        TextComponent _textComponent;
+
         /// <summary>
         /// all children rooms
         /// </summary>
@@ -71,20 +73,21 @@ namespace Threadlock.Entities
         {
             get
             {
-                var width = Map != null ? Map.Width * Map.TileWidth : 0;
-                var height = Map != null ? Map.Height * Map.TileHeight : 0;
+                var width = Map != null ? Map.WorldWidth : 0;
+                var height = Map != null ? Map.WorldHeight : 0;
                 return new RectangleF(Position.X, Position.Y, width, height);
             }
         }
 
         List<int> _childrenIds = new List<int>();
 
-        public DungeonRoomEntity(DungeonComposite composite, DungeonNode dungeonNode)
+        public DungeonRoomEntity(DungeonComposite composite, DungeonNode dungeonNode) : base(dungeonNode.Id.ToString())
         {
             ParentComposite = composite;
             RoomId = dungeonNode.Id;
             Type = dungeonNode.Type;
             _childrenIds = dungeonNode.Children.Select(c => c.ChildNodeId).ToList();
+            _textComponent = AddComponent(new TextComponent(Graphics.Instance.BitmapFont, $"{dungeonNode.Id}", Vector2.Zero, Color.Black));
         }
 
         #region LIFECYCLE
@@ -113,6 +116,8 @@ namespace Threadlock.Entities
             var frontRenderer = AddComponent(new TiledMapRenderer(map));
             frontRenderer.SetLayersToRender(new[] { "Front", "AboveFront" }.Where(l => map.Layers.Contains(l)).ToArray());
             frontRenderer.RenderLayer = RenderLayers.Front;
+
+            _textComponent.SetLocalOffset(new Vector2(map.WorldWidth / 2, map.WorldHeight / 2));
         }
 
         public List<T> FindComponentsOnMap<T>() where T : TiledComponent
@@ -138,29 +143,127 @@ namespace Threadlock.Entities
                 comp.Entity.Destroy();
         }
 
-        public bool OverlapsRoom(DungeonRoomEntity otherRoom)
+        public bool OverlapsRoom(Vector2 position, bool checkDoorways = true)
+        {
+            if (!Bounds.Contains(position))
+                return false;
+
+            var roomRenderer = GetComponents<TiledMapRenderer>().FirstOrDefault(r => r.CollisionLayer != null);
+            if (roomRenderer == null)
+                return false;
+
+            foreach (var tile in roomRenderer.CollisionLayer.Tiles.Where(t => t != null))
+            {
+                var tileWorldPos = Position + new Vector2(tile.X * 16, tile.Y * 16);
+                if (position == tileWorldPos)
+                    return true;
+            }
+
+            if (checkDoorways)
+            {
+                var doorways = FindComponentsOnMap<DungeonDoorway>();
+                foreach (var doorway in doorways)
+                {
+                    for (int y = 0; y < doorway.TmxObject.Height / 16; y++)
+                    {
+                        for (int x = 0; x < doorway.TmxObject.Width / 16; x++)
+                        {
+                            var doorwayTileWorldPos = doorway.Entity.Position + new Vector2(x * 16, y * 16);
+                            if (position == doorwayTileWorldPos)
+                                return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        public bool OverlapsRoom(DungeonRoomEntity otherRoom, bool checkDoorways = true)
         {
             //if there is no overlap, continue
             if (!Bounds.Intersects(otherRoom.Bounds))
                 return false;
 
-            //if there is some overlap, check each tile on the new map
+            var otherRoomRenderer = otherRoom.GetComponents<TiledMapRenderer>().FirstOrDefault(r => r.CollisionLayer != null);
+            if (otherRoomRenderer == null)
+                return false;
+
+            var roomRenderer = GetComponents<TiledMapRenderer>().FirstOrDefault(r => r.CollisionLayer != null);
+            if (roomRenderer == null)
+                return false;
+
+            List<Vector2> tilePositions = new List<Vector2>();
+            List<Vector2> otherRoomTilePositions = new List<Vector2>();
+
+            foreach (var tile in roomRenderer.CollisionLayer.Tiles.Where(t => t != null))
+            {
+                var tileWorldPos = Position + new Vector2(tile.X * 16, tile.Y * 16);
+                tilePositions.Add(tileWorldPos);
+            }
+            foreach (var otherTile in otherRoomRenderer.CollisionLayer.Tiles.Where(t => t != null))
+            {
+                var otherTileWorldPos = otherRoom.Position + new Vector2(otherTile.X * 16, otherTile.Y * 16);
+                otherRoomTilePositions.Add(otherTileWorldPos);
+            }
+
+            if (checkDoorways)
+            {
+                var doorways = FindComponentsOnMap<DungeonDoorway>();
+                foreach (var doorway in doorways)
+                {
+                    for (int y = 0; y < doorway.TmxObject.Height / 16; y++)
+                    {
+                        for (int x = 0; x < doorway.TmxObject.Width / 16; x++)
+                        {
+                            var doorwayTileWorldPos = doorway.Entity.Position + new Vector2(x * 16, y * 16);
+                            tilePositions.Add(doorwayTileWorldPos);
+                        }
+                    }
+                }
+
+                var otherDoorways = otherRoom.FindComponentsOnMap<DungeonDoorway>();
+                foreach (var doorway in otherDoorways)
+                {
+                    for (int y = 0; y < doorway.TmxObject.Height / 16; y++)
+                    {
+                        for (int x = 0; x < doorway.TmxObject.Width / 16; x++)
+                        {
+                            var doorwayTileWorldPos = doorway.Entity.Position + new Vector2(x * 16, y * 16);
+                            otherRoomTilePositions.Add(doorwayTileWorldPos);
+                        }
+                    }
+                }
+            }
+
+            return tilePositions.Any(t => otherRoomTilePositions.Contains(t));
+        }
+
+        bool DoesPositionOverlapTile(Vector2 position)
+        {
             foreach (var layer in Map.TileLayers)
             {
-                //check each non-null tile
                 foreach (var tile in layer.Tiles.Where(t => t != null))
                 {
-                    //get bounds of this tile
-                    var tileBounds = new RectangleF(tile.X * Map.TileWidth, tile.Y * Map.TileHeight, Map.TileWidth, Map.TileHeight);
-                    tileBounds.X += Position.X;
-                    tileBounds.Y += Position.Y;
-
-                    //check if bounds of this tile overlaps any layers in previously placed maps
-                    if (otherRoom.Map.TileLayers.Any(l => l.GetTilesIntersectingBounds(tileBounds).Count > 0))
-                    {
-                        //tiles overlap, return true
+                    var tilePos = Position + new Vector2(tile.X * Map.TileWidth, tile.Y * Map.TileHeight);
+                    if (tilePos == position)
                         return true;
-                    }
+                }
+            }
+
+            return false;
+        }
+
+        bool DoesPositionOverlapDoorway(Vector2 position)
+        {
+            var doorways = FindComponentsOnMap<DungeonDoorway>();
+            if (doorways != null && doorways.Count > 0)
+            {
+                foreach (var doorway in doorways)
+                {
+                    var doorwayBounds = new RectangleF(doorway.Entity.Position, new Vector2(doorway.TmxObject.Width, doorway.TmxObject.Height));
+                    if (doorwayBounds.Contains(position))
+                        return true;
                 }
             }
 
