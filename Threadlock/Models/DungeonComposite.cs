@@ -73,10 +73,10 @@ namespace Threadlock.Models
         /// returns a pathfinding graph that is the size of the entire composite, with walls for all non-null tiles
         /// </summary>
         /// <returns></returns>
-        public AstarGridGraph GetPathfindingGraph()
+        public WeightedGridGraph GetPathfindingGraph()
         {
             //var graph = new AstarGridGraph((int)Bounds.Width / 16, (int)Bounds.Height / 16);
-            var graph = new AstarGridGraph((int)Bounds.Right / 16, (int)Bounds.Bottom / 16);
+            var graph = new WeightedGridGraph((int)Bounds.Right / 16, (int)Bounds.Bottom / 16);
 
             foreach (var map in RoomEntities)
             {

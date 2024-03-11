@@ -143,6 +143,53 @@ namespace Threadlock.Entities
                 comp.Entity.Destroy();
         }
 
+        public bool OverlapsRoom(List<Vector2> positions, out List<Vector2> overlappingPositions, bool checkDoorways = true)
+        {
+            overlappingPositions = new List<Vector2>();
+
+            //if no collision layer, can't overlap
+            var roomRenderer = GetComponents<TiledMapRenderer>().FirstOrDefault(r => r.CollisionLayer != null);
+            if (roomRenderer == null)
+                return false;
+
+            //check if bounds intersect
+            var minPos = new Vector2(positions.Select(p => p.X).Min(), positions.Select(p => p.Y).Min());
+            var maxPos = new Vector2(positions.Select(p => p.X).Max(), positions.Select(p => p.Y).Max());
+            var rect = new RectangleF(minPos, maxPos - minPos);
+            if (!Bounds.Intersects(rect))
+                return false;
+
+            foreach (var tile in roomRenderer.CollisionLayer.Tiles.Where(t => t != null))
+            {
+                var tileWorldPos = Position + new Vector2(tile.X * 16, tile.Y * 16);
+                var matchingTiles = positions.Where(p => p == tileWorldPos);
+                if (matchingTiles.Any())
+                {
+                    overlappingPositions.AddRange(matchingTiles);
+                }
+            }
+
+            if (checkDoorways)
+            {
+                var doorways = FindComponentsOnMap<DungeonDoorway>();
+                foreach (var doorway in doorways)
+                {
+                    for (int y = 0; y < doorway.TmxObject.Height / 16; y++)
+                    {
+                        for (int x = 0; x < doorway.TmxObject.Width / 16; x++)
+                        {
+                            var doorwayTileWorldPos = doorway.Entity.Position + new Vector2(x * 16, y * 16);
+                            var matchingTiles = positions.Where(p => p == doorwayTileWorldPos);
+                            if (matchingTiles.Any())
+                                overlappingPositions.AddRange(matchingTiles);
+                        }
+                    }
+                }
+            }
+
+            return overlappingPositions.Any();
+        }
+
         public bool OverlapsRoom(Vector2 position, bool checkDoorways = true)
         {
             if (!Bounds.Contains(position))

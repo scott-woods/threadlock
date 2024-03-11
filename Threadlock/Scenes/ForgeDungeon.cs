@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
 using Threadlock.SceneComponents;
+using Threadlock.SceneComponents.Dungenerator;
 using Threadlock.StaticData;
 using Threadlock.UI.Canvases;
 

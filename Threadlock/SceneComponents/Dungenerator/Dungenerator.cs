@@ -20,7 +20,7 @@ using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using RectangleF = Nez.RectangleF;
 
-namespace Threadlock.SceneComponents
+namespace Threadlock.SceneComponents.Dungenerator
 {
     public class Dungenerator : SceneComponent
     {
@@ -281,27 +281,35 @@ namespace Threadlock.SceneComponents
                                 var newNodeDoorways = roomEntity.FindComponentsOnMap<DungeonDoorway>();
 
                                 //get possible doorway pairs
-                                var pairsList = GetValidDoorwayPairs(prevNodeDoorways, newNodeDoorways);
+                                var pairsList = GetValidDoorwayPairs(prevNodeDoorways, newNodeDoorways, false);
 
                                 //sort by distance to starting room
-                                if (i > 0)
-                                {
-                                    pairsList = pairsList.OrderBy(p => Vector2.Distance(p.Item1.Entity.Position, processedRooms.First().Position)).ToList();
-                                }
+                                //if (i > 0)
+                                //{
+                                //    pairsList = pairsList.OrderBy(p => Vector2.Distance(p.Item1.Entity.Position, processedRooms.First().Position)).ToList();
+                                //}
 
                                 //try to find a valid pair
                                 while (pairsList.Count > 0)
                                 {
                                     //pick a pair based on where we are in the loop
                                     Tuple<DungeonDoorway, DungeonDoorway> pair = null;
-                                    if (i == 0)
-                                        pair = pairsList.RandomItem();
-                                    else if (i < loop.RoomEntities.Count / 2)
-                                        pair = pairsList.Last();
-                                    else if (i >= loop.RoomEntities.Count / 2)
-                                        pair = pairsList.First();
+                                    if (i >= loop.RoomEntities.Count / 2)
+                                    {
+                                        var min = pairsList.Select(p => Vector2.Distance(p.Item1.PathfindingOrigin, processedRooms.First().Position)).Min();
+                                        var minPairs = pairsList.Where(p => Vector2.Distance(p.Item1.PathfindingOrigin, processedRooms.First().Position) == min).ToList();
+                                        pair = minPairs.RandomItem();
+                                    }
                                     else
                                         pair = pairsList.RandomItem();
+                                    //if (i == 0)
+                                    //    pair = pairsList.RandomItem();
+                                    //else if (i < loop.RoomEntities.Count / 2)
+                                    //    pair = pairsList.Last();
+                                    //else if (i >= loop.RoomEntities.Count / 2)
+                                    //    pair = pairsList.First();
+                                    //else
+                                    //    pair = pairsList.RandomItem();
 
                                     //get the ideal position for the new room entity based on the pair
                                     var movement = GetMovementToAlignDoorways(pair.Item1, pair.Item2);
@@ -391,23 +399,23 @@ namespace Threadlock.SceneComponents
                         var graph = loop.GetPathfindingGraph();
 
                         //try to find a path between the doorways
-                        if (ConnectDoorways(pair.Item1, pair.Item2, graph, processedRooms, out var path))
+                        if (CorridorGenerator.ConnectDoorways(pair.Item1, pair.Item2, graph, processedRooms, out var path))
                         {
                             //found a valid path, set doorways as open
                             pair.Item1.SetOpen(true);
                             pair.Item2.SetOpen(true);
 
                             //open tileset
-                            using (var stream = TitleContainer.OpenStream(Nez.Content.Tiled.Tilesets.Forge_tileset))
+                            using (var stream = TitleContainer.OpenStream(Content.Tiled.Tilesets.Forge_tileset))
                             {
                                 var xDocTileset = XDocument.Load(stream);
 
-                                string tsxDir = Path.GetDirectoryName(Nez.Content.Tiled.Tilesets.Forge_tileset);
+                                string tsxDir = Path.GetDirectoryName(Content.Tiled.Tilesets.Forge_tileset);
                                 var tileset = new TmxTileset().LoadTmxTileset(null, xDocTileset.Element("tileset"), 0, tsxDir);
                                 tileset.TmxDirectory = tsxDir;
 
-                                var pathPoints = path.Values.SelectMany(v => v).Distinct().ToList();
-                                var tileRenderers = PaintFloorTiles(pathPoints, tileset, endEntity);
+                                //var pathPoints = path.Values.SelectMany(v => v).Distinct().ToList();
+                                var tileRenderers = CorridorPainter.PaintFloorTiles(path, tileset, endEntity);
 
                                 loop.SingleTileRenderers.AddRange(tileRenderers);
                             }
@@ -481,8 +489,9 @@ namespace Threadlock.SceneComponents
 
                         //get possible doorway pairs
                         var pairsList = GetValidDoorwayPairs(parentNodeDoorways, childNodeDoorways, false)
-                            .Where(p => p.Item1.Direction != p.Item2.Direction)
-                            .OrderByDescending(p => p.Item1.IsDirectMatch(p.Item2)).ToList();
+                            .OrderByDescending(p => p.Item1.IsDirectMatch(p.Item2))
+                            .ThenByDescending(p => p.Item1.Direction != p.Item2.Direction)
+                            .ToList();
 
                         while (pairsList.Count > 0)
                         {
@@ -491,57 +500,70 @@ namespace Threadlock.SceneComponents
                                 ? pairsList.Where(p => p.Item1.IsDirectMatch(p.Item2)).ToList().RandomItem()
                                 : pairsList.RandomItem();
 
-                            //determine direction to try placing the composite based on the chosen doorway pair
-                            var dir = Vector2.Zero;
+                            var minDistance = 8;
+                            var maxDistance = 25;
+                            List<Vector2> possibleTiles = new List<Vector2>();
+
+                            //define the range for X and Y based on direction
+                            int xStart, xEnd, yStart, yEnd;
                             switch (pair.Item1.Direction)
                             {
                                 case "Top":
-                                    dir.Y = -1;
+                                    xStart = -maxDistance; xEnd = maxDistance;
+                                    yStart = -maxDistance; yEnd = -minDistance;
                                     break;
                                 case "Bottom":
-                                    dir.Y = 1;
+                                    xStart = -maxDistance; xEnd = maxDistance;
+                                    yStart = minDistance; yEnd = maxDistance;
                                     break;
                                 case "Left":
-                                    dir.X = -1;
+                                    xStart = -maxDistance; xEnd = -minDistance;
+                                    yStart = -maxDistance; yEnd = maxDistance;
                                     break;
                                 case "Right":
-                                    dir.X = 1;
+                                    xStart = minDistance; xEnd = maxDistance;
+                                    yStart = -maxDistance; yEnd = maxDistance;
                                     break;
-                            }
-                            switch (pair.Item2.Direction)
-                            {
-                                case "Top":
-                                    dir.Y = 1;
-                                    break;
-                                case "Bottom":
-                                    dir.Y = -1;
-                                    break;
-                                case "Left":
-                                    dir.X = 1;
-                                    break;
-                                case "Right":
-                                    dir.X = -1;
-                                    break;
+                                default:
+                                    throw new InvalidOperationException("Invalid direction");
                             }
 
-                            //try to position the composite between 8 and 25 tiles away
-                            var distance = 8;
-                            bool success = false;
-                            while (distance < 250)
+                            //iterate over the defined ranges
+                            for (int y = yStart; y <= yEnd; y++)
                             {
-                                //how far away to move from the first doorway
-                                var worldDistance = distance * dir * 16;
+                                for (int x = xStart; x <= xEnd; x++)
+                                {
+                                    if ((pair.Item1.Direction == "Top" || pair.Item1.Direction == "Bottom") && Math.Abs(x) >= minDistance ||
+                                        (pair.Item1.Direction == "Left" || pair.Item1.Direction == "Right") && Math.Abs(y) >= minDistance)
+                                    {
+                                        possibleTiles.Add(new Vector2(x, y));
+                                    }
+                                }
+                            }
 
-                                //move child composite
-                                var idealDoorwayOriginPos = pair.Item1.PathfindingOrigin + worldDistance;
+                            //try all possible tiles
+                            while (possibleTiles.Count > 0)
+                            {
+                                var tileDistance = possibleTiles.RandomItem();
+
+                                var tileWorldDistance = tileDistance * 16;
+
+                                var idealDoorwayOriginPos = pair.Item1.PathfindingOrigin + tileWorldDistance;
                                 var movementAmount = idealDoorwayOriginPos - pair.Item2.PathfindingOrigin;
                                 childEntity.ParentComposite.MoveRooms(movementAmount, false);
 
                                 //check for overlap
-                                if (roomsToCheck.Any(p => childEntity.ParentComposite.RoomEntities.Any(r => r.OverlapsRoom(p))))
+                                if (roomsToCheck.Any(r =>
                                 {
-                                    //increment distance and try again
-                                    distance += 1;
+                                    if (childEntity.ParentComposite.RoomEntities.Any(childRoom => childRoom.OverlapsRoom(r)))
+                                        return true;
+                                    if (childEntity.ParentComposite.SingleTileRenderers.Any(sr => r.OverlapsRoom(sr.Entity.Position)))
+                                        return true;
+                                    return false;
+                                }))
+                                {
+                                    //remove tile distance from list and try again
+                                    possibleTiles.Remove(tileDistance);
                                     continue;
                                 }
                                 else
@@ -551,39 +573,37 @@ namespace Threadlock.SceneComponents
                                     var graph = CreateDungeonGraph(roomsForGraph);
 
                                     //try to find a path between the doorways
-                                    if (ConnectDoorways(pair.Item1, pair.Item2, graph, roomsForGraph, out var path))
+                                    if (CorridorGenerator.ConnectDoorways(pair.Item1, pair.Item2, graph, roomsForGraph, out var path))
                                     {
                                         //found a valid path, set doorways as open
                                         pair.Item1.SetOpen(true);
                                         pair.Item2.SetOpen(true);
 
                                         //open tileset
-                                        using (var stream = TitleContainer.OpenStream(Nez.Content.Tiled.Tilesets.Forge_tileset))
+                                        using (var stream = TitleContainer.OpenStream(Content.Tiled.Tilesets.Forge_tileset))
                                         {
                                             var xDocTileset = XDocument.Load(stream);
 
-                                            string tsxDir = Path.GetDirectoryName(Nez.Content.Tiled.Tilesets.Forge_tileset);
+                                            string tsxDir = Path.GetDirectoryName(Content.Tiled.Tilesets.Forge_tileset);
                                             var tileset = new TmxTileset().LoadTmxTileset(null, xDocTileset.Element("tileset"), 0, tsxDir);
                                             tileset.TmxDirectory = tsxDir;
 
-                                            var pathPoints = path.Values.SelectMany(v => v).Distinct().ToList();
-                                            var tileRenderers = PaintFloorTiles(pathPoints, tileset, childEntity);
+                                            //var pathPoints = path.Values.SelectMany(v => v).Distinct().ToList();
+                                            var tileRenderers = CorridorPainter.PaintFloorTiles(path, tileset, childEntity);
                                             room.ParentComposite.SingleTileRenderers.AddRange(tileRenderers);
 
-                                            success = true;
                                             break;
                                         }
                                     }
                                     else
                                     {
-                                        distance += 1;
+                                        possibleTiles.Remove(tileDistance);
                                         continue;
                                     }
                                 }
                             }
 
-                            //no position was valid, this pair is invalid. remove from list and try again
-                            if (!success)
+                            if (possibleTiles.Count == 0)
                             {
                                 pairsList.Remove(pair);
                                 continue;
@@ -605,13 +625,13 @@ namespace Threadlock.SceneComponents
 
         #region HELPERS
 
-        AstarGridGraph CreateDungeonGraph(List<DungeonRoomEntity> roomsToCheck)
+        WeightedGridGraph CreateDungeonGraph(List<DungeonRoomEntity> roomsToCheck)
         {
             //prepare entire dungeon for pathfinding by moving bounds above 0, 0
             var top = _allComposites.Select(c => c.Bounds.Top).Min();
             var left = _allComposites.Select(c => c.Bounds.Left).Min();
             var topLeft = new Vector2(left, top);
-            var desiredPos = Vector2.Zero + (new Vector2(1, 1) * 16 * 25);
+            var desiredPos = Vector2.Zero + new Vector2(1, 1) * 16 * 25;
             var amountToMove = desiredPos - topLeft;
             foreach (var composite in _allComposites)
             {
@@ -621,7 +641,7 @@ namespace Threadlock.SceneComponents
             var bottom = _allComposites.Select(c => c.Bounds.Bottom).Max();
             var right = _allComposites.Select(c => c.Bounds.Right).Max();
 
-            var graph = new AstarGridGraph((int)right / 16, (int)bottom / 16);
+            var graph = new WeightedGridGraph((int)right / 16, (int)bottom / 16);
 
             foreach (var map in roomsToCheck)
             {
@@ -656,99 +676,8 @@ namespace Threadlock.SceneComponents
                     }
                 }
             }
-            
+
             return graph;
-        }
-
-        bool ConnectDoorways(DungeonDoorway startDoor, DungeonDoorway endDoor, AstarGridGraph graph, List<DungeonRoomEntity> roomsToCheck, out Dictionary<Vector2, List<Vector2>> largerPath)
-        {
-            largerPath = new Dictionary<Vector2, List<Vector2>>();
-
-            var startDoorwayGridPos = (startDoor.PathfindingOrigin / 16).ToPoint();
-            var endDoorwayGridPos = (endDoor.PathfindingOrigin / 16).ToPoint();
-
-            switch (startDoor.Direction)
-            {
-                case "Top":
-                    startDoorwayGridPos.Y -= 2;
-                    break;
-                case "Bottom":
-                    startDoorwayGridPos.Y += 2;
-                    break;
-                case "Left":
-                    startDoorwayGridPos.X -= 2;
-                    break;
-                case "Right":
-                    startDoorwayGridPos.X += 2;
-                    break;
-            }
-            switch (endDoor.Direction)
-            {
-                case "Top":
-                    endDoorwayGridPos.Y -= 2;
-                    break;
-                case "Bottom":
-                    endDoorwayGridPos.Y += 2;
-                    break;
-                case "Left":
-                    endDoorwayGridPos.X -= 2;
-                    break;
-                case "Right":
-                    endDoorwayGridPos.X += 2;
-                    break;
-            }
-
-            graph.Walls.Remove(startDoorwayGridPos);
-            graph.Walls.Remove(endDoorwayGridPos);
-
-            var isPathValid = false;
-            while (!isPathValid)
-            {
-                isPathValid = true;
-
-                largerPath.Clear();
-
-                //try finding a path
-                var path = graph.Search(startDoorwayGridPos, endDoorwayGridPos);
-
-                //if no path found, connection failed
-                if (path == null)
-                    return false;
-
-                //get path in world space
-                var adjustedPath = path.Select(p =>
-                {
-                    return (new Vector2(p.X, p.Y) * 16);
-                }).ToList();
-
-                largerPath = IncreaseCorridorWidth(adjustedPath);
-
-                //check that all tiles in larger path are valid
-                foreach (var pathSet in largerPath.Where(p => p.Key != startDoorwayGridPos.ToVector2() * 16 && p.Key != endDoorwayGridPos.ToVector2() * 16))
-                {
-                    if (pathSet.Value.Any(p =>
-                    {
-                        if (roomsToCheck.Any(r => r.OverlapsRoom(p, false)))
-                            return true;
-                        //if (DirectionHelper.CardinalDirections.Any(d =>
-                        //{
-                        //    var posInDirection = p + (d * 16);
-                        //    return roomsToCheck.Any(r => r.OverlapsRoom(posInDirection, false));
-                        //}))
-                        //    return true;
-                        return false;
-                    }))
-                    {
-                        var posToAddToWalls = (pathSet.Key / 16).ToPoint();
-                        if (!graph.Walls.Contains(posToAddToWalls))
-                            graph.Walls.Add(posToAddToWalls);
-                        isPathValid = false;
-                        break;
-                    }
-                }
-            }
-
-            return true;
         }
 
         Vector2 GetMovementToAlignDoorways(DungeonDoorway previousDoorway, DungeonDoorway nextDoorway)
@@ -778,65 +707,6 @@ namespace Threadlock.SceneComponents
                 pairsList = pairs.ToList();
 
             return pairsList;
-        }
-
-        List<SingleTileRenderer> PaintFloorTiles(List<Vector2> positions, TmxTileset tileset, DungeonRoomEntity parentRoom)
-        {
-            var renderers = new List<SingleTileRenderer>();
-            var tile = tileset.TileRegions[202];
-            //var tile = map.TileLayers.First().Tiles.First();
-            foreach (var pos in positions)
-            {
-                var ent = Scene.CreateEntity("tile");
-                ent.SetPosition(pos);
-                var tileRenderer = ent.AddComponent(new SingleTileRenderer(tileset.Image.Texture, tile));
-                tileRenderer.RenderLayer = RenderLayers.Back;
-                renderers.Add(tileRenderer);
-            }
-
-            return renderers;
-        }
-
-        void GenerateWalls(List<Vector2> floorPositions, TmxTileset tileset)
-        {
-            List<Vector2> wallPositions = new List<Vector2>();
-
-            var tile = tileset.TileRegions[152];
-            foreach (var pos in floorPositions)
-            {
-                foreach (var dir in new[] { new Vector2(1, 0), new Vector2(-1, 0), new Vector2(0, 1), new Vector2(0, -1) })
-                {
-                    var neighborPos = pos + (dir * tileset.TileWidth);
-                    if (!floorPositions.Contains(neighborPos))
-                        wallPositions.Add(neighborPos);
-                }
-            }
-
-            foreach (var wallPos in wallPositions)
-            {
-                var ent = Scene.CreateEntity("wall", wallPos);
-                ent.AddComponent(new SingleTileRenderer(tileset.Image.Texture, tile));
-            }
-        }
-
-        Dictionary<Vector2, List<Vector2>> IncreaseCorridorWidth(List<Vector2> positions)
-        {
-            Dictionary<Vector2, List<Vector2>> posDictionary = new Dictionary<Vector2, List<Vector2>>();
-            List<Vector2> visitedPositions = new List<Vector2>();
-            for (int i = 1; i < positions.Count + 1; i++)
-            {
-                posDictionary[positions[i - 1]] = new List<Vector2>();
-                for (int x = -1; x < 2; x++)
-                {
-                    for (int y = -1; y < 2; y++)
-                    {
-                        var pos = new Vector2(x * 16, y * 16) + positions[i - 1];
-                        posDictionary[positions[i - 1]].Add(pos);
-                    }
-                }
-            }
-
-            return posDictionary;
         }
 
         #endregion

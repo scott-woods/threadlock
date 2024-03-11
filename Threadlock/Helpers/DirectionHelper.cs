@@ -65,6 +65,15 @@ namespace Threadlock.Helpers
             }
         }
 
+        public static Vector2 Up { get => new Vector2(0, -1); }
+        public static Vector2 Down { get => new Vector2(0, 1); }
+        public static Vector2 Left { get => new Vector2(-1, 0); }
+        public static Vector2 Right { get => new Vector2(1, 0); }
+        public static Vector2 UpLeft { get => new Vector2(-1, -1); }
+        public static Vector2 DownLeft { get => new Vector2(-1, 1); }
+        public static Vector2 UpRight { get => new Vector2(1, -1); }
+        public static Vector2 DownRight { get => new Vector2(1, 1); }
+
         /// <summary>
         /// given a direction, returns an empty string for left and right, Down for an angle facing down, and Up for an angle facing up
         /// </summary>
