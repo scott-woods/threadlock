@@ -37,6 +37,13 @@ namespace Threadlock.Components
             _sourceRect = _tilesetTile.Tileset.TileRegions[_tilesetTile.Id];
         }
 
+        public SingleTileRenderer(TmxTileset tileset, int tileId, int renderLayer)
+        {
+            _tilesetTexture = tileset.Image.Texture;
+            _sourceRect = tileset.TileRegions[tileId];
+            RenderLayer = renderLayer;
+        }
+
         public override void Render(Batcher batcher, Camera camera)
         {
             //batcher.Draw(_tile.Image.Texture, Entity.Position, new Rectangle((int)Entity.Position.X, (int)Entity.Position.Y, _tile.Tileset.TileWidth, _tile.Tileset.TileHeight), Color.White, 0, Vector2.Zero, Entity.Scale, SpriteEffects.None, LayerDepth);

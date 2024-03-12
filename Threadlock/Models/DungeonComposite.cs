@@ -38,6 +38,7 @@ namespace Threadlock.Models
             }
         }
         public List<SingleTileRenderer> SingleTileRenderers = new List<SingleTileRenderer>();
+        public List<Vector2> FloorTilePositions = new List<Vector2>();
 
         public DungeonComposite(List<DungeonNode> roomNodes, DungeonCompositeType compositeType)
         {
@@ -127,6 +128,9 @@ namespace Threadlock.Models
             {
                 tileRenderer.Entity.Position += movement;
             }
+
+            for (int i = 0; i < FloorTilePositions.Count; i++)
+                FloorTilePositions[i] += movement;
 
             foreach (var room in RoomEntities)
             {

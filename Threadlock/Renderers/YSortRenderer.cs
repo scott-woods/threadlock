@@ -22,7 +22,7 @@ namespace Threadlock.Renderers
             BeginRender(cam);
 
             var beforeYSortSection = new List<RenderableComponent>();
-            var frontRenderers = new List<TiledMapRenderer>();
+            var frontRenderers = new List<RenderableComponent>();
             var ySortRenderers = new List<RenderableComponent>();
             var afterYSortSection = new List<RenderableComponent>();
 
@@ -44,9 +44,9 @@ namespace Threadlock.Renderers
                     }
 
                     //get Front tilemap renderers
-                    if (renderable.RenderLayer == RenderLayers.Front && renderable.GetType() == typeof(TiledMapRenderer))
+                    if (renderable.RenderLayer == RenderLayers.Front)
                     {
-                        frontRenderers.Add(renderable as TiledMapRenderer);
+                        frontRenderers.Add(renderable);
                         continue;
                     }
 
@@ -85,14 +85,22 @@ namespace Threadlock.Renderers
                 //if there are any tiles on a Front layer with a y value greater than the origin, render before Front layer
                 if (frontRenderers.Any((r) =>
                 {
-                    return r.TiledMap.TileLayers.Any(l =>
+                    if (r.GetType() == typeof(TiledMapRenderer))
                     {
-                        var tiles = l.GetTilesIntersectingBounds(bounds);
-                        return tiles.Any(t =>
+                        var mapRenderer = r as TiledMapRenderer;
+                        return mapRenderer.TiledMap.TileLayers.Any(l =>
                         {
-                            return r.Entity.Position.Y + (t.Y * r.TiledMap.TileHeight) + r.TiledMap.TileHeight > origin.Y;
+                            var tiles = l.GetTilesIntersectingBounds(bounds);
+                            return tiles.Any(t =>
+                            {
+                                return r.Entity.Position.Y + (t.Y * mapRenderer.TiledMap.TileHeight) + mapRenderer.TiledMap.TileHeight > origin.Y;
+                            });
                         });
-                    });
+                    }
+                    else
+                    {
+                        return r.Entity.Position.Y > origin.Y;
+                    }
                 }))
                 {
                     ySortBefore.Add(renderable);

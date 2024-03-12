@@ -113,6 +113,44 @@ namespace Threadlock.SceneComponents.Dungenerator
                     continue;
                 }
 
+                //paint corridor tiles
+                var allFloorPositions = _allComposites
+                    .SelectMany(c => c.FloorTilePositions)
+                    .Distinct()
+                    .ToList();
+
+                List<Vector2> reservedPositions = new List<Vector2>();
+                foreach (var doorway in Scene.FindComponentsOfType<DungeonDoorway>().Where(d => d.HasConnection))
+                {
+                    reservedPositions.Add(doorway.PathfindingOrigin);
+                    switch (doorway.Direction)
+                    {
+                        case "Top":
+                        case "Bottom":
+                            reservedPositions.Add(doorway.PathfindingOrigin + (DirectionHelper.Left * 16));
+                            reservedPositions.Add(doorway.PathfindingOrigin + (DirectionHelper.Right * 16));
+                            break;
+                        case "Left":
+                        case "Right":
+                            reservedPositions.Add(doorway.PathfindingOrigin + (DirectionHelper.Up * 16));
+                            reservedPositions.Add(doorway.PathfindingOrigin + (DirectionHelper.Down * 16));
+                            break;
+                    }
+                }
+
+                //open tileset
+                using (var stream = TitleContainer.OpenStream(Content.Tiled.Tilesets.Forge_tileset))
+                {
+                    var xDocTileset = XDocument.Load(stream);
+
+                    string tsxDir = Path.GetDirectoryName(Content.Tiled.Tilesets.Forge_tileset);
+                    var tileset = new TmxTileset().LoadTmxTileset(null, xDocTileset.Element("tileset"), 0, tsxDir);
+                    tileset.TmxDirectory = tsxDir;
+
+                    //var tileRenderers = CorridorPainter.PaintFloorTiles(floorPositions, tileset, endEntity);
+                    var tileRenderers = CorridorPainter.PaintCorridorTiles(allFloorPositions, reservedPositions, tileset);
+                }
+
                 break;
             }
         }
@@ -399,26 +437,28 @@ namespace Threadlock.SceneComponents.Dungenerator
                         var graph = loop.GetPathfindingGraph();
 
                         //try to find a path between the doorways
-                        if (CorridorGenerator.ConnectDoorways(pair.Item1, pair.Item2, graph, processedRooms, out var path))
+                        if (CorridorGenerator.ConnectDoorways(pair.Item1, pair.Item2, graph, processedRooms, out List<Vector2> floorPositions))
                         {
                             //found a valid path, set doorways as open
                             pair.Item1.SetOpen(true);
                             pair.Item2.SetOpen(true);
 
+                            loop.FloorTilePositions.AddRange(floorPositions);
+
                             //open tileset
-                            using (var stream = TitleContainer.OpenStream(Content.Tiled.Tilesets.Forge_tileset))
-                            {
-                                var xDocTileset = XDocument.Load(stream);
+                            //using (var stream = TitleContainer.OpenStream(Content.Tiled.Tilesets.Forge_tileset))
+                            //{
+                            //    var xDocTileset = XDocument.Load(stream);
 
-                                string tsxDir = Path.GetDirectoryName(Content.Tiled.Tilesets.Forge_tileset);
-                                var tileset = new TmxTileset().LoadTmxTileset(null, xDocTileset.Element("tileset"), 0, tsxDir);
-                                tileset.TmxDirectory = tsxDir;
+                            //    string tsxDir = Path.GetDirectoryName(Content.Tiled.Tilesets.Forge_tileset);
+                            //    var tileset = new TmxTileset().LoadTmxTileset(null, xDocTileset.Element("tileset"), 0, tsxDir);
+                            //    tileset.TmxDirectory = tsxDir;
 
-                                //var pathPoints = path.Values.SelectMany(v => v).Distinct().ToList();
-                                var tileRenderers = CorridorPainter.PaintFloorTiles(path, tileset, endEntity);
+                            //    //var pathPoints = path.Values.SelectMany(v => v).Distinct().ToList();
+                            //    var tileRenderers = CorridorPainter.PaintFloorTiles(floorPositions, tileset, endEntity);
 
-                                loop.SingleTileRenderers.AddRange(tileRenderers);
-                            }
+                            //    loop.SingleTileRenderers.AddRange(tileRenderers);
+                            //}
                         }
                         else
                         {
@@ -573,27 +613,31 @@ namespace Threadlock.SceneComponents.Dungenerator
                                     var graph = CreateDungeonGraph(roomsForGraph);
 
                                     //try to find a path between the doorways
-                                    if (CorridorGenerator.ConnectDoorways(pair.Item1, pair.Item2, graph, roomsForGraph, out var path))
+                                    if (CorridorGenerator.ConnectDoorways(pair.Item1, pair.Item2, graph, roomsForGraph, out List<Vector2> floorPositions))
                                     {
                                         //found a valid path, set doorways as open
                                         pair.Item1.SetOpen(true);
                                         pair.Item2.SetOpen(true);
 
+                                        room.ParentComposite.FloorTilePositions.AddRange(floorPositions);
+
+                                        break;
+
                                         //open tileset
-                                        using (var stream = TitleContainer.OpenStream(Content.Tiled.Tilesets.Forge_tileset))
-                                        {
-                                            var xDocTileset = XDocument.Load(stream);
+                                        //using (var stream = TitleContainer.OpenStream(Content.Tiled.Tilesets.Forge_tileset))
+                                        //{
+                                        //    var xDocTileset = XDocument.Load(stream);
 
-                                            string tsxDir = Path.GetDirectoryName(Content.Tiled.Tilesets.Forge_tileset);
-                                            var tileset = new TmxTileset().LoadTmxTileset(null, xDocTileset.Element("tileset"), 0, tsxDir);
-                                            tileset.TmxDirectory = tsxDir;
+                                        //    string tsxDir = Path.GetDirectoryName(Content.Tiled.Tilesets.Forge_tileset);
+                                        //    var tileset = new TmxTileset().LoadTmxTileset(null, xDocTileset.Element("tileset"), 0, tsxDir);
+                                        //    tileset.TmxDirectory = tsxDir;
 
-                                            //var pathPoints = path.Values.SelectMany(v => v).Distinct().ToList();
-                                            var tileRenderers = CorridorPainter.PaintFloorTiles(path, tileset, childEntity);
-                                            room.ParentComposite.SingleTileRenderers.AddRange(tileRenderers);
+                                        //    //var pathPoints = path.Values.SelectMany(v => v).Distinct().ToList();
+                                        //    var tileRenderers = CorridorPainter.PaintFloorTiles(floorPositions, tileset, childEntity);
+                                        //    room.ParentComposite.SingleTileRenderers.AddRange(tileRenderers);
 
-                                            break;
-                                        }
+                                        //    break;
+                                        //}
                                     }
                                     else
                                     {
