@@ -190,42 +190,6 @@ namespace Threadlock.Entities
             return overlappingPositions.Any();
         }
 
-        public bool OverlapsRoom(Vector2 position, bool checkDoorways = true)
-        {
-            if (!Bounds.Contains(position))
-                return false;
-
-            var roomRenderer = GetComponents<TiledMapRenderer>().FirstOrDefault(r => r.CollisionLayer != null);
-            if (roomRenderer == null)
-                return false;
-
-            foreach (var tile in roomRenderer.CollisionLayer.Tiles.Where(t => t != null))
-            {
-                var tileWorldPos = Position + new Vector2(tile.X * 16, tile.Y * 16);
-                if (position == tileWorldPos)
-                    return true;
-            }
-
-            if (checkDoorways)
-            {
-                var doorways = FindComponentsOnMap<DungeonDoorway>();
-                foreach (var doorway in doorways)
-                {
-                    for (int y = 0; y < doorway.TmxObject.Height / 16; y++)
-                    {
-                        for (int x = 0; x < doorway.TmxObject.Width / 16; x++)
-                        {
-                            var doorwayTileWorldPos = doorway.Entity.Position + new Vector2(x * 16, y * 16);
-                            if (position == doorwayTileWorldPos)
-                                return true;
-                        }
-                    }
-                }
-            }
-
-            return false;
-        }
-
         public bool OverlapsRoom(DungeonRoomEntity otherRoom, bool checkDoorways = true)
         {
             //if there is no overlap, continue
@@ -240,81 +204,63 @@ namespace Threadlock.Entities
             if (roomRenderer == null)
                 return false;
 
+
+            var otherRoomCollisionRect = GetCollisionLayerRect(otherRoomRenderer);
+            var roomCollisionRect = GetCollisionLayerRect(roomRenderer);
+
+            if (roomCollisionRect.Intersects(otherRoomCollisionRect))
+                return true;
+
             List<Vector2> tilePositions = new List<Vector2>();
             List<Vector2> otherRoomTilePositions = new List<Vector2>();
 
-            foreach (var tile in roomRenderer.CollisionLayer.Tiles.Where(t => t != null))
-            {
-                var tileWorldPos = Position + new Vector2(tile.X * 16, tile.Y * 16);
-                tilePositions.Add(tileWorldPos);
-            }
-            foreach (var otherTile in otherRoomRenderer.CollisionLayer.Tiles.Where(t => t != null))
-            {
-                var otherTileWorldPos = otherRoom.Position + new Vector2(otherTile.X * 16, otherTile.Y * 16);
-                otherRoomTilePositions.Add(otherTileWorldPos);
-            }
-
             if (checkDoorways)
             {
-                var doorways = FindComponentsOnMap<DungeonDoorway>();
-                foreach (var doorway in doorways)
-                {
-                    for (int y = 0; y < doorway.TmxObject.Height / 16; y++)
-                    {
-                        for (int x = 0; x < doorway.TmxObject.Width / 16; x++)
-                        {
-                            var doorwayTileWorldPos = doorway.Entity.Position + new Vector2(x * 16, y * 16);
-                            tilePositions.Add(doorwayTileWorldPos);
-                        }
-                    }
-                }
+                //var doorways = FindComponentsOnMap<DungeonDoorway>();
+                //foreach (var doorway in doorways)
+                //{
+                //    for (int y = 0; y < doorway.TmxObject.Height / 16; y++)
+                //    {
+                //        for (int x = 0; x < doorway.TmxObject.Width / 16; x++)
+                //        {
+                //            var doorwayTileWorldPos = doorway.Entity.Position + new Vector2(x * 16, y * 16);
+                //            tilePositions.Add(doorwayTileWorldPos);
+                //        }
+                //    }
+                //}
 
-                var otherDoorways = otherRoom.FindComponentsOnMap<DungeonDoorway>();
-                foreach (var doorway in otherDoorways)
-                {
-                    for (int y = 0; y < doorway.TmxObject.Height / 16; y++)
-                    {
-                        for (int x = 0; x < doorway.TmxObject.Width / 16; x++)
-                        {
-                            var doorwayTileWorldPos = doorway.Entity.Position + new Vector2(x * 16, y * 16);
-                            otherRoomTilePositions.Add(doorwayTileWorldPos);
-                        }
-                    }
-                }
+                //var otherDoorways = otherRoom.FindComponentsOnMap<DungeonDoorway>();
+                //foreach (var doorway in otherDoorways)
+                //{
+                //    for (int y = 0; y < doorway.TmxObject.Height / 16; y++)
+                //    {
+                //        for (int x = 0; x < doorway.TmxObject.Width / 16; x++)
+                //        {
+                //            var doorwayTileWorldPos = doorway.Entity.Position + new Vector2(x * 16, y * 16);
+                //            otherRoomTilePositions.Add(doorwayTileWorldPos);
+                //        }
+                //    }
+                //}
             }
 
-            return tilePositions.Any(t => otherRoomTilePositions.Contains(t));
-        }
-
-        bool DoesPositionOverlapTile(Vector2 position)
-        {
-            foreach (var layer in Map.TileLayers)
-            {
-                foreach (var tile in layer.Tiles.Where(t => t != null))
-                {
-                    var tilePos = Position + new Vector2(tile.X * Map.TileWidth, tile.Y * Map.TileHeight);
-                    if (tilePos == position)
-                        return true;
-                }
-            }
+            //return tilePositions.Any(t => otherRoomTilePositions.Contains(t));
 
             return false;
         }
 
-        bool DoesPositionOverlapDoorway(Vector2 position)
+        Rectangle GetCollisionLayerRect(TiledMapRenderer renderer)
         {
-            var doorways = FindComponentsOnMap<DungeonDoorway>();
-            if (doorways != null && doorways.Count > 0)
-            {
-                foreach (var doorway in doorways)
-                {
-                    var doorwayBounds = new RectangleF(doorway.Entity.Position, new Vector2(doorway.TmxObject.Width, doorway.TmxObject.Height));
-                    if (doorwayBounds.Contains(position))
-                        return true;
-                }
-            }
+            if (renderer.CollisionLayer == null)
+                return new Rectangle();
 
-            return false;
+            var minX = renderer.CollisionLayer.Tiles.Where(t => t != null).Select(t => t.X).Min();
+            var maxX = renderer.CollisionLayer.Tiles.Where(t => t != null).Select(t => t.X).Max();
+            var minY = renderer.CollisionLayer.Tiles.Where(t => t != null).Select(t => t.Y).Min();
+            var maxY = renderer.CollisionLayer.Tiles.Where(t => t != null).Select(t => t.Y).Max();
+
+            var rect = new Rectangle(minX, minY, (maxX - minX) * 16, (maxY - minY) * 16);
+            rect.Location += renderer.Entity.Position.ToPoint();
+            return rect;
         }
     }
 }

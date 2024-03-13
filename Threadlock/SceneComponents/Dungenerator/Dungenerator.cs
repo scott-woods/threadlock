@@ -16,6 +16,7 @@ using Threadlock.Entities;
 using Threadlock.Helpers;
 using Threadlock.Models;
 using Threadlock.StaticData;
+using static Threadlock.StaticData.Tiles.Forge;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using RectangleF = Nez.RectangleF;
@@ -65,14 +66,8 @@ namespace Threadlock.SceneComponents.Dungenerator
                 {
                     foreach (var composite in _allComposites)
                     {
-                        foreach (var tileRenderer in composite.SingleTileRenderers)
-                        {
-                            tileRenderer.Entity.Destroy();
-                        }
-                        composite.SingleTileRenderers.Clear();
+                        composite.Reset();
                     }
-                    foreach (var map in _allMapEntities)
-                        map.ClearMap();
                     _allMapEntities.Clear();
                     continue;
                 }
@@ -83,14 +78,8 @@ namespace Threadlock.SceneComponents.Dungenerator
                 {
                     foreach (var composite in _allComposites)
                     {
-                        foreach (var tileRenderer in composite.SingleTileRenderers)
-                        {
-                            tileRenderer.Entity.Destroy();
-                        }
-                        composite.SingleTileRenderers.Clear();
+                        composite.Reset();
                     }
-                    foreach (var map in _allMapEntities)
-                        map.ClearMap();
                     _allMapEntities.Clear();
                     continue;
                 }
@@ -101,14 +90,8 @@ namespace Threadlock.SceneComponents.Dungenerator
                 {
                     foreach (var composite in _allComposites)
                     {
-                        foreach (var tileRenderer in composite.SingleTileRenderers)
-                        {
-                            tileRenderer.Entity.Destroy();
-                        }
-                        composite.SingleTileRenderers.Clear();
+                        composite.Reset();
                     }
-                    foreach (var map in _allMapEntities)
-                        map.ClearMap();
                     _allMapEntities.Clear();
                     continue;
                 }
@@ -418,7 +401,7 @@ namespace Threadlock.SceneComponents.Dungenerator
                     //CLOSE THE LOOP
 
                     //adjust room positions to prepare for pathfinding
-                    loop.AdjustForPathfinding(25);
+                    //loop.AdjustForPathfinding(25);
 
                     //handle connecting end of loop to beginning
                     var startEntity = processedRooms.First();
@@ -434,31 +417,16 @@ namespace Threadlock.SceneComponents.Dungenerator
                         //pick first pair
                         var pair = pairs.First();
 
-                        var graph = loop.GetPathfindingGraph();
+                        var graph = loop.GetPathfindingGraph(out var paddedRect);
 
                         //try to find a path between the doorways
-                        if (CorridorGenerator.ConnectDoorways(pair.Item1, pair.Item2, graph, processedRooms, out List<Vector2> floorPositions))
+                        if (CorridorGenerator.ConnectDoorways(pair.Item1, pair.Item2, graph, processedRooms, paddedRect, out List<Vector2> floorPositions))
                         {
                             //found a valid path, set doorways as open
                             pair.Item1.SetOpen(true);
                             pair.Item2.SetOpen(true);
 
                             loop.FloorTilePositions.AddRange(floorPositions);
-
-                            //open tileset
-                            //using (var stream = TitleContainer.OpenStream(Content.Tiled.Tilesets.Forge_tileset))
-                            //{
-                            //    var xDocTileset = XDocument.Load(stream);
-
-                            //    string tsxDir = Path.GetDirectoryName(Content.Tiled.Tilesets.Forge_tileset);
-                            //    var tileset = new TmxTileset().LoadTmxTileset(null, xDocTileset.Element("tileset"), 0, tsxDir);
-                            //    tileset.TmxDirectory = tsxDir;
-
-                            //    //var pathPoints = path.Values.SelectMany(v => v).Distinct().ToList();
-                            //    var tileRenderers = CorridorPainter.PaintFloorTiles(floorPositions, tileset, endEntity);
-
-                            //    loop.SingleTileRenderers.AddRange(tileRenderers);
-                            //}
                         }
                         else
                         {
@@ -581,6 +549,33 @@ namespace Threadlock.SceneComponents.Dungenerator
                                 }
                             }
 
+                            var childCompRect = childEntity.ParentComposite.Bounds;
+                            List<Vector2> tilesToRemove = new List<Vector2>();
+
+                            foreach (var possibleTile in possibleTiles)
+                            {
+                                if (roomsToCheck.Any(r => r.Bounds.Contains(possibleTile)))
+                                {
+                                    tilesToRemove.Add(possibleTile);
+                                    continue;
+                                }
+
+                                var tileWorldDistance = possibleTile * 16;
+                                var idealDoorwayOriginPos = pair.Item1.PathfindingOrigin + tileWorldDistance;
+                                var movementAmount = idealDoorwayOriginPos - pair.Item2.PathfindingOrigin;
+
+                                var projectedRect = new RectangleF(childCompRect.Location, childCompRect.Size);
+                                projectedRect.Location += movementAmount;
+
+                                if (roomsToCheck.Any(r => r.Bounds.Intersects(projectedRect)))
+                                {
+                                    tilesToRemove.Add(possibleTile);
+                                    continue;
+                                }
+                            }
+
+                            possibleTiles = possibleTiles.Except(tilesToRemove).ToList();
+
                             //try all possible tiles
                             while (possibleTiles.Count > 0)
                             {
@@ -592,28 +587,73 @@ namespace Threadlock.SceneComponents.Dungenerator
                                 var movementAmount = idealDoorwayOriginPos - pair.Item2.PathfindingOrigin;
                                 childEntity.ParentComposite.MoveRooms(movementAmount, false);
 
-                                //check for overlap
-                                if (roomsToCheck.Any(r =>
+                                if (childEntity.ParentComposite.RoomEntities.Any(childRoom =>
                                 {
-                                    if (childEntity.ParentComposite.RoomEntities.Any(childRoom => childRoom.OverlapsRoom(r)))
-                                        return true;
-                                    if (childEntity.ParentComposite.SingleTileRenderers.Any(sr => r.OverlapsRoom(sr.Entity.Position)))
-                                        return true;
-                                    return false;
+                                    return roomsToCheck.Any(r => childRoom.OverlapsRoom(r));
                                 }))
                                 {
-                                    //remove tile distance from list and try again
                                     possibleTiles.Remove(tileDistance);
                                     continue;
                                 }
                                 else
                                 {
+                                    //at this point, we know rooms don't directly overlap. time to try making a path between them
+
+                                    var tilePadding = 8;
+                                    var joinedRect = Rectangle.Union(childEntity.ParentComposite.Bounds, room.ParentComposite.Bounds);
+                                    joinedRect.X -= tilePadding * 16;
+                                    joinedRect.Y -= tilePadding * 16;
+                                    joinedRect.Width += (tilePadding * 16 * 2);
+                                    joinedRect.Height += (tilePadding * 16 * 2);
+
+                                    var graph = new WeightedGridGraph(joinedRect.Width / 16, joinedRect.Height / 16);
+                                    foreach (var graphRoom in room.ParentComposite.RoomEntities.Concat(childEntity.ParentComposite.RoomEntities))
+                                    {
+                                        var collisionRenderer = graphRoom.GetComponents<TiledMapRenderer>().FirstOrDefault(r => r.CollisionLayer != null);
+                                        if (collisionRenderer == null)
+                                            continue;
+
+                                        //add wall for each collision tile
+                                        for (var y = 0; y < collisionRenderer.CollisionLayer.Map.Height / 16; y++)
+                                        {
+                                            for (var x = 0; x < collisionRenderer.CollisionLayer.Map.Width / 16; x++)
+                                            {
+                                                if (collisionRenderer.CollisionLayer.GetTile(x, y) != null)
+                                                {
+                                                    var tileWorldPos = new Point(x, y) + (graphRoom.Position / 16).ToPoint();
+                                                    graph.Walls.Add(tileWorldPos - (joinedRect.Location.ToVector2() / 16).ToPoint());
+                                                }
+                                            }
+                                        }
+
+                                        var doorways = graphRoom.FindComponentsOnMap<DungeonDoorway>();
+                                        if (doorways != null)
+                                        {
+                                            foreach (var doorway in doorways)
+                                            {
+                                                for (var y = 0; y < doorway.TmxObject.Height / 16; y++)
+                                                {
+                                                    for (var x = 0; x < doorway.TmxObject.Width / 16; x++)
+                                                    {
+                                                        var tilePos = new Vector2(x, y);
+                                                        var adjustedTilePos = tilePos + (doorway.Entity.Position / 16);
+                                                        graph.Walls.Add(adjustedTilePos.ToPoint() - (joinedRect.Location.ToVector2() / 16).ToPoint());
+
+                                                        //var tilePoint = adjustedTilePos.ToPoint();
+                                                        //if (!graph.Walls.Contains(tilePoint))
+                                                        //    graph.Walls.Add(tilePoint);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
                                     //get pathfinding graph
                                     var roomsForGraph = roomsToCheck.Concat(childEntity.ParentComposite.RoomEntities).ToList();
-                                    var graph = CreateDungeonGraph(roomsForGraph);
+                                    //var graph = CreateDungeonGraph(roomsForGraph);
 
                                     //try to find a path between the doorways
-                                    if (CorridorGenerator.ConnectDoorways(pair.Item1, pair.Item2, graph, roomsForGraph, out List<Vector2> floorPositions))
+                                    if (CorridorGenerator.ConnectDoorways(pair.Item1, pair.Item2, graph, roomsForGraph, new RectangleF(joinedRect.Location.X, joinedRect.Location.Y, joinedRect.Width, joinedRect.Height), out List<Vector2> floorPositions))
                                     {
                                         //found a valid path, set doorways as open
                                         pair.Item1.SetOpen(true);
@@ -622,22 +662,6 @@ namespace Threadlock.SceneComponents.Dungenerator
                                         room.ParentComposite.FloorTilePositions.AddRange(floorPositions);
 
                                         break;
-
-                                        //open tileset
-                                        //using (var stream = TitleContainer.OpenStream(Content.Tiled.Tilesets.Forge_tileset))
-                                        //{
-                                        //    var xDocTileset = XDocument.Load(stream);
-
-                                        //    string tsxDir = Path.GetDirectoryName(Content.Tiled.Tilesets.Forge_tileset);
-                                        //    var tileset = new TmxTileset().LoadTmxTileset(null, xDocTileset.Element("tileset"), 0, tsxDir);
-                                        //    tileset.TmxDirectory = tsxDir;
-
-                                        //    //var pathPoints = path.Values.SelectMany(v => v).Distinct().ToList();
-                                        //    var tileRenderers = CorridorPainter.PaintFloorTiles(floorPositions, tileset, childEntity);
-                                        //    room.ParentComposite.SingleTileRenderers.AddRange(tileRenderers);
-
-                                        //    break;
-                                        //}
                                     }
                                     else
                                     {

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Threadlock.Components;
 using Threadlock.Components.TiledComponents;
 using Threadlock.Entities;
+using Threadlock.StaticData;
 
 namespace Threadlock.Models
 {
@@ -74,31 +75,36 @@ namespace Threadlock.Models
         /// returns a pathfinding graph that is the size of the entire composite, with walls for all non-null tiles
         /// </summary>
         /// <returns></returns>
-        public WeightedGridGraph GetPathfindingGraph()
+        public WeightedGridGraph GetPathfindingGraph(out RectangleF paddedRectangle)
         {
-            //var graph = new AstarGridGraph((int)Bounds.Width / 16, (int)Bounds.Height / 16);
-            var graph = new WeightedGridGraph((int)Bounds.Right / 16, (int)Bounds.Bottom / 16);
+            var tilePadding = 8;
+            paddedRectangle = Bounds;
+            paddedRectangle.X -= tilePadding * 16;
+            paddedRectangle.Y -= tilePadding * 16;
+            paddedRectangle.Width += (tilePadding * 16 * 2);
+            paddedRectangle.Height += (tilePadding * 16 * 2);
 
-            foreach (var map in RoomEntities)
+            var graph = new WeightedGridGraph((int)paddedRectangle.Width / 16, (int)paddedRectangle.Height / 16);
+            foreach (var room in RoomEntities)
             {
-                if (map.TryGetComponent<TiledMapRenderer>(out var renderer))
+                var collisionRenderer = room.GetComponents<TiledMapRenderer>().FirstOrDefault(r => r.CollisionLayer != null);
+                if (collisionRenderer == null)
+                    continue;
+
+                if (room.TryGetComponent<TiledMapRenderer>(out var renderer))
                 {
                     foreach (var layer in renderer.TiledMap.TileLayers)
                     {
                         foreach (var tile in layer.Tiles.Where(t => t != null))
                         {
                             var tilePos = new Vector2(tile.X, tile.Y);
-                            var adjustedTilePos = tilePos + (map.Position / 16);
-
-                            var tilePoint = adjustedTilePos.ToPoint();
-                            if (!graph.Walls.Contains(tilePoint))
-                                graph.Walls.Add(tilePoint);
+                            var adjustedTilePos = tilePos + (room.Position / 16);
+                            graph.Walls.Add(adjustedTilePos.ToPoint() - (paddedRectangle.Location / 16).ToPoint());
                         }
                     }
                 }
 
-                //add walls on every tile of each dungeon doorway
-                var doorways = map.FindComponentsOnMap<DungeonDoorway>();
+                var doorways = room.FindComponentsOnMap<DungeonDoorway>();
                 if (doorways != null)
                 {
                     foreach (var doorway in doorways)
@@ -109,10 +115,7 @@ namespace Threadlock.Models
                             {
                                 var tilePos = new Vector2(x, y);
                                 var adjustedTilePos = tilePos + (doorway.Entity.Position / 16);
-
-                                var tilePoint = adjustedTilePos.ToPoint();
-                                if (!graph.Walls.Contains(tilePoint))
-                                    graph.Walls.Add(tilePoint);
+                                graph.Walls.Add(adjustedTilePos.ToPoint() - (paddedRectangle.Location / 16).ToPoint());
                             }
                         }
                     }
@@ -151,6 +154,23 @@ namespace Threadlock.Models
             var desiredPos = Vector2.Zero + (new Vector2(1, 1) * 16 * numberOfTiles);
             var amountToMove = desiredPos - Bounds.Location;
             MoveRooms(amountToMove, false);
+        }
+
+        public void Reset()
+        {
+            //clear tile renderers
+            foreach (var tileRenderer in SingleTileRenderers)
+            {
+                tileRenderer.Entity.Destroy();
+            }
+            SingleTileRenderers.Clear();
+
+            //clear floor positions
+            FloorTilePositions.Clear();
+
+            //clear maps
+            foreach (var map in RoomEntities)
+                map.ClearMap();
         }
     }
 
