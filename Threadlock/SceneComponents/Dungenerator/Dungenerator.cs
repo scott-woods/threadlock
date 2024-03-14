@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Xml.Linq;
 using Threadlock.Components;
@@ -28,6 +29,7 @@ namespace Threadlock.SceneComponents.Dungenerator
         const int _maxAttempts = 100;
         List<DungeonRoomEntity> _allMapEntities = new List<DungeonRoomEntity>();
         List<DungeonComposite> _allComposites = new List<DungeonComposite>();
+        List<TmxMap> _allMaps = new List<TmxMap>();
 
         public void Generate()
         {
@@ -52,6 +54,25 @@ namespace Threadlock.SceneComponents.Dungenerator
             {
                 var composite = new DungeonComposite(tree, DungeonCompositeType.Tree);
                 _allComposites.Add(composite);
+            }
+
+            //load all maps for this area
+            Dictionary<TmxMap, string> mapDictionary = new Dictionary<TmxMap, string>(); //dictionary so unused maps can be unloaded
+            Type forgeType = typeof(Content.Tiled.Tilemaps.Forge);
+            FieldInfo[] fields = forgeType.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
+            foreach (var field in fields)
+            {
+                if (field.IsLiteral && !field.IsInitOnly && field.FieldType == typeof(string))
+                {
+                    string value = (string)field.GetValue(null);
+                    if (value.EndsWith(".tmx"))
+                    {
+                        var map = Scene.Content.LoadTiledMap(value);
+                        _allMaps.Add(map);
+
+                        mapDictionary.Add(map, value);
+                    }
+                }
             }
 
             var attempts = 0;
@@ -136,6 +157,18 @@ namespace Threadlock.SceneComponents.Dungenerator
 
                 break;
             }
+
+            //unload unused maps
+            foreach (var map in _allMaps)
+            {
+                if (!_allMapEntities.Any(m => m.Map == map))
+                {
+                    if (mapDictionary.TryGetValue(map, out var name))
+                    {
+                        Scene.Content.UnloadAsset<TmxMap>(name);
+                    }
+                }
+            }
         }
 
         #region HANDLE LOOPS/TREES
@@ -156,8 +189,7 @@ namespace Threadlock.SceneComponents.Dungenerator
                     bool treeSuccess = true;
                     foreach (var roomEntity in tree.RoomEntities)
                     {
-                        //get potential maps
-                        var possibleMaps = roomEntity.GetPossibleMaps();
+                        var possibleMaps = GetValidMaps(roomEntity);
 
                         //try maps until a valid one is found
                         while (possibleMaps.Count > 0)
@@ -283,7 +315,7 @@ namespace Threadlock.SceneComponents.Dungenerator
                         var roomEntity = loop.RoomEntities[i];
 
                         //get potential maps
-                        var possibleMaps = roomEntity.GetPossibleMaps();
+                        var possibleMaps = GetValidMaps(roomEntity);
 
                         //try maps until a valid one is found
                         while (possibleMaps.Count > 0)
@@ -692,6 +724,24 @@ namespace Threadlock.SceneComponents.Dungenerator
         #endregion
 
         #region HELPERS
+
+        public List<TmxMap> GetValidMaps(DungeonRoomEntity room)
+        {
+            List<TmxMap> possibleMaps = new List<TmxMap>();
+
+            //get potential maps
+            var validMaps = _allMaps.Where(m =>
+            {
+                if (m.Properties == null)
+                    return false;
+                if (!m.Properties.ContainsKey("RoomType"))
+                    return false;
+                return m.Properties["RoomType"] == room.Type;
+            });
+
+            possibleMaps.AddRange(validMaps);
+            return possibleMaps;
+        }
 
         WeightedGridGraph CreateDungeonGraph(List<DungeonRoomEntity> roomsToCheck)
         {

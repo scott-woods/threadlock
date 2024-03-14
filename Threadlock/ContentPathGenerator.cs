@@ -93,6 +93,9 @@ namespace Nez
 		public static class Data
 		{
 			public const string DungeonFlows = @"Content\Data\DungeonFlows.json";
+			public const string DungeonFlows2 = @"Content\Data\DungeonFlows2.json";
+			public const string DungeonFlows3 = @"Content\Data\DungeonFlows3.json";
+			public const string DungeonFlows4 = @"Content\Data\DungeonFlows4.json";
 		}
 
 		public static class Effects
@@ -1022,10 +1025,17 @@ namespace Nez
 						public const string Testinggak = @"Content\Tiled\Tilemaps\Forge\Halls\testing gak.tmx";
 					}
 
+					public const string Forge_boss = @"Content\Tiled\Tilemaps\Forge\forge_boss.tmx";
+					public const string Forge_exit = @"Content\Tiled\Tilemaps\Forge\forge_exit.tmx";
+					public const string Forge_hub = @"Content\Tiled\Tilemaps\Forge\forge_hub.tmx";
 					public const string Forge_pre_boss = @"Content\Tiled\Tilemaps\Forge\forge_pre_boss.tmx";
+					public const string Forge_pre_boss_2 = @"Content\Tiled\Tilemaps\Forge\forge_pre_boss_2.tmx";
+					public const string Forge_reward = @"Content\Tiled\Tilemaps\Forge\forge_reward.tmx";
 					public const string Forge_simple = @"Content\Tiled\Tilemaps\Forge\forge_simple.tmx";
 					public const string Forge_simple_2 = @"Content\Tiled\Tilemaps\Forge\forge_simple_2.tmx";
 					public const string Forge_simple_3 = @"Content\Tiled\Tilemaps\Forge\forge_simple_3.tmx";
+					public const string Forge_simple_4 = @"Content\Tiled\Tilemaps\Forge\forge_simple_4.tmx";
+					public const string Forge_start = @"Content\Tiled\Tilemaps\Forge\forge_start.tmx";
 					public const string Forge_test = @"Content\Tiled\Tilemaps\Forge\forge_test.tmx";
 					public const string Forge_test_2 = @"Content\Tiled\Tilemaps\Forge\forge_test_2.tmx";
 					public const string Rules = @"Content\Tiled\Tilemaps\Forge\rules.txt";

@@ -31,7 +31,7 @@
             ]
         },
         {
-            "color": "#ffa0a0a4",
+            "color": "#ff00aa00",
             "drawFill": true,
             "id": 5,
             "members": [
@@ -40,13 +40,7 @@
             "type": "class",
             "useAs": [
                 "property",
-                "map",
-                "layer",
                 "object",
-                "tile",
-                "tileset",
-                "wangcolor",
-                "wangset",
                 "project"
             ]
         },
@@ -89,6 +83,12 @@
                     "name": "Area",
                     "type": "string",
                     "value": ""
+                },
+                {
+                    "name": "RoomType",
+                    "propertyType": "RoomType",
+                    "type": "string",
+                    "value": "none"
                 }
             ],
             "name": "DungeonMap",
@@ -178,6 +178,23 @@
                 "wangset",
                 "project"
             ]
+        },
+        {
+            "id": 9,
+            "name": "RoomType",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "none",
+                "normal",
+                "start",
+                "preBoss",
+                "boss",
+                "exit",
+                "reward",
+                "hub"
+            ],
+            "valuesAsFlags": false
         }
     ]
 }

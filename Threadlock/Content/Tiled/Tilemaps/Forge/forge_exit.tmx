@@ -2,7 +2,7 @@
 <map version="1.10" tiledversion="1.10.2" class="DungeonMap" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="16" tileheight="16" infinite="0" nextlayerid="16" nextobjectid="13">
  <properties>
   <property name="Area" value="Forge"/>
-  <property name="RoomType" propertytype="RoomType" value="normal"/>
+  <property name="RoomType" propertytype="RoomType" value="exit"/>
  </properties>
  <tileset firstgid="1" source="../../Tilesets/prototype_tileset.tsx"/>
  <tileset firstgid="5" source="../../Tilesets/forge_tileset.tsx"/>
@@ -222,7 +222,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="11" name="Entities" visible="0">
+ <objectgroup id="11" name="Entities">
   <object id="2" type="DungeonDoorway" x="256" y="64" width="80" height="80">
    <properties>
     <property name="Direction" value="Top"/>

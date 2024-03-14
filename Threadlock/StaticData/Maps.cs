@@ -12,7 +12,7 @@ namespace Threadlock.StaticData
         public static Map ForgeSpawn = new Map(Nez.Content.Tiled.Tilemaps.Forge.Forge_pre_boss);
         public static List<Map> ForgeMaps = new List<Map>()
         {
-            new Map(Nez.Content.Tiled.Tilemaps.Forge.Forge_simple)
+            new Map(Nez.Content.Tiled.Tilemaps.Forge.Forge_simple_3)
         };
     }
 }

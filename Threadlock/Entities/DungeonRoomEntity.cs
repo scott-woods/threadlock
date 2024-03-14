@@ -108,7 +108,7 @@ namespace Threadlock.Entities
             Map = map;
 
             var mapRenderer = AddComponent(new TiledMapRenderer(map, "Walls"));
-            mapRenderer.SetLayersToRender(new[] { "Back", "Walls" }.Where(l => map.Layers.Contains(l)).ToArray());
+            mapRenderer.SetLayersToRender(new[] { "Back", "Back2", "Walls" }.Where(l => map.Layers.Contains(l)).ToArray());
             mapRenderer.RenderLayer = RenderLayers.Back;
             Flags.SetFlagExclusive(ref mapRenderer.PhysicsLayer, PhysicsLayers.Environment);
             TiledHelper.CreateEntitiesForTiledObjects(mapRenderer);
@@ -123,15 +123,6 @@ namespace Threadlock.Entities
         public List<T> FindComponentsOnMap<T>() where T : TiledComponent
         {
             return Scene.FindComponentsOfType<T>().Where(c => c.MapEntity == this).ToList();
-        }
-
-        public List<TmxMap> GetPossibleMaps()
-        {
-            //TODO: use type to determine which maps to use
-            return new List<TmxMap>()
-            {
-                Scene.Content.LoadTiledMap(Nez.Content.Tiled.Tilemaps.Forge.Forge_simple_3)
-            };
         }
 
         public void ClearMap()
