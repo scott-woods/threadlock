@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using static Nez.Content.Tiled;
+using Threadlock.StaticData;
 
 namespace Threadlock.Components
 {
@@ -20,28 +21,26 @@ namespace Threadlock.Components
         TmxTilesetTile _tilesetTile;
         Texture2D _tilesetTexture;
         Rectangle _sourceRect;
+        bool _isWall = false;
 
-        public SingleTileRenderer(TmxLayerTile tile)
-        {
-            _tile = tile;        }
-
-        public SingleTileRenderer(Texture2D tilesetTexture, Rectangle sourceRect)
-        {
-            _tilesetTexture = tilesetTexture;
-            _sourceRect = sourceRect;
-        }
-
-        public SingleTileRenderer(TmxTilesetTile tilesetTile)
-        {
-            _tilesetTile = tilesetTile;
-            _sourceRect = _tilesetTile.Tileset.TileRegions[_tilesetTile.Id];
-        }
-
-        public SingleTileRenderer(TmxTileset tileset, int tileId, int renderLayer)
+        public SingleTileRenderer(TmxTileset tileset, int tileId, int renderLayer, bool isWall = false)
         {
             _tilesetTexture = tileset.Image.Texture;
             _sourceRect = tileset.TileRegions[tileId];
             RenderLayer = renderLayer;
+            _isWall = isWall;
+        }
+
+        public override void OnAddedToEntity()
+        {
+            base.OnAddedToEntity();
+
+            if (_isWall)
+            {
+                var collider = Entity.AddComponent(new BoxCollider(_sourceRect.Width, _sourceRect.Height));
+                collider.SetLocalOffset(new Vector2(_sourceRect.Width / 2, _sourceRect.Height / 2));
+                Flags.SetFlagExclusive(ref collider.PhysicsLayer, PhysicsLayers.Environment);
+            }
         }
 
         public override void Render(Batcher batcher, Camera camera)
