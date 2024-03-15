@@ -27,7 +27,7 @@ namespace Threadlock.Scenes
         {
             base.Initialize();
 
-            ClearColor = Color.Blue;
+            ClearColor = Color.Black;
 
             //add cursor
             var mouseCursor = AddEntity(new MouseCursor());

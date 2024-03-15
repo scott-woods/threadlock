@@ -17,6 +17,7 @@ using Threadlock.Entities;
 using Threadlock.Helpers;
 using Threadlock.Models;
 using Threadlock.StaticData;
+using static Nez.Content.Tiled.Tilemaps.Forge;
 using static Threadlock.StaticData.Tiles.Forge;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
@@ -124,23 +125,37 @@ namespace Threadlock.SceneComponents.Dungenerator
                     .ToList();
 
                 List<Vector2> reservedPositions = new List<Vector2>();
-                foreach (var doorway in Scene.FindComponentsOfType<DungeonDoorway>().Where(d => d.HasConnection))
+                foreach (var map in _allMapEntities)
                 {
-                    reservedPositions.Add(doorway.PathfindingOrigin);
-                    switch (doorway.Direction)
-                    {
-                        case "Top":
-                        case "Bottom":
-                            reservedPositions.Add(doorway.PathfindingOrigin + (DirectionHelper.Left * 16));
-                            reservedPositions.Add(doorway.PathfindingOrigin + (DirectionHelper.Right * 16));
-                            break;
-                        case "Left":
-                        case "Right":
-                            reservedPositions.Add(doorway.PathfindingOrigin + (DirectionHelper.Up * 16));
-                            reservedPositions.Add(doorway.PathfindingOrigin + (DirectionHelper.Down * 16));
-                            break;
-                    }
+                    //get world position of every Back (floor) tile on this map
+                    reservedPositions.AddRange(GetTilePositionsByLayer(map, "Back"));
                 }
+
+                foreach (var doorway in Scene.FindComponentsOfType<DungeonDoorway>())
+                {
+                    if (doorway.HasConnection)
+                        reservedPositions.AddRange(GetTilePositionsByLayer(doorway.Entity, "Back"));
+                    allFloorPositions.AddRange(GetTilePositionsByLayer(doorway.Entity, "Fill"));
+                }
+
+                //List<Vector2> reservedPositions = new List<Vector2>();
+                //foreach (var doorway in Scene.FindComponentsOfType<DungeonDoorway>().Where(d => d.HasConnection))
+                //{
+                //    reservedPositions.Add(doorway.PathfindingOrigin);
+                //    switch (doorway.Direction)
+                //    {
+                //        case "Top":
+                //        case "Bottom":
+                //            reservedPositions.Add(doorway.PathfindingOrigin + (DirectionHelper.Left * 16));
+                //            reservedPositions.Add(doorway.PathfindingOrigin + (DirectionHelper.Right * 16));
+                //            break;
+                //        case "Left":
+                //        case "Right":
+                //            reservedPositions.Add(doorway.PathfindingOrigin + (DirectionHelper.Up * 16));
+                //            reservedPositions.Add(doorway.PathfindingOrigin + (DirectionHelper.Down * 16));
+                //            break;
+                //    }
+                //}
 
                 //open tileset
                 using (var stream = TitleContainer.OpenStream(Content.Tiled.Tilesets.Forge_tileset))
@@ -152,7 +167,7 @@ namespace Threadlock.SceneComponents.Dungenerator
                     tileset.TmxDirectory = tsxDir;
 
                     //var tileRenderers = CorridorPainter.PaintFloorTiles(floorPositions, tileset, endEntity);
-                    var tileRenderers = CorridorPainter.PaintCorridorTiles(allFloorPositions, reservedPositions, tileset);
+                    CorridorPainter.PaintCorridorTiles(allFloorPositions, reservedPositions, tileset);
                 }
 
                 break;
@@ -825,6 +840,27 @@ namespace Threadlock.SceneComponents.Dungenerator
                 pairsList = pairs.ToList();
 
             return pairsList;
+        }
+
+        List<Vector2> GetTilePositionsByLayer(Entity entity, string layerName)
+        {
+            //init list
+            var tilePositions = new List<Vector2>();
+
+            //try to get renderer
+            if (entity.TryGetComponent<TiledMapRenderer>(out var renderer))
+            {
+                //get layer
+                var layer = renderer.TiledMap.TileLayers.FirstOrDefault(l => l.Name ==  layerName);
+
+                if (layer != null)
+                {
+                    foreach (var tile in layer.Tiles.Where(t => t != null))
+                        tilePositions.Add(renderer.Entity.Position + new Vector2(tile.X * 16, tile.Y * 16));
+                }
+            }
+
+            return tilePositions;
         }
 
         #endregion

@@ -139,16 +139,14 @@ namespace Threadlock.SceneComponents.Dungenerator
             return mask;
         }
 
-        public static List<SingleTileRenderer> PaintCorridorTiles(List<Vector2> floorPositions, List<Vector2> reservedPositions, TmxTileset tileset)
+        public static void PaintCorridorTiles(List<Vector2> floorPositions, List<Vector2> reservedPositions, TmxTileset tileset)
         {
             var renderers = new List<SingleTileRenderer>();
 
             var allTilesForMask = floorPositions.Concat(reservedPositions).ToList();
 
-            Dictionary<Vector2, SingleTileRenderer> tileDictionary = new Dictionary<Vector2, SingleTileRenderer>();
-            Dictionary<Vector2, SingleTileRenderer> frontTileDictionary = new Dictionary<Vector2, SingleTileRenderer>();
-            Dictionary<Vector2, SingleTileRenderer> sideWallDictionary = new Dictionary<Vector2, SingleTileRenderer>();
-            Dictionary<Vector2, SingleTileRenderer> colliderDictionary = new Dictionary<Vector2, SingleTileRenderer>();
+            Dictionary<Vector2, SingleTile> backTiles = new Dictionary<Vector2, SingleTile>();
+            Dictionary<Vector2, SingleTile> frontTiles = new Dictionary<Vector2, SingleTile>();
 
             foreach (var floorPos in floorPositions)
             {
@@ -158,110 +156,119 @@ namespace Threadlock.SceneComponents.Dungenerator
                 switch (orientation)
                 {
                     case TileOrientation.Center:
-                        tileDictionary[floorPos] = new SingleTileRenderer(tileset, Tiles.Forge.Floor.StoneCenter, RenderLayers.Back);
+                        //floor
+                        backTiles[floorPos] = new SingleTile(Tiles.Forge.Floor.StoneCenter);
                         break;
                     case TileOrientation.TopLeft:
                         //floor
-                        tileDictionary[floorPos] = new SingleTileRenderer(tileset, Tiles.Forge.Floor.StoneTopLeftCorner, RenderLayers.Back);
+                        backTiles[floorPos] = new SingleTile(Tiles.Forge.Floor.StoneTopLeftCorner);
 
                         //walls
                         var lowerWall = Tiles.Forge.Walls.LeftCornerLower;
                         var midWall = Tiles.Forge.Walls.LeftCornerMid;
                         var topWall = Tiles.Forge.Walls.LeftCornerTop;
-                        sideWallDictionary[floorPos + (DirectionHelper.Up * 16 * 3) + (DirectionHelper.Left * 16)] = new SingleTileRenderer(tileset, Tiles.Forge.Walls.LeftSideRightTurn, RenderLayers.Back, true);
+                        backTiles[floorPos + (DirectionHelper.Up * 16 * 3) + (DirectionHelper.Left * 16)] = new SingleTile(Tiles.Forge.Walls.LeftSideRightTurn, true);
                         for (int i = 0; i < 3; i++)
-                            sideWallDictionary[floorPos + (DirectionHelper.Left * 16) + (DirectionHelper.Up * 16 * i)] = new SingleTileRenderer(tileset, Tiles.Forge.Walls.LeftSide, RenderLayers.Back, true);
+                            if (!backTiles.ContainsKey(floorPos + (DirectionHelper.Left * 16) + (DirectionHelper.Up * 16 * i)))
+                                backTiles[floorPos + (DirectionHelper.Left * 16) + (DirectionHelper.Up * 16 * i)] = new SingleTile(Tiles.Forge.Walls.LeftSide, true);
                         if ((mask & TileDirection.TopRight) == 0)
                         {
-                            tileDictionary[floorPos + (DirectionHelper.Up * 16)] = new SingleTileRenderer(tileset, lowerWall, RenderLayers.Back, true);
-                            tileDictionary[floorPos + (DirectionHelper.Up * 16 * 2)] = new SingleTileRenderer(tileset, midWall, RenderLayers.Back, true);
-                            tileDictionary[floorPos + (DirectionHelper.Up * 16 * 3)] = new SingleTileRenderer(tileset, topWall, RenderLayers.Back, true);
+                            backTiles[floorPos + (DirectionHelper.Up * 16)] = new SingleTile(lowerWall, true);
+                            backTiles[floorPos + (DirectionHelper.Up * 16 * 2)] = new SingleTile(midWall, true);
+                            backTiles[floorPos + (DirectionHelper.Up * 16 * 3)] = new SingleTile(topWall, true);
                         }
                         break;
                     case TileOrientation.TopRight:
                         //floor
-                        tileDictionary[floorPos] = new SingleTileRenderer(tileset, Tiles.Forge.Floor.StoneTopRightCorner, RenderLayers.Back);
+                        backTiles[floorPos] = new SingleTile(Tiles.Forge.Floor.StoneTopRightCorner);
 
                         //walls
                         var topRightLowerWall = Tiles.Forge.Walls.RightCornerLower;
                         var topRightMidWall = Tiles.Forge.Walls.RightCornerMid;
                         var topRightTopWall = Tiles.Forge.Walls.RightCornerTop;
-                        sideWallDictionary[floorPos + (DirectionHelper.Up * 16 * 3) + (DirectionHelper.Right * 16)] = new SingleTileRenderer(tileset, Tiles.Forge.Walls.RightSideLeftTurn, RenderLayers.Back, true);
+                        backTiles[floorPos + (DirectionHelper.Up * 16 * 3) + (DirectionHelper.Right * 16)] = new SingleTile(Tiles.Forge.Walls.RightSideLeftTurn, true);
                         for (int i = 0; i < 3; i++)
-                            sideWallDictionary[floorPos + (DirectionHelper.Right * 16) + (DirectionHelper.Up * 16 * i)] = new SingleTileRenderer(tileset, Tiles.Forge.Walls.RightSide, RenderLayers.Back, true);
+                            if (!backTiles.ContainsKey(floorPos + (DirectionHelper.Right * 16) + (DirectionHelper.Up * 16 * i)))
+                                backTiles[floorPos + (DirectionHelper.Right * 16) + (DirectionHelper.Up * 16 * i)] = new SingleTile(Tiles.Forge.Walls.RightSide, true);
                         if ((mask & TileDirection.TopLeft) == 0)
                         {
-                            tileDictionary[floorPos + (DirectionHelper.Up * 16)] = new SingleTileRenderer(tileset, topRightLowerWall, RenderLayers.Back, true);
-                            tileDictionary[floorPos + (DirectionHelper.Up * 16 * 2)] = new SingleTileRenderer(tileset, topRightMidWall, RenderLayers.Back, true);
-                            tileDictionary[floorPos + (DirectionHelper.Up * 16 * 3)] = new SingleTileRenderer(tileset, topRightTopWall, RenderLayers.Back, true);
+                            backTiles[floorPos + (DirectionHelper.Up * 16)] = new SingleTile(topRightLowerWall, true);
+                            backTiles[floorPos + (DirectionHelper.Up * 16 * 2)] = new SingleTile(topRightMidWall, true);
+                            backTiles[floorPos + (DirectionHelper.Up * 16 * 3)] = new SingleTile(topRightTopWall, true);
                         }
                         break;
                     case TileOrientation.BottomRight:
                         //floor
-                        tileDictionary[floorPos] = new SingleTileRenderer(tileset, Tiles.Forge.Floor.StoneBottomRightCorner, RenderLayers.Back);
+                        backTiles[floorPos] = new SingleTile(Tiles.Forge.Floor.StoneBottomRightCorner);
 
                         //front
                         if ((mask & (TileDirection.BottomLeft | TileDirection.BottomRight)) == 0)
-                            frontTileDictionary[floorPos] = new SingleTileRenderer(tileset, Tiles.Forge.Walls.Bottom, RenderLayers.Front);
+                            frontTiles[floorPos] = new SingleTile(Tiles.Forge.Walls.Bottom);
 
                         //walls
-                        colliderDictionary[floorPos + (DirectionHelper.Down * 16)] = new SingleTileRenderer(tileset, Tiles.Forge.Walls.Collider, RenderLayers.Back, true);
-                        tileDictionary[floorPos + (DirectionHelper.Right * 16)] = new SingleTileRenderer(tileset, Tiles.Forge.Walls.BottomRightSideTurnLeft, RenderLayers.Back, true);
-                        colliderDictionary[floorPos + (DirectionHelper.DownRight * 16)] = new SingleTileRenderer(tileset, Tiles.Forge.Walls.Collider, RenderLayers.Back, true);
+                        if (!backTiles.ContainsKey(floorPos + (DirectionHelper.Down * 16)))
+                            backTiles[floorPos + (DirectionHelper.Down * 16)] = new SingleTile(Tiles.Forge.Walls.Collider, true);
+                        backTiles[floorPos + (DirectionHelper.Right * 16)] = new SingleTile(Tiles.Forge.Walls.BottomRightSideTurnLeft, true);
+                        backTiles[floorPos + (DirectionHelper.DownRight * 16)] = new SingleTile(Tiles.Forge.Walls.Collider, true);
                         break;
                     case TileOrientation.BottomLeft:
                         //floor
-                        tileDictionary[floorPos] = new SingleTileRenderer(tileset, Tiles.Forge.Floor.StoneBottomLeftCorner, RenderLayers.Back);
+                        backTiles[floorPos] = new SingleTile(Tiles.Forge.Floor.StoneBottomLeftCorner);
 
                         //front
                         if ((mask & (TileDirection.BottomLeft | TileDirection.BottomRight)) == 0)
-                            frontTileDictionary[floorPos] = new SingleTileRenderer(tileset, Tiles.Forge.Walls.Bottom, RenderLayers.Front);
+                            frontTiles[floorPos] = new SingleTile(Tiles.Forge.Walls.Bottom);
 
                         //walls
-                        colliderDictionary[floorPos + (DirectionHelper.Down * 16)] = new SingleTileRenderer(tileset, Tiles.Forge.Walls.Collider, RenderLayers.Back, true);
-                        tileDictionary[floorPos + (DirectionHelper.Left * 16)] = new SingleTileRenderer(tileset, Tiles.Forge.Walls.BottomLeftSideTurnRight, RenderLayers.Back, true);
-                        colliderDictionary[floorPos + (DirectionHelper.DownLeft * 16)] = new SingleTileRenderer(tileset, Tiles.Forge.Walls.Collider, RenderLayers.Back, true);
+                        if (!backTiles.ContainsKey(floorPos + (DirectionHelper.Down * 16)))
+                            backTiles[floorPos + (DirectionHelper.Down * 16)] = new SingleTile(Tiles.Forge.Walls.Collider, true);
+                        backTiles[floorPos + (DirectionHelper.Left * 16)] = new SingleTile(Tiles.Forge.Walls.BottomLeftSideTurnRight, true);
+                        backTiles[floorPos + (DirectionHelper.DownLeft * 16)] = new SingleTile(Tiles.Forge.Walls.Collider, true);
                         break;
                     case TileOrientation.TopEdge:
                         //floor
-                        tileDictionary[floorPos] = new SingleTileRenderer(tileset, Tiles.Forge.Floor.StoneTopEdge, RenderLayers.Back);
+                        backTiles[floorPos] = new SingleTile(Tiles.Forge.Floor.StoneTopEdge);
 
                         //walls
                         if ((mask & (TileDirection.TopLeft | TileDirection.TopRight)) == 0)
                         {
-                            tileDictionary[floorPos + (DirectionHelper.Up * 16)] = new SingleTileRenderer(tileset, Tiles.Forge.Walls.NormalLower, RenderLayers.Back, true);
-                            tileDictionary[floorPos + (DirectionHelper.Up * 16 * 2)] = new SingleTileRenderer(tileset, Tiles.Forge.Walls.NormalMid, RenderLayers.Back, true);
-                            tileDictionary[floorPos + (DirectionHelper.Up * 16 * 3)] = new SingleTileRenderer(tileset, Tiles.Forge.Walls.NormalTop, RenderLayers.Back, true);
+                            backTiles[floorPos + (DirectionHelper.Up * 16)] = new SingleTile(Tiles.Forge.Walls.NormalLower, true);
+                            backTiles[floorPos + (DirectionHelper.Up * 16 * 2)] = new SingleTile(Tiles.Forge.Walls.NormalMid, true);
+                            backTiles[floorPos + (DirectionHelper.Up * 16 * 3)] = new SingleTile(Tiles.Forge.Walls.NormalTop, true);
                         }
                         break;
                     case TileOrientation.RightEdge:
                         //floor
-                        tileDictionary[floorPos] = new SingleTileRenderer(tileset, Tiles.Forge.Floor.StoneRightEdge, RenderLayers.Back);
+                        backTiles[floorPos] = new SingleTile(Tiles.Forge.Floor.StoneRightEdge);
 
                         //walls
-                        sideWallDictionary[floorPos + (DirectionHelper.Right * 16)] = new SingleTileRenderer(tileset, Tiles.Forge.Walls.RightSide, RenderLayers.Back, true);
+                        if (!backTiles.ContainsKey(floorPos + (DirectionHelper.Right * 16)))
+                            backTiles[floorPos + (DirectionHelper.Right * 16)] = new SingleTile(Tiles.Forge.Walls.RightSide, true);
                         break;
                     case TileOrientation.BottomEdge:
                         //floor
-                        tileDictionary[floorPos] = new SingleTileRenderer(tileset, Tiles.Forge.Floor.StoneBottomEdge, RenderLayers.Back);
+                        backTiles[floorPos] = new SingleTile(Tiles.Forge.Floor.StoneBottomEdge);
 
-                        //front
                         if ((mask & (TileDirection.BottomLeft | TileDirection.BottomRight)) == 0)
-                            frontTileDictionary[floorPos] = new SingleTileRenderer(tileset, Tiles.Forge.Walls.Bottom, RenderLayers.Front);
+                        {
+                            //front
+                            frontTiles[floorPos] = new SingleTile(Tiles.Forge.Walls.Bottom);
 
-                        //walls
-                        colliderDictionary[floorPos + (DirectionHelper.Down * 16)] = new SingleTileRenderer(tileset, Tiles.Forge.Walls.Collider, RenderLayers.Back, true);
+                            //walls
+                            backTiles[floorPos + (DirectionHelper.Down * 16)] = new SingleTile(Tiles.Forge.Walls.Collider, true);
+                        }
                         break;
                     case TileOrientation.LeftEdge:
                         //floor
-                        tileDictionary[floorPos] = new SingleTileRenderer(tileset, Tiles.Forge.Floor.StoneLeftEdge, RenderLayers.Back);
+                        backTiles[floorPos] = new SingleTile(Tiles.Forge.Floor.StoneLeftEdge);
 
                         //walls
-                        sideWallDictionary[floorPos + (DirectionHelper.Left * 16)] = new SingleTileRenderer(tileset, Tiles.Forge.Walls.LeftSide, RenderLayers.Back, true);
+                        if (!backTiles.ContainsKey(floorPos + (DirectionHelper.Left * 16)))
+                            backTiles[floorPos + (DirectionHelper.Left * 16)] = new SingleTile(Tiles.Forge.Walls.LeftSide, true);
                         break;
                     case TileOrientation.BottomRightInverse:
                         //floor
-                        tileDictionary[floorPos] = new SingleTileRenderer(tileset, Tiles.Forge.Floor.StoneBottomRightInverse, RenderLayers.Back);
+                        backTiles[floorPos] = new SingleTile(Tiles.Forge.Floor.StoneBottomRightInverse);
 
                         //walls
                         var botRightInverseLowerWall = Tiles.Forge.Walls.RightEdgeLower;
@@ -274,13 +281,13 @@ namespace Threadlock.SceneComponents.Dungenerator
                             botRightInverseTopWall = Tiles.Forge.Walls.RightEdgeCornerTop;
                         }
                         var bottomRightInverseOffset = (DirectionHelper.Left * 16);
-                        tileDictionary[floorPos + bottomRightInverseOffset + (DirectionHelper.Up * 16)] = new SingleTileRenderer(tileset, botRightInverseLowerWall, RenderLayers.Back, true);
-                        tileDictionary[floorPos + bottomRightInverseOffset + (DirectionHelper.Up * 16 * 2)] = new SingleTileRenderer(tileset, botRightInverseMidWall, RenderLayers.Back, true);
-                        tileDictionary[floorPos + bottomRightInverseOffset + (DirectionHelper.Up * 16 * 3)] = new SingleTileRenderer(tileset, botRightInverseTopWall, RenderLayers.Back, true);
+                        backTiles[floorPos + bottomRightInverseOffset + (DirectionHelper.Up * 16)] = new SingleTile(botRightInverseLowerWall, true);
+                        backTiles[floorPos + bottomRightInverseOffset + (DirectionHelper.Up * 16 * 2)] = new SingleTile(botRightInverseMidWall, true);
+                        backTiles[floorPos + bottomRightInverseOffset + (DirectionHelper.Up * 16 * 3)] = new SingleTile(botRightInverseTopWall, true);
                         break;
                     case TileOrientation.BottomLeftInverse:
                         //floor
-                        tileDictionary[floorPos] = new SingleTileRenderer(tileset, Tiles.Forge.Floor.StoneBottomLeftInverse, RenderLayers.Back);
+                        backTiles[floorPos] = new SingleTile(Tiles.Forge.Floor.StoneBottomLeftInverse);
 
                         //walls
                         var botLeftInverseLowerWall = Tiles.Forge.Walls.LeftEdgeLower;
@@ -293,49 +300,49 @@ namespace Threadlock.SceneComponents.Dungenerator
                             botLeftInverseTopWall = Tiles.Forge.Walls.LeftEdgeCornerTop;
                         }
                         var botLeftInverseOffset = (DirectionHelper.Right * 16);
-                        tileDictionary[floorPos + botLeftInverseOffset + (DirectionHelper.Up * 16)] = new SingleTileRenderer(tileset, botLeftInverseLowerWall, RenderLayers.Back, true);
-                        tileDictionary[floorPos + botLeftInverseOffset + (DirectionHelper.Up * 16 * 2)] = new SingleTileRenderer(tileset, botLeftInverseMidWall, RenderLayers.Back, true);
-                        tileDictionary[floorPos + botLeftInverseOffset + (DirectionHelper.Up * 16 * 3)] = new SingleTileRenderer(tileset, botLeftInverseTopWall, RenderLayers.Back, true);
+                        backTiles[floorPos + botLeftInverseOffset + (DirectionHelper.Up * 16)] = new SingleTile(botLeftInverseLowerWall, true);
+                        backTiles[floorPos + botLeftInverseOffset + (DirectionHelper.Up * 16 * 2)] = new SingleTile(botLeftInverseMidWall, true);
+                        backTiles[floorPos + botLeftInverseOffset + (DirectionHelper.Up * 16 * 3)] = new SingleTile(botLeftInverseTopWall, true);
                         break;
                     case TileOrientation.TopLeftInverse:
                         //floor
-                        tileDictionary[floorPos] = new SingleTileRenderer(tileset, Tiles.Forge.Floor.StoneTopLeftInverse, RenderLayers.Back);
+                        backTiles[floorPos] = new SingleTile(Tiles.Forge.Floor.StoneTopLeftInverse);
 
                         //front
-                        frontTileDictionary[floorPos + (DirectionHelper.Right * 16)] = new SingleTileRenderer(tileset, Tiles.Forge.Walls.BottomTurnLeft, RenderLayers.Front);
+                        frontTiles[floorPos + (DirectionHelper.Right * 16)] = new SingleTile(Tiles.Forge.Walls.BottomTurnLeft);
                         break;
                     case TileOrientation.TopRightInverse:
                         //floor
-                        tileDictionary[floorPos] = new SingleTileRenderer(tileset, Tiles.Forge.Floor.StoneTopRightInverse, RenderLayers.Back);
+                        backTiles[floorPos] = new SingleTile(Tiles.Forge.Floor.StoneTopRightInverse);
 
                         //front
-                        frontTileDictionary[floorPos + (DirectionHelper.Left * 16)] = new SingleTileRenderer(tileset, Tiles.Forge.Walls.BottomTurnRight, RenderLayers.Front);
+                        frontTiles[floorPos + (DirectionHelper.Left * 16)] = new SingleTile(Tiles.Forge.Walls.BottomTurnRight);
                         break;
                 }
             }
 
-            foreach (var kvp in tileDictionary)
-            {
-                var renderer = Game1.Scene.CreateEntity("", kvp.Key).AddComponent(kvp.Value);
-                renderers.Add(renderer);
-            }
-            foreach (var kvp in frontTileDictionary)
-            {
-                var renderer = Game1.Scene.CreateEntity("", kvp.Key).AddComponent(kvp.Value);
-                renderers.Add(renderer);
-            }
-            foreach (var kvp in sideWallDictionary.Where(w => !tileDictionary.ContainsKey(w.Key)))
-            {
-                var renderer = Game1.Scene.CreateEntity("", kvp.Key).AddComponent(kvp.Value);
-                renderers.Add(renderer);
-            }
-            foreach (var kvp in colliderDictionary.Where(w => !sideWallDictionary.ContainsKey(w.Key) && !tileDictionary.ContainsKey(w.Key)))
-            {
-                var renderer = Game1.Scene.CreateEntity("", kvp.Key).AddComponent(kvp.Value);
-                renderers.Add(renderer);
-            }
+            var tileRenderer = Game1.Scene.CreateEntity("").AddComponent(new CorridorRenderer(tileset, backTiles, true));
+            tileRenderer.RenderLayer = RenderLayers.Back;
 
-            return renderers;
+            var frontRenderer = Game1.Scene.CreateEntity("").AddComponent(new CorridorRenderer(tileset, frontTiles));
+            frontRenderer.RenderLayer = RenderLayers.Front;
+
+            //var frontDict = frontTileDictionary
+            //    .ToDictionary(t => t.Key, t => t.Value.TileId);
+            //var frontRenderer = Game1.Scene.CreateEntity("").AddComponent(new CorridorRenderer(tileset, frontDict));
+            //frontRenderer.RenderLayer = RenderLayers.Front;
+
+            //var wallDict = sideWallDictionary
+            //    .Where(w => !tileDictionary.ContainsKey(w.Key))
+            //    .ToDictionary(t => t.Key, t => t.Value.TileId);
+            //var wallRenderer = Game1.Scene.CreateEntity("").AddComponent(new CorridorRenderer(tileset, wallDict, true));
+            //wallRenderer.RenderLayer = RenderLayers.Back;
+
+            //var colliderDict = colliderDictionary
+            //    .Where(w => !sideWallDictionary.ContainsKey(w.Key) && !tileDictionary.ContainsKey(w.Key))
+            //    .ToDictionary(t => t.Key, t => t.Value.TileId);
+            //var colliderRenderer = Game1.Scene.CreateEntity("").AddComponent(new CorridorRenderer(tileset, colliderDict, true));
+            //colliderRenderer.RenderLayer = RenderLayers.Back;
         }
     }
 }

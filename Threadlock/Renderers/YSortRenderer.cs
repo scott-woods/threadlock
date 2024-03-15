@@ -88,14 +88,22 @@ namespace Threadlock.Renderers
                     if (r.GetType() == typeof(TiledMapRenderer))
                     {
                         var mapRenderer = r as TiledMapRenderer;
-                        return mapRenderer.TiledMap.TileLayers.Any(l =>
+                        var frontLayers = mapRenderer.TiledMap.TileLayers.Where(l => l.Name == "Front");
+                        return frontLayers.Any(l =>
                         {
-                            var tiles = l.GetTilesIntersectingBounds(bounds);
+                            var adjustedBounds = new RectangleF(bounds.Location - mapRenderer.Entity.Position, bounds.Size);
+                            var tiles = l.GetTilesIntersectingBounds(adjustedBounds);
                             return tiles.Any(t =>
                             {
                                 return r.Entity.Position.Y + (t.Y * mapRenderer.TiledMap.TileHeight) + mapRenderer.TiledMap.TileHeight > origin.Y;
                             });
                         });
+                    }
+                    else if (r.GetType() == typeof(CorridorRenderer))
+                    {
+                        var corridorRenderer = r as CorridorRenderer;
+                        var tiles = corridorRenderer.GetTilesIntersectingBounds(bounds);
+                        return tiles.Any(t => t.Y + corridorRenderer.Tileset.TileHeight > origin.Y);
                     }
                     else
                     {

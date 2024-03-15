@@ -22,6 +22,7 @@ namespace Threadlock.Components
         Texture2D _tilesetTexture;
         Rectangle _sourceRect;
         bool _isWall = false;
+        public int TileId;
 
         public SingleTileRenderer(TmxTileset tileset, int tileId, int renderLayer, bool isWall = false)
         {
@@ -29,6 +30,7 @@ namespace Threadlock.Components
             _sourceRect = tileset.TileRegions[tileId];
             RenderLayer = renderLayer;
             _isWall = isWall;
+            TileId = tileId;
         }
 
         public override void OnAddedToEntity()
@@ -37,9 +39,9 @@ namespace Threadlock.Components
 
             if (_isWall)
             {
-                var collider = Entity.AddComponent(new BoxCollider(_sourceRect.Width, _sourceRect.Height));
-                collider.SetLocalOffset(new Vector2(_sourceRect.Width / 2, _sourceRect.Height / 2));
-                Flags.SetFlagExclusive(ref collider.PhysicsLayer, PhysicsLayers.Environment);
+                //var collider = Entity.AddComponent(new BoxCollider(_sourceRect.Width, _sourceRect.Height));
+                //collider.SetLocalOffset(new Vector2(_sourceRect.Width / 2, _sourceRect.Height / 2));
+                //Flags.SetFlagExclusive(ref collider.PhysicsLayer, PhysicsLayers.Environment);
             }
         }
 

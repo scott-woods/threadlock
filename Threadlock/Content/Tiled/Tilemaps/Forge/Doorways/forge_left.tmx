@@ -1,47 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="2" height="6" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="1">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="2" height="6" tilewidth="16" tileheight="16" infinite="0" nextlayerid="17" nextobjectid="1">
  <tileset firstgid="1" source="../../../Tilesets/forge_tileset.tsx"/>
- <layer id="8" name="ClosedBack" width="2" height="6">
+ <tileset firstgid="626" source="../../../Tilesets/prototype_tileset.tsx"/>
+ <layer id="10" name="Back" width="2" height="6">
   <data encoding="csv">
-0,202,
-0,202,
-0,202,
-0,202,
-0,202,
-0,202
-</data>
- </layer>
- <layer id="1" name="OpenBack" width="2" height="6">
-  <data encoding="csv">
-0,207,
-0,207,
-0,207,
-178,232,
-203,203,
-228,182
-</data>
- </layer>
- <layer id="9" name="ClosedWalls" width="2" height="6">
-  <data encoding="csv">
-55,0,
-55,0,
-55,0,
-55,0,
-55,0,
-55,0
-</data>
- </layer>
- <layer id="2" name="OpenWalls" width="2" height="6">
-  <data encoding="csv">
-104,0,
-129,0,
-154,0,
+0,0,
+0,0,
+0,0,
 0,0,
 0,0,
 0,0
 </data>
  </layer>
- <layer id="5" name="GateWalls" width="2" height="6">
+ <layer id="12" name="Fill" width="2" height="6">
+  <data encoding="csv">
+0,627,
+0,627,
+0,627,
+627,627,
+627,627,
+627,627
+</data>
+ </layer>
+ <layer id="11" name="Walls" width="2" height="6">
+  <data encoding="csv">
+0,0,
+0,0,
+0,0,
+0,0,
+0,0,
+0,0
+</data>
+ </layer>
+ <layer id="14" name="GateWalls" width="2" height="6">
   <data encoding="csv">
 0,0,
 0,0,
@@ -51,21 +42,21 @@
 246,0
 </data>
  </layer>
- <layer id="3" name="OpenFront" width="2" height="6">
-  <data encoding="csv">
-0,0,
-0,0,
-0,0,
-0,0,
-0,0,
-4,0
-</data>
- </layer>
- <layer id="4" name="GateFront" width="2" height="6">
+ <layer id="15" name="GateFront" width="2" height="6">
   <data encoding="csv">
 196,0,
 221,0,
 221,0,
+0,0,
+0,0,
+0,0
+</data>
+ </layer>
+ <layer id="13" name="Front" width="2" height="6">
+  <data encoding="csv">
+0,0,
+0,0,
+0,0,
 0,0,
 0,0,
 0,0

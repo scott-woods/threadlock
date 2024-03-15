@@ -52,24 +52,10 @@ namespace Threadlock.Components.TiledComponents
         {
             base.Initialize();
 
-            //get pathfinding offset
-            //if (TmxObject.Properties.TryGetValue("PathfindingOffset", out var pathfindingOffset))
-            //{
-            //    var offsetValues = pathfindingOffset.Split(' ');
-            //    PathfindingOffset = new Vector2(Convert.ToInt32(offsetValues[0]), Convert.ToInt32(offsetValues[1]));
-            //}
-
             //get direction exit is facing
             if (TmxObject.Properties.TryGetValue("Direction", out var direction))
             {
                 Direction = direction;
-            }
-
-            //get parent dungeon room
-            if (MapEntity.TryGetComponent<DungeonRoom>(out var dungeonRoom))
-            {
-                DungeonRoom = dungeonRoom;
-                dungeonRoom.Doorways.Add(this);
             }
 
             //parent dungeon map
@@ -78,16 +64,17 @@ namespace Threadlock.Components.TiledComponents
                 _parentMap = mapRenderer.TiledMap;
             }
 
-            //Entity.SetPosition(new Microsoft.Xna.Framework.Vector2(base.Entity.Position.X - (_map.Width * _map.TileWidth) / 2, base.Entity.Position.Y - (_map.Height * _map.TileHeight) / 2));
-        }
-
-        public override void OnAddedToEntity()
-        {
-            base.OnAddedToEntity();
-
             if (!_processed)
                 CreateMap();
         }
+
+        //public override void OnAddedToEntity()
+        //{
+        //    base.OnAddedToEntity();
+
+        //    if (!_processed)
+        //        CreateMap();
+        //}
 
         public void SetOpen(bool open)
         {
@@ -165,7 +152,7 @@ namespace Threadlock.Components.TiledComponents
             {
                 var doorwayStatus = HasConnection ? "Open" : "Closed";
                 var mapName = $"{area.ToLower()}_{Direction.ToLower()}_{doorwayStatus.ToLower()}";
-                _map = base.Entity.Scene.Content.LoadTiledMap($@"Content\Tiled\Tilemaps\{area}\Doorways\{mapName}.tmx");
+                _map = Game1.Scene.Content.LoadTiledMap($@"Content\Tiled\Tilemaps\{area}\Doorways\{mapName}.tmx");
 
                 //create main map renderer
                 var mapRenderer = Entity.AddComponent(new TiledMapRenderer(_map));

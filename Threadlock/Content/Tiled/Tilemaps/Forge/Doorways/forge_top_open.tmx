@@ -1,22 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="5" height="5" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="2">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="5" height="5" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="3">
  <tileset firstgid="1" source="../../../Tilesets/forge_tileset.tsx"/>
  <tileset firstgid="626" source="../../../Tilesets/dungeon_prison.tsx"/>
+ <tileset firstgid="1251" source="../../../Tilesets/prototype_tileset.tsx"/>
  <layer id="1" name="Back" width="5" height="5">
   <data encoding="csv">
-0,202,203,204,0,
-0,202,203,204,0,
-0,202,203,204,0,
-0,202,203,204,0,
-178,232,203,230,178
+0,0,0,0,0,
+0,0,0,0,0,
+0,0,0,0,0,
+0,0,0,0,0,
+0,0,0,0,0
+</data>
+ </layer>
+ <layer id="8" name="Fill" width="5" height="5">
+  <data encoding="csv">
+0,1252,1252,1252,0,
+0,1252,1252,1252,0,
+0,1252,1252,1252,0,
+0,1252,1252,1252,0,
+1252,1252,1252,1252,1252
 </data>
  </layer>
  <layer id="2" name="Walls" width="5" height="5">
   <data encoding="csv">
-55,0,0,0,51,
-104,0,0,0,102,
-129,0,0,0,127,
-154,0,0,0,152,
+0,0,0,0,0,
+0,0,0,0,0,
+0,0,0,0,0,
+0,0,0,0,0,
 0,0,0,0,0
 </data>
  </layer>
