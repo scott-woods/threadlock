@@ -120,7 +120,7 @@ namespace Threadlock.SceneComponents.Dungenerator
                     break;
             }
 
-            var padding = 6;
+            var padding = 2;
             for (int i = 1; i < padding + 1; i++)
             {
                 graph.Walls.Add((startDoorwaySide1 / 16).ToPoint() + (startDoorwayDirection * i).ToPoint() - (graphRect.Location / 16).ToPoint());
@@ -157,6 +157,9 @@ namespace Threadlock.SceneComponents.Dungenerator
 
                 //get larger hallway
                 var largerPath = IncreaseCorridorWidth(adjustedPath, reservedPositions);
+
+                floorPositions = largerPath.SelectMany(p => p.Value).ToList();
+                return true;
 
                 //get list of all positions that we want to consider for bitmasking
                 var allTilePositions = largerPath.SelectMany(p => p.Value)

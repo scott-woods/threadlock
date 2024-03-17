@@ -99,8 +99,8 @@
             "scale": 4,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 40,
-                "y": 40
+                "x": 41.875,
+                "y": 38.25
             }
         },
         "Tilemaps/Forge/Doorways/forge_left.tmx": {
@@ -130,8 +130,8 @@
             "scale": 3,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 16,
-                "y": 48
+                "x": 14.833333333333329,
+                "y": 46.66666666666667
             }
         },
         "Tilemaps/Forge/Doorways/forge_right.tmx": {
@@ -161,8 +161,8 @@
             "scale": 3,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 16,
-                "y": 48
+                "x": 14.5,
+                "y": 46.33333333333332
             }
         },
         "Tilemaps/Forge/Doorways/forge_start.tmx": {
@@ -200,8 +200,8 @@
             "scale": 3,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 31.666666666666664,
-                "y": 39.99999999999999
+                "x": 45.166666666666664,
+                "y": 35.66666666666667
             }
         },
         "Tilemaps/Forge/Halls/forge_bottom_left_corner - Copy - Copy - Copy.tmx": {
@@ -339,8 +339,8 @@
             "scale": 1,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 225.5,
-                "y": 261
+                "x": 305.5,
+                "y": 247
             }
         },
         "Tilemaps/Forge/forge_pre_boss.tmx": {
@@ -423,8 +423,8 @@
             "scale": 1.5,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 180,
-                "y": 180.66666666666663
+                "x": 150.33333333333331,
+                "y": 105.33333333333334
             }
         },
         "Tilemaps/Forge/forge_test.tmx": {
@@ -497,11 +497,11 @@
     "project": "threadlock.tiled-project",
     "property.type": "DoorwayDirection",
     "recentFiles": [
-        "Tilemaps/Forge/forge_normal_1.tmx",
-        "Tilemaps/Forge/Doorways/forge_right_open.tmx",
-        "Tilemaps/Forge/Doorways/forge_left_open.tmx",
-        "Tilemaps/Forge/Doorways/forge_bottom_open.tmx",
         "Tilemaps/Forge/Doorways/forge_top_open.tmx",
+        "Tilemaps/Forge/Doorways/forge_bottom_open.tmx",
+        "Tilemaps/Forge/Doorways/forge_left_open.tmx",
+        "Tilemaps/Forge/Doorways/forge_right_open.tmx",
+        "Tilemaps/Forge/forge_normal_1.tmx",
         "Tilemaps/Forge/forge_simple_3.tmx",
         "Tilesets/forge_tileset.tsx",
         "Tilemaps/Forge/forge_doorway_testing.tmx",

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Nez;
 using Nez.AI.Pathfinding;
 using Nez.Persistence;
@@ -9,18 +8,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Xml.Linq;
-using Threadlock.Components;
 using Threadlock.Components.TiledComponents;
 using Threadlock.Entities;
 using Threadlock.Helpers;
 using Threadlock.Models;
-using Threadlock.StaticData;
-using static Nez.Content.Tiled.Tilemaps.Forge;
-using static Threadlock.StaticData.Tiles.Forge;
-using Color = Microsoft.Xna.Framework.Color;
-using Rectangle = Microsoft.Xna.Framework.Rectangle;
+using static Threadlock.SceneComponents.Dungenerator.CorridorPainter;
 using RectangleF = Nez.RectangleF;
 
 namespace Threadlock.SceneComponents.Dungenerator
@@ -138,6 +131,8 @@ namespace Threadlock.SceneComponents.Dungenerator
                     allFloorPositions.AddRange(GetTilePositionsByLayer(doorway.Entity, "Fill"));
                 }
 
+                //GetPathfindingGraph(_allMapEntities, out var graph, out var graphRect, true);
+
                 //List<Vector2> reservedPositions = new List<Vector2>();
                 //foreach (var doorway in Scene.FindComponentsOfType<DungeonDoorway>().Where(d => d.HasConnection))
                 //{
@@ -244,6 +239,11 @@ namespace Threadlock.SceneComponents.Dungenerator
                                             pair.Item2.SetOpen(true);
 
                                             break;
+                                        }
+                                        else
+                                        {
+                                            pairsList.Remove(pair);
+                                            continue;
                                         }
                                     }
 
@@ -422,6 +422,11 @@ namespace Threadlock.SceneComponents.Dungenerator
                                             pair.Item2.SetOpen(true);
 
                                             break;
+                                        }
+                                        else
+                                        {
+                                            pairsList.Remove(pair);
+                                            continue;
                                         }
                                     }
 
@@ -698,6 +703,20 @@ namespace Threadlock.SceneComponents.Dungenerator
                 //    continue;
                 //}
 
+                bool floorOverlap = false;
+                foreach (var floorPos in roomsToCheck.SelectMany(r => r.FloorTilePositions))
+                {
+                    if (projectedRect.Contains(floorPos))
+                    {
+                        tilesToRemove.Add(possibleTile);
+                        floorOverlap = true;
+                        break;
+                    }
+                }
+
+                if (floorOverlap)
+                    continue;
+
                 List<Vector2> projectedFloorPositions = new List<Vector2>();
                 projectedFloorPositions.AddRange(roomsToMove.SelectMany(r => r.FloorTilePositions.Select(t => t + movementAmount)));
 
@@ -720,48 +739,40 @@ namespace Threadlock.SceneComponents.Dungenerator
             //try all possible tiles
             while (possibleTiles.Count > 0)
             {
+                //get how far the child doorway should be from outgoing doorway
                 var tileDistance = possibleTiles.RandomItem();
-
                 var tileWorldDistance = tileDistance * 16;
 
+                //determine how far to move the child rooms
                 var idealDoorwayOriginPos = startDoor.PathfindingOrigin + tileWorldDistance;
                 var movementAmount = idealDoorwayOriginPos - endDoor.PathfindingOrigin;
+
+                //move child rooms
                 foreach (var room in roomsToMove)
                     room.MoveRoom(movementAmount, false);
 
-                if (roomsToMove.Any(childRoom =>
+                var joinedRooms = roomsToCheck.Concat(roomsToMove).ToList();
+
+                //get pathfinding between two rooms and their composites
+                var graphRooms = startDoor.DungeonRoomEntity.ParentComposite.RoomEntities.Concat(endDoor.DungeonRoomEntity.ParentComposite.RoomEntities).ToList();
+                GetPathfindingGraph(graphRooms, out var graph, out var graphRect);
+
+                //try to find a path between the doorways
+                if (CorridorGenerator.ConnectDoorways(startDoor, endDoor, graph, joinedRooms.ToList(), graphRect, out List<Vector2> floorPositions))
                 {
-                    return roomsToCheck.Any(r => childRoom.OverlapsRoom(r));
-                }))
-                {
-                    possibleTiles.Remove(tileDistance);
-                    continue;
+                    //found a valid path, set doorways as open
+                    startDoor.SetOpen(true);
+                    endDoor.SetOpen(true);
+
+                    startDoor.DungeonRoomEntity.FloorTilePositions.AddRange(floorPositions);
+
+                    break;
                 }
                 else
                 {
-                    //at this point, we know rooms don't directly overlap. time to try making a path between them
-
-                    var joinedRooms = roomsToCheck.Concat(roomsToMove).ToList();
-
-                    var graphRooms = startDoor.DungeonRoomEntity.ParentComposite.RoomEntities.Concat(endDoor.DungeonRoomEntity.ParentComposite.RoomEntities).ToList();
-                    GetPathfindingGraph(graphRooms, out var graph, out var graphRect);
-
-                    //try to find a path between the doorways
-                    if (CorridorGenerator.ConnectDoorways(startDoor, endDoor, graph, joinedRooms.ToList(), graphRect, out List<Vector2> floorPositions))
-                    {
-                        //found a valid path, set doorways as open
-                        startDoor.SetOpen(true);
-                        endDoor.SetOpen(true);
-
-                        startDoor.DungeonRoomEntity.FloorTilePositions.AddRange(floorPositions);
-
-                        break;
-                    }
-                    else
-                    {
-                        possibleTiles.Remove(tileDistance);
-                        continue;
-                    }
+                    return false;
+                    possibleTiles.Remove(tileDistance);
+                    continue;
                 }
             }
 
@@ -771,74 +782,109 @@ namespace Threadlock.SceneComponents.Dungenerator
             return true;
         }
 
-        void GetPathfindingGraph(List<DungeonRoomEntity> joinedRooms, out WeightedGridGraph graph, out RectangleF graphRect)
+        void GetPathfindingGraph(List<DungeonRoomEntity> joinedRooms, out WeightedGridGraph graph, out RectangleF graphRect, bool createProtos = false)
         {
-            var tilePadding = 6;
-
+            //get rectangle around entire set of rooms, and add some tiles of padding around that rectangle
+            var tilePadding = 4;
             graphRect = GetCombinedBounds(joinedRooms);
             graphRect.X -= tilePadding * 16;
             graphRect.Y -= tilePadding * 16;
             graphRect.Width += (tilePadding * 16 * 2);
             graphRect.Height += (tilePadding * 16 * 2);
 
+            //create graph
             graph = new WeightedGridGraph((int)graphRect.Width / 16, (int)graphRect.Height / 16);
             foreach (var graphRoom in joinedRooms)
             {
+                //if no collision tiles in this room, continue
                 var collisionRenderer = graphRoom.GetComponents<TiledMapRenderer>().FirstOrDefault(r => r.CollisionLayer != null);
                 if (collisionRenderer == null)
                     continue;
 
+                //get collision tile positions in world space
                 var collisionTiles = collisionRenderer.CollisionLayer.Tiles
                     .Where(t => t != null)
                     .Select(t => graphRoom.Position + new Vector2(t.X * t.Tileset.TileWidth, t.Y * t.Tileset.TileHeight))
                     .ToList();
+
+                //list of wall positions in world space
                 var wallWorldPositions = new List<Vector2>();
                 foreach (var collisionTile in collisionTiles)
                 {
                     wallWorldPositions.Add(collisionTile);
 
-                    var orientation = CorridorPainter.GetTileOrientation(collisionTile, collisionTiles);
-                    switch (orientation)
-                    {
-                        case CorridorPainter.TileOrientation.LeftEdge:
-                            for (int i = 1; i < tilePadding + 1; i++)
-                                wallWorldPositions.Add(collisionTile + (DirectionHelper.Left * 16 * i));
-                            break;
-                        case CorridorPainter.TileOrientation.RightEdge:
-                            for (int i = 1; i < tilePadding + 1; i++)
-                                wallWorldPositions.Add(collisionTile + (DirectionHelper.Right * 16 * i));
-                            break;
-                        case CorridorPainter.TileOrientation.TopEdge:
-                            for (int i = 1; i < tilePadding + 1; i++)
-                                wallWorldPositions.Add(collisionTile + (DirectionHelper.Up * 16 * i));
-                            break;
-                        case CorridorPainter.TileOrientation.BottomEdge:
-                            for (int i = 1; i < tilePadding + 1; i++)
-                                wallWorldPositions.Add(collisionTile + (DirectionHelper.Down * 16 * i));
-                            break;
-                    }
+                    //based on tile orientation, add additional walls outwards
+                    //var orientation = CorridorPainter.GetTileOrientation(collisionTile, collisionTiles);
+                    //if (new CorridorPainter.TileOrientation[] { CorridorPainter.TileOrientation.LeftEdge, CorridorPainter.TileOrientation.TopLeft, CorridorPainter.TileOrientation.BottomLeft }.Contains(orientation))
+                    //    for (int i = 1; i < tilePadding + 1; i++)
+                    //        wallWorldPositions.Add(collisionTile + (DirectionHelper.Left * 16 * i));
+                    //if (new CorridorPainter.TileOrientation[] { CorridorPainter.TileOrientation.RightEdge, CorridorPainter.TileOrientation.TopRight, CorridorPainter.TileOrientation.BottomRight }.Contains(orientation))
+                    //    for (int i = 1; i < tilePadding + 1; i++)
+                    //        wallWorldPositions.Add(collisionTile + (DirectionHelper.Right * 16 * i));
+                    //if (new CorridorPainter.TileOrientation[] {CorridorPainter.TileOrientation.TopEdge, CorridorPainter.TileOrientation.TopRight, CorridorPainter.TileOrientation.TopLeft}.Contains(orientation))
+                    //    for (int i = 1; i < tilePadding + 1; i++)
+                    //        wallWorldPositions.Add(collisionTile + (DirectionHelper.Up * 16 * i));
+                    //if (new CorridorPainter.TileOrientation[] { CorridorPainter.TileOrientation.BottomEdge, CorridorPainter.TileOrientation.BottomLeft, CorridorPainter.TileOrientation.BottomRight }.Contains(orientation))
+                    //    for (int i = 1; i < tilePadding + 1; i++)
+                    //        wallWorldPositions.Add(collisionTile + (DirectionHelper.Down * 16 * i));
+
+                    var mask = CorridorPainter.GetTileBitmask(collisionTile, collisionTiles);
+                    if ((mask & CorridorPainter.TileDirection.Left) == 0)
+                        for (int i = 1; i < tilePadding + 1; i++)
+                            wallWorldPositions.Add(collisionTile + (DirectionHelper.Left * 16 * i));
+                    if ((mask & CorridorPainter.TileDirection.Right) == 0)
+                        for (int i = 1; i < tilePadding + 1; i++)
+                            wallWorldPositions.Add(collisionTile + (DirectionHelper.Right * 16 * i));
+                    if ((mask & CorridorPainter.TileDirection.Top) == 0)
+                        for (int i = 1; i < tilePadding + 1; i++)
+                            wallWorldPositions.Add(collisionTile + (DirectionHelper.Up * 16 * i));
+                    if ((mask & CorridorPainter.TileDirection.Bottom) == 0)
+                        for (int i = 1; i < tilePadding + 1; i++)
+                            wallWorldPositions.Add(collisionTile + (DirectionHelper.Down * 16 * i));
+                    if ((mask & (TileDirection.Bottom | TileDirection.Right)) == 0)
+                        for (int i = 1; i < tilePadding + 1; i++)
+                            wallWorldPositions.Add(collisionTile + (DirectionHelper.DownRight * 16 * i));
+                    if ((mask & (TileDirection.Bottom | TileDirection.Left)) == 0)
+                        for (int i = 1; i < tilePadding + 1; i++)
+                            wallWorldPositions.Add(collisionTile + (DirectionHelper.DownLeft * 16 * i));
+                    if ((mask & (TileDirection.Top | TileDirection.Right)) == 0)
+                        for (int i = 1; i < tilePadding + 1; i++)
+                            wallWorldPositions.Add(collisionTile + (DirectionHelper.UpRight * 16 * i));
+                    if ((mask & (TileDirection.Top | TileDirection.Left)) == 0)
+                        for (int i = 1; i < tilePadding + 1; i++)
+                            wallWorldPositions.Add(collisionTile + (DirectionHelper.UpLeft * 16 * i));
+                    //switch (orientation)
+                    //{
+                    //    case CorridorPainter.TileOrientation.LeftEdge:
+                    //        for (int i = 1; i < tilePadding + 1; i++)
+                    //            wallWorldPositions.Add(collisionTile + (DirectionHelper.Left * 16 * i));
+                    //        break;
+                    //    case CorridorPainter.TileOrientation.RightEdge:
+                    //        for (int i = 1; i < tilePadding + 1; i++)
+                    //            wallWorldPositions.Add(collisionTile + (DirectionHelper.Right * 16 * i));
+                    //        break;
+                    //    case CorridorPainter.TileOrientation.TopEdge:
+                    //        for (int i = 1; i < tilePadding + 1; i++)
+                    //            wallWorldPositions.Add(collisionTile + (DirectionHelper.Up * 16 * i));
+                    //        break;
+                    //    case CorridorPainter.TileOrientation.BottomEdge:
+                    //        for (int i = 1; i < tilePadding + 1; i++)
+                    //            wallWorldPositions.Add(collisionTile + (DirectionHelper.Down * 16 * i));
+                    //        break;
+                    //}
                 }
 
+                //adjust wall world positions into valid positions on the graph and add the walls
                 foreach (var wallWorldPosition in wallWorldPositions)
                 {
+                    if (createProtos)
+                        Scene.CreateEntity("", wallWorldPosition).AddComponent(new PrototypeSpriteRenderer(2, 2));
                     var adjustedWallWorldPos = (wallWorldPosition / 16).ToPoint() - (graphRect.Location / 16).ToPoint();
                     if (!graph.Walls.Contains(adjustedWallWorldPos))
                         graph.Walls.Add(adjustedWallWorldPos);
                 }
 
-                //add wall for each collision tile
-                //for (var y = 0; y < collisionRenderer.CollisionLayer.Map.Height / 16; y++)
-                //{
-                //    for (var x = 0; x < collisionRenderer.CollisionLayer.Map.Width / 16; x++)
-                //    {
-                //        if (collisionRenderer.CollisionLayer.GetTile(x, y) != null)
-                //        {
-                //            var tileWorldPos = new Point(x, y) + (graphRoom.Position / 16).ToPoint();
-                //            graph.Walls.Add(tileWorldPos - (joinedRect.Location.ToVector2() / 16).ToPoint());
-                //        }
-                //    }
-                //}
-
+                //add a wall for each tile in each doorway
                 var doorways = graphRoom.FindComponentsOnMap<DungeonDoorway>();
                 if (doorways != null)
                 {
@@ -891,61 +937,6 @@ namespace Threadlock.SceneComponents.Dungenerator
 
             possibleMaps.AddRange(validMaps);
             return possibleMaps;
-        }
-
-        WeightedGridGraph CreateDungeonGraph(List<DungeonRoomEntity> roomsToCheck)
-        {
-            //prepare entire dungeon for pathfinding by moving bounds above 0, 0
-            var top = _allComposites.Select(c => c.Bounds.Top).Min();
-            var left = _allComposites.Select(c => c.Bounds.Left).Min();
-            var topLeft = new Vector2(left, top);
-            var desiredPos = Vector2.Zero + new Vector2(1, 1) * 16 * 25;
-            var amountToMove = desiredPos - topLeft;
-            foreach (var composite in _allComposites)
-            {
-                composite.MoveRooms(amountToMove, false);
-            }
-
-            var bottom = _allComposites.Select(c => c.Bounds.Bottom).Max();
-            var right = _allComposites.Select(c => c.Bounds.Right).Max();
-
-            var graph = new WeightedGridGraph((int)right / 16, (int)bottom / 16);
-
-            foreach (var map in roomsToCheck)
-            {
-                var collisionRenderer = map.GetComponents<TiledMapRenderer>().FirstOrDefault(r => r.CollisionLayer != null);
-                if (collisionRenderer != null)
-                {
-                    foreach (var tile in collisionRenderer.CollisionLayer.Tiles.Where(t => t != null))
-                    {
-                        var tileWorldPos = map.Position + new Vector2(tile.X * 16, tile.Y * 16);
-                        var adjustedTilePos = tileWorldPos / 16;
-
-                        var tilePoint = adjustedTilePos.ToPoint();
-                        if (!graph.Walls.Contains(tilePoint))
-                            graph.Walls.Add(tilePoint);
-                    }
-                }
-
-                var doorways = map.FindComponentsOnMap<DungeonDoorway>();
-                foreach (var doorway in doorways)
-                {
-                    for (int y = 0; y < doorway.TmxObject.Height / 16; y++)
-                    {
-                        for (int x = 0; x < doorway.TmxObject.Width / 16; x++)
-                        {
-                            var doorwayTileWorldPos = doorway.Entity.Position + new Vector2(x * 16, y * 16);
-                            var adjustedDoorwayTilePos = doorwayTileWorldPos / 16;
-
-                            var doorwayPoint = adjustedDoorwayTilePos.ToPoint();
-                            if (!graph.Walls.Contains(doorwayPoint))
-                                graph.Walls.Add(doorwayPoint);
-                        }
-                    }
-                }
-            }
-
-            return graph;
         }
 
         Vector2 GetMovementToAlignDoorways(DungeonDoorway previousDoorway, DungeonDoorway nextDoorway)

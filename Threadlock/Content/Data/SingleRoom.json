@@ -1,0 +1,10 @@
+﻿{
+    "Nodes": [
+        {
+            "Id": 1,
+            "Type": "start",
+            "Children": [
+            ]
+        }
+    ]
+}
