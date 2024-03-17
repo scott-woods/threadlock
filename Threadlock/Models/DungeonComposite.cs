@@ -39,7 +39,6 @@ namespace Threadlock.Models
             }
         }
         public List<SingleTileRenderer> SingleTileRenderers = new List<SingleTileRenderer>();
-        public List<Vector2> FloorTilePositions = new List<Vector2>();
 
         public DungeonComposite(List<DungeonNode> roomNodes, DungeonCompositeType compositeType)
         {
@@ -132,21 +131,8 @@ namespace Threadlock.Models
                 tileRenderer.Entity.Position += movement;
             }
 
-            for (int i = 0; i < FloorTilePositions.Count; i++)
-                FloorTilePositions[i] += movement;
-
             foreach (var room in RoomEntities)
-            {
-                room.Position += movement;
-                if (moveChildComposites)
-                {
-                    if (room.ChildrenOutsideComposite != null && room.ChildrenOutsideComposite.Count > 0)
-                    {
-                        foreach (var child in room.ChildrenOutsideComposite)
-                            child.ParentComposite.MoveRooms(movement);
-                    }
-                }
-            }
+                room.MoveRoom(movement, moveChildComposites);
         }
 
         public void AdjustForPathfinding(int numberOfTiles)
@@ -164,9 +150,6 @@ namespace Threadlock.Models
                 tileRenderer.Entity.Destroy();
             }
             SingleTileRenderers.Clear();
-
-            //clear floor positions
-            FloorTilePositions.Clear();
 
             //clear maps
             foreach (var map in RoomEntities)

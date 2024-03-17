@@ -141,8 +141,6 @@ namespace Threadlock.SceneComponents.Dungenerator
 
         public static void PaintCorridorTiles(List<Vector2> floorPositions, List<Vector2> reservedPositions, TmxTileset tileset)
         {
-            var renderers = new List<SingleTileRenderer>();
-
             var allTilesForMask = floorPositions.Concat(reservedPositions).ToList();
 
             Dictionary<Vector2, SingleTile> backTiles = new Dictionary<Vector2, SingleTile>();
@@ -326,23 +324,6 @@ namespace Threadlock.SceneComponents.Dungenerator
 
             var frontRenderer = Game1.Scene.CreateEntity("").AddComponent(new CorridorRenderer(tileset, frontTiles));
             frontRenderer.RenderLayer = RenderLayers.Front;
-
-            //var frontDict = frontTileDictionary
-            //    .ToDictionary(t => t.Key, t => t.Value.TileId);
-            //var frontRenderer = Game1.Scene.CreateEntity("").AddComponent(new CorridorRenderer(tileset, frontDict));
-            //frontRenderer.RenderLayer = RenderLayers.Front;
-
-            //var wallDict = sideWallDictionary
-            //    .Where(w => !tileDictionary.ContainsKey(w.Key))
-            //    .ToDictionary(t => t.Key, t => t.Value.TileId);
-            //var wallRenderer = Game1.Scene.CreateEntity("").AddComponent(new CorridorRenderer(tileset, wallDict, true));
-            //wallRenderer.RenderLayer = RenderLayers.Back;
-
-            //var colliderDict = colliderDictionary
-            //    .Where(w => !sideWallDictionary.ContainsKey(w.Key) && !tileDictionary.ContainsKey(w.Key))
-            //    .ToDictionary(t => t.Key, t => t.Value.TileId);
-            //var colliderRenderer = Game1.Scene.CreateEntity("").AddComponent(new CorridorRenderer(tileset, colliderDict, true));
-            //colliderRenderer.RenderLayer = RenderLayers.Back;
         }
     }
 }

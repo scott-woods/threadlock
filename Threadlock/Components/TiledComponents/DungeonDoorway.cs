@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Threadlock.Entities;
 using Threadlock.Helpers;
 using Threadlock.Models;
 using Threadlock.StaticData;
@@ -40,6 +41,7 @@ namespace Threadlock.Components.TiledComponents
         }
         public string Direction;
         public DungeonRoom DungeonRoom;
+        public DungeonRoomEntity DungeonRoomEntity { get => MapEntity as DungeonRoomEntity; }
 
         List<TiledMapRenderer> _mapRenderers = new List<TiledMapRenderer>();
         TmxMap _map;

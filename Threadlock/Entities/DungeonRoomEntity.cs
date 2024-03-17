@@ -75,9 +75,58 @@ namespace Threadlock.Entities
             {
                 var width = Map != null ? Map.WorldWidth : 0;
                 var height = Map != null ? Map.WorldHeight : 0;
-                return new RectangleF(Position.X, Position.Y, width, height);
+                return new RectangleF(Position, new Vector2(width, height));
+
+                //if (!FloorTilePositions.Any())
+                //{
+                //    var width = Map != null ? Map.WorldWidth : 0;
+                //    var height = Map != null ? Map.WorldHeight : 0;
+                //    return new RectangleF(Position, new Vector2(width, height));
+                //}
+
+                //var minFloorTileX = FloorTilePositions.Select(t => t.X).Min();
+                //var minFloorTileY = FloorTilePositions.Select(t => t.Y).Min();
+                //var maxFloorTileX = FloorTilePositions.Select(t => t.X).Max();
+                //var maxFloorTileY = FloorTilePositions.Select(t => t.Y).Max();
+                //var minX = Position.X <= minFloorTileX ? Position.X : minFloorTileX;
+                //var minY = Position.Y <= minFloorTileY ? Position.Y : minFloorTileY;
+                //var maxX = Position.X + Map.WorldWidth >= maxFloorTileX ? Position.X + Map.WorldWidth : maxFloorTileX;
+                //var maxY = Position.Y + Map.WorldHeight >= maxFloorTileY ? Position.Y + Map.WorldHeight : maxFloorTileY;
+
+                //var pos = new Vector2(minX, minY);
+                //var size = new Vector2(maxX - minX, maxY - minY);
+
+                //return new RectangleF(pos, size);
             }
         }
+        
+        public RectangleF CollisionBounds
+        {
+            get
+            {
+                var collisionRenderer = GetComponents<TiledMapRenderer>().FirstOrDefault(r => r.CollisionLayer != null);
+                if (collisionRenderer != null)
+                {
+                    var positions = collisionRenderer.CollisionLayer.Tiles
+                        .Where(t => t != null)
+                        .Select(t => Position + new Vector2(t.X * t.Tileset.TileWidth, t.Y * t.Tileset.TileHeight))
+                        .ToList();
+                    //positions.AddRange(FloorTilePositions);
+
+                    var minX = positions.Select(t => t.X).Min();
+                    var maxX = positions.Select(t => t.X).Max();
+                    var minY = positions.Select(t => t.Y).Min();
+                    var maxY = positions.Select(t => t.Y).Max();
+                    var pos = new Vector2(minX, minY);
+                    var size = new Vector2(maxX - minX, maxY - minY);
+                    return new RectangleF(pos, size);
+                }
+
+                return new RectangleF();
+            }
+        }
+
+        public List<Vector2> FloorTilePositions = new List<Vector2>();
 
         List<int> _childrenIds = new List<int>();
 
@@ -108,16 +157,29 @@ namespace Threadlock.Entities
             Map = map;
 
             var mapRenderer = AddComponent(new TiledMapRenderer(map, "Walls"));
-            mapRenderer.SetLayersToRender(new[] { "Back", "Back2", "Walls" }.Where(l => map.Layers.Contains(l)).ToArray());
+            mapRenderer.SetLayersToRender(new[] { "Back", "Back2", "Walls" }.Where(l => map.Layers.Any(l2 => l2.Name == l)).ToArray());
             mapRenderer.RenderLayer = RenderLayers.Back;
             Flags.SetFlagExclusive(ref mapRenderer.PhysicsLayer, PhysicsLayers.Environment);
             TiledHelper.CreateEntitiesForTiledObjects(mapRenderer);
 
             var frontRenderer = AddComponent(new TiledMapRenderer(map));
-            frontRenderer.SetLayersToRender(new[] { "Front", "AboveFront" }.Where(l => map.Layers.Contains(l)).ToArray());
+            frontRenderer.SetLayersToRender(new[] { "Front", "AboveFront" }.Where(l => map.Layers.Any(l2 => l2.Name == l)).ToArray());
             frontRenderer.RenderLayer = RenderLayers.Front;
 
             _textComponent.SetLocalOffset(new Vector2(map.WorldWidth / 2, map.WorldHeight / 2));
+        }
+
+        public void MoveRoom(Vector2 movementAmount, bool moveChildComposites = false)
+        {
+            Position += movementAmount;
+            for (int i = 0; i < FloorTilePositions.Count; i++)
+                FloorTilePositions[i] += movementAmount;
+
+            if (ChildrenOutsideComposite != null && ChildrenOutsideComposite.Count > 0)
+            {
+                foreach (var child in ChildrenOutsideComposite)
+                    child.ParentComposite.MoveRooms(movementAmount);
+            }
         }
 
         public List<T> FindComponentsOnMap<T>() where T : TiledComponent
@@ -129,6 +191,8 @@ namespace Threadlock.Entities
         {
             Map = null;
 
+            FloorTilePositions.Clear();
+
             var comps = Scene.FindComponentsOfType<TiledComponent>().Where(c => c.MapEntity == this);
             foreach (var comp in comps)
                 comp.Entity.Destroy();
@@ -137,6 +201,9 @@ namespace Threadlock.Entities
         public bool OverlapsRoom(List<Vector2> positions, out List<Vector2> overlappingPositions, bool checkDoorways = true)
         {
             overlappingPositions = new List<Vector2>();
+
+            if (positions.Count() == 0)
+                return false;
 
             //if no collision layer, can't overlap
             var roomRenderer = GetComponents<TiledMapRenderer>().FirstOrDefault(r => r.CollisionLayer != null);

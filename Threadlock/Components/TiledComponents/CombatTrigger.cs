@@ -17,11 +17,11 @@ namespace Threadlock.Components.TiledComponents
             SetEnabled(false);
 
             //destroy other triggers if any are out there
-            var triggers = FindComponentsOnMap<CombatTrigger>().Where(t => t != this);
-            foreach (var trigger in triggers)
-                trigger.Entity.Destroy();
+            //var triggers = FindComponentsOnMap<CombatTrigger>().Where(t => t != this);
+            //foreach (var trigger in triggers)
+            //    trigger.Entity.Destroy();
 
-            Game1.StartCoroutine(CombatTriggerCoroutine());
+            //Game1.StartCoroutine(CombatTriggerCoroutine());
         }
 
         IEnumerator CombatTriggerCoroutine()

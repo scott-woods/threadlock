@@ -45,19 +45,29 @@
             ]
         },
         {
+            "id": 10,
+            "name": "DoorwayDirection",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "None",
+                "Top",
+                "Bottom",
+                "Left",
+                "Right"
+            ],
+            "valuesAsFlags": false
+        },
+        {
             "color": "#ffa0a0a4",
             "drawFill": true,
             "id": 6,
             "members": [
                 {
                     "name": "Direction",
+                    "propertyType": "DoorwayDirection",
                     "type": "string",
-                    "value": ""
-                },
-                {
-                    "name": "PathfindingOffset",
-                    "type": "string",
-                    "value": ""
+                    "value": "None"
                 }
             ],
             "name": "DungeonDoorway",

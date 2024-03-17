@@ -116,7 +116,7 @@
 </data>
   </layer>
  </group>
- <group id="56" name="input2">
+ <group id="56" name="input2" visible="0">
   <layer id="30" name="input2_Prototype" width="32" height="32" visible="0">
    <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -226,7 +226,7 @@
 </data>
   </layer>
  </group>
- <group id="57" name="input3">
+ <group id="57" name="input3" visible="0">
   <layer id="32" name="input3_Prototype" width="32" height="32" visible="0">
    <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -336,7 +336,7 @@
 </data>
   </layer>
  </group>
- <group id="58" name="input4">
+ <group id="58" name="input4" visible="0">
   <layer id="34" name="input4_Prototype" width="32" height="32" visible="0">
    <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

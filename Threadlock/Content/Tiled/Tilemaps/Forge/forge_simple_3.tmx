@@ -222,7 +222,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="11" name="Entities" visible="0">
+ <objectgroup id="11" name="Entities">
   <object id="2" type="DungeonDoorway" x="256" y="64" width="80" height="80">
    <properties>
     <property name="Direction" value="Top"/>

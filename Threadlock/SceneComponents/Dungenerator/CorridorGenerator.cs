@@ -24,6 +24,13 @@ namespace Threadlock.SceneComponents.Dungenerator
             //init floor positions list
             floorPositions = new List<Vector2>();
 
+            //if this is a perfect pair, see if it's already aligned correctly
+            if (startDoor.IsDirectMatch(endDoor))
+            {
+                if (Vector2.Distance(startDoor.PathfindingOrigin, endDoor.PathfindingOrigin) == 16)
+                    return true;
+            }
+
             //translate doorways to grid
             var startDoorwayGridPos = (startDoor.PathfindingOrigin / 16).ToPoint();
             var endDoorwayGridPos = (endDoor.PathfindingOrigin / 16).ToPoint();
@@ -36,59 +43,96 @@ namespace Threadlock.SceneComponents.Dungenerator
             //adjust starting position based on direction we're moving from
             var doorwayOffset = 2;
             var weightOffset = 6;
+            Vector2 startDoorwaySide1 = Vector2.Zero;
+            Vector2 startDoorwaySide2 = Vector2.Zero;
+            Vector2 startDoorwayDirection = Vector2.Zero;
+            Vector2 endDoorwaySide1 = Vector2.Zero;
+            Vector2 endDoorwaySide2 = Vector2.Zero;
+            Vector2 endDoorwayDirection = Vector2.Zero;
             switch (startDoor.Direction)
             {
                 case "Top":
+                    startDoorwayDirection = DirectionHelper.Up;
+                    startDoorwaySide1 = startDoor.PathfindingOrigin + (DirectionHelper.Left * 16);
+                    startDoorwaySide2 = startDoor.PathfindingOrigin + (DirectionHelper.Right * 16);
                     reservedPositions.Add(startDoor.PathfindingOrigin + (DirectionHelper.Left * 16));
                     reservedPositions.Add(startDoor.PathfindingOrigin + (DirectionHelper.Right * 16));
-                    graph.WeightedNodes.Add(startDoorwayGridPos + new Point(0, -weightOffset) - (graphRect.Location / 16).ToPoint());
                     startDoorwayGridPos.Y -= doorwayOffset;
                     break;
                 case "Bottom":
+                    startDoorwayDirection = DirectionHelper.Down;
+                    startDoorwaySide1 = startDoor.PathfindingOrigin + (DirectionHelper.Left * 16);
+                    startDoorwaySide2 = startDoor.PathfindingOrigin + (DirectionHelper.Right * 16);
                     reservedPositions.Add(startDoor.PathfindingOrigin + (DirectionHelper.Left * 16));
                     reservedPositions.Add(startDoor.PathfindingOrigin + (DirectionHelper.Right * 16));
-                    graph.WeightedNodes.Add(startDoorwayGridPos + new Point(0, weightOffset) - (graphRect.Location / 16).ToPoint());
                     startDoorwayGridPos.Y += doorwayOffset;
                     break;
                 case "Left":
+                    startDoorwayDirection = DirectionHelper.Left;
+                    startDoorwaySide1 = startDoor.PathfindingOrigin + (DirectionHelper.Up * 16);
+                    startDoorwaySide2 = startDoor.PathfindingOrigin + (DirectionHelper.Down * 16);
                     reservedPositions.Add(startDoor.PathfindingOrigin + (DirectionHelper.Up * 16));
                     reservedPositions.Add(startDoor.PathfindingOrigin + (DirectionHelper.Down * 16));
-                    graph.WeightedNodes.Add(startDoorwayGridPos + new Point(-weightOffset, 0) - (graphRect.Location / 16).ToPoint());
                     startDoorwayGridPos.X -= doorwayOffset;
                     break;
                 case "Right":
+                    startDoorwayDirection = DirectionHelper.Right;
+                    startDoorwaySide1 = startDoor.PathfindingOrigin + (DirectionHelper.Up * 16);
+                    startDoorwaySide2 = startDoor.PathfindingOrigin + (DirectionHelper.Down * 16);
                     reservedPositions.Add(startDoor.PathfindingOrigin + (DirectionHelper.Up * 16));
                     reservedPositions.Add(startDoor.PathfindingOrigin + (DirectionHelper.Down * 16));
-                    graph.WeightedNodes.Add(startDoorwayGridPos + new Point(weightOffset, 0) - (graphRect.Location / 16).ToPoint());
                     startDoorwayGridPos.X += doorwayOffset;
                     break;
             }
             switch (endDoor.Direction)
             {
                 case "Top":
+                    endDoorwayDirection = DirectionHelper.Up;
+                    endDoorwaySide1 = endDoor.PathfindingOrigin + (DirectionHelper.Left * 16);
+                    endDoorwaySide2 = endDoor.PathfindingOrigin + (DirectionHelper.Right * 16);
                     reservedPositions.Add(endDoor.PathfindingOrigin + (DirectionHelper.Left * 16));
                     reservedPositions.Add(endDoor.PathfindingOrigin + (DirectionHelper.Right * 16));
-                    graph.WeightedNodes.Add(endDoorwayGridPos + new Point(0, -weightOffset) - (graphRect.Location / 16).ToPoint());
                     endDoorwayGridPos.Y -= doorwayOffset;
                     break;
                 case "Bottom":
+                    endDoorwayDirection = DirectionHelper.Down;
+                    endDoorwaySide1 = endDoor.PathfindingOrigin + (DirectionHelper.Left * 16);
+                    endDoorwaySide2 = endDoor.PathfindingOrigin + (DirectionHelper.Right * 16);
                     reservedPositions.Add(endDoor.PathfindingOrigin + (DirectionHelper.Left * 16));
                     reservedPositions.Add(endDoor.PathfindingOrigin + (DirectionHelper.Right * 16));
-                    graph.WeightedNodes.Add(endDoorwayGridPos + new Point(0, weightOffset) - (graphRect.Location / 16).ToPoint());
                     endDoorwayGridPos.Y += doorwayOffset;
                     break;
                 case "Left":
+                    endDoorwayDirection = DirectionHelper.Left;
+                    endDoorwaySide1 = endDoor.PathfindingOrigin + (DirectionHelper.Up * 16);
+                    endDoorwaySide2 = endDoor.PathfindingOrigin + (DirectionHelper.Down * 16);
                     reservedPositions.Add(endDoor.PathfindingOrigin + (DirectionHelper.Up * 16));
                     reservedPositions.Add(endDoor.PathfindingOrigin + (DirectionHelper.Down * 16));
-                    graph.WeightedNodes.Add(endDoorwayGridPos + new Point(-weightOffset, 0) - (graphRect.Location / 16).ToPoint());
                     endDoorwayGridPos.X -= doorwayOffset;
                     break;
                 case "Right":
+                    endDoorwayDirection = DirectionHelper.Right;
+                    endDoorwaySide1 = endDoor.PathfindingOrigin + (DirectionHelper.Up * 16);
+                    endDoorwaySide2 = endDoor.PathfindingOrigin + (DirectionHelper.Down * 16);
                     reservedPositions.Add(endDoor.PathfindingOrigin + (DirectionHelper.Up * 16));
                     reservedPositions.Add(endDoor.PathfindingOrigin + (DirectionHelper.Down * 16));
-                    graph.WeightedNodes.Add(endDoorwayGridPos + new Point(weightOffset, 0) - (graphRect.Location / 16).ToPoint());
                     endDoorwayGridPos.X += doorwayOffset;
                     break;
+            }
+
+            var padding = 6;
+            for (int i = 1; i < padding + 1; i++)
+            {
+                graph.Walls.Add((startDoorwaySide1 / 16).ToPoint() + (startDoorwayDirection * i).ToPoint() - (graphRect.Location / 16).ToPoint());
+                graph.Walls.Add((startDoorwaySide2 / 16).ToPoint() + (startDoorwayDirection * i).ToPoint() - (graphRect.Location / 16).ToPoint());
+                graph.Walls.Add((endDoorwaySide1 / 16).ToPoint() + (endDoorwayDirection * i).ToPoint() - (graphRect.Location / 16).ToPoint());
+                graph.Walls.Add((endDoorwaySide2 / 16).ToPoint() + (endDoorwayDirection * i).ToPoint() - (graphRect.Location / 16).ToPoint());
+
+                if (graph.Walls.Contains((startDoor.PathfindingOrigin / 16).ToPoint() + (startDoorwayDirection * i).ToPoint() - (graphRect.Location / 16).ToPoint()))
+                    graph.Walls.Remove((startDoor.PathfindingOrigin / 16).ToPoint() + (startDoorwayDirection * i).ToPoint() - (graphRect.Location / 16).ToPoint());
+
+                if (graph.Walls.Contains((endDoor.PathfindingOrigin / 16).ToPoint() + (endDoorwayDirection * i).ToPoint() - (graphRect.Location / 16).ToPoint()))
+                    graph.Walls.Remove((endDoor.PathfindingOrigin / 16).ToPoint() + (endDoorwayDirection * i).ToPoint() - (graphRect.Location / 16).ToPoint());
             }
 
             var isPathValid = false;
@@ -112,7 +156,7 @@ namespace Threadlock.SceneComponents.Dungenerator
                 }).ToList();
 
                 //get larger hallway
-                var largerPath = IncreaseCorridorWidth(adjustedPath);
+                var largerPath = IncreaseCorridorWidth(adjustedPath, reservedPositions);
 
                 //get list of all positions that we want to consider for bitmasking
                 var allTilePositions = largerPath.SelectMany(p => p.Value)
@@ -123,7 +167,8 @@ namespace Threadlock.SceneComponents.Dungenerator
                 var posDictionary = new Dictionary<Vector2, Vector2>();
 
                 //check that all tiles in larger path are valid
-                var setsToCheck = largerPath.Where(p => p.Key != startDoorwayGridPos.ToVector2() * 16 && p.Key != endDoorwayGridPos.ToVector2() * 16).ToList();
+                var setsToCheck = largerPath;
+                //var setsToCheck = largerPath.Where(p => p.Key != startDoorwayGridPos.ToVector2() * 16 && p.Key != endDoorwayGridPos.ToVector2() * 16).ToList();
                 foreach (var pathSet in setsToCheck)
                 {
                     foreach (var pathPoint in pathSet.Value)
@@ -226,7 +271,7 @@ namespace Threadlock.SceneComponents.Dungenerator
             return true;
         }
 
-        public static Dictionary<Vector2, List<Vector2>> IncreaseCorridorWidth(List<Vector2> positions)
+        public static Dictionary<Vector2, List<Vector2>> IncreaseCorridorWidth(List<Vector2> positions, List<Vector2> reservedPositions)
         {
             Dictionary<Vector2, List<Vector2>> posDictionary = new Dictionary<Vector2, List<Vector2>>();
             List<Vector2> visitedPositions = new List<Vector2>();
@@ -238,7 +283,7 @@ namespace Threadlock.SceneComponents.Dungenerator
                     for (int y = -1; y < 2; y++)
                     {
                         var pos = new Vector2(x * 16, y * 16) + positions[i - 1];
-                        if (!visitedPositions.Contains(pos))
+                        if (!visitedPositions.Contains(pos) && !reservedPositions.Contains(pos))
                         {
                             posDictionary[positions[i - 1]].Add(pos);
                             visitedPositions.Add(pos);

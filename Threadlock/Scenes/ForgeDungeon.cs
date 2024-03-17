@@ -15,7 +15,6 @@ namespace Threadlock.Scenes
 {
     public class ForgeDungeon : BaseScene
     {
-        BSPDungenerator _generator;
         Dungenerator _dungenerator;
         PlayerSpawner _playerSpawner;
 
@@ -25,7 +24,6 @@ namespace Threadlock.Scenes
 
             CreateEntity("ui").AddComponent(new CombatUI());
 
-            _generator = AddSceneComponent(new BSPDungenerator());
             _dungenerator = AddSceneComponent(new Dungenerator());
             _playerSpawner = AddSceneComponent(new PlayerSpawner());
         }
