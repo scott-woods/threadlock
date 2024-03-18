@@ -41,8 +41,8 @@ namespace Threadlock.SceneComponents.Dungenerator
             reservedPositions.Add(endDoor.PathfindingOrigin);
 
             //adjust starting position based on direction we're moving from
-            var doorwayOffset = 2;
-            var weightOffset = 6;
+            var yOffset = 1;
+            var xOffset = 2;
             Vector2 startDoorwaySide1 = Vector2.Zero;
             Vector2 startDoorwaySide2 = Vector2.Zero;
             Vector2 startDoorwayDirection = Vector2.Zero;
@@ -57,7 +57,7 @@ namespace Threadlock.SceneComponents.Dungenerator
                     startDoorwaySide2 = startDoor.PathfindingOrigin + (DirectionHelper.Right * 16);
                     reservedPositions.Add(startDoor.PathfindingOrigin + (DirectionHelper.Left * 16));
                     reservedPositions.Add(startDoor.PathfindingOrigin + (DirectionHelper.Right * 16));
-                    startDoorwayGridPos.Y -= doorwayOffset;
+                    startDoorwayGridPos.Y -= yOffset;
                     break;
                 case "Bottom":
                     startDoorwayDirection = DirectionHelper.Down;
@@ -65,7 +65,7 @@ namespace Threadlock.SceneComponents.Dungenerator
                     startDoorwaySide2 = startDoor.PathfindingOrigin + (DirectionHelper.Right * 16);
                     reservedPositions.Add(startDoor.PathfindingOrigin + (DirectionHelper.Left * 16));
                     reservedPositions.Add(startDoor.PathfindingOrigin + (DirectionHelper.Right * 16));
-                    startDoorwayGridPos.Y += doorwayOffset;
+                    startDoorwayGridPos.Y += yOffset;
                     break;
                 case "Left":
                     startDoorwayDirection = DirectionHelper.Left;
@@ -73,7 +73,7 @@ namespace Threadlock.SceneComponents.Dungenerator
                     startDoorwaySide2 = startDoor.PathfindingOrigin + (DirectionHelper.Down * 16);
                     reservedPositions.Add(startDoor.PathfindingOrigin + (DirectionHelper.Up * 16));
                     reservedPositions.Add(startDoor.PathfindingOrigin + (DirectionHelper.Down * 16));
-                    startDoorwayGridPos.X -= doorwayOffset;
+                    startDoorwayGridPos.X -= xOffset;
                     break;
                 case "Right":
                     startDoorwayDirection = DirectionHelper.Right;
@@ -81,7 +81,7 @@ namespace Threadlock.SceneComponents.Dungenerator
                     startDoorwaySide2 = startDoor.PathfindingOrigin + (DirectionHelper.Down * 16);
                     reservedPositions.Add(startDoor.PathfindingOrigin + (DirectionHelper.Up * 16));
                     reservedPositions.Add(startDoor.PathfindingOrigin + (DirectionHelper.Down * 16));
-                    startDoorwayGridPos.X += doorwayOffset;
+                    startDoorwayGridPos.X += xOffset;
                     break;
             }
             switch (endDoor.Direction)
@@ -92,7 +92,7 @@ namespace Threadlock.SceneComponents.Dungenerator
                     endDoorwaySide2 = endDoor.PathfindingOrigin + (DirectionHelper.Right * 16);
                     reservedPositions.Add(endDoor.PathfindingOrigin + (DirectionHelper.Left * 16));
                     reservedPositions.Add(endDoor.PathfindingOrigin + (DirectionHelper.Right * 16));
-                    endDoorwayGridPos.Y -= doorwayOffset;
+                    endDoorwayGridPos.Y -= yOffset;
                     break;
                 case "Bottom":
                     endDoorwayDirection = DirectionHelper.Down;
@@ -100,7 +100,7 @@ namespace Threadlock.SceneComponents.Dungenerator
                     endDoorwaySide2 = endDoor.PathfindingOrigin + (DirectionHelper.Right * 16);
                     reservedPositions.Add(endDoor.PathfindingOrigin + (DirectionHelper.Left * 16));
                     reservedPositions.Add(endDoor.PathfindingOrigin + (DirectionHelper.Right * 16));
-                    endDoorwayGridPos.Y += doorwayOffset;
+                    endDoorwayGridPos.Y += yOffset;
                     break;
                 case "Left":
                     endDoorwayDirection = DirectionHelper.Left;
@@ -108,7 +108,7 @@ namespace Threadlock.SceneComponents.Dungenerator
                     endDoorwaySide2 = endDoor.PathfindingOrigin + (DirectionHelper.Down * 16);
                     reservedPositions.Add(endDoor.PathfindingOrigin + (DirectionHelper.Up * 16));
                     reservedPositions.Add(endDoor.PathfindingOrigin + (DirectionHelper.Down * 16));
-                    endDoorwayGridPos.X -= doorwayOffset;
+                    endDoorwayGridPos.X -= xOffset;
                     break;
                 case "Right":
                     endDoorwayDirection = DirectionHelper.Right;
@@ -116,7 +116,7 @@ namespace Threadlock.SceneComponents.Dungenerator
                     endDoorwaySide2 = endDoor.PathfindingOrigin + (DirectionHelper.Down * 16);
                     reservedPositions.Add(endDoor.PathfindingOrigin + (DirectionHelper.Up * 16));
                     reservedPositions.Add(endDoor.PathfindingOrigin + (DirectionHelper.Down * 16));
-                    endDoorwayGridPos.X += doorwayOffset;
+                    endDoorwayGridPos.X += xOffset;
                     break;
             }
 
@@ -127,7 +127,10 @@ namespace Threadlock.SceneComponents.Dungenerator
                 graph.Walls.Add((startDoorwaySide2 / 16).ToPoint() + (startDoorwayDirection * i).ToPoint() - (graphRect.Location / 16).ToPoint());
                 graph.Walls.Add((endDoorwaySide1 / 16).ToPoint() + (endDoorwayDirection * i).ToPoint() - (graphRect.Location / 16).ToPoint());
                 graph.Walls.Add((endDoorwaySide2 / 16).ToPoint() + (endDoorwayDirection * i).ToPoint() - (graphRect.Location / 16).ToPoint());
+            }
 
+            for (int i = 1; i < padding + 1; i++)
+            {
                 if (graph.Walls.Contains((startDoor.PathfindingOrigin / 16).ToPoint() + (startDoorwayDirection * i).ToPoint() - (graphRect.Location / 16).ToPoint()))
                     graph.Walls.Remove((startDoor.PathfindingOrigin / 16).ToPoint() + (startDoorwayDirection * i).ToPoint() - (graphRect.Location / 16).ToPoint());
 
@@ -161,114 +164,114 @@ namespace Threadlock.SceneComponents.Dungenerator
                 floorPositions = largerPath.SelectMany(p => p.Value).ToList();
                 return true;
 
-                //get list of all positions that we want to consider for bitmasking
-                var allTilePositions = largerPath.SelectMany(p => p.Value)
-                    .Concat(reservedPositions)
-                    .ToList();
+                ////get list of all positions that we want to consider for bitmasking
+                //var allTilePositions = largerPath.SelectMany(p => p.Value)
+                //    .Concat(reservedPositions)
+                //    .ToList();
 
-                //key is the actual position, value is the base path position it belongs to
-                var posDictionary = new Dictionary<Vector2, Vector2>();
+                ////key is the actual position, value is the base path position it belongs to
+                //var posDictionary = new Dictionary<Vector2, Vector2>();
 
-                //check that all tiles in larger path are valid
-                var setsToCheck = largerPath;
-                //var setsToCheck = largerPath.Where(p => p.Key != startDoorwayGridPos.ToVector2() * 16 && p.Key != endDoorwayGridPos.ToVector2() * 16).ToList();
-                foreach (var pathSet in setsToCheck)
-                {
-                    foreach (var pathPoint in pathSet.Value)
-                    {
-                        posDictionary[pathPoint] = pathSet.Key;
+                ////check that all tiles in larger path are valid
+                //var setsToCheck = largerPath;
+                ////var setsToCheck = largerPath.Where(p => p.Key != startDoorwayGridPos.ToVector2() * 16 && p.Key != endDoorwayGridPos.ToVector2() * 16).ToList();
+                //foreach (var pathSet in setsToCheck)
+                //{
+                //    foreach (var pathPoint in pathSet.Value)
+                //    {
+                //        posDictionary[pathPoint] = pathSet.Key;
 
-                        var orientation = GetTileOrientation(pathPoint, allTilePositions);
+                //        var orientation = GetTileOrientation(pathPoint, allTilePositions);
 
-                        switch (orientation)
-                        {
-                            case TileOrientation.TopLeft:
-                                posDictionary[pathPoint + (DirectionHelper.Left * 16)] = pathSet.Key;
-                                for (int i = 1; i < 4; i++)
-                                {
-                                    posDictionary[pathPoint + (DirectionHelper.Left * 16) + (DirectionHelper.Up * 16 * i)] = pathSet.Key;
-                                    posDictionary[pathPoint + (DirectionHelper.Up * 16 * i)] = pathSet.Key;
-                                }
-                                break;
-                            case TileOrientation.TopRight:
-                                posDictionary[pathPoint + (DirectionHelper.Right * 16)] = pathSet.Key;
-                                for (int i = 1; i < 4; i++)
-                                {
-                                    posDictionary[pathPoint + (DirectionHelper.Right * 16) + (DirectionHelper.Up * 16 * i)] = pathSet.Key;
-                                    posDictionary[pathPoint + (DirectionHelper.Up * 16 * i)] = pathSet.Key;
-                                }
-                                break;
-                            case TileOrientation.BottomRight:
-                                posDictionary[pathPoint + (DirectionHelper.Down * 16)] = pathSet.Key;
-                                posDictionary[pathPoint + (DirectionHelper.Right * 16)] = pathSet.Key;
-                                posDictionary[pathPoint + (DirectionHelper.DownRight * 16)] = pathSet.Key;
-                                break;
-                            case TileOrientation.BottomLeft:
-                                posDictionary[pathPoint + (DirectionHelper.Down * 16)] = pathSet.Key;
-                                posDictionary[pathPoint + (DirectionHelper.Left * 16)] = pathSet.Key;
-                                posDictionary[pathPoint + (DirectionHelper.DownLeft * 16)] = pathSet.Key;
-                                break;
-                            case TileOrientation.TopEdge:
-                                for (int i = 1; i < 4; i++)
-                                    posDictionary[pathPoint + (DirectionHelper.Up * 16 * i)] = pathSet.Key;
-                                break;
-                            case TileOrientation.RightEdge:
-                                posDictionary[pathPoint + (DirectionHelper.Right * 16)] = pathSet.Key;
-                                break;
-                            case TileOrientation.BottomEdge:
-                                posDictionary[pathPoint + (DirectionHelper.Down * 16)] = pathSet.Key;
-                                break;
-                            case TileOrientation.LeftEdge:
-                                posDictionary[pathPoint + (DirectionHelper.Left * 16)] = pathSet.Key;
-                                break;
-                            case TileOrientation.BottomRightInverse:
-                                var bottomRightInverseOffset = DirectionHelper.Left * 16;
-                                for (int i = 1; i < 4; i++)
-                                    posDictionary[pathPoint + bottomRightInverseOffset + (DirectionHelper.Up * 16 * i)] = pathSet.Key;
-                                break;
-                            case TileOrientation.BottomLeftInverse:
-                                var bottomLeftInverseOffset = DirectionHelper.Right * 16;
-                                for (int i = 1; i < 4; i++)
-                                    posDictionary[pathPoint + bottomLeftInverseOffset + (DirectionHelper.Up * 16 * i)] = pathSet.Key;
-                                break;
-                            case TileOrientation.TopLeftInverse:
-                                posDictionary[pathPoint + (DirectionHelper.Right * 16)] = pathSet.Key;
-                                posDictionary[pathPoint + (DirectionHelper.DownRight * 16)] = pathSet.Key;
-                                break;
-                            case TileOrientation.TopRightInverse:
-                                posDictionary[pathPoint + (DirectionHelper.Left * 16)] = pathSet.Key;
-                                posDictionary[pathPoint + (DirectionHelper.DownLeft * 16)] = pathSet.Key;
-                                break;
-                        }
-                    }
-                }
+                //        switch (orientation)
+                //        {
+                //            case TileOrientation.TopLeft:
+                //                posDictionary[pathPoint + (DirectionHelper.Left * 16)] = pathSet.Key;
+                //                for (int i = 1; i < 4; i++)
+                //                {
+                //                    posDictionary[pathPoint + (DirectionHelper.Left * 16) + (DirectionHelper.Up * 16 * i)] = pathSet.Key;
+                //                    posDictionary[pathPoint + (DirectionHelper.Up * 16 * i)] = pathSet.Key;
+                //                }
+                //                break;
+                //            case TileOrientation.TopRight:
+                //                posDictionary[pathPoint + (DirectionHelper.Right * 16)] = pathSet.Key;
+                //                for (int i = 1; i < 4; i++)
+                //                {
+                //                    posDictionary[pathPoint + (DirectionHelper.Right * 16) + (DirectionHelper.Up * 16 * i)] = pathSet.Key;
+                //                    posDictionary[pathPoint + (DirectionHelper.Up * 16 * i)] = pathSet.Key;
+                //                }
+                //                break;
+                //            case TileOrientation.BottomRight:
+                //                posDictionary[pathPoint + (DirectionHelper.Down * 16)] = pathSet.Key;
+                //                posDictionary[pathPoint + (DirectionHelper.Right * 16)] = pathSet.Key;
+                //                posDictionary[pathPoint + (DirectionHelper.DownRight * 16)] = pathSet.Key;
+                //                break;
+                //            case TileOrientation.BottomLeft:
+                //                posDictionary[pathPoint + (DirectionHelper.Down * 16)] = pathSet.Key;
+                //                posDictionary[pathPoint + (DirectionHelper.Left * 16)] = pathSet.Key;
+                //                posDictionary[pathPoint + (DirectionHelper.DownLeft * 16)] = pathSet.Key;
+                //                break;
+                //            case TileOrientation.TopEdge:
+                //                for (int i = 1; i < 4; i++)
+                //                    posDictionary[pathPoint + (DirectionHelper.Up * 16 * i)] = pathSet.Key;
+                //                break;
+                //            case TileOrientation.RightEdge:
+                //                posDictionary[pathPoint + (DirectionHelper.Right * 16)] = pathSet.Key;
+                //                break;
+                //            case TileOrientation.BottomEdge:
+                //                posDictionary[pathPoint + (DirectionHelper.Down * 16)] = pathSet.Key;
+                //                break;
+                //            case TileOrientation.LeftEdge:
+                //                posDictionary[pathPoint + (DirectionHelper.Left * 16)] = pathSet.Key;
+                //                break;
+                //            case TileOrientation.BottomRightInverse:
+                //                var bottomRightInverseOffset = DirectionHelper.Left * 16;
+                //                for (int i = 1; i < 4; i++)
+                //                    posDictionary[pathPoint + bottomRightInverseOffset + (DirectionHelper.Up * 16 * i)] = pathSet.Key;
+                //                break;
+                //            case TileOrientation.BottomLeftInverse:
+                //                var bottomLeftInverseOffset = DirectionHelper.Right * 16;
+                //                for (int i = 1; i < 4; i++)
+                //                    posDictionary[pathPoint + bottomLeftInverseOffset + (DirectionHelper.Up * 16 * i)] = pathSet.Key;
+                //                break;
+                //            case TileOrientation.TopLeftInverse:
+                //                posDictionary[pathPoint + (DirectionHelper.Right * 16)] = pathSet.Key;
+                //                posDictionary[pathPoint + (DirectionHelper.DownRight * 16)] = pathSet.Key;
+                //                break;
+                //            case TileOrientation.TopRightInverse:
+                //                posDictionary[pathPoint + (DirectionHelper.Left * 16)] = pathSet.Key;
+                //                posDictionary[pathPoint + (DirectionHelper.DownLeft * 16)] = pathSet.Key;
+                //                break;
+                //        }
+                //    }
+                //}
 
-                //validate floor and tile positions
-                foreach (var room in roomsToCheck)
-                {
-                    List<Vector2> overlappingPositions = new List<Vector2>();
+                ////validate floor and tile positions
+                //foreach (var room in roomsToCheck)
+                //{
+                //    List<Vector2> overlappingPositions = new List<Vector2>();
 
-                    if (room.OverlapsRoom(posDictionary.Keys.ToList(), out var roomOverlaps, false))
-                        overlappingPositions.AddRange(roomOverlaps);
+                //    if (room.OverlapsRoom(posDictionary.Keys.ToList(), out var roomOverlaps, false))
+                //        overlappingPositions.AddRange(roomOverlaps);
 
-                    if (overlappingPositions.Any())
-                    {
-                        isPathValid = false;
+                //    if (overlappingPositions.Any())
+                //    {
+                //        isPathValid = false;
 
-                        foreach (var overlap in overlappingPositions)
-                        {
-                            if (posDictionary.TryGetValue(overlap, out var parentPos))
-                            {
-                                var adjustedPos = ((parentPos / 16) - (graphRect.Location / 16)).ToPoint();
-                                if (!graph.Walls.Contains(adjustedPos))
-                                    graph.Walls.Add(adjustedPos);
-                            }
-                        }
-                    }
-                }
+                //        foreach (var overlap in overlappingPositions)
+                //        {
+                //            if (posDictionary.TryGetValue(overlap, out var parentPos))
+                //            {
+                //                var adjustedPos = ((parentPos / 16) - (graphRect.Location / 16)).ToPoint();
+                //                if (!graph.Walls.Contains(adjustedPos))
+                //                    graph.Walls.Add(adjustedPos);
+                //            }
+                //        }
+                //    }
+                //}
 
-                if (isPathValid)
-                    floorPositions = largerPath.SelectMany(p => p.Value).ToList();
+                //if (isPathValid)
+                //    floorPositions = largerPath.SelectMany(p => p.Value).ToList();
             }
 
             return true;

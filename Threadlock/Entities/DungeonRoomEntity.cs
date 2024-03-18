@@ -118,7 +118,7 @@ namespace Threadlock.Entities
                     var minY = positions.Select(t => t.Y).Min();
                     var maxY = positions.Select(t => t.Y).Max();
                     var pos = new Vector2(minX, minY);
-                    var size = new Vector2(maxX - minX, maxY - minY);
+                    var size = new Vector2(maxX - minX + collisionRenderer.TiledMap.TileWidth, maxY - minY + collisionRenderer.TiledMap.TileHeight);
                     return new RectangleF(pos, size);
                 }
 
@@ -193,16 +193,56 @@ namespace Threadlock.Entities
 
             FloorTilePositions.Clear();
 
+            var renderers = GetComponents<TiledMapRenderer>();
+            foreach (var renderer in renderers)
+            {
+                renderer.RemoveColliders();
+                RemoveComponent(renderer);
+            }
+
             var comps = Scene.FindComponentsOfType<TiledComponent>().Where(c => c.MapEntity == this);
             foreach (var comp in comps)
                 comp.Entity.Destroy();
+        }
+
+        public bool OverlapsRoom(RectangleF rectangle, bool checkDoorways = true)
+        {
+            if (CollisionBounds.Size == Vector2.Zero)
+                return false;
+
+            if (!CollisionBounds.Intersects(rectangle))
+                return false;
+
+            var roomRenderer = GetComponents<TiledMapRenderer>().FirstOrDefault(r => r.CollisionLayer != null);
+            if (roomRenderer == null)
+                return false;
+
+            foreach (var tile in roomRenderer.CollisionLayer.Tiles.Where(t => t != null))
+            {
+                var tileWorldPos = Position + new Vector2(tile.X * 16, tile.Y * 16);
+                if (rectangle.Contains(tileWorldPos))
+                    return true;
+            }
+
+            if (checkDoorways)
+            {
+                var doorways = FindComponentsOnMap<DungeonDoorway>();
+                foreach (var doorway in doorways)
+                {
+                    var doorwayRect = new RectangleF(doorway.Entity.Position, new Vector2(doorway.TmxObject.Width, doorway.TmxObject.Height));
+                    if (doorwayRect.Intersects(rectangle))
+                        return true;
+                }
+            }
+
+            return false;
         }
 
         public bool OverlapsRoom(List<Vector2> positions, out List<Vector2> overlappingPositions, bool checkDoorways = true)
         {
             overlappingPositions = new List<Vector2>();
 
-            if (positions.Count() == 0)
+            if (positions.Count == 0)
                 return false;
 
             //if no collision layer, can't overlap

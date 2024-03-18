@@ -19,7 +19,14 @@ namespace Threadlock.Components
             get
             {
                 if (_tileDictionary.Any())
-                    return _tileDictionary.Keys.Select(k => k.X).Max() - _tileDictionary.Keys.Select(k => k.X).Min();
+                {
+                    var minX = _tileDictionary.Keys.Select(t => t.X).Min();
+                    var maxX = _tileDictionary.Keys.Select(t => t.X).Max();
+                    var tileWidth = _tileset != null ? _tileset.TileWidth : 16;
+
+                    return maxX - minX + tileWidth;
+                }
+
                 return 0;
             }
         }
@@ -28,7 +35,14 @@ namespace Threadlock.Components
             get
             {
                 if (_tileDictionary.Any())
-                    return _tileDictionary.Keys.Select(k => k.Y).Max() - _tileDictionary.Keys.Select(k => k.Y).Min();
+                {
+                    var minY = _tileDictionary.Keys.Select(t => t.Y).Min();
+                    var maxY = _tileDictionary.Keys.Select(t => t.Y).Max();
+                    var tileHeight = _tileset != null ? _tileset.TileHeight : 16;
+
+                    return maxY - minY + tileHeight;
+                }
+
                 return 0;
             }
         }
@@ -41,6 +55,7 @@ namespace Threadlock.Components
         TmxTileset _tileset;
         public TmxTileset Tileset { get => _tileset; }
         bool _shouldAddColliders = false;
+        List<BoxCollider> _colliders;
 
         public CorridorRenderer(TmxTileset tileset, Dictionary<Vector2, SingleTile> tileDictionary, bool addColliders = false)
         {
@@ -64,6 +79,18 @@ namespace Threadlock.Components
                 AddColliders();
         }
 
+        public override void OnRemovedFromEntity()
+        {
+            base.OnRemovedFromEntity();
+
+            if (_colliders == null)
+                return;
+
+            foreach (var collider in _colliders)
+                Physics.RemoveCollider(collider);
+            _colliders = null;
+        }
+
         public override void Render(Batcher batcher, Camera camera)
         {
             var culledTileDictionary = GetCulledTiles(camera.Bounds);
@@ -83,6 +110,12 @@ namespace Threadlock.Components
                 var collider = Entity.AddComponent(new BoxCollider(collisionRects[i].Width, collisionRects[i].Height));
                 collider.SetLocalOffset(collisionRects[i].Location.ToVector2() + new Vector2(collider.Width / 2, collider.Height / 2));
                 Flags.SetFlagExclusive(ref collider.PhysicsLayer, PhysicsLayers.Environment);
+
+                if (_colliders == null)
+                    _colliders = new List<BoxCollider>();
+
+                _colliders.Add(collider);
+                Physics.AddCollider(collider);
                 //var collider = new BoxCollider(collisionRects[i].X + _localOffset.X,
                 //    collisionRects[i].Y + _localOffset.Y, collisionRects[i].Width, collisionRects[i].Height);
                 //collider.PhysicsLayer = PhysicsLayer;
@@ -94,11 +127,12 @@ namespace Threadlock.Components
 
         Dictionary<Vector2, SingleTile> GetCulledTiles(RectangleF cameraClipBounds)
         {
+            var padding = 4;
             Point min, max;
-            min.X = (int)cameraClipBounds.Left - _tileset.TileWidth;
-            min.Y = (int)cameraClipBounds.Top - _tileset.TileHeight;
-            max.X = (int)cameraClipBounds.Right + _tileset.TileWidth;
-            max.Y = (int)cameraClipBounds.Bottom + _tileset.TileHeight;
+            min.X = (int)cameraClipBounds.Left - (_tileset.TileWidth * padding);
+            min.Y = (int)cameraClipBounds.Top - (_tileset.TileHeight * padding);
+            max.X = (int)cameraClipBounds.Right + (_tileset.TileWidth * padding);
+            max.Y = (int)cameraClipBounds.Bottom + (_tileset.TileHeight * padding);
 
             return _tileDictionary.Where(t =>
             {

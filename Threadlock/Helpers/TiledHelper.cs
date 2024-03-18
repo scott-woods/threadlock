@@ -47,5 +47,32 @@ namespace Threadlock.Helpers
                 entity.AddComponent(instance);
             }
         }
+
+        /// <summary>
+        /// get a list of world space positions on a specific layer
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="layerName"></param>
+        /// <returns></returns>
+        public static List<Vector2> GetTilePositionsByLayer(Entity entity, string layerName)
+        {
+            //init list
+            var tilePositions = new List<Vector2>();
+
+            //try to get renderer
+            if (entity.TryGetComponent<TiledMapRenderer>(out var renderer))
+            {
+                //get layer
+                var layer = renderer.TiledMap.TileLayers.FirstOrDefault(l => l.Name == layerName);
+
+                if (layer != null)
+                {
+                    foreach (var tile in layer.Tiles.Where(t => t != null))
+                        tilePositions.Add(renderer.Entity.Position + new Vector2(tile.X * 16, tile.Y * 16));
+                }
+            }
+
+            return tilePositions;
+        }
     }
 }

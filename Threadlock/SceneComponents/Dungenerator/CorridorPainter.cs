@@ -52,9 +52,9 @@ namespace Threadlock.SceneComponents.Dungenerator
         static TileDirection TopRightRequiredDirs { get => TileDirection.Left | TileDirection.Bottom; }
         static TileDirection BottomLeftRequiredDirs { get => TileDirection.Top | TileDirection.Right; }
         static TileDirection BottomRightRequiredDirs { get => TileDirection.Left | TileDirection.Top; }
-        static TileDirection TopEdgeRequiredDirs { get => TileDirection.Left | TileDirection.Right | TileDirection.Bottom; }
+        static TileDirection TopEdgeRequiredDirs { get => TileDirection.Left | TileDirection.Right; }
         static TileDirection LeftEdgeRequiredDirs { get => TileDirection.Top | TileDirection.Bottom | TileDirection.Right; }
-        static TileDirection BottomEdgeRequiredDirs { get => TileDirection.Left | TileDirection.Right | TileDirection.Top; }
+        static TileDirection BottomEdgeRequiredDirs { get => TileDirection.Left | TileDirection.Right; }
         static TileDirection RightEdgeRequiredDirs { get => TileDirection.Top | TileDirection.Bottom | TileDirection.Left; }
 
         public static TileOrientation GetTileOrientation(Vector2 tilePosition, List<Vector2> allTilePositions)
@@ -139,15 +139,61 @@ namespace Threadlock.SceneComponents.Dungenerator
             return mask;
         }
 
+        static void GlueTiles(Vector2 position, List<Vector2> allPositions, List<Vector2> currentList, int range, Vector2 direction)
+        {
+            bool connectionFound = false;
+            for (int i = range; i > 0; i--)
+            {
+                var testPos = position + (direction * 16 * i);
+
+                if (allPositions.Contains(testPos))
+                    connectionFound = true;
+
+                if (connectionFound)
+                {
+                    if (!currentList.Contains(testPos))
+                        currentList.Add(testPos);
+                }
+            }
+        }
+
         public static void PaintCorridorTiles(List<Vector2> floorPositions, List<Vector2> reservedPositions, TmxTileset tileset)
         {
+            List<Vector2> tilesToAdd = new List<Vector2>();
+            foreach (var floorPos in floorPositions)
+            {
+                var verticalGlueRange = 4;
+                var horizontalGlueRange = 2;
+                var mask = GetTileBitmask(floorPos, floorPositions);
+                if ((mask & TileDirection.Bottom) == 0)
+                    GlueTiles(floorPos, floorPositions, tilesToAdd, verticalGlueRange, DirectionHelper.Down);
+                if ((mask & TileDirection.Left) == 0)
+                    GlueTiles(floorPos, floorPositions, tilesToAdd, horizontalGlueRange, DirectionHelper.Left);
+                if ((mask & TileDirection.Top) == 0)
+                    GlueTiles(floorPos, floorPositions, tilesToAdd, verticalGlueRange, DirectionHelper.Up);
+                if ((mask & TileDirection.Right) == 0)
+                    GlueTiles(floorPos, floorPositions, tilesToAdd, horizontalGlueRange, DirectionHelper.Right);
+            }
+
+            foreach (var tile in tilesToAdd)
+                if (!floorPositions.Contains(tile))
+                    floorPositions.Add(tile);
+
             var allTilesForMask = floorPositions.Concat(reservedPositions).ToList();
 
             Dictionary<Vector2, SingleTile> backTiles = new Dictionary<Vector2, SingleTile>();
             Dictionary<Vector2, SingleTile> frontTiles = new Dictionary<Vector2, SingleTile>();
 
+            //foreach (var pos in reservedPositions)
+            //{
+            //    var r = Game1.Scene.CreateEntity("", pos).AddComponent(new PrototypeSpriteRenderer(2, 2));
+            //    r.SetColor(Color.Red);
+            //}
+
             foreach (var floorPos in floorPositions)
             {
+                //Game1.Scene.CreateEntity("", floorPos).AddComponent(new PrototypeSpriteRenderer(2, 2));
+
                 var orientation = GetTileOrientation(floorPos, allTilesForMask);
                 var mask = GetTileBitmask(floorPos, allTilesForMask);
 
