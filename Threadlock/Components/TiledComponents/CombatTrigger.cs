@@ -76,7 +76,8 @@ namespace Threadlock.Components.TiledComponents
                                 typesPicked.Add(enemyType);
 
                                 //spawn enemy
-                                spawn.SpawnEnemy(typeof(ChainBot));
+                                //spawn.SpawnEnemy(typeof(ChainBot));
+                                spawn.SpawnEnemy(enemyType);
 
                                 //wait a moment before spawning next enemy
                                 yield return Coroutine.WaitForSeconds(.2f);

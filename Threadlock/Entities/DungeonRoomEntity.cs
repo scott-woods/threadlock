@@ -207,6 +207,17 @@ namespace Threadlock.Entities
 
         public bool OverlapsRoom(RectangleF rectangle, bool checkDoorways = true)
         {
+            if (checkDoorways)
+            {
+                var doorways = FindComponentsOnMap<DungeonDoorway>();
+                foreach (var doorway in doorways)
+                {
+                    var doorwayRect = new RectangleF(doorway.Entity.Position, new Vector2(doorway.TmxObject.Width, doorway.TmxObject.Height));
+                    if (doorwayRect.Intersects(rectangle))
+                        return true;
+                }
+            }
+
             if (CollisionBounds.Size == Vector2.Zero)
                 return false;
 
@@ -222,17 +233,6 @@ namespace Threadlock.Entities
                 var tileWorldPos = Position + new Vector2(tile.X * 16, tile.Y * 16);
                 if (rectangle.Contains(tileWorldPos))
                     return true;
-            }
-
-            if (checkDoorways)
-            {
-                var doorways = FindComponentsOnMap<DungeonDoorway>();
-                foreach (var doorway in doorways)
-                {
-                    var doorwayRect = new RectangleF(doorway.Entity.Position, new Vector2(doorway.TmxObject.Width, doorway.TmxObject.Height));
-                    if (doorwayRect.Intersects(rectangle))
-                        return true;
-                }
             }
 
             return false;

@@ -13,6 +13,7 @@ using Threadlock.Components.TiledComponents;
 using Threadlock.Entities;
 using Threadlock.Helpers;
 using Threadlock.Models;
+using Threadlock.StaticData;
 using static Threadlock.SceneComponents.Dungenerator.CorridorPainter;
 using RectangleF = Nez.RectangleF;
 
@@ -810,7 +811,8 @@ namespace Threadlock.SceneComponents.Dungenerator
                 }
             }
 
-            List<Vector2> possiblePositions = new List<Vector2>();
+            //List<Vector2> possiblePositions = new List<Vector2>();
+            List<PositionInfo> possiblePosObjects = new List<PositionInfo>();
 
             var minRadius = 5;
             var radius = 20;
@@ -828,13 +830,22 @@ namespace Threadlock.SceneComponents.Dungenerator
                     var actualMovement = potentialPos - endDoor.PathfindingOrigin;
 
                     if (ValidateRoomMovement(actualMovement, roomsToMove, roomsToCheck))
-                        possiblePositions.Add(potentialPos);
+                    {
+                        foreach (var room in roomsToMove)
+                            room.MoveRoom(actualMovement, false);
+
+                        var hasLineOfSight = Physics.Linecast(startDoor.PathfindingOrigin, potentialPos, 1 << PhysicsLayers.Environment).Collider != null;
+                        //possiblePositions.Add(potentialPos);
+                        possiblePosObjects.Add(new PositionInfo(potentialPos, hasLineOfSight));
+                    }
                 }
             }
 
-            while (possiblePositions.Count > 0)
+            while (possiblePosObjects.Count > 0)
             {
-                var targetPosition = possiblePositions.RandomItem();
+                Vector2 targetPosition = possiblePosObjects.RandomItem().Position;
+                if (possiblePosObjects.Any(p => p.HasLineOfSight))
+                    targetPosition = possiblePosObjects.Where(p => p.HasLineOfSight).ToList().RandomItem().Position;
 
                 var movementAmount = targetPosition - endDoor.PathfindingOrigin;
 
@@ -858,13 +869,13 @@ namespace Threadlock.SceneComponents.Dungenerator
                 }
                 else
                 {
-                    return false;
-                    possiblePositions.Remove(targetPosition);
+                    //return false;
+                    possiblePosObjects.RemoveAll(p => p.Position == targetPosition);
                     continue;
                 }
             }
 
-            if (possiblePositions.Count == 0)
+            if (possiblePosObjects.Count == 0)
                 return false;
             return true;
         }
@@ -913,7 +924,7 @@ namespace Threadlock.SceneComponents.Dungenerator
         void GetPathfindingGraph(List<DungeonRoomEntity> joinedRooms, out WeightedGridGraph graph, out RectangleF graphRect, bool createProtos = false)
         {
             //get rectangle around entire set of rooms, and add some tiles of padding around that rectangle
-            var xPadding = 4;
+            var xPadding = 2;
             var yPadding = 4;
             graphRect = GetCombinedBounds(joinedRooms);
             graphRect.X -= xPadding * 16;
@@ -982,6 +993,7 @@ namespace Threadlock.SceneComponents.Dungenerator
                     if ((mask & (TileDirection.Top | TileDirection.Left)) == 0)
                         for (int i = 1; i < yPadding + 1; i++)
                             wallWorldPositions.Add(collisionTile + (DirectionHelper.UpLeft * 16 * i));
+
                     //switch (orientation)
                     //{
                     //    case CorridorPainter.TileOrientation.LeftEdge:
@@ -1013,27 +1025,27 @@ namespace Threadlock.SceneComponents.Dungenerator
                         graph.Walls.Add(adjustedWallWorldPos);
                 }
 
-                //add a wall for each tile in each doorway
-                var doorways = graphRoom.FindComponentsOnMap<DungeonDoorway>();
-                if (doorways != null)
-                {
-                    foreach (var doorway in doorways)
-                    {
-                        for (var y = 0; y < doorway.TmxObject.Height / 16; y++)
-                        {
-                            for (var x = 0; x < doorway.TmxObject.Width / 16; x++)
-                            {
-                                var tilePos = new Vector2(x, y);
-                                var adjustedTilePos = tilePos + (doorway.Entity.Position / 16);
-                                graph.Walls.Add(adjustedTilePos.ToPoint() - (graphRect.Location / 16).ToPoint());
+                ////add a wall for each tile in each doorway
+                //var doorways = graphRoom.FindComponentsOnMap<DungeonDoorway>();
+                //if (doorways != null)
+                //{
+                //    foreach (var doorway in doorways)
+                //    {
+                //        for (var y = 0; y < doorway.TmxObject.Height / 16; y++)
+                //        {
+                //            for (var x = 0; x < doorway.TmxObject.Width / 16; x++)
+                //            {
+                //                var tilePos = new Vector2(x, y);
+                //                var adjustedTilePos = tilePos + (doorway.Entity.Position / 16);
+                //                graph.Walls.Add(adjustedTilePos.ToPoint() - (graphRect.Location / 16).ToPoint());
 
-                                //var tilePoint = adjustedTilePos.ToPoint();
-                                //if (!graph.Walls.Contains(tilePoint))
-                                //    graph.Walls.Add(tilePoint);
-                            }
-                        }
-                    }
-                }
+                //                //var tilePoint = adjustedTilePos.ToPoint();
+                //                //if (!graph.Walls.Contains(tilePoint))
+                //                //    graph.Walls.Add(tilePoint);
+                //            }
+                //        }
+                //    }
+                //}
             }
         }
 

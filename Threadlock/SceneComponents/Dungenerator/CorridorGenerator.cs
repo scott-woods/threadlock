@@ -129,7 +129,7 @@ namespace Threadlock.SceneComponents.Dungenerator
                 graph.Walls.Add((endDoorwaySide2 / 16).ToPoint() + (endDoorwayDirection * i).ToPoint() - (graphRect.Location / 16).ToPoint());
             }
 
-            for (int i = 1; i < padding + 1; i++)
+            for (int i = 1; i < padding + 2; i++)
             {
                 if (graph.Walls.Contains((startDoor.PathfindingOrigin / 16).ToPoint() + (startDoorwayDirection * i).ToPoint() - (graphRect.Location / 16).ToPoint()))
                     graph.Walls.Remove((startDoor.PathfindingOrigin / 16).ToPoint() + (startDoorwayDirection * i).ToPoint() - (graphRect.Location / 16).ToPoint());
