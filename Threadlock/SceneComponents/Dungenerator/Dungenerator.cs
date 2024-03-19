@@ -387,6 +387,8 @@ namespace Threadlock.SceneComponents.Dungenerator
                                         var min = pairsList.Select(p => Vector2.Distance(p.Item1.PathfindingOrigin, processedRooms.First().Position)).Min();
                                         var minPairs = pairsList.Where(p => Vector2.Distance(p.Item1.PathfindingOrigin, processedRooms.First().Position) == min).ToList();
                                         pair = minPairs.RandomItem();
+                                        if (minPairs.Any(p => p.Item1.IsDirectMatch(p.Item2)))
+                                            pair = minPairs.Where(p => p.Item1.IsDirectMatch(p.Item2)).ToList().RandomItem();
                                     }
                                     else if (pairsList.Any(p => p.Item1.IsDirectMatch(p.Item2)))
                                         pair = pairsList.Where(p => p.Item1.IsDirectMatch(p.Item2)).ToList().RandomItem();
