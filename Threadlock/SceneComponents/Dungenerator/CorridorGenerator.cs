@@ -19,6 +19,91 @@ namespace Threadlock.SceneComponents.Dungenerator
 {
     public static class CorridorGenerator
     {
+        public static bool ConnectDoorways(DungeonDoorway startDoor, DungeonDoorway endDoor, List<DungeonRoomEntity> roomsToCheck, out List<Vector2> floorPositions)
+        {
+            floorPositions = new List<Vector2>();
+
+            var startDir = startDoor.GetOutgingDirection();
+            var endDir = endDoor.GetIncomingDirection();
+
+            var offset = 2;
+
+            Vector2 currentPos = startDoor.PathfindingOrigin + (startDir * 16 * offset);
+            List<Vector2> path = new List<Vector2>() { currentPos };
+
+            var endPos = endDoor.PathfindingOrigin - (endDir * 16 * offset);
+
+            if (!startDoor.IsDirectMatch(endDoor))
+            {
+                var vertexPos = startDir.X != 0 ? new Vector2(endDoor.PathfindingOrigin.X, startDoor.PathfindingOrigin.Y)
+                : new Vector2(startDoor.PathfindingOrigin.X, endDoor.PathfindingOrigin.Y);
+
+                while (currentPos != vertexPos)
+                {
+                    currentPos += (startDir * 16);
+                    path.Add(currentPos);
+                }
+            }
+            
+            while (currentPos != endPos)
+            {
+                currentPos += (endDir * 16);
+                path.Add(currentPos);
+            }
+
+            if (roomsToCheck.Any(r => r.OverlapsRoom(path, out var overlaps, false)))
+                return false;
+
+            //reserved positions are extra positions outside the normal path that we still want to consider for the direction mask
+            List<Vector2> reservedPositions = new List<Vector2>();
+            reservedPositions.Add(startDoor.PathfindingOrigin);
+            reservedPositions.Add(endDoor.PathfindingOrigin);
+            switch (startDoor.Direction)
+            {
+                case "Top":
+                    reservedPositions.Add(startDoor.PathfindingOrigin + (DirectionHelper.Left * 16));
+                    reservedPositions.Add(startDoor.PathfindingOrigin + (DirectionHelper.Right * 16));
+                    break;
+                case "Bottom":
+                    reservedPositions.Add(startDoor.PathfindingOrigin + (DirectionHelper.Left * 16));
+                    reservedPositions.Add(startDoor.PathfindingOrigin + (DirectionHelper.Right * 16));
+                    break;
+                case "Left":
+                    reservedPositions.Add(startDoor.PathfindingOrigin + (DirectionHelper.Up * 16));
+                    reservedPositions.Add(startDoor.PathfindingOrigin + (DirectionHelper.Down * 16));
+                    break;
+                case "Right":
+                    reservedPositions.Add(startDoor.PathfindingOrigin + (DirectionHelper.Up * 16));
+                    reservedPositions.Add(startDoor.PathfindingOrigin + (DirectionHelper.Down * 16));
+                    break;
+            }
+            switch (endDoor.Direction)
+            {
+                case "Top":
+                    reservedPositions.Add(endDoor.PathfindingOrigin + (DirectionHelper.Left * 16));
+                    reservedPositions.Add(endDoor.PathfindingOrigin + (DirectionHelper.Right * 16));
+                    break;
+                case "Bottom":
+                    reservedPositions.Add(endDoor.PathfindingOrigin + (DirectionHelper.Left * 16));
+                    reservedPositions.Add(endDoor.PathfindingOrigin + (DirectionHelper.Right * 16));
+                    break;
+                case "Left":
+                    reservedPositions.Add(endDoor.PathfindingOrigin + (DirectionHelper.Up * 16));
+                    reservedPositions.Add(endDoor.PathfindingOrigin + (DirectionHelper.Down * 16));
+                    break;
+                case "Right":
+                    reservedPositions.Add(endDoor.PathfindingOrigin + (DirectionHelper.Up * 16));
+                    reservedPositions.Add(endDoor.PathfindingOrigin + (DirectionHelper.Down * 16));
+                    break;
+            }
+
+            //get larger hallway
+            var largerPath = IncreaseCorridorWidth(path, reservedPositions);
+
+            floorPositions = largerPath.SelectMany(p => p.Value).ToList();
+            return true;
+        }
+
         public static bool ConnectDoorways(DungeonDoorway startDoor, DungeonDoorway endDoor, WeightedGridGraph graph, List<DungeonRoomEntity> roomsToCheck, RectangleF graphRect, out List<Vector2> floorPositions)
         {
             //init floor positions list
@@ -147,6 +232,9 @@ namespace Threadlock.SceneComponents.Dungenerator
                 var path = graph.Search(startDoorwayGridPos - (graphRect.Location / 16).ToPoint(), endDoorwayGridPos - (graphRect.Location / 16).ToPoint());
 
                 //if no path found, connection failed
+                //if (path == null || path.Count > 30)
+                //    return false;
+
                 if (path == null)
                     return false;
 
@@ -163,115 +251,6 @@ namespace Threadlock.SceneComponents.Dungenerator
 
                 floorPositions = largerPath.SelectMany(p => p.Value).ToList();
                 return true;
-
-                ////get list of all positions that we want to consider for bitmasking
-                //var allTilePositions = largerPath.SelectMany(p => p.Value)
-                //    .Concat(reservedPositions)
-                //    .ToList();
-
-                ////key is the actual position, value is the base path position it belongs to
-                //var posDictionary = new Dictionary<Vector2, Vector2>();
-
-                ////check that all tiles in larger path are valid
-                //var setsToCheck = largerPath;
-                ////var setsToCheck = largerPath.Where(p => p.Key != startDoorwayGridPos.ToVector2() * 16 && p.Key != endDoorwayGridPos.ToVector2() * 16).ToList();
-                //foreach (var pathSet in setsToCheck)
-                //{
-                //    foreach (var pathPoint in pathSet.Value)
-                //    {
-                //        posDictionary[pathPoint] = pathSet.Key;
-
-                //        var orientation = GetTileOrientation(pathPoint, allTilePositions);
-
-                //        switch (orientation)
-                //        {
-                //            case TileOrientation.TopLeft:
-                //                posDictionary[pathPoint + (DirectionHelper.Left * 16)] = pathSet.Key;
-                //                for (int i = 1; i < 4; i++)
-                //                {
-                //                    posDictionary[pathPoint + (DirectionHelper.Left * 16) + (DirectionHelper.Up * 16 * i)] = pathSet.Key;
-                //                    posDictionary[pathPoint + (DirectionHelper.Up * 16 * i)] = pathSet.Key;
-                //                }
-                //                break;
-                //            case TileOrientation.TopRight:
-                //                posDictionary[pathPoint + (DirectionHelper.Right * 16)] = pathSet.Key;
-                //                for (int i = 1; i < 4; i++)
-                //                {
-                //                    posDictionary[pathPoint + (DirectionHelper.Right * 16) + (DirectionHelper.Up * 16 * i)] = pathSet.Key;
-                //                    posDictionary[pathPoint + (DirectionHelper.Up * 16 * i)] = pathSet.Key;
-                //                }
-                //                break;
-                //            case TileOrientation.BottomRight:
-                //                posDictionary[pathPoint + (DirectionHelper.Down * 16)] = pathSet.Key;
-                //                posDictionary[pathPoint + (DirectionHelper.Right * 16)] = pathSet.Key;
-                //                posDictionary[pathPoint + (DirectionHelper.DownRight * 16)] = pathSet.Key;
-                //                break;
-                //            case TileOrientation.BottomLeft:
-                //                posDictionary[pathPoint + (DirectionHelper.Down * 16)] = pathSet.Key;
-                //                posDictionary[pathPoint + (DirectionHelper.Left * 16)] = pathSet.Key;
-                //                posDictionary[pathPoint + (DirectionHelper.DownLeft * 16)] = pathSet.Key;
-                //                break;
-                //            case TileOrientation.TopEdge:
-                //                for (int i = 1; i < 4; i++)
-                //                    posDictionary[pathPoint + (DirectionHelper.Up * 16 * i)] = pathSet.Key;
-                //                break;
-                //            case TileOrientation.RightEdge:
-                //                posDictionary[pathPoint + (DirectionHelper.Right * 16)] = pathSet.Key;
-                //                break;
-                //            case TileOrientation.BottomEdge:
-                //                posDictionary[pathPoint + (DirectionHelper.Down * 16)] = pathSet.Key;
-                //                break;
-                //            case TileOrientation.LeftEdge:
-                //                posDictionary[pathPoint + (DirectionHelper.Left * 16)] = pathSet.Key;
-                //                break;
-                //            case TileOrientation.BottomRightInverse:
-                //                var bottomRightInverseOffset = DirectionHelper.Left * 16;
-                //                for (int i = 1; i < 4; i++)
-                //                    posDictionary[pathPoint + bottomRightInverseOffset + (DirectionHelper.Up * 16 * i)] = pathSet.Key;
-                //                break;
-                //            case TileOrientation.BottomLeftInverse:
-                //                var bottomLeftInverseOffset = DirectionHelper.Right * 16;
-                //                for (int i = 1; i < 4; i++)
-                //                    posDictionary[pathPoint + bottomLeftInverseOffset + (DirectionHelper.Up * 16 * i)] = pathSet.Key;
-                //                break;
-                //            case TileOrientation.TopLeftInverse:
-                //                posDictionary[pathPoint + (DirectionHelper.Right * 16)] = pathSet.Key;
-                //                posDictionary[pathPoint + (DirectionHelper.DownRight * 16)] = pathSet.Key;
-                //                break;
-                //            case TileOrientation.TopRightInverse:
-                //                posDictionary[pathPoint + (DirectionHelper.Left * 16)] = pathSet.Key;
-                //                posDictionary[pathPoint + (DirectionHelper.DownLeft * 16)] = pathSet.Key;
-                //                break;
-                //        }
-                //    }
-                //}
-
-                ////validate floor and tile positions
-                //foreach (var room in roomsToCheck)
-                //{
-                //    List<Vector2> overlappingPositions = new List<Vector2>();
-
-                //    if (room.OverlapsRoom(posDictionary.Keys.ToList(), out var roomOverlaps, false))
-                //        overlappingPositions.AddRange(roomOverlaps);
-
-                //    if (overlappingPositions.Any())
-                //    {
-                //        isPathValid = false;
-
-                //        foreach (var overlap in overlappingPositions)
-                //        {
-                //            if (posDictionary.TryGetValue(overlap, out var parentPos))
-                //            {
-                //                var adjustedPos = ((parentPos / 16) - (graphRect.Location / 16)).ToPoint();
-                //                if (!graph.Walls.Contains(adjustedPos))
-                //                    graph.Walls.Add(adjustedPos);
-                //            }
-                //        }
-                //    }
-                //}
-
-                //if (isPathValid)
-                //    floorPositions = largerPath.SelectMany(p => p.Value).ToList();
             }
 
             return true;

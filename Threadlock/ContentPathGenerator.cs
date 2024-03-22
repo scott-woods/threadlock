@@ -225,6 +225,30 @@ namespace Nez
 
 			}
 
+			public static class Decorations
+			{
+				public static class Forge
+				{
+					public static class Atlas
+					{
+						public const string Forge_decorations = @"Content\Textures\Decorations\Forge\Atlas\forge_decorations.png";
+					}
+
+					public const string Barrel_1 = @"Content\Textures\Decorations\Forge\barrel_1.png";
+					public const string BrokenBarrel_1 = @"Content\Textures\Decorations\Forge\brokenBarrel_1.png";
+					public const string BrokenBarrel_2 = @"Content\Textures\Decorations\Forge\brokenBarrel_2.png";
+					public const string BrokenBarrel_3 = @"Content\Textures\Decorations\Forge\brokenBarrel_3.png";
+					public const string BrokenBarrel_4 = @"Content\Textures\Decorations\Forge\brokenBarrel_4.png";
+					public const string BrokenCrate_1 = @"Content\Textures\Decorations\Forge\brokenCrate_1.png";
+					public const string BrokenCrate_2 = @"Content\Textures\Decorations\Forge\brokenCrate_2.png";
+					public const string BrokenDoubleCrate_2 = @"Content\Textures\Decorations\Forge\brokenDoubleCrate_2.png";
+					public const string BrokenDoubleCrate_3 = @"Content\Textures\Decorations\Forge\brokenDoubleCrate_3.png";
+					public const string Crate_1 = @"Content\Textures\Decorations\Forge\crate_1.png";
+					public const string DoubleCrate = @"Content\Textures\Decorations\Forge\doubleCrate.png";
+				}
+
+			}
+
 			public static class Effects
 			{
 				public const string Electric_hit_1 = @"Content\Textures\Effects\electric_hit_1.png";
@@ -1030,6 +1054,7 @@ namespace Nez
 					public const string Forge_boss = @"Content\Tiled\Tilemaps\Forge\forge_boss.tmx";
 					public const string Forge_exit = @"Content\Tiled\Tilemaps\Forge\forge_exit.tmx";
 					public const string Forge_hub_1 = @"Content\Tiled\Tilemaps\Forge\forge_hub_1.tmx";
+					public const string Forge_normal_1 = @"Content\Tiled\Tilemaps\Forge\forge_normal_1.tmx";
 					public const string Forge_normal_2 = @"Content\Tiled\Tilemaps\Forge\forge_normal_2.tmx";
 					public const string Forge_pre_boss_2 = @"Content\Tiled\Tilemaps\Forge\forge_pre_boss_2.tmx";
 					public const string Forge_reward = @"Content\Tiled\Tilemaps\Forge\forge_reward.tmx";

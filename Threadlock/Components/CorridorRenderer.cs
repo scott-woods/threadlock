@@ -49,6 +49,7 @@ namespace Threadlock.Components
 
         public int PhysicsLayer = PhysicsLayers.Environment;
 
+        public Dictionary<Vector2, SingleTile> TileDictionary { get =>  _tileDictionary; }
         Dictionary<Vector2, SingleTile> _tileDictionary = new Dictionary<Vector2, SingleTile>();
         Dictionary<Vector2, SingleTile> _collisionTiles { get => _tileDictionary.Where(t => t.Value.IsCollider).ToDictionary(t => t.Key, t => t.Value); }
         List<Rectangle> _tileRects { get => _tileDictionary.Keys.Select(k => new Rectangle((int)k.X, (int)k.Y, _tileset.TileWidth, _tileset.TileHeight)).ToList(); }

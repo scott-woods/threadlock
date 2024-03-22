@@ -11,6 +11,7 @@ using Threadlock.Entities;
 using Threadlock.Helpers;
 using Threadlock.Models;
 using Threadlock.StaticData;
+using static Nez.Content.Tiled.Tilemaps.Forge;
 
 namespace Threadlock.Components.TiledComponents
 {
@@ -203,6 +204,42 @@ namespace Threadlock.Components.TiledComponents
                 //_mapRenderers.Add(mapRenderer);
                 //_mapRenderers.Add(tiledMapDetailsRenderer);
             }
+        }
+
+        /// <summary>
+        /// Get direction going into this door (ex: right door would return a Vector2 going left)
+        /// </summary>
+        /// <returns></returns>
+        public Vector2 GetIncomingDirection()
+        {
+            Vector2 dir = Vector2.Zero;
+            dir = Direction switch
+            {
+                "Top" => DirectionHelper.Down,
+                "Bottom" => DirectionHelper.Up,
+                "Left" => DirectionHelper.Right,
+                "Right" => DirectionHelper.Left,
+                _ => throw new Exception("Dungeon Doorway direction was not valid."),
+            };
+            return dir;
+        }
+
+        /// <summary>
+        /// Get direction going out of this door (ex: right door would return a Vector2 going right)
+        /// </summary>
+        /// <returns></returns>
+        public Vector2 GetOutgingDirection()
+        {
+            Vector2 dir = Vector2.Zero;
+            dir = Direction switch
+            {
+                "Top" => DirectionHelper.Up,
+                "Bottom" => DirectionHelper.Down,
+                "Left" => DirectionHelper.Left,
+                "Right" => DirectionHelper.Right,
+                _ => throw new Exception("Dungeon Doorway direction was not valid."),
+            };
+            return dir;
         }
     }
 }

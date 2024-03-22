@@ -109,16 +109,16 @@ namespace Threadlock.Entities
                 {
                     var positions = collisionRenderer.CollisionLayer.Tiles
                         .Where(t => t != null)
-                        .Select(t => Position + new Vector2(t.X * t.Tileset.TileWidth, t.Y * t.Tileset.TileHeight))
                         .ToList();
                     //positions.AddRange(FloorTilePositions);
 
-                    var minX = positions.Select(t => t.X).Min();
-                    var maxX = positions.Select(t => t.X).Max();
-                    var minY = positions.Select(t => t.Y).Min();
-                    var maxY = positions.Select(t => t.Y).Max();
+                    var minX = positions.Select(t => t.X * t.Tileset.TileWidth).Min();
+                    var maxX = positions.Select(t => t.X * t.Tileset.TileWidth).Max();
+                    var minY = positions.Select(t => t.Y * t.Tileset.TileHeight).Min();
+                    var maxY = positions.Select(t => t.Y * t.Tileset.TileHeight).Max();
                     var pos = new Vector2(minX, minY);
-                    var size = new Vector2(maxX - minX + collisionRenderer.TiledMap.TileWidth, maxY - minY + collisionRenderer.TiledMap.TileHeight);
+                    pos += Position;
+                    var size = new Vector2(maxX + collisionRenderer.TiledMap.TileWidth - minX, maxY + collisionRenderer.TiledMap.TileHeight - minY);
                     return new RectangleF(pos, size);
                 }
 
@@ -157,7 +157,7 @@ namespace Threadlock.Entities
             Map = map;
 
             var mapRenderer = AddComponent(new TiledMapRenderer(map, "Walls"));
-            mapRenderer.SetLayersToRender(new[] { "Back", "Back2", "Walls" }.Where(l => map.Layers.Any(l2 => l2.Name == l)).ToArray());
+            mapRenderer.SetLayersToRender(new[] { "Back", "Back2", "Back3", "Walls" }.Where(l => map.Layers.Any(l2 => l2.Name == l)).ToArray());
             mapRenderer.RenderLayer = RenderLayers.Back;
             Flags.SetFlagExclusive(ref mapRenderer.PhysicsLayer, PhysicsLayers.Environment);
             TiledHelper.CreateEntitiesForTiledObjects(mapRenderer);

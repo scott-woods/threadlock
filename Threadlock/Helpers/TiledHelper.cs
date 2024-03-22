@@ -59,17 +59,24 @@ namespace Threadlock.Helpers
             //init list
             var tilePositions = new List<Vector2>();
 
-            //try to get renderer
-            if (entity.TryGetComponent<TiledMapRenderer>(out var renderer))
+            var renderers = entity.GetComponents<TiledMapRenderer>();
+            List<TmxMap> seenMaps = new List<TmxMap>();
+            foreach (var renderer in renderers)
             {
-                //get layer
-                var layer = renderer.TiledMap.TileLayers.FirstOrDefault(l => l.Name == layerName);
-
-                if (layer != null)
+                if (renderer.TiledMap != null && !seenMaps.Contains(renderer.TiledMap))
                 {
-                    foreach (var tile in layer.Tiles.Where(t => t != null))
-                        tilePositions.Add(renderer.Entity.Position + new Vector2(tile.X * 16, tile.Y * 16));
+                    seenMaps.Add(renderer.TiledMap);
+
+                    //get layer
+                    var layer = renderer.TiledMap.TileLayers.FirstOrDefault(l => l.Name == layerName);
+
+                    if (layer != null)
+                    {
+                        foreach (var tile in layer.Tiles.Where(t => t != null))
+                            tilePositions.Add(renderer.Entity.Position + new Vector2(tile.X * 16, tile.Y * 16));
+                    }
                 }
+                    
             }
 
             return tilePositions;

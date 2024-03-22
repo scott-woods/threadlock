@@ -139,6 +139,28 @@ namespace Threadlock.SceneComponents.Dungenerator
             return mask;
         }
 
+        public static void CombineTiles(List<Vector2> allTiles, int xRange, int yRange)
+        {
+            List<Vector2> tilesToAdd = new List<Vector2>();
+
+            foreach (var floorPos in allTiles)
+            {
+                var mask = GetTileBitmask(floorPos, allTiles);
+                if ((mask & TileDirection.Bottom) == 0)
+                    GlueTiles(floorPos, allTiles, tilesToAdd, yRange, DirectionHelper.Down);
+                if ((mask & TileDirection.Left) == 0)
+                    GlueTiles(floorPos, allTiles, tilesToAdd, xRange, DirectionHelper.Left);
+                if ((mask & TileDirection.Top) == 0)
+                    GlueTiles(floorPos, allTiles, tilesToAdd, yRange, DirectionHelper.Up);
+                if ((mask & TileDirection.Right) == 0)
+                    GlueTiles(floorPos, allTiles, tilesToAdd, xRange, DirectionHelper.Right);
+            }
+
+            foreach (var tile in tilesToAdd)
+                if (!allTiles.Contains(tile))
+                    allTiles.Add(tile);
+        }
+
         static void GlueTiles(Vector2 position, List<Vector2> allPositions, List<Vector2> currentList, int range, Vector2 direction)
         {
             bool connectionFound = false;
@@ -159,26 +181,6 @@ namespace Threadlock.SceneComponents.Dungenerator
 
         public static void PaintCorridorTiles(List<Vector2> floorPositions, List<Vector2> reservedPositions, TmxTileset tileset)
         {
-            List<Vector2> tilesToAdd = new List<Vector2>();
-            foreach (var floorPos in floorPositions)
-            {
-                var verticalGlueRange = 4;
-                var horizontalGlueRange = 2;
-                var mask = GetTileBitmask(floorPos, floorPositions);
-                if ((mask & TileDirection.Bottom) == 0)
-                    GlueTiles(floorPos, floorPositions, tilesToAdd, verticalGlueRange, DirectionHelper.Down);
-                if ((mask & TileDirection.Left) == 0)
-                    GlueTiles(floorPos, floorPositions, tilesToAdd, horizontalGlueRange, DirectionHelper.Left);
-                if ((mask & TileDirection.Top) == 0)
-                    GlueTiles(floorPos, floorPositions, tilesToAdd, verticalGlueRange, DirectionHelper.Up);
-                if ((mask & TileDirection.Right) == 0)
-                    GlueTiles(floorPos, floorPositions, tilesToAdd, horizontalGlueRange, DirectionHelper.Right);
-            }
-
-            foreach (var tile in tilesToAdd)
-                if (!floorPositions.Contains(tile))
-                    floorPositions.Add(tile);
-
             var allTilesForMask = floorPositions.Concat(reservedPositions).ToList();
 
             Dictionary<Vector2, SingleTile> backTiles = new Dictionary<Vector2, SingleTile>();
