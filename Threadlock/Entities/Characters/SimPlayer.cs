@@ -29,6 +29,7 @@ namespace Threadlock.Entities.Characters
             //create animator, slightly transparent
             _animator = AddComponent(new SpriteAnimator());
             _animator.SetColor(new Microsoft.Xna.Framework.Color(255, 255, 255, 128));
+            _animator.SetRenderLayer(RenderLayers.YSort);
 
             //get animations from player animator
             if (Player.Player.Instance.TryGetComponent<SpriteAnimator>(out var animator))

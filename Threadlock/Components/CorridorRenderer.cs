@@ -224,5 +224,18 @@ namespace Threadlock.Components
 
             return result;
         }
+
+        public bool IsTileAtWorldPosition(Vector2 position)
+        {
+            var tileX = (int)Math.Floor(position.X / _tileset.TileWidth) * _tileset.TileWidth;
+            var tileY = (int)Math.Floor(position.Y / _tileset.TileHeight) * _tileset.TileHeight;
+
+            var testPos = new Vector2(tileX, tileY);
+
+            if (_tileDictionary.Any(t => !t.Value.IsCollider && t.Key == testPos))
+                return true;
+
+            return false;
+        }
     }
 }

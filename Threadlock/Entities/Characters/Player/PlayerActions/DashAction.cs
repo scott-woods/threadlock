@@ -178,14 +178,34 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             //get direction player is aiming
             var dir = Player.Instance.GetFacingDirection();
 
-            //validate the target position
-            var newFinalPos = Entity.Position;
-            var range = _range;
-            while (range > 0)
+            //update velocity component to face proper direction
+            if (Entity.TryGetComponent<VelocityComponent>(out var playerVc))
+                playerVc.Direction = dir;
+
+            //play charge anim by direction
+            var animName = $"ChargeDash{DirectionHelper.GetDirectionStringByVector(dir)}";
+            if (_animator.Animations.ContainsKey(animName) && !_animator.IsAnimationActive(animName))
+                _animator.Play(animName);
+
+            var basePos = Entity.Position;
+            if (Entity.TryGetComponent<OriginComponent>(out var oc))
+                basePos = oc.Origin;
+
+            var mapRenderer = EntityHelper.GetCurrentMap(Entity);
+            var desiredPos = basePos + (dir * _range);
+            var raycast = Physics.Linecast(basePos, desiredPos, 1 << PhysicsLayers.Environment);
+            if (raycast.Collider != null)
             {
-                var testPos = Entity.Position + dir * range;
-                newFinalPos = testPos;
-                break;
+                var posNearWall = raycast.Point + (dir * -1 * 8);
+                if (Vector2.Distance(basePos, raycast.Point) > Vector2.Distance(posNearWall, raycast.Point))
+                {
+                    if (TiledHelper.ValidatePosition(Entity.Scene, posNearWall))
+                        desiredPos = posNearWall;
+                    else
+                        desiredPos = basePos;
+                }
+                else
+                    desiredPos = basePos;
             }
 
             //animation
@@ -193,11 +213,8 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             if (!_animator.IsAnimationActive(animation))
                 _animator.Play(animation);
 
-            //call move with no speed, just so sprite flipper updates properly
-            _velocityComponent.Move(dir, 0);
-
             //update the target's position
-            _target.SetLocalOffset(newFinalPos - Entity.Position);
+            _target.SetLocalOffset(desiredPos - basePos);
 
             //update direction
             _direction = dir;

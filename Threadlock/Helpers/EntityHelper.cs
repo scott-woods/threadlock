@@ -41,6 +41,13 @@ namespace Threadlock.Helpers
             return cast.Collider == null;
         }
 
+        public static TiledMapRenderer GetCurrentMap(Entity entity, bool useOrigin = true)
+        {
+            var pos = GetEntityPosition(entity, useOrigin);
+            var renderer = entity.Scene.FindComponentsOfType<TiledMapRenderer>().FirstOrDefault(r => r.Bounds.Contains(pos));
+            return renderer;
+        }
+
         static Vector2 GetEntityPosition(Entity entity, bool useOrigin)
         {
             Vector2 pos = entity.Position;

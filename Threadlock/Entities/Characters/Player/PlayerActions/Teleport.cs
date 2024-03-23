@@ -111,7 +111,39 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             //    else return Position;
             //}
 
-            return Entity.Scene.Camera.MouseToWorldPoint();
+            var desiredPos = Entity.Scene.Camera.MouseToWorldPoint();
+
+            var basePos = Entity.Position;
+            if (Entity.TryGetComponent<OriginComponent>(out var oc))
+                basePos = oc.Origin;
+            var dir = desiredPos - basePos;
+            dir.Normalize();
+
+            var result = basePos;
+
+            //first, distance to mouse must be within radius
+            var dist = Vector2.Distance(desiredPos, basePos);
+            if (dist >= _maxRadius)
+                desiredPos = basePos + (dir * _maxRadius);
+
+            var mapRenderer = EntityHelper.GetCurrentMap(Entity);
+
+            //make sure position wouldn't put us in a wall
+            if (TiledHelper.ValidatePosition(Entity.Scene, desiredPos))
+                result = desiredPos;
+            else
+            {
+                var raycast = Physics.Linecast(basePos, desiredPos, 1 << PhysicsLayers.Environment);
+                if (raycast.Collider != null)
+                {
+                    var posNearWall = raycast.Point + (dir * -1 * 8);
+                    if (Vector2.Distance(basePos, raycast.Point) > Vector2.Distance(posNearWall, raycast.Point))
+                        if (TiledHelper.ValidatePosition(Entity.Scene, posNearWall))
+                            result = posNearWall;
+                }
+            }
+
+            return result;
         }
 
         void UpdateSimPlayerPosition()
@@ -140,11 +172,6 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
                 if (!animator.IsAnimationActive(animName))
                     animator.Play(animName);
             }
-
-            //first, distance to mouse must be within radius
-            var dist = Vector2.Distance(desiredPos, basePos);
-            if (dist >= _maxRadius)
-                desiredPos = basePos + (dir * _maxRadius);
 
             _simPlayer.Position = desiredPos;
         }
