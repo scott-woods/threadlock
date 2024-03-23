@@ -79,13 +79,19 @@ namespace Threadlock.Helpers
         /// </summary>
         /// <param name="direction"></param>
         /// <returns></returns>
-        public static string GetDirectionStringByVector(Vector2 direction)
+        public static string GetDirectionStringByVector(Vector2 direction, bool includeHorizontal = false)
         {
             var angle = Math.Atan2(direction.Y, direction.X) * Mathf.Rad2Deg;
             angle = (angle + 360) % 360;
             var directionString = "";
             if (angle >= 45 && angle < 135) directionString = "Down";
             else if (angle >= 225 && angle < 315) directionString = "Up";
+
+            if (includeHorizontal)
+            {
+                if (angle >= 135 && angle < 225) directionString = "Left";
+                else if (angle >= 315 || angle < 45) directionString = "Right";
+            }
 
             return directionString;
         }

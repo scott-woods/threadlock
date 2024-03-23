@@ -5,7 +5,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Threadlock.Components;
 using Threadlock.Entities.Characters.Player;
+using Threadlock.Helpers;
+using Threadlock.StaticData;
 
 namespace Threadlock.Entities.Characters
 {
@@ -13,6 +16,11 @@ namespace Threadlock.Entities.Characters
     {
         //components
         SpriteAnimator _animator;
+        VelocityComponent _velocityComponent;
+        Mover _mover;
+        SpriteFlipper _flipper;
+        OriginComponent _originComponent;
+        Collider _collider;
 
         public override void OnAddedToScene()
         {
@@ -30,16 +38,34 @@ namespace Threadlock.Entities.Characters
                     _animator.AddAnimation(animation.Key, animation.Value);
                 }
 
-                _animator.SetLocalOffset(animator.LocalOffset);
+                _animator.SetLocalOffset(Player.Player.Instance.DefaultSpriteOffset);
             }
+
+            _mover = AddComponent(new Mover());
+
+            _velocityComponent = AddComponent(new VelocityComponent(_mover));
+
+            _flipper = AddComponent(new SpriteFlipper());
+
+            //collider
+            _collider = AddComponent(new BoxCollider(-4, 4, 8, 5));
+            Flags.SetFlagExclusive(ref _collider.PhysicsLayer, PhysicsLayers.None);
+            _collider.CollidesWithLayers = 0;
+            Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.None);
+
+            _originComponent = AddComponent(new OriginComponent(_collider));
         }
 
         public override void Update()
         {
             base.Update();
 
-            if (!_animator.IsAnimationActive("IdleDown"))
-                _animator.Play("IdleDown");
+            var dir = DirectionHelper.GetDirectionStringByVector(_velocityComponent.Direction);
+            var animName = $"Idle{dir}";
+            if (!_animator.Animations.ContainsKey(animName))
+                animName = "IdleDown";
+            if (!_animator.IsAnimationActive(animName))
+                _animator.Play(animName);
         }
     }
 }

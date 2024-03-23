@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Threadlock.Components;
+using Threadlock.Helpers;
 using Threadlock.StaticData;
 
 namespace Threadlock.Entities.Characters.Player.PlayerActions
@@ -117,14 +119,32 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             //get desired position
             var desiredPos = GetDesiredPosition();
 
-            //first, distance to mouse must be within radius
-            var dist = Vector2.Distance(desiredPos, Entity.Position);
-            if (dist >= _maxRadius)
+            //get direction
+            var basePos = Entity.Position;
+            if (Entity.TryGetComponent<OriginComponent>(out var oc))
+                basePos = oc.Origin;
+            var dir = desiredPos - basePos;
+            dir.Normalize();
+
+            if (_simPlayer.TryGetComponent<VelocityComponent>(out var velocityComponent))
+                velocityComponent.Direction = dir;
+
+            if (Entity.TryGetComponent<VelocityComponent>(out var playerVc))
+                playerVc.Direction = dir;
+
+            if (Entity.TryGetComponent<SpriteAnimator>(out var animator))
             {
-                var dir = desiredPos - Entity.Position;
-                dir.Normalize();
-                desiredPos = Entity.Position + (dir * _maxRadius);
+                var animName = $"Idle{DirectionHelper.GetDirectionStringByVector(dir)}";
+                if (!animator.Animations.ContainsKey(animName))
+                    animName = "IdleDown";
+                if (!animator.IsAnimationActive(animName))
+                    animator.Play(animName);
             }
+
+            //first, distance to mouse must be within radius
+            var dist = Vector2.Distance(desiredPos, basePos);
+            if (dist >= _maxRadius)
+                desiredPos = basePos + (dir * _maxRadius);
 
             _simPlayer.Position = desiredPos;
         }

@@ -24,7 +24,7 @@ namespace Threadlock.Entities.Characters.Player
         public static Player Instance { get; private set; }
 
         public float MoveSpeed = 150f;
-        public Vector2 SpriteOffset = new Vector2(13, -2);
+        public Vector2 DefaultSpriteOffset = new Vector2(13, -2);
 
         //state machine
         public StateMachine<Player> StateMachine { get; set; }
@@ -69,7 +69,7 @@ namespace Threadlock.Entities.Characters.Player
             //add components
             _mover = AddComponent(new Mover());
             _animator = AddComponent(new SpriteAnimator());
-            _animator.SetLocalOffset(SpriteOffset);
+            _animator.SetLocalOffset(DefaultSpriteOffset);
             _animator.SetRenderLayer(RenderLayers.YSort);
             _velocityComponent = AddComponent(new VelocityComponent(_mover));
             _spriteFlipper = AddComponent(new SpriteFlipper());
