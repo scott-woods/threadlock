@@ -71,14 +71,6 @@ namespace Threadlock.Components.TiledComponents
                 CreateMap();
         }
 
-        //public override void OnAddedToEntity()
-        //{
-        //    base.OnAddedToEntity();
-
-        //    if (!_processed)
-        //        CreateMap();
-        //}
-
         public void SetOpen(bool open)
         {
             HasConnection = open;
@@ -181,28 +173,6 @@ namespace Threadlock.Components.TiledComponents
                 _mapRenderers.Add(tiledMapDetailsRenderer);
 
                 _processed = true;
-
-                ////create main map renderer
-                //var mapRenderer = Entity.AddComponent(new TiledMapRenderer(_map, "Walls"));
-                //mapRenderer.SetLayersToRender(new[] { "Back", "Walls" });
-                //mapRenderer.RenderLayer = 10;
-                //Flags.SetFlagExclusive(ref mapRenderer.PhysicsLayer, PhysicsLayers.Environment);
-
-                ////create above map renderer
-                //var tiledMapDetailsRenderer = Entity.AddComponent(new TiledMapRenderer(_map));
-                //var layersToRender = new List<string>();
-                //if (_map.Layers.Contains("Front"))
-                //    layersToRender.Add("Front");
-                //if (_map.Layers.Contains("AboveFront"))
-                //    layersToRender.Add("AboveFront");
-                //tiledMapDetailsRenderer.SetLayersToRender(layersToRender.ToArray());
-                //tiledMapDetailsRenderer.RenderLayer = RenderLayers.Front;
-                ////tiledMapDetailsRenderer.Material = Material.StencilWrite();
-
-                //TiledHelper.CreateEntitiesForTiledObjects(mapRenderer);
-
-                //_mapRenderers.Add(mapRenderer);
-                //_mapRenderers.Add(tiledMapDetailsRenderer);
             }
         }
 

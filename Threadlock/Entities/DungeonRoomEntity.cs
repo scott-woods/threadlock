@@ -76,27 +76,6 @@ namespace Threadlock.Entities
                 var width = Map != null ? Map.WorldWidth : 0;
                 var height = Map != null ? Map.WorldHeight : 0;
                 return new RectangleF(Position, new Vector2(width, height));
-
-                //if (!FloorTilePositions.Any())
-                //{
-                //    var width = Map != null ? Map.WorldWidth : 0;
-                //    var height = Map != null ? Map.WorldHeight : 0;
-                //    return new RectangleF(Position, new Vector2(width, height));
-                //}
-
-                //var minFloorTileX = FloorTilePositions.Select(t => t.X).Min();
-                //var minFloorTileY = FloorTilePositions.Select(t => t.Y).Min();
-                //var maxFloorTileX = FloorTilePositions.Select(t => t.X).Max();
-                //var maxFloorTileY = FloorTilePositions.Select(t => t.Y).Max();
-                //var minX = Position.X <= minFloorTileX ? Position.X : minFloorTileX;
-                //var minY = Position.Y <= minFloorTileY ? Position.Y : minFloorTileY;
-                //var maxX = Position.X + Map.WorldWidth >= maxFloorTileX ? Position.X + Map.WorldWidth : maxFloorTileX;
-                //var maxY = Position.Y + Map.WorldHeight >= maxFloorTileY ? Position.Y + Map.WorldHeight : maxFloorTileY;
-
-                //var pos = new Vector2(minX, minY);
-                //var size = new Vector2(maxX - minX, maxY - minY);
-
-                //return new RectangleF(pos, size);
             }
         }
         
@@ -136,7 +115,7 @@ namespace Threadlock.Entities
             RoomId = dungeonNode.Id;
             Type = dungeonNode.Type;
             _childrenIds = dungeonNode.Children.Select(c => c.ChildNodeId).ToList();
-            _textComponent = AddComponent(new TextComponent(Graphics.Instance.BitmapFont, $"{dungeonNode.Id}", Vector2.Zero, Color.Black));
+            //_textComponent = AddComponent(new TextComponent(Graphics.Instance.BitmapFont, $"{dungeonNode.Id}", Vector2.Zero, Color.Black));
         }
 
         #region LIFECYCLE
@@ -166,7 +145,7 @@ namespace Threadlock.Entities
             frontRenderer.SetLayersToRender(new[] { "Front", "AboveFront" }.Where(l => map.Layers.Any(l2 => l2.Name == l)).ToArray());
             frontRenderer.RenderLayer = RenderLayers.Front;
 
-            _textComponent.SetLocalOffset(new Vector2(map.WorldWidth / 2, map.WorldHeight / 2));
+            //_textComponent.SetLocalOffset(new Vector2(map.WorldWidth / 2, map.WorldHeight / 2));
         }
 
         public void MoveRoom(Vector2 movementAmount, bool moveChildComposites = false)
