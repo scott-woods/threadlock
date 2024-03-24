@@ -38,18 +38,19 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
 
         protected override IEnumerator ExecutionCoroutine()
         {
-            _animationWaiter.WaitForAnimation("SweepAttack");
+            Game1.StartCoroutine(_animationWaiter.WaitForAnimation("SweepAttack"));
 
             while (_animator.CurrentFrame < _pickDirectionFrame)
                 yield return null;
 
             var dir = EntityHelper.DirectionToEntity(_enemy, _enemy.TargetEntity);
 
+            _attackVfx = Entity.Scene.AddEntity(new OrbMageSweepAttackVfx(dir));
+
             while (_animator.CurrentFrame < _startFrame)
                 yield return null;
 
             //create vfx entity
-            _attackVfx = Entity.Scene.AddEntity(new OrbMageSweepAttackVfx(dir));
             _attackVfx.SetPosition(Entity.Position);
             yield return _attackVfx.Play();
         }
@@ -57,6 +58,8 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
         protected override void Reset()
         {
             _animationWaiter.Cancel();
+            _attackVfx?.Destroy();
+            _attackVfx = null;
         }
     }
 }

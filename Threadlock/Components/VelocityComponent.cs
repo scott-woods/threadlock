@@ -12,6 +12,7 @@ namespace Threadlock.Components
     public class VelocityComponent : Component
     {
         public Vector2 Direction = new Vector2(1, 0);
+        public Vector2 LastNonZeroDirection = new Vector2(1, 0);
 
         //SubpixelVector2 _subPixelV2 = new SubpixelVector2();
 
@@ -26,6 +27,8 @@ namespace Threadlock.Components
         {
             direction.Normalize();
             Direction = direction;
+            if (direction != Vector2.Zero)
+                LastNonZeroDirection = direction;
 
             var movement = Direction * speed * Time.DeltaTime;
             _mover.CalculateMovement(ref movement, out var result);

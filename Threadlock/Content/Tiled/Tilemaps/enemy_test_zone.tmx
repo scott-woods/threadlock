@@ -121,7 +121,7 @@
  <objectgroup id="4" name="Entities">
   <object id="1" type="Trigger" x="160" y="48" width="32" height="16">
    <properties>
-    <property name="Args" value="ChainBot"/>
+    <property name="Args" value="OrbMage"/>
     <property name="EventName" value="SpawnTestEnemy"/>
     <property name="Type" propertytype="TriggerType" value="Interact"/>
    </properties>

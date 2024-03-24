@@ -117,7 +117,9 @@ namespace Threadlock.Entities.Characters.Player.States
                 if (_context.TryGetComponent<OriginComponent>(out var oc))
                     basePos = oc.Origin;
 
-                var dir = _context.GetFacingDirection();
+                var dir = Vector2.Zero;
+                if (_context.TryGetComponent<VelocityComponent>(out var vc))
+                    dir = vc.LastNonZeroDirection;
 
                 var checkEnd = basePos + (dir * _checkRadius);
 

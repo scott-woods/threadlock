@@ -17,7 +17,7 @@ namespace Threadlock.Entities.Characters.Enemies.Ghoul
     public class Ghoul : Enemy<Ghoul>
     {
         //constants
-        float _speed = 135f;
+        float _speed = 165f;
 
         //components
         Mover _mover;
@@ -74,6 +74,7 @@ namespace Threadlock.Entities.Characters.Enemies.Ghoul
             //animator
             _animator = AddComponent(new SpriteAnimator());
             _animator.SetRenderLayer(RenderLayers.YSort);
+            _animator.Speed = 1.5f;
             AddAnimations();
 
             //sprite flipper
@@ -119,6 +120,7 @@ namespace Threadlock.Entities.Characters.Enemies.Ghoul
                             .Action(c => c.ExecuteAction(_ghoulAttack))
                             .ParallelSelector()
                                 .Action(c => c.Idle())
+                                .Action(c => c.TrackTarget(TargetEntity))
                                 .WaitAction(.5f)
                             .EndComposite()
                         .EndComposite()

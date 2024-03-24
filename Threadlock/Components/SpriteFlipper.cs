@@ -24,7 +24,7 @@ namespace Threadlock.Components
         }
         public void Update()
         {
-            var flip = _velocityComponent.Direction.X < 0;
+            var flip = _velocityComponent.LastNonZeroDirection.X < 0;
 
             if (Flipped != flip)
             {

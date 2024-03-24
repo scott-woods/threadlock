@@ -1,4 +1,5 @@
-﻿using Nez.AI.FSM;
+﻿using Microsoft.Xna.Framework;
+using Nez.AI.FSM;
 using Nez.Sprites;
 using System;
 using System.Collections.Generic;
@@ -23,8 +24,10 @@ namespace Threadlock.Entities.Characters.Player.States
             _velocityComponent = _context.GetComponent<VelocityComponent>();
         }
 
-        public override void Update(float deltaTime)
+        public override void Begin()
         {
+            base.Begin();
+
             var dir = _velocityComponent.Direction;
 
             string animation = "";
@@ -37,6 +40,8 @@ namespace Threadlock.Entities.Characters.Player.States
 
             if (!_animator.IsAnimationActive(animation))
                 _animator.Play(animation);
+
+            _velocityComponent.Direction = Vector2.Zero;
         }
 
         public override void Reason()

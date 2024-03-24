@@ -43,6 +43,7 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
             var texture = Scene.Content.LoadTexture(Nez.Content.Textures.Characters.OrbMage.VFXforSweep);
             var sprites = Sprite.SpritesFromAtlas(texture, 87, 34);
             _animator.AddAnimation("Attack", sprites.ToArray());
+            _animator.SetEnabled(false);
 
             _hitbox = AddComponent(new BoxHitbox(_damage, new Rectangle(-22, 6, 62, 11)));
             Flags.SetFlagExclusive(ref _hitbox.PhysicsLayer, PhysicsLayers.EnemyHitbox);
@@ -54,13 +55,15 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
 
         public IEnumerator Play()
         {
+            _animator.SetEnabled(true);
+
             if (_directionToPlayer.X < 0)
                 _animator.FlipY = true;
 
             Position += (_offset * _directionToPlayer);
             Rotation = (float)Math.Atan2(_directionToPlayer.Y, _directionToPlayer.X);
 
-            _animationWaiter.WaitForAnimation("Attack");
+            Game1.StartCoroutine(_animationWaiter.WaitForAnimation("Attack"));
 
             while (_animator.CurrentFrame < _hitboxActiveFrame)
                 yield return null;
@@ -73,7 +76,7 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
 
             _hitbox.SetEnabled(false);
 
-            while (_animator.IsAnimationActive("Attack"))
+            while (_animator.IsAnimationActive("Attack") && _animator.AnimationState == SpriteAnimator.State.Running)
                 yield return null;
 
             _hitbox.SetEnabled(false);

@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
 using Threadlock.DebugTools;
+using Threadlock.Helpers;
 using Threadlock.StaticData;
 using TaskStatus = Nez.AI.BehaviorTrees.TaskStatus;
 
@@ -178,6 +179,31 @@ namespace Threadlock.Entities.Characters.Enemies
             return status;
         }
 
+        /// <summary>
+        /// watch a target, but don't move towards it
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public virtual TaskStatus TrackTarget(Vector2 target)
+        {
+            if (TryGetComponent<VelocityComponent>(out var velocityComponent))
+            {
+                var dir = target - Position;
+                dir.Normalize();
+                velocityComponent.Move(dir, 0);
+            }
+
+            return TaskStatus.Running;
+        }
+
+        public virtual TaskStatus TrackTarget(Entity target)
+        {
+            var pos = target.Position;
+            if (target.TryGetComponent<OriginComponent>(out var originComponent))
+                pos = originComponent.Origin;
+            return TrackTarget(pos);
+        }
+
         public virtual TaskStatus MoveToTarget(Entity target, float speed)
         {
             if (target.TryGetComponent<OriginComponent>(out var originComponent))
@@ -236,14 +262,14 @@ namespace Threadlock.Entities.Characters.Enemies
             return TaskStatus.Running;
         }
 
-        public virtual TaskStatus MoveAway(Entity target, float speed)
+        public virtual TaskStatus MoveAway(Entity target, float speed, float desiredDistance)
         {
             if (target.TryGetComponent<OriginComponent>(out var originComponent))
-                return MoveAway(originComponent.Origin, speed);
-            else return MoveAway(target.Position, speed);
+                return MoveAway(originComponent.Origin, speed, desiredDistance);
+            else return MoveAway(target.Position, speed, desiredDistance);
         }
 
-        public virtual TaskStatus MoveAway(Vector2 target, float speed)
+        public virtual TaskStatus MoveAway(Vector2 target, float speed, float desiredDistance)
         {
             //handle animation
             if (TryGetComponent<SpriteAnimator>(out var animator))
@@ -263,6 +289,9 @@ namespace Threadlock.Entities.Characters.Enemies
 
             if (TryGetComponent<VelocityComponent>(out var velocityComponent))
                 velocityComponent.Move(dir, speed);
+
+            if (EntityHelper.DistanceToEntity(this, TargetEntity) > desiredDistance)
+                return TaskStatus.Success;
 
             return TaskStatus.Running;
         }

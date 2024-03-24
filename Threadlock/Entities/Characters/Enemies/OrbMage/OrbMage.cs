@@ -18,12 +18,13 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
     public class OrbMage : Enemy<OrbMage>
     {
         //consts
-        const float _speed = 25f;
+        const float _speed = 45f;
         const float _minDistanceToPlayer = 48f;
-        const float _attackRange = 192f;
+        const float _attackRange = 128f;
         const float _preferredDistanceToPlayer = 80f;
         const float _sweepAttackRange = 64f;
         const float _attackPrepTime = 3f;
+        const float _attackCooldown = 2.5f;
 
         //components
         Mover _mover;
@@ -43,6 +44,8 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
         OrbMageSweepAttack _orbMageSweepAttack;
 
         float _attackPrepTimer = 0f;
+        ITimer _cooldownTimer;
+        bool _isOnCooldown = false;
 
         #region LIFECYCLE
 
@@ -89,6 +92,14 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
             _knockbackComponent = AddComponent(new KnockbackComponent(_velocityComponent));
         }
 
+        public override void OnRemovedFromScene()
+        {
+            base.OnRemovedFromScene();
+
+            _cooldownTimer?.Stop();
+            _cooldownTimer = null;
+        }
+
         #endregion
 
         #region SETUP
@@ -127,42 +138,46 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
         public override BehaviorTree<OrbMage> CreateSubTree()
         {
             var tree = BehaviorTreeBuilder<OrbMage>.Begin(this)
-                .Sequence()
-                    .Action(o => o.StartAttackTimer())
-                    //pre attack
-                    .Selector(AbortTypes.Self)
-                        //if player too close, move away from player
-                        .ConditionalDecorator(o => EntityHelper.DistanceToEntity(o, o.TargetEntity) <= _minDistanceToPlayer, true)
-                            .Sequence()
-                                .Action(o => o.MoveAway(o.TargetEntity, _speed))
-                            .EndComposite()
+                .Selector(AbortTypes.Self)
 
-                        //if not in attack range, move towards player
-                        .ConditionalDecorator(o => EntityHelper.DistanceToEntity(o, o.TargetEntity) > _attackRange, true)
-                            .Sequence()
-                                .Action(o => o.MoveToTarget(o.TargetEntity, _speed))
+                    .Sequence()
+                        .Conditional(x => !x.IsOnCooldown())
+                        .Selector() //attack selector
+                            .Sequence() //magic ranged attack
+                                .Conditional(x => x.IsInMagicAttackRange())
+                                .ParallelSelector()
+                                    .Action(x => x.TrackTarget(TargetEntity))
+                                    .Action(x => x.ExecuteAction(_orbMageAttack))
+                                .EndComposite()
+                                .Action(x => x.StartCooldownTimer())
                             .EndComposite()
-                        
-                        //if in attack range, increment attack timer
-                        .ConditionalDecorator(o => EntityHelper.DistanceToEntity(o, o.TargetEntity) <= _attackRange, true)
-                            .Sequence()
-                                .Action(o => o.WaitToAttack())
+                            .Sequence() //melee sweep attack
+                                .Conditional(x => x.IsInMeleeRange())
+                                .ParallelSelector()
+                                    .Action(x => x.TrackTarget(TargetEntity))
+                                    .Action(x => x.ExecuteAction(_orbMageSweepAttack))
+                                .EndComposite()
+                                .Action(x => x.StartCooldownTimer())
                             .EndComposite()
-                    .EndComposite()
-                    //select and perform attaack
-                    .Selector()
-                        .Sequence()
-                            .Conditional(o => EntityHelper.DistanceToEntity(this, o.TargetEntity) < _sweepAttackRange)
-                            .Action(o => o.ExecuteAction(_orbMageSweepAttack))
-                        .EndComposite()
-                        .Sequence()
-                            .Action(o => o.ExecuteAction(_orbMageAttack))
                         .EndComposite()
                     .EndComposite()
-                    .ParallelSelector()
-                        .Action(o => o.Idle())
-                        .WaitAction(1f)
+
+                    .ConditionalDecorator(x => x.IsOnCooldown() || (!x.IsInMagicAttackRange() && !x.IsInMeleeRange()))
+                    .Selector() //move or idle
+                        .Sequence(AbortTypes.LowerPriority)
+                            .Conditional(x => x.IsPlayerTooClose())
+                            .Action(x => x.MoveAway(TargetEntity, _speed, _minDistanceToPlayer))
+                        .EndComposite()
+                        .Sequence(AbortTypes.LowerPriority) //move towards player if too far away
+                            .Conditional(x => x.IsPlayerTooFar())
+                            .Action(x => x.MoveToTarget(TargetEntity, _speed))
+                        .EndComposite()
+                        .ParallelSelector() //idle
+                            .Action(x => x.TrackTarget(TargetEntity))
+                            .Action(x => x.Idle())
+                        .EndComposite()
                     .EndComposite()
+
                 .EndComposite()
             .Build();
 
@@ -172,11 +187,49 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
 
         #endregion
 
+        bool IsInMagicAttackRange()
+        {
+            var dist = EntityHelper.DistanceToEntity(this, TargetEntity);
+            return dist <= _attackRange && dist > _sweepAttackRange;
+        }
+
+        bool IsInMeleeRange()
+        {
+            return EntityHelper.DistanceToEntity(this, TargetEntity) <= _sweepAttackRange;
+        }
+
+        bool IsPlayerTooFar()
+        {
+            var dist = EntityHelper.DistanceToEntity(this, TargetEntity);
+            return dist > _attackRange;
+        }
+
+        bool IsPlayerTooClose()
+        {
+            return EntityHelper.DistanceToEntity(this, TargetEntity) < _minDistanceToPlayer;
+        }
+
+        bool IsOnCooldown()
+        {
+            return _isOnCooldown;
+        }
+
         #region TASKS
 
         TaskStatus StartAttackTimer()
         {
             _attackPrepTimer = 0f;
+            return TaskStatus.Success;
+        }
+
+        TaskStatus StartCooldownTimer()
+        {
+            _isOnCooldown = true;
+            _cooldownTimer = Game1.Schedule(_attackCooldown, timer =>
+            {
+                _isOnCooldown = false;
+            });
+
             return TaskStatus.Success;
         }
 

@@ -146,7 +146,7 @@ namespace Threadlock.Entities.Characters.Enemies.Spitter
 
             //invalid firing situations
             if (distanceToPlayer < _minDistance)
-                return MoveAway(TargetEntity, _moveSpeed);
+                return MoveAway(TargetEntity, _moveSpeed, _minDistance);
             if (distanceToPlayer > _maxDistance || !EntityHelper.HasLineOfSight(this, TargetEntity, false))
                 return MoveToTarget(TargetEntity, _moveSpeed);
 

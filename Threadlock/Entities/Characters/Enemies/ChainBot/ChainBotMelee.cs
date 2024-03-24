@@ -18,7 +18,7 @@ namespace Threadlock.Entities.Characters.Enemies.ChainBot
     {
         //consts
         const int _damage = 2;
-        Vector2 _offset = new Vector2(28, 4);
+        Vector2 _offset = new Vector2(20, 4);
         List<int> _hitboxActiveFrames = new List<int> { 0, 4 };
 
         //components
@@ -42,7 +42,7 @@ namespace Threadlock.Entities.Characters.Enemies.ChainBot
 
             _animator = Entity.GetComponent<SpriteAnimator>();
 
-            _hitbox = Entity.AddComponent(new BoxHitbox(_damage, 40, 10));
+            _hitbox = Entity.AddComponent(new BoxHitbox(_damage, 48, 10));
             Flags.SetFlagExclusive(ref _hitbox.PhysicsLayer, PhysicsLayers.EnemyHitbox);
             Flags.SetFlagExclusive(ref _hitbox.CollidesWithLayers, PhysicsLayers.PlayerHurtbox);
             _hitbox.SetLocalOffset(_offset);

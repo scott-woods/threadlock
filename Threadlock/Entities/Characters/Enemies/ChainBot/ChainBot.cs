@@ -17,7 +17,7 @@ namespace Threadlock.Entities.Characters.Enemies.ChainBot
     public class ChainBot : Enemy<ChainBot>
     {
         //property overrides
-        const float _speed = 75f;
+        const float _speed = 110f;
 
         //components
         SpriteAnimator _animator;
@@ -89,6 +89,11 @@ namespace Threadlock.Entities.Characters.Enemies.ChainBot
                         .Sequence(AbortTypes.LowerPriority)
                             .Conditional(c => c.IsInAttackRange())
                             .Action(c => c.ExecuteAction(_chainBotMelee))
+                            .ParallelSelector()
+                                .Action(c => c.Idle())
+                                .Action(c => c.TrackTarget(TargetEntity))
+                                .WaitAction(2f)
+                            .EndComposite()
                         .EndComposite()
                         .Sequence(AbortTypes.LowerPriority)
                             .Action(c => c.MoveToTarget(TargetEntity, _speed))
@@ -108,7 +113,7 @@ namespace Threadlock.Entities.Characters.Enemies.ChainBot
             var targetPos = TargetEntity.Position;
             var xDist = Math.Abs(Position.X - targetPos.X);
             var yDist = Math.Abs(Position.Y - targetPos.Y);
-            if (xDist <= 16 && yDist <= 8)
+            if (xDist <= 32 && yDist <= 8)
             {
                 return true;
             }
