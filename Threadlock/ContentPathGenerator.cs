@@ -1068,6 +1068,7 @@ namespace Nez
 					public const string Hub = @"Content\Tiled\Tilemaps\HubMaps\hub.tmx";
 				}
 
+				public const string Enemy_test_zone = @"Content\Tiled\Tilemaps\enemy_test_zone.tmx";
 				public const string Test = @"Content\Tiled\Tilemaps\test.tmx";
 			}
 

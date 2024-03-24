@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Nez;
 using Nez.AI.FSM;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
+using Threadlock.Components.TiledComponents;
 using Threadlock.DebugTools;
 using Threadlock.Entities.Characters.Player.PlayerActions;
 using Threadlock.SaveData;
@@ -15,6 +17,8 @@ namespace Threadlock.Entities.Characters.Player.States
 {
     public class PlayerState : State<Player>
     {
+        const float _checkRadius = 20f;
+
         protected StatusComponent _statusComponent;
         protected ApComponent _apComponent;
         protected ActionManager _actionManager;
@@ -100,6 +104,32 @@ namespace Threadlock.Entities.Characters.Player.States
             {
                 _machine.ChangeState<DashState>();
                 return true;
+            }
+
+            return false;
+        }
+
+        public bool TryInteract()
+        {
+            if (Controls.Instance.Check.IsPressed)
+            {
+                var basePos = _context.Position;
+                if (_context.TryGetComponent<OriginComponent>(out var oc))
+                    basePos = oc.Origin;
+
+                var dir = _context.GetFacingDirection();
+
+                var checkEnd = basePos + (dir * _checkRadius);
+
+                var raycast = Physics.Linecast(basePos, checkEnd, 1 << PhysicsLayers.Trigger);
+                if (raycast.Collider != null)
+                {
+                    if (raycast.Collider.Entity.TryGetComponent<Trigger>(out var trigger))
+                    {
+                        Game1.StartCoroutine(trigger.HandleTriggered());
+                        return true;
+                    }
+                }
             }
 
             return false;

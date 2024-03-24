@@ -11,40 +11,6 @@
     ],
     "propertyTypes": [
         {
-            "color": "#ffa0a0a4",
-            "drawFill": true,
-            "id": 3,
-            "members": [
-            ],
-            "name": "CombatArea",
-            "type": "class",
-            "useAs": [
-                "property",
-                "map",
-                "layer",
-                "object",
-                "tile",
-                "tileset",
-                "wangcolor",
-                "wangset",
-                "project"
-            ]
-        },
-        {
-            "color": "#ff00aa00",
-            "drawFill": true,
-            "id": 5,
-            "members": [
-            ],
-            "name": "CombatTrigger",
-            "type": "class",
-            "useAs": [
-                "property",
-                "object",
-                "project"
-            ]
-        },
-        {
             "id": 10,
             "name": "DoorwayDirection",
             "storageType": "string",
@@ -74,13 +40,7 @@
             "type": "class",
             "useAs": [
                 "property",
-                "map",
-                "layer",
                 "object",
-                "tile",
-                "tileset",
-                "wangcolor",
-                "wangset",
                 "project"
             ]
         },
@@ -124,43 +84,7 @@
             "type": "class",
             "useAs": [
                 "property",
-                "map",
-                "layer",
                 "object",
-                "tile",
-                "tileset",
-                "wangcolor",
-                "wangset",
-                "project"
-            ]
-        },
-        {
-            "color": "#ffa0a0a4",
-            "drawFill": true,
-            "id": 1,
-            "members": [
-                {
-                    "name": "TargetScene",
-                    "type": "string",
-                    "value": ""
-                },
-                {
-                    "name": "TargetSpawn",
-                    "type": "string",
-                    "value": ""
-                }
-            ],
-            "name": "ExitArea",
-            "type": "class",
-            "useAs": [
-                "property",
-                "map",
-                "layer",
-                "object",
-                "tile",
-                "tileset",
-                "wangcolor",
-                "wangset",
                 "project"
             ]
         },
@@ -179,13 +103,7 @@
             "type": "class",
             "useAs": [
                 "property",
-                "map",
-                "layer",
                 "object",
-                "tile",
-                "tileset",
-                "wangcolor",
-                "wangset",
                 "project"
             ]
         },
@@ -203,6 +121,48 @@
                 "exit",
                 "reward",
                 "hub"
+            ],
+            "valuesAsFlags": false
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 11,
+            "members": [
+                {
+                    "name": "Args",
+                    "type": "string",
+                    "value": ""
+                },
+                {
+                    "name": "EventName",
+                    "type": "string",
+                    "value": ""
+                },
+                {
+                    "name": "Type",
+                    "propertyType": "TriggerType",
+                    "type": "string",
+                    "value": "None"
+                }
+            ],
+            "name": "Trigger",
+            "type": "class",
+            "useAs": [
+                "property",
+                "object",
+                "project"
+            ]
+        },
+        {
+            "id": 12,
+            "name": "TriggerType",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "None",
+                "Area",
+                "Interact"
             ],
             "valuesAsFlags": false
         }

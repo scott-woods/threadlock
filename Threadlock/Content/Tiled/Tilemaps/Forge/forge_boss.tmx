@@ -243,7 +243,11 @@
     <property name="Direction" value="Left"/>
    </properties>
   </object>
-  <object id="7" type="CombatTrigger" x="112" y="128">
+  <object id="7" type="Trigger" x="112" y="128">
+   <properties>
+    <property name="EventName" value="DungeonEncounter"/>
+    <property name="Type" propertytype="TriggerType" value="Area"/>
+   </properties>
    <polygon points="0,0 304,0 304,256 0,256"/>
   </object>
   <object id="8" type="EnemySpawnPoint" x="176" y="176">

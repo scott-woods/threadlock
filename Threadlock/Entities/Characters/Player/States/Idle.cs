@@ -43,6 +43,8 @@ namespace Threadlock.Entities.Characters.Player.States
         {
             base.Reason();
 
+            TryInteract();
+
             if (TryAction())
                 return;
             if (TryBasicAttack())
