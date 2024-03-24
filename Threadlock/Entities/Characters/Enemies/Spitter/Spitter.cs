@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using Threadlock.Components;
 using Threadlock.Helpers;
+using Threadlock.Models;
 using Threadlock.StaticData;
 
 namespace Threadlock.Entities.Characters.Enemies.Spitter
@@ -17,11 +18,11 @@ namespace Threadlock.Entities.Characters.Enemies.Spitter
     {
         //consts
         const float _minDistance = 64;
-        const float _preferredDistance = 96;
-        const float _maxDistance = 192;
         const float _moveSpeed = 50f;
-        const float _slowMoveSpeed = 25f;
-        const float _cooldown = 3f;
+        const float _fastMoveSpeed = 80f;
+        const float _attackRange = 128f;
+        const float _attackCooldown = 2.5f;
+        const float _pursuitDuration = 3f;
 
         //components
         Mover _mover;
@@ -40,7 +41,11 @@ namespace Threadlock.Entities.Characters.Enemies.Spitter
         SpitAttack _spitAttack;
 
         //misc
-        float _cooldownTimer = _cooldown;
+        //float _cooldownTimer = _cooldown;
+        bool _isOnCooldown = false;
+        bool _isPursued = false;
+        ITimer _cooldownTimer;
+        ITimer _pursuitTimer;
 
         #region LIFECYCLE
 
@@ -61,6 +66,7 @@ namespace Threadlock.Entities.Characters.Enemies.Spitter
             Flags.SetFlagExclusive(ref hurtboxCollider.PhysicsLayer, (int)PhysicsLayers.EnemyHurtbox);
             Flags.SetFlagExclusive(ref hurtboxCollider.CollidesWithLayers, (int)PhysicsLayers.PlayerHitbox);
             _hurtbox = AddComponent(new Hurtbox(hurtboxCollider, 0, Content.Audio.Sounds.Chain_bot_damaged));
+            _hurtbox.Emitter.AddObserver(HurtboxEventTypes.Hit, OnHurtboxHit);
 
             _healthComponent = AddComponent(new HealthComponent(12, 12));
 
@@ -84,6 +90,21 @@ namespace Threadlock.Entities.Characters.Enemies.Spitter
 
             //actions
             _spitAttack = AddComponent(new SpitAttack(this));
+
+            BeginCooldown();
+        }
+
+        public override void OnRemovedFromScene()
+        {
+            base.OnRemovedFromScene();
+
+            _hurtbox.Emitter.RemoveObserver(HurtboxEventTypes.Hit, OnHurtboxHit);
+
+            _cooldownTimer?.Stop();
+            _cooldownTimer = null;
+
+            _pursuitTimer?.Stop();
+            _pursuitTimer = null;
         }
 
         #endregion
@@ -107,57 +128,82 @@ namespace Threadlock.Entities.Characters.Enemies.Spitter
         public override BehaviorTree<Spitter> CreateSubTree()
         {
             var tree = BehaviorTreeBuilder<Spitter>.Begin(this)
-                .Selector(AbortTypes.Self)
-                    .ConditionalDecorator(s => !EntityHelper.HasLineOfSight(this, s.TargetEntity, false) || !s.CanAttack(), false)
+                .Selector()
+
+                    .Sequence(AbortTypes.LowerPriority) //attack sequence
+                        .Conditional(x => x.CanFire())
+                        .Action(x => x.ExecuteAction(_spitAttack))
+                        .Action(x => x.BeginCooldown())
+                    .EndComposite()
+
+                    .Selector(AbortTypes.Self) //if can't attack, choose what to do
+                        //if pursued, run away
+                        .ConditionalDecorator(x => x.IsPursued())
                         .Sequence()
-                            .Action(s => s.Move())
-                            .ParallelSelector()
-                                .WaitAction(1f)
-                                .Action(s => s.Idle())
-                            .EndComposite()
-                            .Action(s => s.ExecuteAction(_spitAttack))
-                            .Action(s => s.ResetTimer())
+                            .Action(x => x.MoveAway(TargetEntity, _fastMoveSpeed, _minDistance))
                         .EndComposite()
+
+                        //if no LoS or out of range, move towards target
+                        .ConditionalDecorator(x => !EntityHelper.HasLineOfSight(x, TargetEntity) || !x.IsInRange())
+                        .Sequence()
+                            .Action(x => x.MoveToTarget(TargetEntity, _moveSpeed))
+                        .EndComposite()
+
+                        //otherwise idle (tracking target
+                        .Sequence()
+                            .Action(x => x.Idle(true))
+                        .EndComposite()
+                    .EndComposite()
+
                 .EndComposite()
-                .Build();
+            .Build();
 
             tree.UpdatePeriod = 0;
             return tree;
         }
 
-        bool CanAttack()
+        bool CanFire()
         {
-            return _cooldownTimer <= 0f;
+            return !_isOnCooldown && EntityHelper.HasLineOfSight(this, TargetEntity) && !IsPursued() && IsInRange();
         }
 
-        TaskStatus ResetTimer()
+        bool IsPursued()
         {
-            _cooldownTimer = _cooldown;
+            return _isPursued;
+        }
+
+        bool IsInRange()
+        {
+            return EntityHelper.DistanceToEntity(this, TargetEntity) <= _attackRange;
+        }
+
+        #region TASKS
+
+        TaskStatus BeginCooldown()
+        {
+            _isOnCooldown = true;
+            _cooldownTimer = Game1.Schedule(_attackCooldown, timer =>
+            {
+                _isOnCooldown = false;
+            });
+
             return TaskStatus.Success;
         }
 
-        TaskStatus Move()
+        #endregion
+
+        #region OBSERVERS
+
+        void OnHurtboxHit(HurtboxHit hit)
         {
-            if (CanAttack())
-                return TaskStatus.Success;
-
-            //get distance to player
-            var distanceToPlayer = EntityHelper.DistanceToEntity(this, TargetEntity);
-
-            //invalid firing situations
-            if (distanceToPlayer < _minDistance)
-                return MoveAway(TargetEntity, _moveSpeed, _minDistance);
-            if (distanceToPlayer > _maxDistance || !EntityHelper.HasLineOfSight(this, TargetEntity, false))
-                return MoveToTarget(TargetEntity, _moveSpeed);
-
-            //decrement timer
-            _cooldownTimer -= Time.DeltaTime;
-
-            //valid firing situations
-            if (distanceToPlayer > _preferredDistance)
-                return MoveToTarget(TargetEntity, _slowMoveSpeed);
-
-            return Idle();
+            _isPursued = true;
+            _pursuitTimer?.Stop();
+            _pursuitTimer = Game1.Schedule(_pursuitDuration, timer =>
+            {
+                _isPursued = false;
+            });
         }
+
+        #endregion
     }
 }

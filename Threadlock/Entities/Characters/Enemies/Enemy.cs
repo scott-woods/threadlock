@@ -296,12 +296,26 @@ namespace Threadlock.Entities.Characters.Enemies
             return TaskStatus.Running;
         }
 
-        public virtual TaskStatus Idle()
+        public virtual TaskStatus Idle(bool trackTarget = false)
         {
             if (TryGetComponent<SpriteAnimator>(out var animator))
             {
                 if (!animator.IsAnimationActive("Idle"))
                     animator.Play("Idle");
+            }
+
+            if (trackTarget)
+            {
+                var pos = TargetEntity.Position;
+                if (TargetEntity.TryGetComponent<OriginComponent>(out var originComponent))
+                    pos = originComponent.Origin;
+
+                if (TryGetComponent<VelocityComponent>(out var velocityComponent))
+                {
+                    var dir = pos - Position;
+                    dir.Normalize();
+                    velocityComponent.Move(dir, 0);
+                }
             }
 
             return TaskStatus.Running;
