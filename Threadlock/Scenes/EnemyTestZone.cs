@@ -14,9 +14,9 @@ namespace Threadlock.Scenes
 {
     public class EnemyTestZone : BaseScene
     {
-        public override void Initialize()
+        public override void OnStart()
         {
-            base.Initialize();
+            base.OnStart();
 
             var mapEntity = CreateEntity("map");
             var map = Content.LoadTiledMap(Nez.Content.Tiled.Tilemaps.Enemy_test_zone);

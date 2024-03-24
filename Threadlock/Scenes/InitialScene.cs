@@ -21,9 +21,9 @@ namespace Threadlock.Scenes
 {
     public class InitialScene : BaseScene
     {
-        public override void Initialize()
+        public override void OnStart()
         {
-            base.Initialize();
+            base.OnStart();
 
             var mapEntity = CreateEntity("map");
             var map = Content.LoadTiledMap(Nez.Content.Tiled.Tilemaps.Test);

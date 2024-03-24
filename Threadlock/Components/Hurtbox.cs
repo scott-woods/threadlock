@@ -114,7 +114,7 @@ namespace Threadlock.Components
             }
         }
 
-        void OnDeathStarted()
+        void OnDeathStarted(Entity entity)
         {
             SetEnabled(false);
         }

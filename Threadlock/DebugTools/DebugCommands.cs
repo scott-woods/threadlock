@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Threadlock.Components;
 using Threadlock.Entities.Characters.Player;
 
 #if DEBUG
@@ -32,6 +33,24 @@ namespace Threadlock.DebugTools
         static void ToggleEnemyAI()
         {
             DebugSettings.EnemyAIEnabled = !DebugSettings.EnemyAIEnabled;
+        }
+
+        [Command("goto", "Try to load a different scene")]
+        static void GoToScene(string sceneName, string spawnId)
+        {
+            var sceneType = Type.GetType($"Threadlock.Scenes.{sceneName}");
+            if (sceneType != null)
+                Game1.SceneManager.ChangeScene(sceneType, spawnId);
+        }
+
+        [Command("sethp", "Set player's hp to any amount")]
+        static void SetHp(string hp)
+        {
+            if (Player.Instance != null)
+            {
+                if (Player.Instance.TryGetComponent<HealthComponent>(out var hc))
+                    hc.Health = Convert.ToInt32(hp);
+            }
         }
     }
 }

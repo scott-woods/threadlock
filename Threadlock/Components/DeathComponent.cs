@@ -11,15 +11,17 @@ namespace Threadlock.Components
 {
     public class DeathComponent : Component
     {
-        public Emitter<DeathEventTypes> Emitter = new Emitter<DeathEventTypes>();
+        public Emitter<DeathEventTypes, Entity> Emitter = new Emitter<DeathEventTypes, Entity>();
 
         string _deathAnimName;
         string _sound;
+        bool _destroy;
 
-        public DeathComponent(string deathAnimationName, string sound)
+        public DeathComponent(string deathAnimationName, string sound, bool destroy = true)
         {
             _deathAnimName = deathAnimationName;
             _sound = sound;
+            _destroy = destroy;
         }
 
         public override void OnAddedToEntity()
@@ -32,7 +34,7 @@ namespace Threadlock.Components
 
         void Die()
         {
-            Emitter.Emit(DeathEventTypes.Started);
+            Emitter.Emit(DeathEventTypes.Started, Entity);
 
             Game1.AudioManager.PlaySound(_sound);
 
@@ -42,10 +44,7 @@ namespace Threadlock.Components
                 animator.OnAnimationCompletedEvent += OnAnimationCompleted;
             }
             else
-            {
-                Emitter.Emit(DeathEventTypes.Finished);
-                Entity.Destroy();
-            }
+                Finished();
         }
 
         void OnHealthDepleted()
@@ -64,8 +63,15 @@ namespace Threadlock.Components
                 animator.SetSprite(animator.CurrentAnimation.Sprites.Last());
             }
 
-            Emitter.Emit(DeathEventTypes.Finished);
-            Entity.Destroy();
+            Finished();
+        }
+
+        void Finished()
+        {
+            Emitter.Emit(DeathEventTypes.Finished, Entity);
+
+            if (_destroy)
+                Entity.Destroy();
         }
     }
 

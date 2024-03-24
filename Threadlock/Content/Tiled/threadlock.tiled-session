@@ -469,16 +469,19 @@
             "scale": 1.5,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 248,
-                "y": 192
+                "x": 159.66666666666666,
+                "y": 62.66666666666667
             }
         },
         "Tilemaps/enemy_test_zone.tmx": {
+            "expandedObjectLayers": [
+                4
+            ],
             "scale": 1,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 268,
-                "y": 135
+                "x": 267.5,
+                "y": 132
             }
         },
         "Tilemaps/test.tmx": {

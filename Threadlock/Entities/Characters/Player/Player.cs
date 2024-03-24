@@ -13,6 +13,7 @@ using Threadlock.Components;
 using Threadlock.Entities.Characters.Player.BasicWeapons;
 using Threadlock.Entities.Characters.Player.PlayerActions;
 using Threadlock.Entities.Characters.Player.States;
+using Threadlock.GlobalManagers;
 using Threadlock.Helpers;
 using Threadlock.SaveData;
 using Threadlock.StaticData;
@@ -56,13 +57,6 @@ namespace Threadlock.Entities.Characters.Player
         public Player()
         {
             Instance = this;
-        }
-
-        #region LIFECYCLE
-
-        public override void OnAddedToScene()
-        {
-            base.OnAddedToScene();
 
             SetTag(EntityTags.EnemyTarget);
 
@@ -97,7 +91,7 @@ namespace Threadlock.Entities.Characters.Player
 
             _healthComponent = AddComponent(new HealthComponent(10, 10));
 
-            _deathComponent = AddComponent(new DeathComponent("Die", Nez.Content.Audio.Sounds._69_Die_02));
+            _deathComponent = AddComponent(new DeathComponent("Die", Nez.Content.Audio.Sounds._69_Die_02, false));
 
             _originComponent = AddComponent(new OriginComponent(_collider));
 
@@ -133,6 +127,24 @@ namespace Threadlock.Entities.Characters.Player
             StateMachine.AddState(new ActionState());
             StateMachine.AddState(new DashState());
             StateMachine.AddState(new StunnedState());
+
+            Game1.SceneManager.Emitter.AddObserver(SceneManagerEvents.SceneChangeStarted, OnSceneChangeStarted);
+            Game1.Emitter.AddObserver(CoreEvents.SceneChanged, OnSceneChanged);
+            _deathComponent.Emitter.AddObserver(DeathEventTypes.Finished, OnDeath);
+        }
+
+        #region LIFECYCLE
+
+        public override void OnRemovedFromScene()
+        {
+            base.OnRemovedFromScene();
+
+            if (IsDestroyed)
+            {
+                Game1.SceneManager.Emitter.RemoveObserver(SceneManagerEvents.SceneChangeStarted, OnSceneChangeStarted);
+                Game1.Emitter.RemoveObserver(CoreEvents.SceneChanged, OnSceneChanged);
+                _deathComponent.Emitter.RemoveObserver(DeathEventTypes.Finished, OnDeath);
+            }
         }
 
         public override void Update()
@@ -143,6 +155,22 @@ namespace Threadlock.Entities.Characters.Player
         }
 
         #endregion
+
+        void OnDeath(Entity entity)
+        {
+            Game1.GameStateManager.HandlePlayerDeath();
+        }
+
+        void OnSceneChangeStarted()
+        {
+            DetachFromScene();
+            SetEnabled(false);
+        }
+
+        void OnSceneChanged()
+        {
+            AttachToScene(Game1.Scene);
+        }
 
         void AddAnimations()
         {
@@ -204,6 +232,14 @@ namespace Threadlock.Entities.Characters.Player
             var dir = Scene.Camera.MouseToWorldPoint() - Position;
             dir.Normalize();
             return dir;
+        }
+
+        public void PrepareForRespawn()
+        {
+            _healthComponent.Health = _healthComponent.MaxHealth;
+            _apComponent.ActionPoints = 0;
+            _statusComponent.PopStatus(StatusPriority.Death);
+            _hurtbox.SetEnabled(true);
         }
     }
 }

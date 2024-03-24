@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Threadlock.Components;
 using Threadlock.Components.TiledComponents;
 using Threadlock.Entities.Characters.Player;
 
@@ -14,7 +15,10 @@ namespace Threadlock.SceneComponents
     {
         public Player SpawnPlayer()
         {
-            var playerEntity = Scene.AddEntity(new Player());
+            if (Player.Instance == null)
+            {
+                Scene.AddEntity(new Player());
+            }
 
             var spawnPosition = Vector2.Zero;
             var playerSpawnPoints = Scene.FindComponentsOfType<PlayerSpawnPoint>();
@@ -29,9 +33,11 @@ namespace Threadlock.SceneComponents
                     spawnPosition = playerSpawnPoints.First().Entity.Position;
             }
 
-            playerEntity.SetPosition(spawnPosition);
+            Player.Instance.SetEnabled(true);
 
-            return playerEntity;
+            Player.Instance.SetPosition(spawnPosition);
+
+            return Player.Instance;
         }
     }
 }

@@ -33,9 +33,9 @@ namespace Threadlock.Scenes
             _playerSpawner = AddSceneComponent(new PlayerSpawner());
         }
 
-        public override void Begin()
+        public override void OnStart()
         {
-            base.Begin();
+            base.OnStart();
 
             //_generator.Generate();
             _dungenerator.Generate();
