@@ -38,6 +38,9 @@ namespace Threadlock.Components
 
             Game1.AudioManager.PlaySound(_sound);
 
+            if (Entity.TryGetComponent<LootDropper>(out var lootDropper))
+                lootDropper.DropLoot();
+
             if (Entity.TryGetComponent<SpriteAnimator>(out var animator))
             {
                 animator.Play(_deathAnimName, SpriteAnimator.LoopMode.Once);

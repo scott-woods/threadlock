@@ -69,9 +69,8 @@ namespace Threadlock.StaticData
                                 var possibleTypes = area.EnemyTypes.Where(t =>
                                 {
                                     if (typesPicked.Contains(t))
-                                        if (typesPicked.Count(p => p == t) < 3)
-                                            return true;
-                                    return false;
+                                        return typesPicked.Count(p => p == t) < 3;
+                                    return true;
                                 }).ToList();
 
                                 //if any possible types, get a random from that list

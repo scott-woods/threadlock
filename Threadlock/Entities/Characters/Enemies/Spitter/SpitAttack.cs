@@ -57,13 +57,13 @@ namespace Threadlock.Entities.Characters.Enemies.Spitter
 
                     CreateProjectile(dir);
 
-                    var leftRotationMatrix = Matrix.CreateRotationZ(MathHelper.ToRadians(30));
-                    var leftRotatedDir = Vector2.Transform(dir, leftRotationMatrix);
-                    CreateProjectile(leftRotatedDir);
+                    //var leftRotationMatrix = Matrix.CreateRotationZ(MathHelper.ToRadians(30));
+                    //var leftRotatedDir = Vector2.Transform(dir, leftRotationMatrix);
+                    //CreateProjectile(leftRotatedDir);
 
-                    var rightRotationMatrix = Matrix.CreateRotationZ(MathHelper.ToRadians(-30));
-                    var rightRotatedDir = Vector2.Transform(dir, rightRotationMatrix);
-                    CreateProjectile(rightRotatedDir);
+                    //var rightRotationMatrix = Matrix.CreateRotationZ(MathHelper.ToRadians(-30));
+                    //var rightRotatedDir = Vector2.Transform(dir, rightRotationMatrix);
+                    //CreateProjectile(rightRotatedDir);
 
                     break;
                 }

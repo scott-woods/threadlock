@@ -56,7 +56,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
                 _animator = animator;
                 _animationWaiter = new AnimationWaiter(_animator);
 
-                var texture = Entity.Scene.Content.LoadTexture(Content.Textures.Characters.Player.Sci_fi_player_with_sword);
+                var texture = Game1.Content.LoadTexture(Content.Textures.Characters.Player.Sci_fi_player_with_sword);
                 var sprites = Sprite.SpritesFromAtlas(texture, 64, 65);
                 _animator.AddAnimation("ChargeChainLightning", new Sprite[] { sprites[147] });
                 _animator.AddAnimation("ChargeChainLightningUp", new Sprite[] { sprites[209] });

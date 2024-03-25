@@ -50,6 +50,7 @@ namespace Threadlock
             Physics.SpatialHashCellSize = 32;
             Physics.RaycastsStartInColliders = true;
             Physics.RaycastsHitTriggers = true;
+            Physics.Gravity = new Vector2(0, 800f);
 
             //resolution settings
             Scene.UIRenderTargetSize = new Point(ResolutionManager.UIResolution.X, ResolutionManager.UIResolution.Y);

@@ -90,6 +90,8 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
             _deathComponent = AddComponent(new DeathComponent("Die", Nez.Content.Audio.Sounds.Enemy_death_1));
 
             _knockbackComponent = AddComponent(new KnockbackComponent(_velocityComponent));
+
+            AddComponent(new LootDropper(LootTables.BasicEnemy));
         }
 
         public override void OnRemovedFromScene()

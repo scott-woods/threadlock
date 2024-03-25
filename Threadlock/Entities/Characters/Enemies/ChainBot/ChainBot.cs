@@ -75,6 +75,8 @@ namespace Threadlock.Entities.Characters.Enemies.ChainBot
             _originComponent = AddComponent(new OriginComponent(_collider));
 
             _chainBotMelee = AddComponent(new ChainBotMelee(this));
+
+            AddComponent(new LootDropper(LootTables.BasicEnemy));
         }
 
         #endregion

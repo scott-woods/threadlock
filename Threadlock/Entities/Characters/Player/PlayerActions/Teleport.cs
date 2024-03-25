@@ -19,7 +19,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
     public class Teleport : PlayerAction
     {
         //consts
-        const float _maxRadius = 100f;
+        const float _maxRadius = 200f;
         const float _speed = 250f;
 
         //entities

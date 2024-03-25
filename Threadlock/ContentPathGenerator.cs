@@ -249,6 +249,11 @@ namespace Nez
 
 			}
 
+			public static class Drops
+			{
+				public const string Health_orb = @"Content\Textures\Drops\health_orb.png";
+			}
+
 			public static class Effects
 			{
 				public const string Electric_hit_1 = @"Content\Textures\Effects\electric_hit_1.png";

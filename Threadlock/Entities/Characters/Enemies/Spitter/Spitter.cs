@@ -68,7 +68,7 @@ namespace Threadlock.Entities.Characters.Enemies.Spitter
             _hurtbox = AddComponent(new Hurtbox(hurtboxCollider, 0, Content.Audio.Sounds.Chain_bot_damaged));
             _hurtbox.Emitter.AddObserver(HurtboxEventTypes.Hit, OnHurtboxHit);
 
-            _healthComponent = AddComponent(new HealthComponent(12, 12));
+            _healthComponent = AddComponent(new HealthComponent(9, 9));
 
             //collider
             _collider = AddComponent(new BoxCollider(-4, 8, 6, 6));
@@ -90,6 +90,8 @@ namespace Threadlock.Entities.Characters.Enemies.Spitter
 
             //actions
             _spitAttack = AddComponent(new SpitAttack(this));
+
+            AddComponent(new LootDropper(LootTables.BasicEnemy));
 
             BeginCooldown();
         }

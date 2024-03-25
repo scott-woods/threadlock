@@ -64,7 +64,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
 
                 _animationWaiter = new AnimationWaiter(_animator);
 
-                var texture = Entity.Scene.Content.LoadTexture(Content.Textures.Characters.Player.Sci_fi_player_with_sword);
+                var texture = Game1.Content.LoadTexture(Content.Textures.Characters.Player.Sci_fi_player_with_sword);
                 var sprites = Sprite.SpritesFromAtlas(texture, 64, 65);
                 _animator.AddAnimation("ChargeDash", AnimatedSpriteHelper.GetSpriteArray(sprites, new List<int> { 145 }));
                 _animator.AddAnimation("ChargeDashDown", AnimatedSpriteHelper.GetSpriteArray(sprites, new List<int> { 57 }));
