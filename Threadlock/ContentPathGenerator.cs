@@ -16,6 +16,7 @@ namespace Nez
 			public static class Music
 			{
 				public const string Meltingidols = @"Content\Audio\Music\melting idols.ogg";
+				public const string The_bay = @"Content\Audio\Music\the_bay.ogg";
 			}
 
 			public static class Sounds

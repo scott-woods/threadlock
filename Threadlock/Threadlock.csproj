@@ -31,6 +31,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Content\Audio\Music\melting idols.ogg" />
+    <None Remove="Content\Audio\Music\the_bay.ogg" />
     <None Remove="Content\Data\DungeonFlows2.json" />
     <None Remove="Content\Data\DungeonFlows3.json" />
     <None Remove="Content\Data\DungeonFlows4.json" />

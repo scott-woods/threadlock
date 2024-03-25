@@ -40,7 +40,10 @@ namespace Threadlock.DebugTools
         {
             var sceneType = Type.GetType($"Threadlock.Scenes.{sceneName}");
             if (sceneType != null)
+            {
+                Game1.AudioManager.StopMusic();
                 Game1.SceneManager.ChangeScene(sceneType, spawnId);
+            }
         }
 
         [Command("sethp", "Set player's hp to any amount")]

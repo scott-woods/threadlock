@@ -42,6 +42,8 @@ namespace Threadlock.Scenes
 
             var followCam = Camera.AddComponent(new CustomFollowCamera(player));
 
+            Game1.AudioManager.PlayMusic(Nez.Content.Audio.Music.The_bay);
+
             //var enemySpawns = FindComponentsOfType<EnemySpawnPoint>();
             //enemySpawns.First().SpawnEnemy();
         }

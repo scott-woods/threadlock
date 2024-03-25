@@ -40,6 +40,8 @@ namespace Threadlock.Scenes
             //_generator.Generate();
             _dungenerator.Generate();
 
+            Game1.AudioManager.PlayMusic(Nez.Content.Audio.Music.Meltingidols);
+
             //var map = Content.LoadTiledMap(Nez.Content.Tiled.Tilemaps.Forge.Forge_start);
             //var mapEntity = CreateEntity("map");
             //var mapRenderer = mapEntity.AddComponent(new TiledMapRenderer(map, "Walls"));

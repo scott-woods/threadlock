@@ -14,6 +14,7 @@ namespace Threadlock.GlobalManagers
     {
         public void HandlePlayerDeath()
         {
+            Game1.AudioManager.StopMusic();
             Game1.SceneManager.ChangeScene(typeof(Hub), "0");
             Game1.SceneManager.Emitter.AddObserver(SceneManagerEvents.ScreenObscured, OnScreenObscured);
         }
