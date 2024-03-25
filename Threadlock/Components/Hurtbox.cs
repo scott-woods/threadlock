@@ -14,6 +14,9 @@ using Threadlock.Models;
 
 namespace Threadlock.Components
 {
+    /// <summary>
+    /// Collider that detects when entity is hit by an enemy attack, and emits with info about the hit
+    /// </summary>
     public class Hurtbox : Component, IUpdatable
     {
         public Emitter<HurtboxEventTypes, HurtboxHit> Emitter = new Emitter<HurtboxEventTypes, HurtboxHit>();
@@ -27,6 +30,7 @@ namespace Threadlock.Components
         float _recoveryTime;
         string _damageSound;
         List<string> _recentAttackIds = new List<string>();
+        ITimer _recoveryTimer;
 
         public Hurtbox(Collider collider, float recoveryTime)
         {
@@ -109,6 +113,12 @@ namespace Threadlock.Components
                 //effectEntity.SetRotation(angle);
                 //var effectComponent = effectEntity.AddComponent(new HitEffectComponent(effect, color));
 
+                SetEnabled(false);
+                _recoveryTimer = Game1.Schedule(_recoveryTime, timer =>
+                {
+                    SetEnabled(true);
+                });
+
                 //emit hit signal
                 Emitter.Emit(HurtboxEventTypes.Hit, new HurtboxHit(collisionResult, hitbox));
             }
@@ -117,6 +127,9 @@ namespace Threadlock.Components
         void OnDeathStarted(Entity entity)
         {
             SetEnabled(false);
+
+            _recoveryTimer?.Stop();
+            _recoveryTimer = null;
         }
     }
 

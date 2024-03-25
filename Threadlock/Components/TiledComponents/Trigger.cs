@@ -66,12 +66,26 @@ namespace Threadlock.Components.TiledComponents
 
         public void Update()
         {
-            if (TriggerType == TriggerType.Area && Collider.CollidesWithAny(out CollisionResult result))
-                Game1.StartCoroutine(HandleTriggered());
+            if (TriggerType == TriggerType.Area)
+            {
+                var colliders = Physics.BoxcastBroadphaseExcludingSelf(Collider, Collider.CollidesWithLayers);
+                if (colliders.Count > 0)
+                {
+                    if (colliders.Any(c =>
+                    {
+                        return Collider.Shape.CollidesWithShape(c.Shape, out var result);
+                    }))
+                        Game1.StartCoroutine(HandleTriggered());
+                }
+            }
+            
+            //if (TriggerType == TriggerType.Area && Collider.CollidesWithAny(out CollisionResult result))
+            //    Game1.StartCoroutine(HandleTriggered());
         }
 
         public IEnumerator HandleTriggered()
         {
+            //yield break;
             //if handler is null, there's nothing to trigger. break here
             if (Handler == null)
                 yield break;

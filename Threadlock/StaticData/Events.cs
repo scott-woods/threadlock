@@ -28,6 +28,11 @@ namespace Threadlock.StaticData
 
         public static IEnumerator DungeonEncounter(Trigger trigger)
         {
+            //disable other encounter triggers on map
+            var triggers = trigger.FindComponentsOnMap<Trigger>().Where(t => t.Handler == DungeonEncounter);
+            foreach (var t in triggers)
+                t.SetEnabled(false);
+
             //lock gates
             Game1.AudioManager.PlaySound(Nez.Content.Audio.Sounds.Gate_close);
             var doorways = trigger.FindComponentsOnMap<DungeonDoorway>();
@@ -98,8 +103,9 @@ namespace Threadlock.StaticData
                 }
             }
 
-            //destroy trigger entity
-            trigger.Entity.Destroy();
+            //destroy other encounter triggers
+            foreach (var t in triggers)
+                t.Entity.Destroy();
         }
 
         public static IEnumerator ExitArea(Trigger trigger)

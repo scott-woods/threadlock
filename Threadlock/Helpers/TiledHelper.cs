@@ -34,6 +34,7 @@ namespace Threadlock.Helpers
                         break;
                     case TmxObjectType.Polygon:
                         //position = mapRenderer.Entity.Position + new Vector2(obj.X, obj.Y);
+                        //position = new Vector2(obj.Points.Select(p => p.X).Min(), obj.Points.Select(p => p.Y).Min());
                         position = new Vector2(obj.X, obj.Y);
                         break;
                     default:

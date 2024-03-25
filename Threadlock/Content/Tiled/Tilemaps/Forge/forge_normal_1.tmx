@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" class="DungeonMap" orientation="orthogonal" renderorder="right-down" width="38" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="37" nextobjectid="13">
+<map version="1.10" tiledversion="1.10.2" class="DungeonMap" orientation="orthogonal" renderorder="right-down" width="38" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="37" nextobjectid="15">
  <properties>
   <property name="Area" value="Forge"/>
   <property name="RoomType" propertytype="RoomType" value="normal"/>
@@ -335,13 +335,6 @@
     <property name="Direction" propertytype="DoorwayDirection" value="Bottom"/>
    </properties>
   </object>
-  <object id="6" type="Trigger" x="16" y="128">
-   <properties>
-    <property name="EventName" value="DungeonEncounter"/>
-    <property name="Type" propertytype="TriggerType" value="Area"/>
-   </properties>
-   <polygon points="0,0 336,0 336,128 480,128 480,304 0,304"/>
-  </object>
   <object id="7" type="EnemySpawnPoint" x="80" y="208">
    <point/>
   </object>
@@ -359,6 +352,18 @@
   </object>
   <object id="12" type="EnemySpawnPoint" x="320" y="336">
    <point/>
+  </object>
+  <object id="13" type="Trigger" x="352" y="256" width="144" height="176">
+   <properties>
+    <property name="EventName" value="DungeonEncounter"/>
+    <property name="Type" propertytype="TriggerType" value="Area"/>
+   </properties>
+  </object>
+  <object id="14" type="Trigger" x="16" y="128" width="336" height="304">
+   <properties>
+    <property name="EventName" value="DungeonEncounter"/>
+    <property name="Type" propertytype="TriggerType" value="Area"/>
+   </properties>
   </object>
  </objectgroup>
 </map>

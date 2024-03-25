@@ -44,6 +44,9 @@ namespace Threadlock.Components
 
             if (Entity.TryGetComponent<Hurtbox>(out var hurtbox))
                 hurtbox.Emitter.AddObserver(HurtboxEventTypes.Hit, OnHurtboxHit);
+
+            if (Entity.TryGetComponent<DeathComponent>(out var dc))
+                dc.Emitter.AddObserver(DeathEventTypes.Started, OnDeathStarted);
         }
 
         public override void OnRemovedFromEntity()
@@ -52,6 +55,9 @@ namespace Threadlock.Components
 
             if (Entity.TryGetComponent<Hurtbox>(out var hurtbox))
                 hurtbox.Emitter.RemoveObserver(HurtboxEventTypes.Hit, OnHurtboxHit);
+
+            if (Entity.TryGetComponent<DeathComponent>(out var dc))
+                dc.Emitter.RemoveObserver(DeathEventTypes.Started, OnDeathStarted);
         }
 
         #endregion
@@ -88,6 +94,12 @@ namespace Threadlock.Components
 
             //start knockback
             _knockbackCoroutine = Game1.StartCoroutine(Knockback(dir, initialSpeed));
+        }
+
+        void OnDeathStarted(Entity entity)
+        {
+            if (_knockbackCoroutine != null)
+                EndKnockback();
         }
 
         #endregion
