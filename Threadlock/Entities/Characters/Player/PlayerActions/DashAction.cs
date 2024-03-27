@@ -180,7 +180,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
 
             //update velocity component to face proper direction
             if (Entity.TryGetComponent<VelocityComponent>(out var playerVc))
-                playerVc.Direction = dir;
+                playerVc.LastNonZeroDirection = dir;
 
             //play charge anim by direction
             var animName = $"ChargeDash{DirectionHelper.GetDirectionStringByVector(dir)}";

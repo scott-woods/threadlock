@@ -60,8 +60,28 @@ namespace Threadlock.Entities.Characters.Player.States
             //if key is released
             if (_currentAction.Key.IsReleased && _currentAction.Value.State == PlayerActionState.Preparing)
             {
-                //change state
-                _machine.ChangeState<Idle>();
+                //stop prep
+                _prepCoroutine?.Stop();
+                _prepCoroutine = null;
+
+                //stop execute
+                _executionCoroutine?.Stop();
+                _executionCoroutine = null;
+
+                //stop action
+                _actionCoroutine?.Stop();
+                _actionCoroutine = null;
+
+                //reset action
+                _currentAction.Value.Reset();
+
+                if (_actionManager.CanPerformAction())
+                {
+                    _currentAction = _actionManager.CurrentAction.Value;
+                    _actionCoroutine = Game1.StartCoroutine(ActionCoroutine());
+                }
+                else
+                    _machine.ChangeState<Idle>();
             }
         }
 

@@ -34,9 +34,9 @@ namespace Threadlock.SceneComponents.Dungenerator
         {
             //read flow file
             DungeonFlow flow = new DungeonFlow();
-            if (File.Exists("Content/Data/DungeonFlows.json"))
+            if (File.Exists("Content/Data/DungeonFlows5.json"))
             {
-                var json = File.ReadAllText("Content/Data/DungeonFlows.json");
+                var json = File.ReadAllText("Content/Data/DungeonFlows5.json");
                 flow = Json.FromJson<DungeonFlow>(json);
             }
             else return;

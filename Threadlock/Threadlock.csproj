@@ -35,6 +35,7 @@
     <None Remove="Content\Data\DungeonFlows2.json" />
     <None Remove="Content\Data\DungeonFlows3.json" />
     <None Remove="Content\Data\DungeonFlows4.json" />
+    <None Remove="Content\Data\DungeonFlows5.json" />
     <None Remove="Content\Data\SimpleLoop.json" />
     <None Remove="Content\Data\SingleRoom.json" />
     <None Remove="Content\Effects\JitterDestroyer.fx" />

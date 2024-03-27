@@ -25,7 +25,17 @@ namespace Threadlock.Components
 
         public void Move(Vector2 direction, float speed)
         {
+            //can't move in no direction
+            if (direction == Vector2.Zero)
+                return;
+
+            //normalize direction
             direction.Normalize();
+
+            //if normalizing resulted in NaN somehow, break here
+            if (float.IsNaN(direction.X) || float.IsNaN(direction.Y))
+                return;
+
             Direction = direction;
             if (direction != Vector2.Zero)
                 LastNonZeroDirection = direction;

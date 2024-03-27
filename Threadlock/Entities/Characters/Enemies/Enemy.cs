@@ -190,7 +190,7 @@ namespace Threadlock.Entities.Characters.Enemies
             {
                 var dir = target - Position;
                 dir.Normalize();
-                velocityComponent.Move(dir, 0);
+                velocityComponent.LastNonZeroDirection = dir;
             }
 
             return TaskStatus.Running;
@@ -314,7 +314,7 @@ namespace Threadlock.Entities.Characters.Enemies
                 {
                     var dir = pos - Position;
                     dir.Normalize();
-                    velocityComponent.Move(dir, 0);
+                    velocityComponent.LastNonZeroDirection = dir;
                 }
             }
 

@@ -14,7 +14,7 @@ namespace Threadlock.Components.TiledComponents
         {
             base.Initialize();
 
-            if (TmxObject.Properties.TryGetValue("Id", out var id))
+            if (TmxObject.Properties != null && TmxObject.Properties.TryGetValue("Id", out var id))
             {
                 Id = id;
             }

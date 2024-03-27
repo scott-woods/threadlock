@@ -150,8 +150,8 @@
             "scale": 4,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 16,
-                "y": 48
+                "x": 117.25,
+                "y": 69.75
             }
         },
         "Tilemaps/Forge/Doorways/forge_right_open.tmx": {
@@ -304,8 +304,8 @@
             "scale": 1.0279296875,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 289.416682500475,
-                "y": 338.54455633669016
+                "x": 256.8269048071443,
+                "y": 256.8269048071443
             }
         },
         "Tilemaps/Forge/forge_doorway_testing.tmx": {
@@ -320,8 +320,8 @@
             "scale": 1.5,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 281.6666666666667,
-                "y": 270.66666666666663
+                "x": 255.99999999999997,
+                "y": 256
             }
         },
         "Tilemaps/Forge/forge_hub.tmx": {
@@ -336,8 +336,8 @@
             "scale": 0.8223437499999999,
             "selectedLayer": 7,
             "viewCenter": {
-                "x": 293.6728101843055,
-                "y": 282.12046361390844
+                "x": 296.7129013870416,
+                "y": 288.2006460193806
             }
         },
         "Tilemaps/Forge/forge_normal_1.tmx": {
@@ -347,8 +347,8 @@
             "scale": 0.75,
             "selectedLayer": 7,
             "viewCenter": {
-                "x": 326,
-                "y": 264
+                "x": 304,
+                "y": 320
             }
         },
         "Tilemaps/Forge/forge_normal_2.tmx": {
@@ -358,8 +358,8 @@
             "scale": 0.75,
             "selectedLayer": 7,
             "viewCenter": {
-                "x": 460.66666666666663,
-                "y": 314.6666666666667
+                "x": 415.99999999999994,
+                "y": 328
             }
         },
         "Tilemaps/Forge/forge_pre_boss.tmx": {
@@ -377,16 +377,16 @@
             "scale": 2,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 219.75,
-                "y": 377.5
+                "x": 256,
+                "y": 256
             }
         },
         "Tilemaps/Forge/forge_reward.tmx": {
             "scale": 1.5,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 295.6666666666667,
-                "y": 347.33333333333326
+                "x": 255.99999999999997,
+                "y": 256
             }
         },
         "Tilemaps/Forge/forge_simple.tmx": {
@@ -442,8 +442,8 @@
             "scale": 1,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 262.5,
-                "y": 203
+                "x": 264,
+                "y": 288
             }
         },
         "Tilemaps/Forge/forge_test.tmx": {
@@ -469,8 +469,8 @@
             "scale": 1.5,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 159.66666666666666,
-                "y": 62.66666666666667
+                "x": 247.99999999999997,
+                "y": 192
             }
         },
         "Tilemaps/enemy_test_zone.tmx": {

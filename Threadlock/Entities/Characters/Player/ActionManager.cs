@@ -40,7 +40,7 @@ namespace Threadlock.Entities.Characters.Player
         {
             foreach (var pair in _actionDictionary)
             {
-                if (pair.Key.IsPressed && CanAffordAction(pair.Value))
+                if (pair.Key.IsDown && CanAffordAction(pair.Value))
                 {
                     CurrentAction = pair;
                     return true;

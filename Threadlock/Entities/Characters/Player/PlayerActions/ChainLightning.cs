@@ -174,8 +174,8 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             if (!_animator.IsAnimationActive(animation))
                 _animator.Play(animation);
 
-            //call move with no speed, just so sprite flipper updates properly
-            _velocityComponent.Move(_direction, 0);
+            //update dir so sprite flipper updates
+            _velocityComponent.LastNonZeroDirection = _direction;
         }
     }
 }

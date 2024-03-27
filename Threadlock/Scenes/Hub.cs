@@ -25,8 +25,8 @@ namespace Threadlock.Scenes
 
             var mapEntity = CreateEntity("map");
             var map = Content.LoadTiledMap(Nez.Content.Tiled.Tilemaps.HubMaps.Hub);
-            var mapRenderer = mapEntity.AddComponent(new TiledMapRenderer(map, "Walls", false));
-            mapRenderer.SetLayersToRender(new[] { "Back", "Walls" }.Where(l => map.Layers.Contains(l)).ToArray());
+            var mapRenderer = mapEntity.AddComponent(new TiledMapRenderer(map, "Walls", true));
+            mapRenderer.SetLayersToRender(new[] { "Back", "Back2", "Back3", "Walls" }.Where(l => map.Layers.Contains(l)).ToArray());
             mapRenderer.RenderLayer = RenderLayers.Back;
             Flags.SetFlagExclusive(ref mapRenderer.PhysicsLayer, PhysicsLayers.Environment);
             TiledHelper.CreateEntitiesForTiledObjects(mapRenderer);

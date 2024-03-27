@@ -97,6 +97,7 @@ namespace Nez
 			public const string DungeonFlows2 = @"Content\Data\DungeonFlows2.json";
 			public const string DungeonFlows3 = @"Content\Data\DungeonFlows3.json";
 			public const string DungeonFlows4 = @"Content\Data\DungeonFlows4.json";
+			public const string DungeonFlows5 = @"Content\Data\DungeonFlows5.json";
 			public const string SimpleLoop = @"Content\Data\SimpleLoop.json";
 			public const string SingleRoom = @"Content\Data\SingleRoom.json";
 		}
@@ -1064,7 +1065,6 @@ namespace Nez
 					public const string Forge_normal_2 = @"Content\Tiled\Tilemaps\Forge\forge_normal_2.tmx";
 					public const string Forge_pre_boss_2 = @"Content\Tiled\Tilemaps\Forge\forge_pre_boss_2.tmx";
 					public const string Forge_reward = @"Content\Tiled\Tilemaps\Forge\forge_reward.tmx";
-					public const string Forge_simple_3 = @"Content\Tiled\Tilemaps\Forge\forge_simple_3.tmx";
 					public const string Forge_start = @"Content\Tiled\Tilemaps\Forge\forge_start.tmx";
 					public const string Rules = @"Content\Tiled\Tilemaps\Forge\rules.txt";
 				}

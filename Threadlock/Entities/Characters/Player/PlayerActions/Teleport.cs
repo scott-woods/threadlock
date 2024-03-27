@@ -159,10 +159,10 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             dir.Normalize();
 
             if (_simPlayer.TryGetComponent<VelocityComponent>(out var velocityComponent))
-                velocityComponent.Direction = dir;
+                velocityComponent.LastNonZeroDirection = dir;
 
             if (Entity.TryGetComponent<VelocityComponent>(out var playerVc))
-                playerVc.Direction = dir;
+                playerVc.LastNonZeroDirection = dir;
 
             if (Entity.TryGetComponent<SpriteAnimator>(out var animator))
             {
