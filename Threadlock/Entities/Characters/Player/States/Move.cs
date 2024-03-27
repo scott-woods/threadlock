@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
-using Threadlock.StaticData;
+using Threadlock.SaveData;
 
 namespace Threadlock.Entities.Characters.Player.States
 {

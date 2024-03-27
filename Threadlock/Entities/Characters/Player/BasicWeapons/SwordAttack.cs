@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
 using Threadlock.Components.Hitboxes;
+using Threadlock.SaveData;
 using Threadlock.StaticData;
 
 namespace Threadlock.Entities.Characters.Player.BasicWeapons

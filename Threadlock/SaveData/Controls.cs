@@ -5,8 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Input;
+using Nez.Persistence;
+using System.IO;
 
-namespace Threadlock.StaticData
+namespace Threadlock.SaveData
 {
     public class Controls
     {
@@ -17,10 +19,44 @@ namespace Threadlock.StaticData
             {
                 if (_instance == null)
                 {
-                    _instance = new Controls();
+                    _instance = LoadData();
                 }
                 return _instance;
             }
+        }
+
+        private Controls()
+        {
+            Game1.Emitter.AddObserver(CoreEvents.Exiting, OnExiting);
+        }
+
+        public void SaveData()
+        {
+            var settings = JsonSettings.HandlesReferences;
+            settings.TypeNameHandling = TypeNameHandling.All;
+
+            var json = Json.ToJson(this, settings);
+            File.WriteAllText("Data/controls.json", json);
+        }
+
+        private static Controls LoadData()
+        {
+            if (File.Exists("Data/controls.json"))
+            {
+                var json = File.ReadAllText("Data/controls.json");
+                _instance = Json.FromJson<Controls>(json);
+            }
+            else
+            {
+                _instance = new Controls();
+            }
+
+            return _instance;
+        }
+
+        void OnExiting()
+        {
+            SaveData();
         }
 
         public Keys UIActionKey = Keys.E;

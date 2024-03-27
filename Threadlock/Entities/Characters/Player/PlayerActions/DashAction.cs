@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Threadlock.Components;
 using Threadlock.Components.Hitboxes;
 using Threadlock.Helpers;
+using Threadlock.SaveData;
 using Threadlock.StaticData;
 
 namespace Threadlock.Entities.Characters.Player.PlayerActions
