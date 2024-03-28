@@ -355,11 +355,11 @@
             "expandedObjectLayers": [
                 16
             ],
-            "scale": 0.75,
-            "selectedLayer": 7,
+            "scale": 1.5,
+            "selectedLayer": 4,
             "viewCenter": {
-                "x": 415.99999999999994,
-                "y": 328
+                "x": 122.99999999999997,
+                "y": 304.66666666666663
             }
         },
         "Tilemaps/Forge/forge_pre_boss.tmx": {
@@ -377,8 +377,8 @@
             "scale": 2,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 256,
-                "y": 256
+                "x": 200.25,
+                "y": 275
             }
         },
         "Tilemaps/Forge/forge_reward.tmx": {

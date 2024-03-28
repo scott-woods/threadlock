@@ -19,48 +19,26 @@ namespace Threadlock.SaveData
             {
                 if (_instance == null)
                 {
-                    _instance = LoadData();
+                    _instance = new Controls();
                 }
                 return _instance;
             }
         }
 
-        private Controls()
-        {
-            Game1.Emitter.AddObserver(CoreEvents.Exiting, OnExiting);
-        }
-
-        public void SaveData()
-        {
-            var settings = JsonSettings.HandlesReferences;
-            settings.TypeNameHandling = TypeNameHandling.All;
-
-            var json = Json.ToJson(this, settings);
-            File.WriteAllText("Data/controls.json", json);
-        }
-
-        private static Controls LoadData()
-        {
-            if (File.Exists("Data/controls.json"))
-            {
-                var json = File.ReadAllText("Data/controls.json");
-                _instance = Json.FromJson<Controls>(json);
-            }
-            else
-            {
-                _instance = new Controls();
-            }
-
-            return _instance;
-        }
-
-        void OnExiting()
-        {
-            SaveData();
-        }
-
         public Keys UIActionKey = Keys.E;
         public Buttons UIActionButton = Buttons.A;
+        public Keys CheckKey = Keys.E;
+        public Keys CancelKey = Keys.X;
+        public Keys ShowStatsKey = Keys.Tab;
+        public Keys PauseKey = Keys.Escape;
+        public Keys DodgeKey = Keys.Space;
+        public Keys Action1Key = Keys.Q;
+        public Keys Action2Key = Keys.E;
+        public Keys SupportActionKey = Keys.F;
+        public Keys UpKey = Keys.W;
+        public Keys DownKey = Keys.S;
+        public Keys LeftKey = Keys.A;
+        public Keys RightKey = Keys.D;
 
         public VirtualButton Confirm = new VirtualButton(
             new VirtualButton.GamePadButton(0, Buttons.A),
@@ -68,27 +46,22 @@ namespace Threadlock.SaveData
             );
 
         public VirtualButton Check = new VirtualButton(
-            new VirtualButton.KeyboardKey(Keys.E),
-            new VirtualButton.GamePadButton(0, Buttons.A)
-            );
-
-        public VirtualButton TriggerTurn = new VirtualButton(
-            new VirtualButton.KeyboardKey(Keys.E),
+            new VirtualButton.KeyboardKey(Settings.Instance.CheckKey),
             new VirtualButton.GamePadButton(0, Buttons.A)
             );
 
         public VirtualButton Cancel = new VirtualButton(
-            new VirtualButton.KeyboardKey(Keys.X),
+            new VirtualButton.KeyboardKey(Settings.Instance.CancelKey),
             new VirtualButton.GamePadButton(0, Buttons.B)
             );
 
         public VirtualButton ShowStats = new VirtualButton(
-            new VirtualButton.KeyboardKey(Keys.Tab),
+            new VirtualButton.KeyboardKey(Settings.Instance.ShowStatsKey),
             new VirtualButton.GamePadButton(0, Buttons.Back)
             );
 
         public VirtualButton Pause = new VirtualButton(
-            new VirtualButton.KeyboardKey(Keys.Escape),
+            new VirtualButton.KeyboardKey(Settings.Instance.PauseKey),
             new VirtualButton.GamePadButton(0, Buttons.Start)
             );
 
@@ -98,39 +71,41 @@ namespace Threadlock.SaveData
             );
 
         public VirtualButton Dodge = new VirtualButton(
-            new VirtualButton.KeyboardKey(Keys.Space),
+            new VirtualButton.KeyboardKey(Settings.Instance.DodgeKey),
             new VirtualButton.GamePadButton(0, Buttons.B)
             );
 
         public VirtualButton Action1 = new VirtualButton(
-            new VirtualButton.KeyboardKey(Keys.Q)
+            new VirtualButton.KeyboardKey(Settings.Instance.Action1Key)
             );
 
         public VirtualButton Action2 = new VirtualButton(
-            new VirtualButton.KeyboardKey(Keys.E)
+            new VirtualButton.KeyboardKey(Settings.Instance.Action2Key)
             );
 
         public VirtualButton SupportAction = new VirtualButton(
-            new VirtualButton.KeyboardKey(Keys.F)
+            new VirtualButton.KeyboardKey(Settings.Instance.SupportActionKey)
             );
 
         public VirtualIntegerAxis XAxisIntegerInput = new VirtualIntegerAxis(
             new VirtualAxis.GamePadDpadLeftRight(),
             new VirtualAxis.GamePadLeftStickX(),
-            new VirtualAxis.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Keys.A, Keys.D)
+            new VirtualAxis.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Settings.Instance.LeftKey, Settings.Instance.RightKey)
             );
 
         public VirtualIntegerAxis YAxisIntegerInput = new VirtualIntegerAxis(
             new VirtualAxis.GamePadDpadUpDown(),
             new VirtualAxis.GamePadLeftStickY(),
-            new VirtualAxis.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Keys.W, Keys.S)
+            new VirtualAxis.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Settings.Instance.UpKey, Settings.Instance.DownKey)
             );
 
         public VirtualJoystick DirectionalInput = new VirtualJoystick(
             false,
             new VirtualJoystick.GamePadDpad(),
             new VirtualJoystick.GamePadLeftStick(),
-            new VirtualJoystick.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Keys.A, Keys.D, Keys.W, Keys.S)
+            new VirtualJoystick.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Settings.Instance.LeftKey, Settings.Instance.RightKey, Settings.Instance.UpKey, Settings.Instance.DownKey)
             );
+
+        
     }
 }

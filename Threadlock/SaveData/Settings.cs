@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using Microsoft.Xna.Framework.Input;
 
 namespace Threadlock.SaveData
 {
@@ -14,6 +15,21 @@ namespace Threadlock.SaveData
 
         public float MusicVolume = .7f;
         public float SoundVolume = .7f;
+
+        public Keys UIActionKey = Keys.E;
+        public Buttons UIActionButton = Buttons.A;
+        public Keys CheckKey = Keys.E;
+        public Keys CancelKey = Keys.X;
+        public Keys ShowStatsKey = Keys.Tab;
+        public Keys PauseKey = Keys.Escape;
+        public Keys DodgeKey = Keys.Space;
+        public Keys Action1Key = Keys.Q;
+        public Keys Action2Key = Keys.E;
+        public Keys SupportActionKey = Keys.F;
+        public Keys UpKey = Keys.W;
+        public Keys DownKey = Keys.S;
+        public Keys LeftKey = Keys.A;
+        public Keys RightKey = Keys.D;
 
         private Settings()
         {
