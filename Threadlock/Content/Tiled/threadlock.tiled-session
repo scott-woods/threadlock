@@ -20,6 +20,17 @@
         ":/automap-tiles.tsx": {
             "scaleInDock": 1
         },
+        "C:/Users/scott/Desktop/Content (unpacked)/Maps/WitchSwamp.tmx": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 330,
+                "y": 553
+            }
+        },
+        "C:/Users/scott/Desktop/Content (unpacked)/Maps/WitchSwamp.tmx#wt": {
+            "scaleInDock": 1
+        },
         "C:/Users/scott/Desktop/Game-Dev/MonoGame/Personal-Projects/PuppetRogueliteFNA/puppet-roguelite/PuppetRoguelite/Content/Tiled/Tilemaps/DungeonPrison/dp_b_1.tmx": {
             "scale": 1.3705729166666665,
             "selectedLayer": 1,
@@ -130,8 +141,8 @@
             "scale": 3,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 15.666666666666657,
-                "y": 47.66666666666667
+                "x": 15,
+                "y": 47
             }
         },
         "Tilemaps/Forge/Doorways/forge_right.tmx": {
@@ -304,8 +315,8 @@
             "scale": 1.0279296875,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 255.85407562226868,
-                "y": 255.8540756222687
+                "x": 254.88124643739312,
+                "y": 254.88124643739317
             }
         },
         "Tilemaps/Forge/forge_doorway_testing.tmx": {
@@ -320,8 +331,8 @@
             "scale": 1.5,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 256,
-                "y": 256
+                "x": 255.33333333333331,
+                "y": 255.33333333333331
             }
         },
         "Tilemaps/Forge/forge_hub.tmx": {
@@ -336,30 +347,46 @@
             "scale": 0.8223437499999999,
             "selectedLayer": 7,
             "viewCenter": {
-                "x": 295.4968649059472,
-                "y": 286.9846095382861
+                "x": 293.0647919437583,
+                "y": 284.5525365760973
             }
         },
         "Tilemaps/Forge/forge_normal_1.tmx": {
             "expandedObjectLayers": [
                 35
             ],
-            "scale": 1.5,
-            "selectedLayer": 7,
+            "scale": 1,
+            "selectedLayer": 5,
             "viewCenter": {
-                "x": 446,
-                "y": 288
+                "x": 239,
+                "y": 277
             }
         },
         "Tilemaps/Forge/forge_normal_2.tmx": {
             "expandedObjectLayers": [
-                16
+                21
             ],
-            "scale": 2,
-            "selectedLayer": 4,
+            "scale": 0.75,
+            "selectedLayer": 6,
             "viewCenter": {
-                "x": 123,
-                "y": 390
+                "x": 548,
+                "y": 240
+            }
+        },
+        "Tilemaps/Forge/forge_normal_3.tmx": {
+            "scale": 0.75,
+            "selectedLayer": 6,
+            "viewCenter": {
+                "x": 171.99999999999997,
+                "y": 260
+            }
+        },
+        "Tilemaps/Forge/forge_normal_4.tmx": {
+            "scale": 1.5,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 270,
+                "y": -67.33333333333331
             }
         },
         "Tilemaps/Forge/forge_pre_boss.tmx": {
@@ -377,16 +404,16 @@
             "scale": 2,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 199,
-                "y": 274
+                "x": 198.5,
+                "y": 273.5
             }
         },
         "Tilemaps/Forge/forge_reward.tmx": {
             "scale": 1.5,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 256,
-                "y": 256
+                "x": 255.33333333333331,
+                "y": 255.33333333333331
             }
         },
         "Tilemaps/Forge/forge_simple.tmx": {
@@ -442,8 +469,8 @@
             "scale": 1,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 263,
-                "y": 287
+                "x": 262,
+                "y": 286
             }
         },
         "Tilemaps/Forge/forge_test.tmx": {
@@ -536,11 +563,11 @@
         "Tilemaps/Forge/forge_hub_1.tmx"
     ],
     "project": "threadlock.tiled-project",
-    "property.type": "string",
+    "property.type": "DungeonArea",
     "recentFiles": [
-        "Tilemaps/Forge/forge_normal_2.tmx",
-        "Tilemaps/Forge/Doorways/forge_top_open.tmx",
+        "C:/Users/scott/Desktop/Content (unpacked)/Maps/WitchSwamp.tmx",
         "Tilemaps/Forge/Doorways/forge_left_open.tmx",
+        "Tilemaps/Forge/Doorways/forge_top_open.tmx",
         "Tilemaps/Forge/Doorways/forge_right_open.tmx",
         "Tilemaps/Forge/Doorways/forge_bottom_closed.tmx",
         "Tilemaps/Forge/forge_normal_1.tmx",

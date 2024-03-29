@@ -25,6 +25,17 @@
             "valuesAsFlags": false
         },
         {
+            "id": 13,
+            "name": "DungeonArea",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "None",
+                "Forge"
+            ],
+            "valuesAsFlags": false
+        },
+        {
             "color": "#ffa0a0a4",
             "drawFill": true,
             "id": 6,
@@ -51,8 +62,9 @@
             "members": [
                 {
                     "name": "Area",
+                    "propertyType": "DungeonArea",
                     "type": "string",
-                    "value": ""
+                    "value": "None"
                 },
                 {
                     "name": "RoomType",

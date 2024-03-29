@@ -200,7 +200,18 @@ namespace Threadlock.SceneComponents.Dungenerator
                         while (possibleMaps.Count > 0)
                         {
                             //pick a random map
-                            var map = possibleMaps.RandomItem();
+                            var chosenMaps = _allMapEntities.Select(m => m.Map).Concat(processedRooms.Select(m => m.Map)).ToList();
+                            var pickCounts = possibleMaps.Select(m => new
+                            {
+                                Map = m,
+                                Count = chosenMaps.Count(c => c == m)
+                            });
+                            var minPickCount = pickCounts.Min(m => m.Count);
+                            var leastPickedMaps = pickCounts
+                                .Where(m => m.Count == minPickCount)
+                                .Select(m => m.Map)
+                                .ToList();
+                            var map = leastPickedMaps.RandomItem();
 
                             //create map
                             roomEntity.CreateMap(map);
@@ -321,7 +332,18 @@ namespace Threadlock.SceneComponents.Dungenerator
                         while (possibleMaps.Count > 0)
                         {
                             //pick a random map
-                            var map = possibleMaps.RandomItem();
+                            var chosenMaps = _allMapEntities.Select(m => m.Map).Concat(processedRooms.Select(m => m.Map)).ToList();
+                            var pickCounts = possibleMaps.Select(m => new
+                            {
+                                Map = m,
+                                Count = chosenMaps.Count(c => c == m)
+                            });
+                            var minPickCount = pickCounts.Min(m => m.Count);
+                            var leastPickedMaps = pickCounts
+                                .Where(m => m.Count == minPickCount)
+                                .Select(m => m.Map)
+                                .ToList();
+                            var map = leastPickedMaps.RandomItem();
 
                             //create map
                             room.CreateMap(map);

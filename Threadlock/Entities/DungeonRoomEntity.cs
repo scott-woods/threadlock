@@ -135,14 +135,22 @@ namespace Threadlock.Entities
         {
             Map = map;
 
+            var backAndWallsLayers = new[] { "Back", "Walls" };
             var mapRenderer = AddComponent(new TiledMapRenderer(map, "Walls"));
-            mapRenderer.SetLayersToRender(new[] { "Back", "Back2", "Back3", "Walls" }.Where(l => map.Layers.Any(l2 => l2.Name == l)).ToArray());
+            mapRenderer.SetLayersToRender(map.Layers
+                .Where(l => backAndWallsLayers.Any(x => l.Name.StartsWith(x)))
+                .Select(l => l.Name)
+                .ToArray());
             mapRenderer.RenderLayer = RenderLayers.Back;
             Flags.SetFlagExclusive(ref mapRenderer.PhysicsLayer, PhysicsLayers.Environment);
             TiledHelper.CreateEntitiesForTiledObjects(mapRenderer);
 
+            var frontLayers = new[] { "Front", "AboveFront" };
             var frontRenderer = AddComponent(new TiledMapRenderer(map));
-            frontRenderer.SetLayersToRender(new[] { "Front", "AboveFront" }.Where(l => map.Layers.Any(l2 => l2.Name == l)).ToArray());
+            frontRenderer.SetLayersToRender(map.Layers
+                .Where(l => frontLayers.Any(x => l.Name.StartsWith(x)))
+                .Select(l => l.Name)
+                .ToArray());
             frontRenderer.RenderLayer = RenderLayers.Front;
 
             //_textComponent.SetLocalOffset(new Vector2(map.WorldWidth / 2, map.WorldHeight / 2));
