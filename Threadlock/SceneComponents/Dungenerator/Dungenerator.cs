@@ -220,10 +220,10 @@ namespace Threadlock.SceneComponents.Dungenerator
                                     //get a pair, preference for perfect pairs
                                     Tuple<DungeonDoorway, DungeonDoorway> pair;
                                     var perfectPairs = pairsList.Where(p => p.Item1.IsDirectMatch(p.Item2)).ToList();
+                                    var diffDirPairs = pairsList.Where(p => p.Item1.Direction != p.Item2.Direction).ToList();
                                     if (perfectPairs.Any())
                                         pair = perfectPairs.RandomItem();
-                                    var diffDirPairs = pairsList.Where(p => p.Item1.Direction != p.Item2.Direction).ToList();
-                                    if (diffDirPairs.Any())
+                                    else if (diffDirPairs.Any())
                                         pair = diffDirPairs.RandomItem();
                                     else
                                         pair = pairsList.RandomItem();
@@ -607,134 +607,135 @@ namespace Threadlock.SceneComponents.Dungenerator
 
         bool ConnectDoorways(DungeonDoorway startDoor, DungeonDoorway endDoor, List<DungeonRoomEntity> roomsToCheck, List<DungeonRoomEntity> roomsToMove)
         {
-            if (startDoor.IsDirectMatch(endDoor))
-            {
-                var desiredDoorwayPos = startDoor.PathfindingOrigin;
-                if (startDoor.Direction == "Top")
-                    desiredDoorwayPos.Y -= 16;
-                else if (startDoor.Direction == "Bottom")
-                    desiredDoorwayPos.Y += 16;
-                else if (startDoor.Direction == "Left")
-                    desiredDoorwayPos.X -= 16;
-                else if (startDoor.Direction == "Right")
-                    desiredDoorwayPos.X += 16;
+            return CorridorGenerator.ConnectDoorways(startDoor, endDoor, roomsToCheck, roomsToMove, out var floorPositions);
+            //if (startDoor.IsDirectMatch(endDoor))
+            //{
+            //    var desiredDoorwayPos = startDoor.PathfindingOrigin;
+            //    if (startDoor.Direction == "Top")
+            //        desiredDoorwayPos.Y -= 16;
+            //    else if (startDoor.Direction == "Bottom")
+            //        desiredDoorwayPos.Y += 16;
+            //    else if (startDoor.Direction == "Left")
+            //        desiredDoorwayPos.X -= 16;
+            //    else if (startDoor.Direction == "Right")
+            //        desiredDoorwayPos.X += 16;
 
-                var movementAmount = desiredDoorwayPos - endDoor.PathfindingOrigin;
-                if (ValidateRoomMovement(movementAmount, roomsToMove, roomsToCheck))
-                {
-                    foreach (var room in roomsToMove)
-                        room.MoveRoom(movementAmount);
+            //    var movementAmount = desiredDoorwayPos - endDoor.PathfindingOrigin;
+            //    if (ValidateRoomMovement(movementAmount, roomsToMove, roomsToCheck))
+            //    {
+            //        foreach (var room in roomsToMove)
+            //            room.MoveRoom(movementAmount);
 
-                    startDoor.SetOpen(true);
-                    endDoor.SetOpen(true);
+            //        startDoor.SetOpen(true);
+            //        endDoor.SetOpen(true);
 
-                    return true;
-                }
-            }
+            //        return true;
+            //    }
+            //}
 
-            if (startDoor.Direction == endDoor.Direction)
-                return false;
+            //if (startDoor.Direction == endDoor.Direction)
+            //    return false;
 
-            var graphRooms = roomsToCheck.Concat(roomsToMove).ToList();
-            if (graphRooms.Contains(startDoor.DungeonRoomEntity))
-                graphRooms.Remove(startDoor.DungeonRoomEntity);
-            if (graphRooms.Contains(endDoor.DungeonRoomEntity))
-                graphRooms.Remove(endDoor.DungeonRoomEntity);
-            var roomPadding = 4;
-            List<RectangleF> paddedRects = new List<RectangleF>();
-            foreach (var room in graphRooms)
-            {
-                var rect = room.CollisionBounds;
-                rect.Location -= new Vector2(roomPadding * 16, roomPadding * 16);
-                rect.Size += new Vector2(roomPadding * 16 * 2, roomPadding * 16 * 2);
-                paddedRects.Add(rect);
-            }
+            //var graphRooms = roomsToCheck.Concat(roomsToMove).ToList();
+            //if (graphRooms.Contains(startDoor.DungeonRoomEntity))
+            //    graphRooms.Remove(startDoor.DungeonRoomEntity);
+            //if (graphRooms.Contains(endDoor.DungeonRoomEntity))
+            //    graphRooms.Remove(endDoor.DungeonRoomEntity);
+            //var roomPadding = 4;
+            //List<RectangleF> paddedRects = new List<RectangleF>();
+            //foreach (var room in graphRooms)
+            //{
+            //    var rect = room.CollisionBounds;
+            //    rect.Location -= new Vector2(roomPadding * 16, roomPadding * 16);
+            //    rect.Size += new Vector2(roomPadding * 16 * 2, roomPadding * 16 * 2);
+            //    paddedRects.Add(rect);
+            //}
 
-            var minDistance = 4;
-            var maxDistance = 20;
-            Vector2 startDir = startDoor.GetOutgingDirection();
-            Vector2 endDir = endDoor.GetIncomingDirection();
+            //var minDistance = 4;
+            //var maxDistance = 20;
+            //Vector2 startDir = startDoor.GetOutgingDirection();
+            //Vector2 endDir = endDoor.GetIncomingDirection();
 
-            List<Vector2> possiblePositions = new List<Vector2>();
+            //List<Vector2> possiblePositions = new List<Vector2>();
 
-            if (startDir != endDir)
-            {
-                bool wallHit = false;
-                for (int i = minDistance; i < maxDistance + 1; i++)
-                {
-                    Vector2 targetPos = startDoor.PathfindingOrigin + (startDir * 16 * i);
-                    for (int j = minDistance; j < maxDistance + 1; j++)
-                    {
-                        targetPos += (endDir * 16 * j);
-                        var movement = targetPos - endDoor.PathfindingOrigin;
+            //if (startDir != endDir)
+            //{
+            //    bool wallHit = false;
+            //    for (int i = minDistance; i < maxDistance + 1; i++)
+            //    {
+            //        Vector2 targetPos = startDoor.PathfindingOrigin + (startDir * 16 * i);
+            //        for (int j = minDistance; j < maxDistance + 1; j++)
+            //        {
+            //            targetPos += (endDir * 16 * j);
+            //            var movement = targetPos - endDoor.PathfindingOrigin;
 
-                        if (paddedRects.Any(r => r.Contains(targetPos)))
-                        {
-                            wallHit = true;
-                            break;
-                        }
+            //            if (paddedRects.Any(r => r.Contains(targetPos)))
+            //            {
+            //                wallHit = true;
+            //                break;
+            //            }
 
-                        if (ValidateRoomMovement(movement, roomsToMove, roomsToCheck))
-                            possiblePositions.Add(targetPos);
-                    }
+            //            if (ValidateRoomMovement(movement, roomsToMove, roomsToCheck))
+            //                possiblePositions.Add(targetPos);
+            //        }
 
-                    if (wallHit)
-                    {
-                        possiblePositions.Clear();
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                for (int i = minDistance * 2; i < maxDistance + 1; i++)
-                {
-                    Vector2 targetPos = startDoor.PathfindingOrigin + (startDir * 16 * i);
-                    var movement = targetPos - endDoor.PathfindingOrigin;
+            //        if (wallHit)
+            //        {
+            //            possiblePositions.Clear();
+            //            break;
+            //        }
+            //    }
+            //}
+            //else
+            //{
+            //    for (int i = minDistance * 2; i < maxDistance + 1; i++)
+            //    {
+            //        Vector2 targetPos = startDoor.PathfindingOrigin + (startDir * 16 * i);
+            //        var movement = targetPos - endDoor.PathfindingOrigin;
 
-                    if (paddedRects.Any(r => r.Contains(targetPos)))
-                    {
-                        possiblePositions.Clear();
-                        break;
-                    }
+            //        if (paddedRects.Any(r => r.Contains(targetPos)))
+            //        {
+            //            possiblePositions.Clear();
+            //            break;
+            //        }
 
-                    if (ValidateRoomMovement(movement, roomsToMove, roomsToCheck))
-                        possiblePositions.Add(targetPos);
-                }
-            }
+            //        if (ValidateRoomMovement(movement, roomsToMove, roomsToCheck))
+            //            possiblePositions.Add(targetPos);
+            //    }
+            //}
 
-            possiblePositions = possiblePositions
-                .OrderBy(m => Vector2.Distance(startDoor.PathfindingOrigin, m))
-                .ToList();
+            //possiblePositions = possiblePositions
+            //    .OrderBy(m => Vector2.Distance(startDoor.PathfindingOrigin, m))
+            //    .ToList();
 
-            while (possiblePositions.Count > 0)
-            {
-                var pos = possiblePositions.First();
-                var movement = pos - endDoor.PathfindingOrigin;
-                foreach (var room in roomsToMove)
-                    room.MoveRoom(movement);
+            //while (possiblePositions.Count > 0)
+            //{
+            //    var pos = possiblePositions.First();
+            //    var movement = pos - endDoor.PathfindingOrigin;
+            //    foreach (var room in roomsToMove)
+            //        room.MoveRoom(movement);
 
-                if (CorridorGenerator.ConnectDoorways(startDoor, endDoor, roomsToCheck, out var floorPositions))
-                {
-                    //found a valid path, set doorways as open
-                    startDoor.SetOpen(true);
-                    endDoor.SetOpen(true);
+            //    if (CorridorGenerator.ConnectDoorways(startDoor, endDoor, roomsToCheck, out var floorPositions))
+            //    {
+            //        //found a valid path, set doorways as open
+            //        startDoor.SetOpen(true);
+            //        endDoor.SetOpen(true);
 
-                    startDoor.DungeonRoomEntity.FloorTilePositions.AddRange(floorPositions);
+            //        startDoor.DungeonRoomEntity.FloorTilePositions.AddRange(floorPositions);
 
-                    break;
-                }
-                else
-                    possiblePositions.Remove(pos);
-            }
+            //        break;
+            //    }
+            //    else
+            //        possiblePositions.Remove(pos);
+            //}
 
-            if (possiblePositions.Count == 0)
-                return false;
+            //if (possiblePositions.Count == 0)
+            //    return false;
 
-            return true;
+            //return true;
         }
 
-        bool ValidateRoomMovement(Vector2 movementAmount, List<DungeonRoomEntity> roomsToMove, List<DungeonRoomEntity> roomsToCheck)
+        public static bool ValidateRoomMovement(Vector2 movementAmount, List<DungeonRoomEntity> roomsToMove, List<DungeonRoomEntity> roomsToCheck)
         {
             var floorPositionsToCheck = roomsToCheck.SelectMany(r => r.FloorTilePositions).ToList();
 

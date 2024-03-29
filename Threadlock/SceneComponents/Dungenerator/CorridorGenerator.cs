@@ -19,6 +19,233 @@ namespace Threadlock.SceneComponents.Dungenerator
 {
     public static class CorridorGenerator
     {
+        static readonly int _minDistance = 4;
+        static readonly int _maxDistance = 20;
+        static readonly int _xPad = 2;
+        static readonly int _yPad = 4;
+
+        /// <summary>
+        /// connect doorways, handling moving rooms
+        /// </summary>
+        /// <param name="startDoor"></param>
+        /// <param name="endDoor"></param>
+        /// <param name="roomsToCheck"></param>
+        /// <param name="roomsToMove"></param>
+        /// <param name="floorPositions"></param>
+        /// <returns></returns>
+        public static bool ConnectDoorways(DungeonDoorway startDoor, DungeonDoorway endDoor, List<DungeonRoomEntity> roomsToCheck, List<DungeonRoomEntity> roomsToMove, out List<Vector2> floorPositions)
+        {
+            floorPositions = new List<Vector2>();
+
+            var startDir = startDoor.GetOutgingDirection();
+            var endDir = endDoor.GetIncomingDirection();
+
+            //first, handle direct path
+            if (startDir == endDir)
+            {
+                //try to place end door right next to the start door
+                //var roomMovement = (startDoor.PathfindingOrigin + (startDir * 16)) - endDoor.PathfindingOrigin;
+                //if (Dungenerator.ValidateRoomMovement(roomMovement, roomsToMove, roomsToCheck))
+                //{
+                //    foreach (var room in roomsToMove)
+                //        room.MoveRoom(roomMovement);
+
+                //    startDoor.SetOpen(true);
+                //    endDoor.SetOpen(true);
+
+                //    return true;
+                //}
+
+                int dist = 1;
+                var startPos = startDoor.PathfindingOrigin;
+                while (dist <= _maxDistance)
+                {
+                    var roomMovement = (startDoor.PathfindingOrigin + (startDir * 16 * dist)) - endDoor.PathfindingOrigin;
+                    if (Dungenerator.ValidateRoomMovement(roomMovement, roomsToMove, roomsToCheck))
+                    {
+                        foreach (var room in roomsToMove)
+                            room.MoveRoom(roomMovement);
+
+                        List<Vector2> path = new List<Vector2>();
+
+                        for (int i = 1; i < dist - 1; i++)
+                        {
+                            var pathPos = startDoor.PathfindingOrigin + (startDir * 16 * i);
+                            var rectX = pathPos.X - (_xPad * 16);
+                            var rectY = pathPos.Y - (_yPad * 16);
+                            var rectWidth = (_xPad * 16 * 2) + 16;
+                            var rectHeight = (_yPad * 16) + ((_yPad - 1) * 16);
+                            var testRect = new RectangleF(rectX, rectY, rectWidth, rectHeight);
+
+                            if (roomsToCheck.Where(r => r != startDoor.DungeonRoomEntity).Any(r => r.CollisionBounds.Intersects(testRect)))
+                                return false;
+
+                            path.Add(pathPos);
+                        }
+
+                        var reservedPositions = GetReservedPositions(startDoor, endDoor);
+
+                        var largerPath = IncreaseCorridorWidth(path, reservedPositions);
+
+                        floorPositions = largerPath.SelectMany(p => p.Value).ToList();
+
+                        startDoor.SetOpen(true);
+                        endDoor.SetOpen(true);
+
+                        startDoor.DungeonRoomEntity.FloorTilePositions.AddRange(floorPositions);
+
+                        return true;
+
+                        //float rectX = 0;
+                        //float rectY = 0;
+                        //float rectWidth = 0;
+                        //float rectHeight = 0;
+
+                        //var point = startDoor.PathfindingOrigin + (startDir * 16 * dist);
+
+                        //if (startDir.X != 0)
+                        //{
+                        //    if (startDir.X > 0)
+                        //        rectX = startPos.X - (_xPad * 16);
+                        //    else if (startDir.X < 0)
+                        //        rectX = point.X - (_xPad * 16);
+                        //    rectY = startPos.Y - (_yPad * 16);
+                        //    rectWidth = (startDir.X * 16 * dist) + (_xPad * 16 * 2);
+                        //    rectHeight = (_yPad * 16) + ((_yPad - 1) * 16);
+                        //}
+                        //else if (startDir.Y != 0)
+                        //{
+                        //    rectX = startPos.X - (_xPad * 16);
+                        //    if (startDir.Y > 0)
+                        //        rectY = startPos.Y - (_yPad * 16);
+                        //    else if (startDir.Y < 0)
+                        //        rectY = point.Y - (_yPad * 16);
+                        //    rectWidth = (_xPad * 16 * 2) + 16;
+                        //    rectHeight = (startDir.Y * 16 * dist) + (_yPad * 16 * 2);
+                        //}
+
+                        //var rect = new RectangleF(rectX, rectY, rectWidth, rectHeight);
+
+                        //if (roomsToCheck.Where(r => r != startDoor.DungeonRoomEntity).Any(r => r.CollisionBounds.Intersects(rect)))
+                        //    break;
+                    }
+
+                    dist++;
+                }
+
+                return false;
+            }
+
+            //handle non-direct and non-identical path
+            if (startDir != endDir)
+            {
+                int startDistance = _minDistance;
+                int endDistance = _minDistance;
+
+                List<List<Vector2>> possiblePaths = new List<List<Vector2>>();
+
+                while (startDistance <= _maxDistance)
+                {
+                    List<Vector2> startPath = new List<Vector2>();
+
+                    bool pathFailed = false;
+                    for (int i = 1; i <= startDistance; i++)
+                    {
+                        var pathPos = startDoor.PathfindingOrigin + (startDir * 16 * i);
+                        var rectX = pathPos.X - (_xPad * 16);
+                        var rectY = pathPos.Y - (_yPad * 16);
+                        var rectWidth = (_xPad * 16 * 2) + 16;
+                        var rectHeight = (_yPad * 16) + ((_yPad - 1) * 16);
+                        var testRect = new RectangleF(rectX, rectY, rectWidth, rectHeight);
+
+                        if (roomsToCheck.Where(r => r != startDoor.DungeonRoomEntity).Any(r => r.CollisionBounds.Intersects(testRect)))
+                        {
+                            pathFailed = true;
+                            break;
+                        }
+
+                        startPath.Add(pathPos);
+                    }
+
+                    if (pathFailed)
+                        break;
+
+                    var vertexPos = startDoor.PathfindingOrigin + (startDir * 16 * startDistance);
+
+                    endDistance = _minDistance;
+                    while (endDistance <= _maxDistance)
+                    {
+                        var targetPos = vertexPos + (endDir * 16 * endDistance);
+                        var roomMovement = targetPos - endDoor.PathfindingOrigin;
+                        if (!Dungenerator.ValidateRoomMovement(roomMovement, roomsToMove, roomsToCheck))
+                        {
+                            endDistance++;
+                            continue;
+                        }
+
+                        List<Vector2> endPath = new List<Vector2>();
+
+                        for (int i = 1; i < endDistance - 1; i++)
+                        {
+                            var pathPos = vertexPos + (endDir * 16 * i);
+                            var rectX = pathPos.X - (_xPad * 16);
+                            var rectY = pathPos.Y - (_yPad * 16);
+                            var rectWidth = (_xPad * 16 * 2) + 16;
+                            var rectHeight = (_yPad * 16) + ((_yPad - 1) * 16);
+                            var testRect = new RectangleF(rectX, rectY, rectWidth, rectHeight);
+
+                            if (roomsToCheck.Any(r => r.CollisionBounds.Intersects(testRect)))
+                            {
+                                pathFailed = true;
+                                break;
+                            }
+
+                            endPath.Add(pathPos);
+                        }
+
+                        if (pathFailed)
+                            break;
+
+                        possiblePaths.Add(startPath.Concat(endPath).ToList());
+
+                        endDistance++;
+                    }
+
+                    startDistance++;
+                }
+
+                possiblePaths = possiblePaths
+                    .OrderBy(p => p.Count)
+                    .ToList();
+
+                var reservedPositions = GetReservedPositions(startDoor, endDoor);
+
+                while (possiblePaths.Count > 0)
+                {
+                    var path = possiblePaths.First();
+
+                    var finalPos = path.Last();
+                    var targetPos = finalPos + (endDir * 16 * 2);
+                    var roomMovement = targetPos - endDoor.PathfindingOrigin;
+                    foreach (var room in roomsToMove)
+                        room.MoveRoom(roomMovement);
+
+                    var largerPath = IncreaseCorridorWidth(path, reservedPositions);
+
+                    floorPositions = largerPath.SelectMany(p => p.Value).ToList();
+
+                    startDoor.SetOpen(true);
+                    endDoor.SetOpen(true);
+
+                    startDoor.DungeonRoomEntity.FloorTilePositions.AddRange(floorPositions);
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public static bool ConnectDoorways(DungeonDoorway startDoor, DungeonDoorway endDoor, List<DungeonRoomEntity> roomsToCheck, out List<Vector2> floorPositions)
         {
             floorPositions = new List<Vector2>();
@@ -278,6 +505,42 @@ namespace Threadlock.SceneComponents.Dungenerator
             }
 
             return posDictionary;
+        }
+
+        static List<Vector2> GetReservedPositions(DungeonDoorway startDoor, DungeonDoorway endDoor)
+        {
+            var reservedPositions = new List<Vector2>();
+            reservedPositions.Add(startDoor.PathfindingOrigin);
+            reservedPositions.Add(endDoor.PathfindingOrigin);
+
+            switch (startDoor.Direction)
+            {
+                case "Top":
+                case "Bottom":
+                    reservedPositions.Add(startDoor.PathfindingOrigin + (DirectionHelper.Left * 16));
+                    reservedPositions.Add(startDoor.PathfindingOrigin + (DirectionHelper.Right * 16));
+                    break;
+                case "Left":
+                case "Right":
+                    reservedPositions.Add(startDoor.PathfindingOrigin + (DirectionHelper.Up * 16));
+                    reservedPositions.Add(startDoor.PathfindingOrigin + (DirectionHelper.Down * 16));
+                    break;
+            }
+            switch (endDoor.Direction)
+            {
+                case "Top":
+                case "Bottom":
+                    reservedPositions.Add(endDoor.PathfindingOrigin + (DirectionHelper.Left * 16));
+                    reservedPositions.Add(endDoor.PathfindingOrigin + (DirectionHelper.Right * 16));
+                    break;
+                case "Left":
+                case "Right":
+                    reservedPositions.Add(endDoor.PathfindingOrigin + (DirectionHelper.Up * 16));
+                    reservedPositions.Add(endDoor.PathfindingOrigin + (DirectionHelper.Down * 16));
+                    break;
+            }
+
+            return reservedPositions;
         }
     }
 }

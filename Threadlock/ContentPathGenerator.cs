@@ -1062,7 +1062,6 @@ namespace Nez
 					public const string Forge_exit = @"Content\Tiled\Tilemaps\Forge\forge_exit.tmx";
 					public const string Forge_hub_1 = @"Content\Tiled\Tilemaps\Forge\forge_hub_1.tmx";
 					public const string Forge_normal_1 = @"Content\Tiled\Tilemaps\Forge\forge_normal_1.tmx";
-					public const string Forge_normal_2 = @"Content\Tiled\Tilemaps\Forge\forge_normal_2.tmx";
 					public const string Forge_pre_boss_2 = @"Content\Tiled\Tilemaps\Forge\forge_pre_boss_2.tmx";
 					public const string Forge_reward = @"Content\Tiled\Tilemaps\Forge\forge_reward.tmx";
 					public const string Forge_start = @"Content\Tiled\Tilemaps\Forge\forge_start.tmx";
