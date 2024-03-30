@@ -382,11 +382,11 @@
             }
         },
         "Tilemaps/Forge/forge_normal_4.tmx": {
-            "scale": 1.5,
-            "selectedLayer": 1,
+            "scale": 1,
+            "selectedLayer": 5,
             "viewCenter": {
-                "x": 270,
-                "y": -67.33333333333331
+                "x": 172,
+                "y": 118
             }
         },
         "Tilemaps/Forge/forge_pre_boss.tmx": {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Nez;
 using Nez.AI.FSM;
+using Nez.Console;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,6 +40,7 @@ namespace Threadlock.Entities.Characters.Player.States
 
         public override void Update(float deltaTime)
         {
+
         }
 
         public override void Reason()

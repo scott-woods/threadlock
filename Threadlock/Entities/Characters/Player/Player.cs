@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Nez;
 using Nez.AI.FSM;
+using Nez.Particles;
 using Nez.Sprites;
 using Nez.Textures;
 using System;
@@ -39,6 +40,7 @@ namespace Threadlock.Entities.Characters.Player
         SwordAttack _swordAttack;
         Dash _dash;
         BoxCollider _collider;
+        Shadow _shadow;
         public BoxCollider Collider { get => _collider; }
         Hurtbox _hurtbox;
         KnockbackComponent _knockbackComponent;
@@ -54,7 +56,7 @@ namespace Threadlock.Entities.Characters.Player
         public PlayerAction OffensiveAction2;
         public PlayerAction SupportAction;
 
-        public Player()
+        public Player() : base("Player")
         {
             Instance = this;
 
@@ -131,6 +133,8 @@ namespace Threadlock.Entities.Characters.Player
             Game1.SceneManager.Emitter.AddObserver(SceneManagerEvents.SceneChangeStarted, OnSceneChangeStarted);
             Game1.Emitter.AddObserver(CoreEvents.SceneChanged, OnSceneChanged);
             _deathComponent.Emitter.AddObserver(DeathEventTypes.Finished, OnDeath);
+
+            _shadow = AddComponent(new Shadow(_animator));
         }
 
         #region LIFECYCLE
@@ -240,6 +244,7 @@ namespace Threadlock.Entities.Characters.Player
             _apComponent.ActionPoints = 0;
             _statusComponent.PopStatus(StatusPriority.Death);
             _hurtbox.SetEnabled(true);
+            _shadow.SetEnabled(true);
         }
     }
 }

@@ -144,7 +144,7 @@ namespace Threadlock.Components
             var blinkEffect = new SpriteBlinkEffect();
             blinkEffect.BlinkColor = Entity.GetType() == typeof(Player) ? Color.White : Color.Red;
             var renderables = Entity.GetComponents<RenderableComponent>();
-            foreach (var renderable in renderables)
+            foreach (var renderable in renderables.Where(r => r.GetType() != typeof(Shadow)))
             {
                 renderable.Material = new Material(BlendState.NonPremultiplied, blinkEffect);
             }

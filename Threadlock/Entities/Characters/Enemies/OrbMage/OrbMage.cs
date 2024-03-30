@@ -92,6 +92,8 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
             _knockbackComponent = AddComponent(new KnockbackComponent(_velocityComponent));
 
             AddComponent(new LootDropper(LootTables.BasicEnemy));
+
+            var shadow = AddComponent(new Shadow(_animator));
         }
 
         public override void OnRemovedFromScene()

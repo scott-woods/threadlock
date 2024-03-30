@@ -90,6 +90,8 @@ namespace Threadlock.Entities.Characters.Enemies.Ghoul
             _ghoulAttack = AddComponent(new GhoulAttack(this));
 
             AddComponent(new LootDropper(LootTables.BasicEnemy));
+
+            var shadow = AddComponent(new Shadow(_animator));
         }
 
         #endregion
