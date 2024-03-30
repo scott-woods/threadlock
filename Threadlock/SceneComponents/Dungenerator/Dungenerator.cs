@@ -911,12 +911,16 @@ namespace Threadlock.SceneComponents.Dungenerator
         {
             List<TmxMap> possibleMaps = new List<TmxMap>();
 
+            var requiredCount = _allMapEntities.Where(m => m.AllChildren.Contains(room)).Count() + room.AllChildren.Count;
+
             //get potential maps
             var validMaps = _allMaps.Where(m =>
             {
                 if (m.Properties == null)
                     return false;
                 if (!m.Properties.ContainsKey("RoomType"))
+                    return false;
+                if (m.ObjectGroups.SelectMany(g => g.Objects).Where(o => o.Type == "DungeonDoorway").Count() < requiredCount)
                     return false;
                 return m.Properties["RoomType"] == room.Type;
             });
