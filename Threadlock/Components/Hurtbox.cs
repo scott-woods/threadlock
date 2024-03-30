@@ -9,8 +9,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components.Hitboxes;
 using Threadlock.DebugTools;
+using Threadlock.Entities;
 using Threadlock.Entities.Characters.Player;
 using Threadlock.Models;
+using Threadlock.StaticData;
 
 namespace Threadlock.Components
 {
@@ -100,8 +102,8 @@ namespace Threadlock.Components
                 var angle = (float)Math.Atan2(collisionResult.Normal.Y, collisionResult.Normal.X);
 
                 //choose hit effect
-                //var effects = new List<HitEffect>() { HitEffects.Hit1, HitEffects.Hit2, HitEffects.Hit3 };
-                //var effect = effects.RandomItem();
+                var effects = new List<HitEffectModel>() { HitEffects.Hit1, HitEffects.Hit2, HitEffects.Hit3 };
+                var effect = effects.RandomItem();
 
                 //effect color
                 //Color color = Color.White;
@@ -109,9 +111,9 @@ namespace Threadlock.Components
                 //    color = Color.Red;
 
                 //hit effect
-                //var effectEntity = Entity.Scene.CreateEntity("hit-effect", collisionResult.Point);
-                //effectEntity.SetRotation(angle);
-                //var effectComponent = effectEntity.AddComponent(new HitEffectComponent(effect, color));
+                var effectEntity = Entity.Scene.AddEntity(new HitEffect(effect));
+                effectEntity.SetPosition(collisionResult.Point);
+                effectEntity.SetRotation(angle);
 
                 SetEnabled(false);
                 _recoveryTimer = Game1.Schedule(_recoveryTime, timer =>

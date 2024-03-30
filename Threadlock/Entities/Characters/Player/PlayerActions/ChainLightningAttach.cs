@@ -15,7 +15,7 @@ using Threadlock.StaticData;
 
 namespace Threadlock.Entities.Characters.Player.PlayerActions
 {
-    public class ChainLightningAttach : Entity
+    public class ChainLightningAttach : HitEffect
     {
         //consts
         const int _baseDamage = 2;
@@ -25,14 +25,13 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
 
         //components
         CircleHitbox _hitbox;
-        SpriteAnimator _animator;
 
         //misc
         int _chainCount = 0;
         List<Entity> _hitEntities;
         Entity _entityToHit;
 
-        public ChainLightningAttach(int chainCount, Entity entityToHit, ref List<Entity> hitEntities)
+        public ChainLightningAttach(int chainCount, Entity entityToHit, ref List<Entity> hitEntities) : base(HitEffects.Lightning1)
         {
             _chainCount = chainCount;
             _entityToHit = entityToHit;
@@ -51,32 +50,30 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
 
         public override void OnAddedToScene()
         {
-            base.OnAddedToScene();
-
-            _animator = AddComponent(new SpriteAnimator());
-            var texture = Scene.Content.LoadTexture(Content.Textures.Effects.Electric_hit_1);
-            var sprites = Sprite.SpritesFromAtlas(texture, 82, 65);
-            _animator.AddAnimation("Hit", sprites.ToArray(), 13);
-            _animator.OnAnimationCompletedEvent += OnAnimationCompleted;
-            _animator.SetEnabled(false);
-
             _hitbox = AddComponent(new CircleHitbox(_baseDamage + _chainCount * _damageAddedPerChain, 1));
             Flags.SetFlagExclusive(ref _hitbox.PhysicsLayer, (int)PhysicsLayers.PlayerHitbox);
             Flags.SetFlagExclusive(ref _hitbox.CollidesWithLayers, (int)PhysicsLayers.EnemyHurtbox);
             _hitbox.SetEnabled(false);
 
-            Game1.StartCoroutine(Play());
+            base.OnAddedToScene();
         }
 
         #endregion
+
+        public override void PlayEffect()
+        {
+            base.PlayEffect();
+
+            Game1.StartCoroutine(Play());
+        }
 
         IEnumerator Play()
         {
             if (_chainCount > 0)
             {
                 //play animation
-                _animator.SetEnabled(true);
-                _animator.Play("Hit", SpriteAnimator.LoopMode.Once);
+                Animator.SetEnabled(true);
+                Animator.Play("Hit", SpriteAnimator.LoopMode.Once);
 
                 //enable hitbox
                 _hitbox.SetEnabled(true);
@@ -109,8 +106,8 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
 
         void OnAnimationCompleted(string animationName)
         {
-            _animator.OnAnimationCompletedEvent -= OnAnimationCompleted;
-            _animator.SetEnabled(false);
+            Animator.OnAnimationCompletedEvent -= OnAnimationCompleted;
+            Animator.SetEnabled(false);
         }
     }
 }
