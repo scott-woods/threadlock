@@ -34,9 +34,9 @@ namespace Threadlock.SceneComponents.Dungenerator
         {
             //read flow file
             DungeonFlow flow = new DungeonFlow();
-            if (File.Exists("Content/Data/DungeonFlows5.json"))
+            if (File.Exists("Content/Data/DungeonFlows6.json"))
             {
-                var json = File.ReadAllText("Content/Data/DungeonFlows5.json");
+                var json = File.ReadAllText("Content/Data/DungeonFlows6.json");
                 flow = Json.FromJson<DungeonFlow>(json);
             }
             else return;
@@ -363,11 +363,55 @@ namespace Threadlock.SceneComponents.Dungenerator
                             //get possible doorway pairs
                             var pairsList = GetValidDoorwayPairs(prevNodeDoorways, newNodeDoorways, false);
 
+                            if (i == 1)
+                            {
+                                pairsList = pairsList
+                                    .OrderByDescending(p => p.Item1.IsDirectMatch(p.Item2))
+                                    .ToList();
+                            }
+                            else if (i == 2)
+                            {
+                                var preferredDirs = new List<string>();
+                                switch (oppositeRoom.FindComponentsOnMap<DungeonDoorway>().First(d => d.HasConnection).Direction)
+                                {
+                                    case "Top":
+                                    case "Bottom":
+                                        preferredDirs.Add("Left");
+                                        preferredDirs.Add("Right");
+                                        break;
+                                    case "Left":
+                                    case "Right":
+                                        preferredDirs.Add("Top");
+                                        preferredDirs.Add("Bottom");
+                                        break;
+                                }
+
+                                pairsList = pairsList
+                                    .OrderByDescending(p => preferredDirs.Contains(p.Item1.Direction))
+                                    .ThenByDescending(p => p.Item1.IsDirectMatch(p.Item2))
+                                    .ToList();
+                            }
+                            else
+                            {
+                                pairsList = pairsList
+                                    .OrderBy(p => oppositeRoom != null ? Vector2.Distance(p.Item1.PathfindingOrigin, oppositeRoom.Position) : float.MaxValue)
+                                    .ThenByDescending(p => p.Item1.IsDirectMatch(p.Item2))
+                                    .ToList();
+                            }
+
+                            //if (i < placementOrder.Count / 2)
+                            //    pairsList = pairsList
+                            //        .OrderByDescending(p => p.Item1.IsDirectMatch(p.Item2))
+                            //        .ToList();
+                            //else
+                            //    pairsList = pairsList
+                            //        .OrderBy(p => oppositeRoom != null ? Vector2.Distance(p.Item1.PathfindingOrigin, oppositeRoom.Position) : float.MaxValue)
+                            //        .ToList();
+
                             //sort pairs by direct matches first, then closest to room on the end of the other line
-                            pairsList = pairsList
-                                .OrderByDescending(p => p.Item1.IsDirectMatch(p.Item2))
-                                .ThenBy(p => oppositeRoom != null ? Vector2.Distance(p.Item1.PathfindingOrigin, oppositeRoom.Position) : float.MaxValue)
-                                .ToList();
+                            //pairsList = pairsList
+                            //    .OrderBy(p => oppositeRoom != null ? Vector2.Distance(p.Item1.PathfindingOrigin, oppositeRoom.Position) : float.MaxValue)
+                            //    .ToList();
 
                             //try to find a valid pair
                             while (pairsList.Count > 0)
@@ -423,8 +467,9 @@ namespace Threadlock.SceneComponents.Dungenerator
                     //get pairs and order by distance between each other
                     var pairs = GetValidDoorwayPairs(endEntity.FindComponentsOnMap<DungeonDoorway>(), startEntity.FindComponentsOnMap<DungeonDoorway>(), false);
                     pairs = pairs
-                        .OrderByDescending(p => p.Item1.Direction != p.Item2.Direction)
-                        .ThenBy(p => Vector2.Distance(p.Item1.PathfindingOrigin, p.Item2.PathfindingOrigin))
+                        //.Where(p => Vector2.Distance(p.Item1.PathfindingOrigin, p.Item2.PathfindingOrigin) <= 960)
+                        .OrderBy(p => Vector2.Distance(p.Item1.PathfindingOrigin, p.Item2.PathfindingOrigin))
+                        .ThenByDescending(p => p.Item1.Direction != p.Item2.Direction)
                         .ToList();
 
                     //try pairs
@@ -433,25 +478,30 @@ namespace Threadlock.SceneComponents.Dungenerator
                         //pick first pair
                         var pair = pairs.First();
 
-                        GetPathfindingGraph(processedRooms, out var graph, out var graphRect);
-
-                        //try to find a path between the doorways
-                        if (CorridorGenerator.ConnectDoorways(pair.Item1, pair.Item2, graph, processedRooms, graphRect, out List<Vector2> floorPositions))
-                        {
-                            //found a valid path, set doorways as open
-                            pair.Item1.SetOpen(true);
-                            pair.Item2.SetOpen(true);
-
-                            endEntity.FloorTilePositions.AddRange(floorPositions);
-                        }
+                        if (CorridorGenerator.ConnectStaticDoorways(pair.Item1, pair.Item2, processedRooms))
+                            break;
                         else
-                        {
-                            //pair was invalid, remove and try again
                             pairs.Remove(pair);
-                            continue;
-                        }
 
-                        break;
+                        //GetPathfindingGraph(processedRooms, out var graph, out var graphRect);
+
+                        ////try to find a path between the doorways
+                        //if (CorridorGenerator.ConnectDoorways(pair.Item1, pair.Item2, graph, processedRooms, graphRect, out List<Vector2> floorPositions))
+                        //{
+                        //    //found a valid path, set doorways as open
+                        //    pair.Item1.SetOpen(true);
+                        //    pair.Item2.SetOpen(true);
+
+                        //    endEntity.FloorTilePositions.AddRange(floorPositions);
+                        //}
+                        //else
+                        //{
+                        //    //pair was invalid, remove and try again
+                        //    pairs.Remove(pair);
+                        //    continue;
+                        //}
+
+                        //break;
                     }
 
                     //if no pairs were valid, try making loop from scratch
@@ -629,7 +679,8 @@ namespace Threadlock.SceneComponents.Dungenerator
 
         bool ConnectDoorways(DungeonDoorway startDoor, DungeonDoorway endDoor, List<DungeonRoomEntity> roomsToCheck, List<DungeonRoomEntity> roomsToMove)
         {
-            return CorridorGenerator.ConnectDoorways(startDoor, endDoor, roomsToCheck, roomsToMove, out var floorPositions);
+            var success = CorridorGenerator.ConnectDoorways(startDoor, endDoor, roomsToCheck, roomsToMove, out var floorPositions);
+            return success;
             //if (startDoor.IsDirectMatch(endDoor))
             //{
             //    var desiredDoorwayPos = startDoor.PathfindingOrigin;
@@ -911,7 +962,7 @@ namespace Threadlock.SceneComponents.Dungenerator
         {
             List<TmxMap> possibleMaps = new List<TmxMap>();
 
-            var requiredCount = _allMapEntities.Where(m => m.AllChildren.Contains(room)).Count() + room.AllChildren.Count;
+            var requiredCount = _allComposites.SelectMany(c => c.RoomEntities).Where(m => m.AllChildren.Contains(room)).Count() + room.AllChildren.Count;
 
             //get potential maps
             var validMaps = _allMaps.Where(m =>

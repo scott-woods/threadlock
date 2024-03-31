@@ -43,19 +43,7 @@ namespace Threadlock.SceneComponents.Dungenerator
             //first, handle direct path
             if (startDir == endDir)
             {
-                //try to place end door right next to the start door
-                //var roomMovement = (startDoor.PathfindingOrigin + (startDir * 16)) - endDoor.PathfindingOrigin;
-                //if (Dungenerator.ValidateRoomMovement(roomMovement, roomsToMove, roomsToCheck))
-                //{
-                //    foreach (var room in roomsToMove)
-                //        room.MoveRoom(roomMovement);
-
-                //    startDoor.SetOpen(true);
-                //    endDoor.SetOpen(true);
-
-                //    return true;
-                //}
-
+                //try to find a straight path
                 int dist = 1;
                 var startPos = startDoor.PathfindingOrigin;
                 while (dist <= _maxDistance)
@@ -95,39 +83,6 @@ namespace Threadlock.SceneComponents.Dungenerator
                         startDoor.DungeonRoomEntity.FloorTilePositions.AddRange(floorPositions);
 
                         return true;
-
-                        //float rectX = 0;
-                        //float rectY = 0;
-                        //float rectWidth = 0;
-                        //float rectHeight = 0;
-
-                        //var point = startDoor.PathfindingOrigin + (startDir * 16 * dist);
-
-                        //if (startDir.X != 0)
-                        //{
-                        //    if (startDir.X > 0)
-                        //        rectX = startPos.X - (_xPad * 16);
-                        //    else if (startDir.X < 0)
-                        //        rectX = point.X - (_xPad * 16);
-                        //    rectY = startPos.Y - (_yPad * 16);
-                        //    rectWidth = (startDir.X * 16 * dist) + (_xPad * 16 * 2);
-                        //    rectHeight = (_yPad * 16) + ((_yPad - 1) * 16);
-                        //}
-                        //else if (startDir.Y != 0)
-                        //{
-                        //    rectX = startPos.X - (_xPad * 16);
-                        //    if (startDir.Y > 0)
-                        //        rectY = startPos.Y - (_yPad * 16);
-                        //    else if (startDir.Y < 0)
-                        //        rectY = point.Y - (_yPad * 16);
-                        //    rectWidth = (_xPad * 16 * 2) + 16;
-                        //    rectHeight = (startDir.Y * 16 * dist) + (_yPad * 16 * 2);
-                        //}
-
-                        //var rect = new RectangleF(rectX, rectY, rectWidth, rectHeight);
-
-                        //if (roomsToCheck.Where(r => r != startDoor.DungeonRoomEntity).Any(r => r.CollisionBounds.Intersects(rect)))
-                        //    break;
                     }
 
                     dist++;
@@ -137,7 +92,7 @@ namespace Threadlock.SceneComponents.Dungenerator
             }
 
             //handle non-direct and non-identical path
-            if (startDir != endDir)
+            if (startDoor.Direction != endDoor.Direction)
             {
                 int startDistance = _minDistance;
                 int endDistance = _minDistance;
@@ -194,7 +149,7 @@ namespace Threadlock.SceneComponents.Dungenerator
                             var rectHeight = (_yPad * 16) + ((_yPad - 1) * 16);
                             var testRect = new RectangleF(rectX, rectY, rectWidth, rectHeight);
 
-                            if (roomsToCheck.Any(r => r.CollisionBounds.Intersects(testRect)))
+                            if (roomsToCheck.Where(r => r != startDoor.DungeonRoomEntity).Any(r => r.CollisionBounds.Intersects(testRect)))
                             {
                                 pathFailed = true;
                                 break;
@@ -244,6 +199,142 @@ namespace Threadlock.SceneComponents.Dungenerator
             }
 
             return false;
+        }
+
+        public static bool ConnectStaticDoorways(DungeonDoorway startDoor, DungeonDoorway endDoor, List<DungeonRoomEntity> roomsToCheck)
+        {
+            var rectX = new[] { startDoor.DungeonRoomEntity.Position.X, endDoor.DungeonRoomEntity.Position.X }.Min();
+            var rectY = new[] { startDoor.DungeonRoomEntity.Position.Y, endDoor.DungeonRoomEntity.Position.Y }.Min();
+            var maxX = new[] { startDoor.DungeonRoomEntity.Bounds.Right, endDoor.DungeonRoomEntity.Bounds.Right }.Max();
+            var maxY = new[] { startDoor.DungeonRoomEntity.Bounds.Bottom, endDoor.DungeonRoomEntity.Bounds.Bottom }.Max();
+
+            var topLeft = new Vector2(rectX / 16, rectY / 16);
+            var bottomRight = new Vector2(maxX / 16, maxY / 16);
+            var size = bottomRight - topLeft;
+            var rect = new RectangleF(topLeft, size);
+
+            var graph = new AstarGridGraph((int)size.X, (int)size.Y);
+            var graphOffset = topLeft;
+
+            var joinedRooms = new List<DungeonRoomEntity>(roomsToCheck);
+            if (!joinedRooms.Contains(startDoor.DungeonRoomEntity))
+                joinedRooms.Add(startDoor.DungeonRoomEntity);
+            if (!joinedRooms.Contains(endDoor.DungeonRoomEntity))
+                joinedRooms.Add(endDoor.DungeonRoomEntity);
+
+            List<Point> wallPositions = new List<Point>();
+
+            foreach (var room in joinedRooms)
+            {
+                //add walls from collision tiles
+                var renderer = room.GetComponents<TiledMapRenderer>().FirstOrDefault(r => r.CollisionLayer != null);
+                if (renderer != null)
+                {
+                    var tiles = renderer.CollisionLayer.Tiles.Where(t => t != null)
+                    .Select(t =>
+                    {
+                        var x = t.X;
+                        var y = t.Y;
+                        var pos = new Vector2(x, y);
+                        pos += (renderer.Entity.Position / 16);
+                        pos -= graphOffset;
+                        return pos.ToPoint();
+                    });
+                    foreach (var tile in tiles)
+                    {
+                        if (!wallPositions.Contains(tile))
+                            wallPositions.Add(tile);
+                        ////only add walls that are within bounds and haven't already been added
+                        //if (tile.X >= 0 && tile.Y >= 0 && !graph.Walls.Contains(tile))
+                        //    graph.Walls.Add(tile);
+                    }
+                }
+
+                //add walls from doorways
+                var doorways = room.FindComponentsOnMap<DungeonDoorway>();
+                foreach (var doorway in doorways)
+                {
+                    for (int x = 0; x < doorway.TmxObject.Width / 16; x++)
+                    {
+                        for (int y = 0; y < doorway.TmxObject.Height / 16; y++)
+                        {
+                            var pos = new Vector2(x, y);
+                            pos += (doorway.Entity.Position / 16);
+                            pos -= graphOffset;
+                            var point = pos.ToPoint();
+
+                            if (!wallPositions.Contains(point))
+                                wallPositions.Add(point);
+                            //if (point.X >= 0 && point.Y >= 0 && !graph.Walls.Contains(point))
+                            //    graph.Walls.Add(point);
+                        }
+                    }
+                }
+            }
+
+            foreach (var wallPos in wallPositions)
+            {
+                for (int x = -_xPad; x <= _xPad; x++)
+                {
+                    for (int y = -_yPad; y <= _yPad; y++)
+                    {
+                        var offset = new Point(x, y);
+                        var offsetPos = wallPos + offset;
+                        if (offsetPos.X >= 0 && offsetPos.Y >= 0 && !graph.Walls.Contains(offsetPos))
+                            graph.Walls.Add(offsetPos);
+                    }
+                }
+            }
+
+            var startDir = startDoor.GetOutgingDirection();
+            var endDir = endDoor.GetOutgingDirection();
+            for (int i = 0; i <= _minDistance; i++)
+            {
+                var adjustedStartPos = (startDoor.PathfindingOrigin / 16).ToPoint() - graphOffset.ToPoint();
+                adjustedStartPos += (startDir * i).ToPoint();
+                if (graph.Walls.Contains(adjustedStartPos))
+                    graph.Walls.Remove(adjustedStartPos);
+
+                var adjustedEndPos = (endDoor.PathfindingOrigin / 16).ToPoint() - graphOffset.ToPoint();
+                adjustedEndPos += (endDir * i).ToPoint();
+                if (graph.Walls.Contains(adjustedEndPos))
+                    graph.Walls.Remove(adjustedEndPos);
+
+            }
+
+            //remove pathfinding origins from walls
+            //var adjustedStartPos = (startDoor.PathfindingOrigin / 16).ToPoint() - graphOffset.ToPoint();
+            //if (graph.Walls.Contains(adjustedStartPos))
+            //    graph.Walls.Remove(adjustedStartPos);
+            //var adjustedEndPos = (endDoor.PathfindingOrigin / 16).ToPoint() - graphOffset.ToPoint();
+            //if (graph.Walls.Contains(adjustedEndPos))
+            //    graph.Walls.Remove(adjustedEndPos);
+
+            var path = graph.Search(((startDoor.PathfindingOrigin / 16) - graphOffset).ToPoint(), ((endDoor.PathfindingOrigin / 16) - graphOffset).ToPoint());
+
+            if (path == null)
+                return false;
+
+            //get path in world space
+            var adjustedPath = path.Select(p =>
+            {
+                var pos = new Vector2(p.X, p.Y) + graphOffset;
+                return pos * 16;
+            }).ToList();
+
+            var reservedPositions = GetReservedPositions(startDoor, endDoor);
+
+            //get larger hallway
+            var largerPath = IncreaseCorridorWidth(adjustedPath, reservedPositions);
+
+            var floorPositions = largerPath.SelectMany(p => p.Value).ToList();
+
+            startDoor.SetOpen(true);
+            endDoor.SetOpen(true);
+
+            startDoor.DungeonRoomEntity.FloorTilePositions.AddRange(floorPositions);
+
+            return true;
         }
 
         public static bool ConnectDoorways(DungeonDoorway startDoor, DungeonDoorway endDoor, List<DungeonRoomEntity> roomsToCheck, out List<Vector2> floorPositions)

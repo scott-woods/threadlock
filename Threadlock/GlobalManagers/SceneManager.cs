@@ -18,6 +18,8 @@ namespace Threadlock.GlobalManagers
             TargetSpawnId = targetSpawnId;
             
             var transition = new FadeTransition(() => Activator.CreateInstance(targetSceneType) as Scene);
+            transition.FadeInDuration = .01f;
+            transition.DelayBeforeFadeInDuration = .01f;
             transition.OnTransitionCompleted += OnTransitionCompleted;
             transition.OnScreenObscured += OnScreenObscured;
             Game1.StartSceneTransition(transition);
