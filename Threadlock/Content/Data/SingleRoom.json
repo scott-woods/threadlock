@@ -1,10 +1,19 @@
 ﻿{
     "Nodes": [
-        {
-            "Id": 1,
-            "Type": "start",
-            "Children": [
-            ]
-        }
+      {
+        "Id": 1,
+        "Type": "start",
+        "Children": [
+          {
+            "ChildNodeId": 2,
+            "Type": "corridor"
+          }
+        ]
+      },
+      {
+        "Id": 2,
+        "Type": "normal",
+        "Children": []
+      }
     ]
 }

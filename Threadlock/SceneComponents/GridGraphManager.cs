@@ -12,6 +12,7 @@ namespace Threadlock.SceneComponents
     public class GridGraphManager : SceneComponent
     {
         AstarGridGraph _graph;
+        Vector2 _gridOffset;
 
         public override void OnEnabled()
         {
@@ -25,43 +26,52 @@ namespace Threadlock.SceneComponents
             //get all map renderers in the scene
             var mapRenderers = Scene.FindComponentsOfType<TiledMapRenderer>();
 
-            //determine total width and height of the scene
-            float leftMostPoint = mapRenderers[0].Entity.Position.X / mapRenderers[0].TiledMap.TileWidth;
-            float rightMostPoint = (mapRenderers[0].Entity.Position.X / mapRenderers[0].TiledMap.TileWidth) + mapRenderers[0].TiledMap.Width;
-            float topMostPoint = mapRenderers[0].Entity.Position.Y / mapRenderers[0].TiledMap.TileHeight;
-            float bottomMostPoint = (mapRenderers[0].Entity.Position.Y / mapRenderers[0].TiledMap.TileHeight) + mapRenderers[0].TiledMap.Height;
+            //filter to only those with collision
+            mapRenderers = mapRenderers
+                .Where(r => r.CollisionLayer != null)
+                .ToList();
+
+            Vector2 topLeft = new Vector2(float.MaxValue, float.MaxValue);
+            Vector2 bottomRight = new Vector2(float.MinValue, float.MinValue);
             foreach (var renderer in mapRenderers)
             {
-                var leftPoint = renderer.Entity.Position.X / renderer.TiledMap.TileWidth;
-                var rightPoint = (renderer.Entity.Position.X / renderer.TiledMap.TileWidth) + renderer.TiledMap.Width;
-                var topPoint = renderer.Entity.Position.Y / renderer.TiledMap.TileHeight;
-                var bottomPoint = (renderer.Entity.Position.Y / renderer.TiledMap.TileHeight) + renderer.TiledMap.Height;
+                var pos = renderer.Entity.Position / 16;
+                var mapSize = new Vector2(renderer.TiledMap.Width, renderer.TiledMap.Height);
+                var bottomRightPos = pos + mapSize;
 
-                if (leftPoint < leftMostPoint) leftMostPoint = leftPoint;
-                if (rightPoint > rightMostPoint) rightMostPoint = rightPoint;
-                if (topPoint < topMostPoint) topMostPoint = topPoint;
-                if (bottomPoint > bottomMostPoint) bottomMostPoint = bottomPoint;
+                if (pos.X < topLeft.X)
+                    topLeft.X = pos.X;
+                if (pos.Y < topLeft.Y)
+                    topLeft.Y = pos.Y;
+                if (bottomRightPos.X > bottomRight.X)
+                    bottomRight.X = bottomRightPos.X;
+                if (bottomRightPos.Y > bottomRight.Y)
+                    bottomRight.Y = bottomRightPos.Y;
             }
 
-            //create graph that is total size of the scene
-            var width = (int)(rightMostPoint - leftMostPoint);
-            var height = (int)(bottomMostPoint - topMostPoint);
-            _graph = new AstarGridGraph(width, height);
+            var size = bottomRight - topLeft;
 
-            //add walls
+            _gridOffset = topLeft;
+
+            _graph = new AstarGridGraph((int)size.X, (int)size.Y);
+
             foreach (var renderer in mapRenderers)
             {
-                if (renderer.CollisionLayer == null)
-                    continue;
-
-                var collisionLayer = renderer.CollisionLayer;
-                for (var y = 0; y < collisionLayer.Map.Height; y++)
-                {
-                    for (var x = 0; x < collisionLayer.Map.Width; x++)
+                var tiles = renderer.CollisionLayer.Tiles
+                    .Where(t => t != null)
+                    .Select(t =>
                     {
-                        if (collisionLayer.GetTile(x, y) != null)
-                            _graph.Walls.Add(new Point(x, y));
-                    }
+                        var x = t.X;
+                        var y = t.Y;
+                        var pos = new Vector2(x, y);
+                        pos += (renderer.Entity.Position / 16);
+                        pos -= _gridOffset;
+                        return pos.ToPoint();
+                    });
+                foreach (var tile in tiles)
+                {
+                    if (!_graph.Walls.Contains(tile))
+                        _graph.Walls.Add(tile);
                 }
             }
         }
@@ -70,12 +80,15 @@ namespace Threadlock.SceneComponents
         {
             var x = Mathf.FastFloorToInt(worldPosition.X / 16f);
             var y = Mathf.FastFloorToInt(worldPosition.Y / 16f);
-            return new Point(x, y);
+            var pos = new Vector2(x, y);
+            pos -= _gridOffset;
+            return pos.ToPoint();
         }
 
         public Vector2 GridToWorldPosition(Point gridPosition)
         {
-            return new Vector2(gridPosition.X, gridPosition.Y) * 16f;
+            var pos = new Vector2(gridPosition.X, gridPosition.Y) + _gridOffset;
+            return pos * 16f;
         }
 
         public List<Vector2> FindPath(Vector2 startPoint, Vector2 endPoint)

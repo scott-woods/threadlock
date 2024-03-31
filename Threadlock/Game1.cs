@@ -35,7 +35,7 @@ namespace Threadlock
             RegisterGlobalManager(GameStateManager);
 
             //misc settings
-            IsMouseVisible = true;
+            IsMouseVisible = false;
 
             //time step and refresh rate
             IsFixedTimeStep = true;

@@ -23,17 +23,25 @@ namespace Threadlock.Scenes
         {
             base.OnStart();
 
-            var mapEntity = CreateEntity("map");
             var map = Content.LoadTiledMap(Nez.Content.Tiled.Tilemaps.HubMaps.Hub);
-            var mapRenderer = mapEntity.AddComponent(new TiledMapRenderer(map, "Walls", true));
-            mapRenderer.SetLayersToRender(new[] { "Back", "Back2", "Back3", "Walls" }.Where(l => map.Layers.Contains(l)).ToArray());
+            var mapEntity = CreateEntity("map");
+            var backAndWallsLayers = new[] { "Back", "Walls" };
+            var mapRenderer = mapEntity.AddComponent(new TiledMapRenderer(map, "Walls"));
+            mapRenderer.SetLayersToRender(map.Layers
+                .Where(l => backAndWallsLayers.Any(x => l.Name.StartsWith(x)))
+                .Select(l => l.Name)
+                .ToArray());
             mapRenderer.RenderLayer = RenderLayers.Back;
             Flags.SetFlagExclusive(ref mapRenderer.PhysicsLayer, PhysicsLayers.Environment);
             TiledHelper.CreateEntitiesForTiledObjects(mapRenderer);
 
-            var frontMapRenderer = mapEntity.AddComponent(new TiledMapRenderer(map));
-            frontMapRenderer.SetLayersToRender(new[] { "Front", "AboveFront" }.Where(l => map.Layers.Contains(l)).ToArray());
-            frontMapRenderer.RenderLayer = RenderLayers.Front;
+            var frontLayers = new[] { "Front", "AboveFront" };
+            var frontRenderer = mapEntity.AddComponent(new TiledMapRenderer(map));
+            frontRenderer.SetLayersToRender(map.Layers
+                .Where(l => frontLayers.Any(x => l.Name.StartsWith(x)))
+                .Select(l => l.Name)
+                .ToArray());
+            frontRenderer.RenderLayer = RenderLayers.Front;
 
             var ui = CreateEntity("ui").AddComponent(new CombatUI());
 

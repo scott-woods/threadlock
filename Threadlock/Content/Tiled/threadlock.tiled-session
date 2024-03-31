@@ -366,27 +366,33 @@
             "expandedObjectLayers": [
                 21
             ],
-            "scale": 0.75,
-            "selectedLayer": 6,
+            "scale": 0.5,
+            "selectedLayer": 4,
             "viewCenter": {
-                "x": 548,
-                "y": 240
+                "x": 546,
+                "y": 390
             }
         },
         "Tilemaps/Forge/forge_normal_3.tmx": {
+            "expandedObjectLayers": [
+                19
+            ],
             "scale": 0.75,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 171.99999999999997,
-                "y": 260
+                "x": 170.66666666666663,
+                "y": 258.6666666666667
             }
         },
         "Tilemaps/Forge/forge_normal_4.tmx": {
+            "expandedObjectLayers": [
+                6
+            ],
             "scale": 1,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 172,
-                "y": 118
+                "x": 171,
+                "y": 117
             }
         },
         "Tilemaps/Forge/forge_pre_boss.tmx": {
@@ -467,10 +473,10 @@
                 9
             ],
             "scale": 1,
-            "selectedLayer": 3,
+            "selectedLayer": 7,
             "viewCenter": {
-                "x": 262,
-                "y": 286
+                "x": 167,
+                "y": 215
             }
         },
         "Tilemaps/Forge/forge_test.tmx": {
@@ -496,8 +502,8 @@
             "scale": 1.5,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 245.99999999999997,
-                "y": 190.66666666666663
+                "x": 153.33333333333331,
+                "y": 146
             }
         },
         "Tilemaps/enemy_test_zone.tmx": {
