@@ -115,7 +115,7 @@ namespace Threadlock.Entities
             RoomId = dungeonNode.Id;
             Type = dungeonNode.Type;
             _childrenIds = dungeonNode.Children.Select(c => c.ChildNodeId).ToList();
-            //_textComponent = AddComponent(new TextComponent(Graphics.Instance.BitmapFont, $"{dungeonNode.Id}", Vector2.Zero, Color.Black));
+            _textComponent = AddComponent(new TextComponent(Graphics.Instance.BitmapFont, $"{dungeonNode.Id}", Vector2.Zero, Color.Black));
         }
 
         #region LIFECYCLE
@@ -153,7 +153,7 @@ namespace Threadlock.Entities
                 .ToArray());
             frontRenderer.RenderLayer = RenderLayers.Front;
 
-            //_textComponent.SetLocalOffset(new Vector2(map.WorldWidth / 2, map.WorldHeight / 2));
+            _textComponent.SetLocalOffset(new Vector2(map.WorldWidth / 2, map.WorldHeight / 2));
         }
 
         public void MoveRoom(Vector2 movementAmount, bool moveChildComposites = false)

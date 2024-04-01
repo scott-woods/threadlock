@@ -208,8 +208,8 @@ namespace Threadlock.SceneComponents.Dungenerator
             var maxX = new[] { startDoor.DungeonRoomEntity.Bounds.Right, endDoor.DungeonRoomEntity.Bounds.Right }.Max();
             var maxY = new[] { startDoor.DungeonRoomEntity.Bounds.Bottom, endDoor.DungeonRoomEntity.Bounds.Bottom }.Max();
 
-            var topLeft = new Vector2(rectX / 16, rectY / 16);
-            var bottomRight = new Vector2(maxX / 16, maxY / 16);
+            var topLeft = new Vector2((rectX / 16) - _minDistance, (rectY / 16) - _minDistance);
+            var bottomRight = new Vector2((maxX / 16) + _minDistance, (maxY / 16) + _minDistance);
             var size = bottomRight - topLeft;
             var rect = new RectangleF(topLeft, size);
 
@@ -312,7 +312,7 @@ namespace Threadlock.SceneComponents.Dungenerator
 
             var path = graph.Search(((startDoor.PathfindingOrigin / 16) - graphOffset).ToPoint(), ((endDoor.PathfindingOrigin / 16) - graphOffset).ToPoint());
 
-            if (path == null)
+            if (path == null || path.Count > 50)
                 return false;
 
             //get path in world space
