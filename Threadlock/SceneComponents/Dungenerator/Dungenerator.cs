@@ -595,23 +595,77 @@ namespace Threadlock.SceneComponents.Dungenerator
                             .ThenByDescending(p => p.Item1.Direction != p.Item2.Direction)
                             .ToList();
 
-                        while (pairsList.Count > 0)
+                        var pairsListCopy = new List<Tuple<DungeonDoorway, DungeonDoorway>>(pairsList);
+
+                        while (pairsListCopy.Count > 0)
                         {
                             //pick random pair, preference for perfect pairs
-                            var pair = pairsList.Any(p => p.Item1.IsDirectMatch(p.Item2))
-                                ? pairsList.Where(p => p.Item1.IsDirectMatch(p.Item2)).ToList().RandomItem()
-                                : pairsList.Any(p => p.Item1.Direction != p.Item2.Direction)
-                                ? pairsList.Where(p => p.Item1.Direction != p.Item2.Direction).ToList().RandomItem()
-                                : pairsList.RandomItem();
+                            var pair = pairsListCopy.Any(p => p.Item1.IsDirectMatch(p.Item2))
+                                ? pairsListCopy.Where(p => p.Item1.IsDirectMatch(p.Item2)).ToList().RandomItem()
+                                : pairsListCopy.Any(p => p.Item1.Direction != p.Item2.Direction)
+                                ? pairsListCopy.Where(p => p.Item1.Direction != p.Item2.Direction).ToList().RandomItem()
+                                : pairsListCopy.RandomItem();
 
                             if (ConnectDoorways(pair.Item1, pair.Item2, roomsToCheck, childEntity.ParentComposite.RoomEntities))
                                 break;
                             else
-                                pairsList.Remove(pair);
+                                pairsListCopy.Remove(pair);
                         }
 
-                        if (pairsList.Count == 0)
+                        if (pairsListCopy.Count == 0)
                             return false;
+
+                        //simple pairs failed, try pathfinding now
+                        //if (pairsListCopy.Count == 0)
+                        //{
+                        //    pairsListCopy = new List<Tuple<DungeonDoorway, DungeonDoorway>>(pairsList);
+
+                        //    while (pairsListCopy.Count > 0)
+                        //    {
+                        //        //pick random pair, preference for perfect pairs
+                        //        var pair = pairsListCopy.Any(p => p.Item1.IsDirectMatch(p.Item2))
+                        //            ? pairsListCopy.Where(p => p.Item1.IsDirectMatch(p.Item2)).ToList().RandomItem()
+                        //            : pairsListCopy.Any(p => p.Item1.Direction != p.Item2.Direction)
+                        //            ? pairsListCopy.Where(p => p.Item1.Direction != p.Item2.Direction).ToList().RandomItem()
+                        //            : pairsListCopy.RandomItem();
+
+                        //        var minRadius = 4;
+                        //        var maxRadius = 20;
+                        //        bool connectionSuccessful = false;
+                        //        for (int x = -maxRadius; x <= maxRadius; x++)
+                        //        {
+                        //            if (Math.Abs(x) < minRadius)
+                        //                continue;
+                        //            for (int y = -maxRadius; y <= maxRadius; y++)
+                        //            {
+                        //                if (Math.Abs(y) < minRadius)
+                        //                    continue;
+
+                        //                var targetPos = pair.Item1.PathfindingOrigin + new Vector2(x * 16, y * 16);
+                        //                var movement = targetPos - pair.Item2.PathfindingOrigin;
+                        //                if (!ValidateRoomMovement(movement, childEntity.ParentComposite.RoomEntities, roomsToCheck))
+                        //                    continue;
+
+                        //                foreach (var compRoom in childEntity.ParentComposite.RoomEntities)
+                        //                    compRoom.MoveRoom(movement);
+
+                        //                if (CorridorGenerator.ConnectStaticDoorways(pair.Item1, pair.Item2, roomsToCheck))
+                        //                    connectionSuccessful = true; break;
+                        //            }
+
+                        //            if (connectionSuccessful)
+                        //                break;
+                        //        }
+
+                        //        if (connectionSuccessful)
+                        //            break;
+                        //        else
+                        //            pairsListCopy.Remove(pair);
+                        //    }
+
+                        //    if (pairsListCopy.Count == 0)
+                        //        return false;
+                        //}
                     }
                 }
             }
