@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
+using Threadlock.Entities.Characters.Player.BasicWeapons;
 using Threadlock.SaveData;
 
 namespace Threadlock.Entities.Characters.Player.States
@@ -27,21 +28,7 @@ namespace Threadlock.Entities.Characters.Player.States
 
         public override void Update(float deltaTime)
         {
-            var dir = Controls.Instance.DirectionalInput.Value;
-            dir.Normalize();
-
-            string animation = "";
-            if (dir.Y < 0 && Math.Abs(dir.X) < .1f)
-                animation = "RunUp";
-            else if (dir.Y > 0 && Math.Abs(dir.X) < .1f)
-                animation = "RunDown";
-            else
-                animation = "Run";
-
-            if (!_animator.IsAnimationActive(animation))
-                _animator.Play(animation);
-
-            _velocityComponent.Move(dir, _context.MoveSpeed);
+            _context.Run();
         }
 
         public override void Reason()

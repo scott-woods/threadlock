@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components.TiledComponents;
+using Threadlock.Entities.Characters.Player;
+using Threadlock.Entities.Characters.Player.BasicWeapons;
 using Threadlock.Managers;
 
 namespace Threadlock.StaticData
@@ -16,7 +18,8 @@ namespace Threadlock.StaticData
         {
             { "DungeonEncounter", DungeonEncounter },
             { "ExitArea", ExitArea },
-            { "SpawnTestEnemy", SpawnTestEnemy }
+            { "SpawnTestEnemy", SpawnTestEnemy },
+            { "ChangeWeapon", ChangeWeapon }
         };
 
         static bool VerifyArgs(List<string> args, int requiredCount)
@@ -147,6 +150,25 @@ namespace Threadlock.StaticData
             var spawns = trigger.FindComponentsOnMap<EnemySpawnPoint>();
             if (spawns != null && spawns.Count > 0)
                 spawns.First().SpawnEnemy(enemyType);
+        }
+
+        public static IEnumerator ChangeWeapon(Trigger trigger)
+        {
+            if (!VerifyArgs(trigger.Args, 1))
+                yield break;
+
+            var weaponName = trigger.Args[0];
+            var weaponType = Type.GetType($"Threadlock.Entities.Characters.Player.BasicWeapons.{weaponName}");
+            if (weaponType == null || !typeof(BasicWeapon).IsAssignableFrom(weaponType))
+                yield break;
+
+            var weaponInstance = Activator.CreateInstance(weaponType) as BasicWeapon;
+            if (weaponInstance == null)
+                yield break;
+
+            Player.Instance.EquipNewWeapon(weaponInstance);
+
+            Game1.AudioManager.PlaySound(Nez.Content.Audio.Sounds.Menu_select);
         }
 
         #endregion

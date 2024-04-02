@@ -14,15 +14,26 @@ namespace Threadlock.Components
         {
             get
             {
-                return _collider.AbsolutePosition;
+                return _collider != null ? _collider.AbsolutePosition : Entity.Position + _offset;
             }
         }
 
         Collider _collider;
+        Vector2 _offset;
 
         public OriginComponent(Collider collider)
         {
             _collider = collider;
+        }
+
+        public OriginComponent(Vector2 offset)
+        {
+            _offset = offset;
+        }
+
+        public void UpdateOffset(Vector2 offset)
+        {
+            _offset = offset;
         }
     }
 }

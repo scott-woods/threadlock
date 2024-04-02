@@ -1,26 +1,36 @@
-﻿using Nez.AI.FSM;
+﻿using Microsoft.Xna.Framework;
+using Nez.AI.FSM;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Entities.Characters.Player.BasicWeapons;
+using Threadlock.SaveData;
 
 namespace Threadlock.Entities.Characters.Player.States
 {
     public class BasicAttackState : PlayerState
     {
+        BasicWeapon _basicWeapon;
+
         public override void Begin()
         {
             base.Begin();
 
-            var attack = _context.GetComponent<SwordAttack>();
-            attack.StartAttack(AttackCompletedCallback);
+            _basicWeapon = _context.GetComponent<BasicWeapon>();
+            _basicWeapon.BeginAttack(AttackCompletedCallback);
         }
 
         public override void Update(float deltaTime)
         {
-            //throw new NotImplementedException();
+            if (_basicWeapon.CanMove)
+            {
+                if (Controls.Instance.XAxisIntegerInput.Value != 0 || Controls.Instance.YAxisIntegerInput.Value != 0)
+                    _context.Run();
+                if (Controls.Instance.DirectionalInput.Value == Vector2.Zero)
+                    _context.Idle();
+            }
         }
 
         void AttackCompletedCallback()

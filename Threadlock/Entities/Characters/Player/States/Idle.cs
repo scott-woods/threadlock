@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
+using Threadlock.Entities.Characters.Player.BasicWeapons;
 using Threadlock.StaticData;
 
 namespace Threadlock.Entities.Characters.Player.States
@@ -24,24 +25,11 @@ namespace Threadlock.Entities.Characters.Player.States
             _velocityComponent = _context.GetComponent<VelocityComponent>();
         }
 
-        public override void Begin()
+        public override void Update(float deltaTime)
         {
-            base.Begin();
+            base.Update(deltaTime);
 
-            var dir = _velocityComponent.Direction;
-
-            string animation = "";
-            if (dir.Y < 0 && Math.Abs(dir.X) < .75f)
-                animation = "IdleUp";
-            else if (dir.Y > 0 && Math.Abs(dir.X) < .75f)
-                animation = "IdleDown";
-            else
-                animation = "Idle";
-
-            if (!_animator.IsAnimationActive(animation))
-                _animator.Play(animation);
-
-            _velocityComponent.Direction = Vector2.Zero;
+            _context.Idle();
         }
 
         public override void Reason()

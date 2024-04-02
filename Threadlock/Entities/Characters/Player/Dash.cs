@@ -9,6 +9,7 @@ using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
+using Threadlock.Entities.Characters.Player.BasicWeapons;
 
 namespace Threadlock.Entities.Characters.Player
 {
@@ -75,6 +76,9 @@ namespace Threadlock.Entities.Characters.Player
             {
                 animation = _velocityComponent.Direction.Y >= 0 ? "RollDown" : "RollUp";
             }
+
+            if (!Entity.TryGetComponent<Sword>(out var swordAttack))
+                animation += "NoSword";
 
             _elapsedTime = 0;
 

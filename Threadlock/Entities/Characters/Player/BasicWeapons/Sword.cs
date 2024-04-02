@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Nez;
 using Nez.Sprites;
 using Nez.Systems;
+using Nez.Textures;
 using Nez.Tweens;
 using System;
 using System.Collections.Generic;
@@ -10,15 +12,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
 using Threadlock.Components.Hitboxes;
+using Threadlock.Helpers;
 using Threadlock.SaveData;
 using Threadlock.StaticData;
 
 namespace Threadlock.Entities.Characters.Player.BasicWeapons
 {
-    public class SwordAttack : BasicWeapon, IUpdatable
+    public class Sword : BasicWeapon, IUpdatable
     {
-        Action _completedCallback;
-
         //constants
         const float _initialMoveSpeed = 170f;
         const float _finalMoveSpeed = 0f;
@@ -28,6 +29,8 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
         const float _finisherPushForce = 1.5f;
         const int _movementFrames = 3; //the number of frames that we are moving for
         const float _hitboxOffset = 12f;
+
+        public override bool CanMove => false;
 
         public float Speed = 1f;
         float _originalAnimatorSpeed;
@@ -182,15 +185,17 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
             }
         }
 
+        public override void OnUnequipped()
+        {
+
+        }
+
         /// <summary>
         /// called from player state, starts a new attack
         /// </summary>
         /// <param name="attackCompletedCallback"></param>
-        public void StartAttack(Action attackCompletedCallback)
+        protected override void StartAttack()
         {
-            //set callback
-            _completedCallback = attackCompletedCallback;
-
             //set animation handler
             _animator.OnAnimationCompletedEvent += OnAnimationFinished;
 
@@ -308,7 +313,7 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
             //reset
             Reset();
 
-            _completedCallback?.Invoke();
+            CompletionCallback?.Invoke();
         }
 
         void Reset()
