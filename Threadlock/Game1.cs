@@ -36,6 +36,7 @@ namespace Threadlock
 
             //misc settings
             IsMouseVisible = false;
+            ExitOnEscapeKeypress = false;
 
             //time step and refresh rate
             IsFixedTimeStep = true;

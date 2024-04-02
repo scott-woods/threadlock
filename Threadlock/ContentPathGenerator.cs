@@ -98,6 +98,7 @@ namespace Nez
 			public const string DungeonFlows3 = @"Content\Data\DungeonFlows3.json";
 			public const string DungeonFlows4 = @"Content\Data\DungeonFlows4.json";
 			public const string DungeonFlows5 = @"Content\Data\DungeonFlows5.json";
+			public const string DungeonFlows6 = @"Content\Data\DungeonFlows6.json";
 			public const string SimpleLoop = @"Content\Data\SimpleLoop.json";
 			public const string SingleRoom = @"Content\Data\SingleRoom.json";
 		}
@@ -996,6 +997,7 @@ namespace Nez
 
 				}
 
+				public const string BorderAll10 = @"Content\Textures\UI\Border All 10.png";
 				public const string Crosshair038 = @"Content\Textures\UI\crosshair038.png";
 				public const string PlayerHealthBar = @"Content\Textures\UI\playerHealthBar.png";
 				public const string ProgressBar = @"Content\Textures\UI\progressBar.png";

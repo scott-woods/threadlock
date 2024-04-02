@@ -155,7 +155,8 @@ namespace Threadlock.Entities.Characters.Player
         {
             base.Update();
 
-            StateMachine.Update(Time.DeltaTime);
+            if (Game1.GameStateManager.GameState != GameState.Paused)
+                StateMachine.Update(Time.DeltaTime);
         }
 
         #endregion

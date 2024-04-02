@@ -12,9 +12,11 @@ namespace Threadlock.GlobalManagers
     {
         public Point TrueDesignResolution = new Point(480, 270);
         public Point DesignResolution = new Point(1920, 1080);
+        //public Point DesignResolution { get => new Point(Screen.MonitorWidth, Screen.MonitorHeight); }
         public Point BleedArea = new Point(4, 4);
         public Point DesignResolutionWithBleed { get => DesignResolution + BleedArea; }
-        public Point ResolutionScale { get => DesignResolution / TrueDesignResolution; }
+        //public Point ResolutionScale { get => DesignResolution / TrueDesignResolution; }
+        public Point ResolutionScale = new Point(4, 4);
 
         public Point UIResolution = new Point(1280, 720);
 

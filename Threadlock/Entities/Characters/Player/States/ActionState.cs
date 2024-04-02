@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Entities.Characters.Player.PlayerActions;
+using Threadlock.GlobalManagers;
 
 namespace Threadlock.Entities.Characters.Player.States
 {
@@ -27,6 +28,14 @@ namespace Threadlock.Entities.Characters.Player.States
 
         //misc
         KeyValuePair<VirtualButton, PlayerAction> _currentAction;
+
+        public override void OnInitialized()
+        {
+            base.OnInitialized();
+
+            Game1.GameStateManager.Emitter.AddObserver(GameStateEvents.Paused, OnGamePaused);
+            Game1.GameStateManager.Emitter.AddObserver(GameStateEvents.Unpaused, OnGameUnpaused);
+        }
 
         public override void Begin()
         {
@@ -169,6 +178,19 @@ namespace Threadlock.Entities.Characters.Player.States
             }
 
             _normalSpeedCoroutine = null;
+        }
+
+        void OnGamePaused()
+        {
+            _slowMoCoroutine?.Stop();
+            _slowMoCoroutine = null;
+            _normalSpeedCoroutine?.Stop();
+            _normalSpeedCoroutine = null;
+        }
+
+        void OnGameUnpaused()
+        {
+
         }
     }
 }

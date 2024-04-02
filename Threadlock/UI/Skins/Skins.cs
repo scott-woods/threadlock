@@ -29,6 +29,11 @@ namespace Threadlock.UI.Skins
             skin.Add("font_abaddon_light_60", Game1.Content.LoadBitmapFont(Nez.Content.Fonts.Abaddon_light_60));
             skin.Add("font_abaddon_light_72", Game1.Content.LoadBitmapFont(Nez.Content.Fonts.Abaddon_light_72));
 
+            var menuTexture = Game1.Content.LoadTexture(Nez.Content.Textures.UI.BorderAll10);
+            var menuTextureSprite = new Sprite(menuTexture, 64, 64, 64, 64);
+            var menuNp = new NinePatchDrawable(menuTextureSprite, 24, 24, 24, 24);
+            skin.Add("window_blue", menuNp);
+
             //player health bar
             var playerHealthTexture = Game1.Content.LoadTexture(Nez.Content.Textures.UI.PlayerHealthBar);
             var playerHealthBgSprite = new Sprite(playerHealthTexture, new Rectangle(0, 0, 64, 16));
@@ -71,6 +76,17 @@ namespace Threadlock.UI.Skins
                 {
                     Font = skin.GetFont($"font_abaddon_light_{size}"),
                     FontColor = Color.White
+                });
+
+                skin.Add($"btn_default_{size}", new TextButtonStyle()
+                {
+                    Font = skin.GetFont($"font_abaddon_light_{size}"),
+                    FontColor = Color.White,
+                    Up = new PrimitiveDrawable(Color.Transparent),
+                    Down = new PrimitiveDrawable(Color.Orange),
+                    DownFontColor = Color.Black,
+                    Over = new PrimitiveDrawable(Color.White),
+                    OverFontColor = Color.Black
                 });
             }
 

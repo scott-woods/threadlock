@@ -55,6 +55,7 @@
     <None Remove="Content\Textures\Tilesets\dungeon_prison_tileset.png" />
     <None Remove="Content\Textures\Tilesets\forge_tileset.png" />
     <None Remove="Content\Textures\Tilesets\prototype_tileset.png" />
+    <None Remove="Content\Textures\UI\Border All 10.png" />
     <None Remove="Content\Textures\UI\crosshair038.png" />
     <None Remove="Content\Textures\UI\progressBar.png" />
     <None Remove="Content\Textures\UI\progressBarGlow.png" />
