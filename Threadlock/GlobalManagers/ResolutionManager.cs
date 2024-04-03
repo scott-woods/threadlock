@@ -18,7 +18,8 @@ namespace Threadlock.GlobalManagers
         //public Point ResolutionScale { get => DesignResolution / TrueDesignResolution; }
         public Point ResolutionScale = new Point(4, 4);
 
-        public Point UIResolution = new Point(1280, 720);
+        public Point UIResolution { get => new Point(1920, 1080) / UIScale; }
+        public Point UIScale = new Point(4, 4);
 
         public List<Vector2> ScreenSizes = new List<Vector2>()
         {

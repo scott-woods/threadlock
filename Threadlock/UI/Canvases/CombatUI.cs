@@ -48,6 +48,8 @@ namespace Threadlock.UI.Canvases
             _healthBar = new PlayerHealthbar(_skin, "playerHealthBar");
             topLeftTable.Add(_healthBar).Width(Value.PercentWidth(.15f, _baseTable));
 
+            topLeftTable.SetDebug(true);
+
             _baseTable.Row();
 
             _apTable = new Table();

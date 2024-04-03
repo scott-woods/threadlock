@@ -997,6 +997,19 @@ namespace Nez
 
 				}
 
+				public static class PixelUIpack3
+				{
+					public const string _00 = @"Content\Textures\UI\Pixel UI pack 3\00.png";
+					public const string _01 = @"Content\Textures\UI\Pixel UI pack 3\01.png";
+					public const string _02 = @"Content\Textures\UI\Pixel UI pack 3\02.png";
+					public const string _03 = @"Content\Textures\UI\Pixel UI pack 3\03.png";
+					public const string _04 = @"Content\Textures\UI\Pixel UI pack 3\04.png";
+					public const string _05 = @"Content\Textures\UI\Pixel UI pack 3\05.png";
+					public const string _06 = @"Content\Textures\UI\Pixel UI pack 3\06.png";
+					public const string _07 = @"Content\Textures\UI\Pixel UI pack 3\07.png";
+					public const string All = @"Content\Textures\UI\Pixel UI pack 3\All.png";
+				}
+
 				public const string BorderAll10 = @"Content\Textures\UI\Border All 10.png";
 				public const string Crosshair038 = @"Content\Textures\UI\crosshair038.png";
 				public const string PlayerHealthBar = @"Content\Textures\UI\playerHealthBar.png";

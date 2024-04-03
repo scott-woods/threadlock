@@ -45,7 +45,8 @@ namespace Threadlock.Scenes
             AddRenderer(_gameRenderer);
 
             _uiRenderer = new ScreenSpaceRenderer(1, RenderLayers.ScreenSpaceRenderLayer);
-            var uiRenderTarget = new RenderTexture(Game1.ResolutionManager.UIResolution.X, Game1.ResolutionManager.UIResolution.Y);
+            var uiSize = Game1.ResolutionManager.UIResolution;
+            var uiRenderTarget = new RenderTexture(uiSize.X, uiSize.Y);
             //var uiRenderTarget = new RenderTexture(Game1.ResolutionManager.DesignResolution.X, Game1.ResolutionManager.DesignResolution.Y);
             uiRenderTarget.ResizeBehavior = RenderTexture.RenderTextureResizeBehavior.None;
             _uiRenderer.RenderTexture = uiRenderTarget;
