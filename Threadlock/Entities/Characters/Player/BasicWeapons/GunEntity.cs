@@ -38,6 +38,10 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
                 _renderer = AddComponent(new SpriteRenderer(texture));
                 _renderer.SetRenderLayer(RenderLayers.YSort);
             }
+            else
+            {
+                _renderer.SetEnabled(true);
+            }
 
             if (Player.Instance.TryGetComponent<OriginComponent>(out var oc))
                 _offset = oc.Origin - Player.Instance.Position;

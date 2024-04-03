@@ -14,7 +14,7 @@ namespace Threadlock.GlobalManagers
 {
     public class AudioManager : GlobalManager
     {
-        const float _defaultMusicVolume = .5f;
+        const float _defaultMusicVolume = .2f;
         const float _defaultSoundVolume = .28f;
         const float _volumeReductionFactor = .01f;
 
