@@ -17,6 +17,7 @@ namespace Threadlock.SaveData
         public float SoundVolume = .7f;
 
         public Keys UIActionKey = Keys.E;
+        public Keys Reload = Keys.R;
         public Buttons UIActionButton = Buttons.A;
         public Keys CheckKey = Keys.E;
         public Keys CancelKey = Keys.X;

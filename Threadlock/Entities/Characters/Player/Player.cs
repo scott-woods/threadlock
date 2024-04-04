@@ -31,6 +31,8 @@ namespace Threadlock.Entities.Characters.Player
         //state machine
         public StateMachine<Player> StateMachine { get; set; }
 
+        public event Action<BasicWeapon> OnWeaponChanged;
+
         //components
         Mover _mover;
         SpriteAnimator _animator;
@@ -220,6 +222,8 @@ namespace Threadlock.Entities.Characters.Player
             }
 
             _basicWeapon = AddComponent(weapon);
+
+            OnWeaponChanged?.Invoke(_basicWeapon);
 
             return _basicWeapon;
         }

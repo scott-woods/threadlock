@@ -14,13 +14,23 @@ namespace Threadlock.Entities.Characters.Player.States
     {
         BasicWeapon _basicWeapon;
 
-        public override void Begin()
+        public override void OnInitialized()
         {
-            base.Begin();
+            base.OnInitialized();
 
             _basicWeapon = _context.GetComponent<BasicWeapon>();
-            _basicWeapon.BeginAttack(AttackCompletedCallback);
+            _basicWeapon.CompletionEmitter.AddObserver(BasicWeaponEventTypes.Completed, AttackCompletedCallback);
+
+            _context.OnWeaponChanged += OnWeaponChanged;
         }
+
+        //public override void Begin()
+        //{
+        //    base.Begin();
+
+        //    _basicWeapon = _context.GetComponent<BasicWeapon>();
+        //    _basicWeapon.BeginAttack(AttackCompletedCallback);
+        //}
 
         public override void Update(float deltaTime)
         {
@@ -31,6 +41,18 @@ namespace Threadlock.Entities.Characters.Player.States
                 if (Controls.Instance.DirectionalInput.Value == Vector2.Zero)
                     _context.Idle();
             }
+        }
+        
+        void OnWeaponChanged(BasicWeapon weapon)
+        {
+            if (_basicWeapon != null && _basicWeapon != weapon)
+            {
+                _basicWeapon.CompletionEmitter.RemoveObserver(BasicWeaponEventTypes.Completed, AttackCompletedCallback);
+                _basicWeapon = null;
+            }
+
+            _basicWeapon = weapon;
+            _basicWeapon.CompletionEmitter.AddObserver(BasicWeaponEventTypes.Completed, AttackCompletedCallback);
         }
 
         void AttackCompletedCallback()

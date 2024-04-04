@@ -38,62 +38,19 @@ namespace Threadlock.UI.Skins
             //player health bar
             var playerHealthTexture = Game1.Content.LoadTexture(Nez.Content.Textures.UI.PixelUIpack3._04);
             var borderSprite = new NinePatchSprite(playerHealthTexture, new Rectangle(0, 0, 48, 16), 16, 16, 0, 0);
-            //var borderDrawable = new NinePatchDrawable(borderSprite);
             var borderDrawable = new MaskedNinePatchDrawable(borderSprite);
-            //var borderSprite = new Sprite(playerHealthTexture, new Rectangle(0, 0, 48, 16));
-            //var borderDrawable = new SpriteDrawable(borderSprite);
             borderDrawable.LeftWidth = 0;
             borderDrawable.RightWidth = 0;
             var barSprite = new NinePatchSprite(playerHealthTexture, new Rectangle(48, 0, 48, 16), 16, 16, 0, 0);
-            //var barDrawable = new NinePatchDrawable(barSprite);
             var barDrawable = new MaskedNinePatchDrawable(barSprite);
-            //var barSprite = new Sprite(playerHealthTexture, new Rectangle(48, 0, 48, 16));
-            //var barDrawable = new SpriteDrawable(barSprite);
             barDrawable.MinWidth = 0;
-            //var knobAfterSprite = new Sprite(playerHealthTexture, new Rectangle(0, 48, 48, 16));
-            //var knobAfterDrawable = new SpriteDrawable(knobAfterSprite);
-            var knobAfterSprite = new NinePatchSprite(playerHealthTexture, new Rectangle(0, 48, 48, 16), 16, 16, 0, 0);
-            var knobAfterDrawable = new NinePatchDrawable(knobAfterSprite);
-            knobAfterDrawable.MinWidth = 0;
             skin.Add("playerHealthBar", new ProgressBarStyle()
             {
                 Background = borderDrawable,
                 KnobBefore = barDrawable,
-                //KnobAfter = knobAfterDrawable,
             });
 
-            //var playerHealthBgSprite = new Sprite(playerHealthTexture, new Rectangle(0, 0, 48, 16));
-            //var playerHealthKnobBeforeSprite = new Sprite(playerHealthTexture, new Rectangle(0, 16, 64, 16));
-            //var playerHealthBg = new SpriteDrawable(playerHealthBgSprite);
-            //playerHealthBg.MinHeight = 48;
-            //playerHealthBg.LeftWidth = 1;
-            //playerHealthBg.RightWidth = 1;
-            //var playerHealthKnobBefore = new SpriteDrawable(playerHealthKnobBeforeSprite);
-            //playerHealthKnobBefore.MinHeight = 48;
-            //playerHealthKnobBefore.MinWidth = 0;
-            //skin.Add("playerHealthBar", new ProgressBarStyle()
-            //{
-            //    Background = playerHealthBg,
-            //    KnobBefore = playerHealthKnobBefore,
-            //});
-
             //ap bar
-            //var apBarTexture = Game1.Content.LoadTexture(Nez.Content.Textures.UI.ProgressBar);
-            //var apBarBgSprite = new Sprite(apBarTexture, new Rectangle(0, 0, 64, 16));
-            //var apBarKnobBeforeSprite = new Sprite(apBarTexture, new Rectangle(0, 16, 64, 16));
-            //var apBarBg = new SpriteDrawable(apBarBgSprite);
-            //apBarBg.MinHeight = 48;
-            //apBarBg.LeftWidth = 1;
-            //apBarBg.RightWidth = 1;
-            //var apBarKnobBefore = new SpriteDrawable(apBarKnobBeforeSprite);
-            //apBarKnobBefore.MinHeight = 48;
-            //apBarKnobBefore.MinWidth = 0;
-            //skin.Add("apBar", new ProgressBarStyle()
-            //{
-            //    Background = apBarBg,
-            //    KnobBefore = apBarKnobBefore,
-            //});
-
             var apBarTexture = Game1.Content.LoadTexture(Nez.Content.Textures.UI.PixelUIpack3._04);
             var apBarBgSprite = new NinePatchSprite(apBarTexture, new Rectangle(0, 48, 48, 16), 16, 16, 0, 0);
             var apBarBgDrawable = new MaskedNinePatchDrawable(apBarBgSprite);
@@ -137,6 +94,29 @@ namespace Threadlock.UI.Skins
             {
                 skin.Add($"image_keys_{i}", keySprites[i]);
             }
+
+            //ammo
+            var ammoTexture = Game1.Content.LoadTexture(Nez.Content.Textures.UI.UIAmmo.UIAmmo16x16);
+            var ammoSprites = Sprite.SpritesFromAtlas(ammoTexture, 16, 16);
+            var index = 17;
+            for (int i = 0; i < 6; i++)
+            {
+                skin.Add($"image_ammo_{i}", ammoSprites[index]);
+                index--;
+            }
+
+            //slider
+            var sliderTexture = Game1.Content.LoadTexture(Nez.Content.Textures.UI.UISliders.Simple_slider);
+            var knobSprite = new Sprite(sliderTexture, new Rectangle(0, 0, 3, 3));
+            var sliderSprite = new Sprite(sliderTexture, new Rectangle(3, 0, 35, 16));
+            var sliderDrawable = new SpriteDrawable(sliderSprite);
+            sliderDrawable.LeftWidth = 3;
+            sliderDrawable.RightWidth = 1;
+            skin.Add("slider_simple", new ProgressBarStyle()
+            {
+                Knob = new SpriteDrawable(knobSprite),
+                Background = sliderDrawable
+            });
 
             return skin;
         }

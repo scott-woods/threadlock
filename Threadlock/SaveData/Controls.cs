@@ -25,21 +25,6 @@ namespace Threadlock.SaveData
             }
         }
 
-        public Keys UIActionKey = Keys.E;
-        public Buttons UIActionButton = Buttons.A;
-        public Keys CheckKey = Keys.E;
-        public Keys CancelKey = Keys.X;
-        public Keys ShowStatsKey = Keys.Tab;
-        public Keys PauseKey = Keys.Escape;
-        public Keys DodgeKey = Keys.Space;
-        public Keys Action1Key = Keys.Q;
-        public Keys Action2Key = Keys.E;
-        public Keys SupportActionKey = Keys.F;
-        public Keys UpKey = Keys.W;
-        public Keys DownKey = Keys.S;
-        public Keys LeftKey = Keys.A;
-        public Keys RightKey = Keys.D;
-
         public VirtualButton Confirm = new VirtualButton(
             new VirtualButton.GamePadButton(0, Buttons.A),
             new VirtualButton.MouseLeftButton()
@@ -85,6 +70,10 @@ namespace Threadlock.SaveData
 
         public VirtualButton SupportAction = new VirtualButton(
             new VirtualButton.KeyboardKey(Settings.Instance.SupportActionKey)
+            );
+
+        public VirtualButton Reload = new VirtualButton(
+            new VirtualButton.KeyboardKey(Settings.Instance.Reload)
             );
 
         public VirtualIntegerAxis XAxisIntegerInput = new VirtualIntegerAxis(

@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
 using Threadlock.Helpers;
+using Threadlock.SaveData;
 using Threadlock.StaticData;
 
 namespace Threadlock.Entities.Characters.Player.BasicWeapons
@@ -17,7 +18,6 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
     {
         const float _horizontalRadius = 10f;
         const float _verticalRadius = 8f;
-        const float _cooldown = .2f;
         readonly Vector2 _staticOffset = new Vector2(0, 2);
 
         public event Action<int> OnProjectileHit;
@@ -65,16 +65,14 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
             HandleDirection();
         }
 
-        public IEnumerator Fire(Action completionCallback)
+        public IEnumerator Fire()
         {
             var projectile = Scene.AddEntity(new Projectile(_direction, Projectiles.PlayerGunProjectile));
             projectile.SetPosition(Position);
             projectile.OnHit += OnHit;
             Game1.AudioManager.PlaySound(Nez.Content.Audio.Sounds.Quickshot_fire);
 
-            yield return Coroutine.WaitForSeconds(_cooldown);
-
-            completionCallback?.Invoke();
+            yield break;
         }
 
         void OnHit(Collider collider, int damage)

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
 using Threadlock.Entities.Characters.Player;
+using Threadlock.Entities.Characters.Player.BasicWeapons;
 using Threadlock.Entities.Characters.Player.PlayerActions;
 using Threadlock.StaticData;
 using Threadlock.UI.Elements;
@@ -24,6 +25,8 @@ namespace Threadlock.UI.Canvases
         ProgressBar _apBar;
         Table _iconsTable;
         Table _apTable;
+        Table _bottomTable;
+        Table _weaponInfoTable;
         List<ProgressBar> _apBars = new List<ProgressBar>();
         List<ActionIcon> _actionIcons = new List<ActionIcon>();
 
@@ -56,12 +59,19 @@ namespace Threadlock.UI.Canvases
 
             _baseTable.Row();
 
-            var bottomTable = new Table();
-            _baseTable.Add(bottomTable).Grow();
+            _bottomTable = new Table();
+            _bottomTable.Bottom().Left();
+            _baseTable.Add(_bottomTable).Grow();
+
+            _weaponInfoTable = new Table();
+            _weaponInfoTable.Left();
+            _bottomTable.Add(_weaponInfoTable).Left().SetSpaceBottom(2f);
+
+            _bottomTable.Row();
 
             _iconsTable = new Table();
             _iconsTable.Defaults().SetSpaceRight(Value.PercentWidth(.01f, _baseTable));
-            bottomTable.Add(_iconsTable).Expand().Bottom().Left();
+            _bottomTable.Add(_iconsTable).Left();
         }
 
         public override void OnAddedToEntity()
@@ -137,6 +147,22 @@ namespace Threadlock.UI.Canvases
                     _apBars.Add(bar);
                     _apTable.Add(bar).Width(width);
                 }
+            }
+
+            if (Player.Instance.TryGetComponent<BasicWeapon>(out var weapon))
+                OnWeaponChanged(weapon);
+
+            Player.Instance.OnWeaponChanged += OnWeaponChanged;
+        }
+
+        void OnWeaponChanged(BasicWeapon weapon)
+        {
+            _weaponInfoTable?.Clear();
+
+            if (weapon is Gun gun)
+            {
+                var ammoTable = new AmmoTable(_skin, gun);
+                _weaponInfoTable.Add(ammoTable).Left();
             }
         }
 

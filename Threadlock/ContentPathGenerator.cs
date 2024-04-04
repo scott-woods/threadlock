@@ -1016,6 +1016,19 @@ namespace Nez
 					public const string All = @"Content\Textures\UI\Pixel UI pack 3\All.png";
 				}
 
+				public static class UIAmmo
+				{
+					public const string UIAmmo16x16withglow = @"Content\Textures\UI\UI - Ammo\UI - Ammo 16x16 with glow.png";
+					public const string UIAmmo16x16 = @"Content\Textures\UI\UI - Ammo\UI - Ammo 16x16.png";
+				}
+
+				public static class UISliders
+				{
+					public const string Simple_slider = @"Content\Textures\UI\UI - Sliders\simple_slider.png";
+					public const string Sliders35x16 = @"Content\Textures\UI\UI - Sliders\Sliders 35x16.png";
+					public const string SliderswithGlow35x16 = @"Content\Textures\UI\UI - Sliders\Sliders with Glow 35x16.png";
+				}
+
 				public const string BorderAll10 = @"Content\Textures\UI\Border All 10.png";
 				public const string Crosshair038 = @"Content\Textures\UI\crosshair038.png";
 				public const string PlayerHealthBar = @"Content\Textures\UI\playerHealthBar.png";

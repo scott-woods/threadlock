@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Threadlock.Components;
 using Threadlock.Components.TiledComponents;
 using Threadlock.DebugTools;
+using Threadlock.Entities.Characters.Player.BasicWeapons;
 using Threadlock.Entities.Characters.Player.PlayerActions;
 using Threadlock.SaveData;
 using Threadlock.StaticData;
@@ -80,10 +81,13 @@ namespace Threadlock.Entities.Characters.Player.States
 
         public bool TryBasicAttack()
         {
-            if (Controls.Instance.Melee.IsPressed)
+            if (_context.TryGetComponent<BasicWeapon>(out var weapon))
             {
-                _machine.ChangeState<BasicAttackState>();
-                return true;
+                if (weapon.Poll())
+                {
+                    _machine.ChangeState<BasicAttackState>();
+                    return true;
+                }
             }
 
             return false;

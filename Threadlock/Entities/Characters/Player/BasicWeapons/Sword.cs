@@ -185,6 +185,17 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
             }
         }
 
+        public override bool Poll()
+        {
+            if (Controls.Instance.Melee.IsPressed)
+            {
+                StartAttack();
+                return true;
+            }
+
+            return false;
+        }
+
         public override void OnUnequipped()
         {
 
@@ -194,7 +205,7 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
         /// called from player state, starts a new attack
         /// </summary>
         /// <param name="attackCompletedCallback"></param>
-        protected override void StartAttack()
+        void StartAttack()
         {
             //set animation handler
             _animator.OnAnimationCompletedEvent += OnAnimationFinished;
@@ -313,7 +324,7 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
             //reset
             Reset();
 
-            CompletionCallback?.Invoke();
+            CompletionEmitter.Emit(BasicWeaponEventTypes.Completed);
         }
 
         void Reset()
