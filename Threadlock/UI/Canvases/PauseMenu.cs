@@ -46,13 +46,13 @@ namespace Threadlock.UI.Canvases
             var innerTable = new Table();
             table.Add(innerTable).Grow();
 
-            var resumeButton = new TextButton("Resume", _skin, "btn_default_36");
+            var resumeButton = new TextButton("Resume", _skin, "btn_default_24");
             resumeButton.OnClicked += OnResumeClicked;
             innerTable.Add(resumeButton);
 
             innerTable.Row();
 
-            var exitButton = new TextButton("Quit", _skin, "btn_default_36");
+            var exitButton = new TextButton("Quit", _skin, "btn_default_24");
             innerTable.Add(exitButton);
             exitButton.OnClicked += OnExitClicked;
         }

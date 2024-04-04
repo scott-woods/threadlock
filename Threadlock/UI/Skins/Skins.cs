@@ -78,20 +78,34 @@ namespace Threadlock.UI.Skins
             //});
 
             //ap bar
-            var apBarTexture = Game1.Content.LoadTexture(Nez.Content.Textures.UI.ProgressBar);
-            var apBarBgSprite = new Sprite(apBarTexture, new Rectangle(0, 0, 64, 16));
-            var apBarKnobBeforeSprite = new Sprite(apBarTexture, new Rectangle(0, 16, 64, 16));
-            var apBarBg = new SpriteDrawable(apBarBgSprite);
-            apBarBg.MinHeight = 48;
-            apBarBg.LeftWidth = 1;
-            apBarBg.RightWidth = 1;
-            var apBarKnobBefore = new SpriteDrawable(apBarKnobBeforeSprite);
-            apBarKnobBefore.MinHeight = 48;
-            apBarKnobBefore.MinWidth = 0;
+            //var apBarTexture = Game1.Content.LoadTexture(Nez.Content.Textures.UI.ProgressBar);
+            //var apBarBgSprite = new Sprite(apBarTexture, new Rectangle(0, 0, 64, 16));
+            //var apBarKnobBeforeSprite = new Sprite(apBarTexture, new Rectangle(0, 16, 64, 16));
+            //var apBarBg = new SpriteDrawable(apBarBgSprite);
+            //apBarBg.MinHeight = 48;
+            //apBarBg.LeftWidth = 1;
+            //apBarBg.RightWidth = 1;
+            //var apBarKnobBefore = new SpriteDrawable(apBarKnobBeforeSprite);
+            //apBarKnobBefore.MinHeight = 48;
+            //apBarKnobBefore.MinWidth = 0;
+            //skin.Add("apBar", new ProgressBarStyle()
+            //{
+            //    Background = apBarBg,
+            //    KnobBefore = apBarKnobBefore,
+            //});
+
+            var apBarTexture = Game1.Content.LoadTexture(Nez.Content.Textures.UI.PixelUIpack3._04);
+            var apBarBgSprite = new NinePatchSprite(apBarTexture, new Rectangle(0, 48, 48, 16), 16, 16, 0, 0);
+            var apBarBgDrawable = new MaskedNinePatchDrawable(apBarBgSprite);
+            apBarBgDrawable.LeftWidth = 0;
+            apBarBgDrawable.RightWidth = 0;
+            var apBarKnobBeforeSprite = new NinePatchSprite(apBarTexture, new Rectangle(48, 32, 48, 16), 16, 16, 0, 0);
+            var apBarKnobBeforeDrawable = new MaskedNinePatchDrawable(apBarKnobBeforeSprite);
+            apBarKnobBeforeDrawable.MinWidth = 0;
             skin.Add("apBar", new ProgressBarStyle()
             {
-                Background = apBarBg,
-                KnobBefore = apBarKnobBefore,
+                Background = apBarBgDrawable,
+                KnobBefore = apBarKnobBeforeDrawable,
             });
 
             //labels
@@ -114,6 +128,14 @@ namespace Threadlock.UI.Skins
                     Over = new PrimitiveDrawable(Color.White),
                     OverFontColor = Color.Black
                 });
+            }
+
+            //keyboard key symbols
+            var keysTexture = Game1.Content.LoadTexture(Nez.Content.Textures.UI.KeyboardSymbols.KeyboardLettersandSymbols);
+            var keySprites = Sprite.SpritesFromAtlas(keysTexture, 16, 16);
+            for (int i = 0; i < keySprites.Count; i++)
+            {
+                skin.Add($"image_keys_{i}", keySprites[i]);
             }
 
             return skin;

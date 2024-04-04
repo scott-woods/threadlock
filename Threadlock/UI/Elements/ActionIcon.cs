@@ -19,7 +19,7 @@ namespace Threadlock.UI.Elements
             _iconId = iconId;
             _apCost = apCost;
 
-            SetScale(2f);
+            SetScale(1f);
 
             SetDrawable(_skin.GetDrawable($"Style 4 Icon {iconId}"));
         }

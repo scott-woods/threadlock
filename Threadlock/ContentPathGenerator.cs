@@ -976,6 +976,12 @@ namespace Nez
 					public const string Plus_icon_up = @"Content\Textures\UI\Icons\plus_icon_up.png";
 				}
 
+				public static class KeyboardSymbols
+				{
+					public const string KeyboardExtras = @"Content\Textures\UI\Keyboard Symbols\Keyboard Extras.png";
+					public const string KeyboardLettersandSymbols = @"Content\Textures\UI\Keyboard Symbols\Keyboard Letters and Symbols.png";
+				}
+
 				public static class Menu
 				{
 					public static class Style3

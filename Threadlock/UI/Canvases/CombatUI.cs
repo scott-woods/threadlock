@@ -40,7 +40,7 @@ namespace Threadlock.UI.Canvases
             _baseTable = Stage.AddElement(new Table());
             _baseTable.SetWidth(Game1.ResolutionManager.UIResolution.X);
             _baseTable.SetHeight(Game1.ResolutionManager.UIResolution.Y);
-            _baseTable.SetFillParent(false).Pad(Value.PercentWidth(.025f));
+            _baseTable.SetFillParent(false).Pad(Value.PercentWidth(.01f));
 
             var topLeftTable = new Table();
             _baseTable.Add(topLeftTable).Top().Left();
@@ -48,13 +48,11 @@ namespace Threadlock.UI.Canvases
             _healthBar = new PlayerHealthbar(_skin, "playerHealthBar");
             topLeftTable.Add(_healthBar).Width(Value.PercentWidth(.15f, _baseTable));
 
-            topLeftTable.SetDebug(true);
-
             _baseTable.Row();
 
             _apTable = new Table();
-            _apTable.Defaults().SetSpaceRight(Value.PercentWidth(.005f, _baseTable));
-            _baseTable.Add(_apTable).Top().Left();
+            //_apTable.Defaults().SetSpaceRight(Value.PercentWidth(.005f, _baseTable));
+            _baseTable.Add(_apTable).Width(Value.PercentWidth(.3f, _baseTable)).Top().Left();
 
             _baseTable.Row();
 
@@ -87,8 +85,11 @@ namespace Threadlock.UI.Canvases
 
                 table.Row();
 
-                var label = new Label("Q", _skin, "abaddon_24");
-                table.Add(label);
+                var key = new Image(_skin.GetDrawable("image_keys_32"));
+                table.Add(key);
+
+                //var label = new Label("Q", _skin, "abaddon_24");
+                //table.Add(label);
             }
             if (Player.Instance.OffensiveAction2 != null)
             {
@@ -100,8 +101,11 @@ namespace Threadlock.UI.Canvases
 
                 table.Row();
 
-                var label = new Label("E", _skin, "abaddon_24");
-                table.Add(label);
+                var key = new Image(_skin.GetDrawable("image_keys_20"));
+                table.Add(key);
+
+                //var label = new Label("E", _skin, "abaddon_24");
+                //table.Add(label);
             }
             if (Player.Instance.SupportAction != null)
             {
@@ -113,20 +117,25 @@ namespace Threadlock.UI.Canvases
 
                 table.Row();
 
-                var label = new Label("F", _skin, "abaddon_24");
-                table.Add(label);
+                var key = new Image(_skin.GetDrawable("image_keys_21"));
+                table.Add(key);
+
+                //var label = new Label("F", _skin, "abaddon_24");
+                //table.Add(label);
             }
 
             if (Player.Instance.TryGetComponent<ApComponent>(out var ac))
             {
                 ac.OnApChanged += OnApChanged;
 
+                var tableCell = _baseTable.GetCell(_apTable);
+                var width = tableCell.GetMaxWidth() / ac.MaxActionPoints;
                 for (int i = 0; i < ac.MaxActionPoints; i++)
                 {
                     var bar = new ProgressBar(_skin, "apBar");
                     bar.SetMinMax(0, 1);
                     _apBars.Add(bar);
-                    _apTable.Add(bar);
+                    _apTable.Add(bar).Width(width);
                 }
             }
         }
