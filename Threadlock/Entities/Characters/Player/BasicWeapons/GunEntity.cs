@@ -27,6 +27,7 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
 
         Vector2 _direction = Vector2.One;
         Vector2 _offset = Vector2.Zero;
+        bool _isReloading = false;
 
         public override void OnAddedToScene()
         {
@@ -75,6 +76,28 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
             yield break;
         }
 
+        public IEnumerator ReloadSpin()
+        {
+            var spinDuration = .15f;
+            var timer = 0f;
+            _isReloading = true;
+            while (timer < spinDuration)
+            {
+                var progress = timer / spinDuration;
+                var rotation = progress * 360;
+
+                //get direction
+                _direction = Player.Instance.GetFacingDirection();
+                var radians = (float)Math.Atan2(_direction.Y, _direction.X);
+
+                RotationDegrees = MathHelper.ToDegrees(radians) - rotation;
+                timer += Time.DeltaTime;
+                yield return null;
+            }
+
+            _isReloading = false;
+        }
+
         void OnHit(Collider collider, int damage)
         {
             OnProjectileHit?.Invoke(damage);
@@ -93,7 +116,8 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
             _renderer.SetLocalOffset(new Vector2(offsetX, offsetY) + _staticOffset);
 
             //rotate gun sprite
-            Rotation = radians;
+            if (!_isReloading)
+                Rotation = radians;
 
             //flip sprite
             _renderer.FlipY = _direction.X < 0;

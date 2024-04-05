@@ -75,6 +75,7 @@ namespace Nez
 				public const string Purchase = @"Content\Audio\Sounds\purchase.wav";
 				public const string Quickshot_draw = @"Content\Audio\Sounds\quickshot_draw.wav";
 				public const string Quickshot_fire = @"Content\Audio\Sounds\quickshot_fire.wav";
+				public const string Quickshot_reload_1 = @"Content\Audio\Sounds\quickshot_reload_1.wav";
 				public const string Small_lightning = @"Content\Audio\Sounds\small_lightning.wav";
 				public const string Space_ship_3 = @"Content\Audio\Sounds\space_ship_3.wav";
 				public const string Special_chest_sound = @"Content\Audio\Sounds\special_chest_sound.wav";

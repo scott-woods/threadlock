@@ -53,7 +53,7 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
         {
             base.OnAddedToEntity();
 
-            Game1.AudioManager.PlaySound(Nez.Content.Audio.Sounds.Quickshot_draw);
+            Game1.AudioManager.PlaySound(Nez.Content.Audio.Sounds.Quickshot_reload_1);
 
             _ammo = MaxAmmo;
 
@@ -116,10 +116,18 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
 
         IEnumerator Reload()
         {
+            _gunEntity.SetEnabled(false);
             Game1.AudioManager.PlaySound(Nez.Content.Audio.Sounds.Quickshot_draw);
             OnReloadStarted?.Invoke(_reloadTime);
 
             yield return Coroutine.WaitForSeconds(_reloadTime);
+
+            _gunEntity.SetEnabled(true);
+
+            Game1.AudioManager.PlaySound(Nez.Content.Audio.Sounds.Ap_full);
+            Game1.AudioManager.PlaySound(Nez.Content.Audio.Sounds.Quickshot_reload_1);
+
+            yield return _gunEntity.ReloadSpin();
 
             Ammo = _maxAmmo;
 
