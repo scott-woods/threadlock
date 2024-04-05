@@ -15,6 +15,7 @@ namespace Threadlock
         public static GameStateManager GameStateManager { get; private set; } = new GameStateManager();
         public static AudioManager AudioManager { get; private set; } = new AudioManager();
         public static SceneManager SceneManager { get; private set; } = new SceneManager();
+        public static UIManager UIManager { get; private set; } = new UIManager();
 
         public Game1() : base()
         {
@@ -33,6 +34,7 @@ namespace Threadlock
             RegisterGlobalManager(AudioManager);
             RegisterGlobalManager(SceneManager);
             RegisterGlobalManager(GameStateManager);
+            RegisterGlobalManager(UIManager);
 
             //misc settings
             IsMouseVisible = false;

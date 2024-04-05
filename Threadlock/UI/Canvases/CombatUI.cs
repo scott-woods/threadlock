@@ -153,6 +153,19 @@ namespace Threadlock.UI.Canvases
                 OnWeaponChanged(weapon);
 
             Player.Instance.OnWeaponChanged += OnWeaponChanged;
+
+            Game1.UIManager.Emitter.AddObserver(GlobalManagers.UIEvents.DialogueStarted, OnDialogueStarted);
+            Game1.UIManager.Emitter.AddObserver(GlobalManagers.UIEvents.DialogueEnded, OnDialogueEnded);
+        }
+
+        void OnDialogueStarted()
+        {
+            SetEnabled(false);
+        }
+
+        void OnDialogueEnded()
+        {
+            SetEnabled(true);
         }
 
         void OnWeaponChanged(BasicWeapon weapon)
@@ -179,6 +192,9 @@ namespace Threadlock.UI.Canvases
             {
                 ac.OnApChanged -= OnApChanged;
             }
+
+            Game1.UIManager.Emitter.RemoveObserver(GlobalManagers.UIEvents.DialogueStarted, OnDialogueStarted);
+            Game1.UIManager.Emitter.RemoveObserver(GlobalManagers.UIEvents.DialogueEnded, OnDialogueEnded);
         }
 
         void OnHealthChanged(int oldValue, int newValue)

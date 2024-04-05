@@ -132,6 +132,7 @@ namespace Threadlock.Entities.Characters.Player
             StateMachine.AddState(new ActionState());
             StateMachine.AddState(new DashState());
             StateMachine.AddState(new StunnedState());
+            StateMachine.AddState(new CutsceneState());
 
             Game1.SceneManager.Emitter.AddObserver(SceneManagerEvents.SceneChangeStarted, OnSceneChangeStarted);
             Game1.Emitter.AddObserver(CoreEvents.SceneChanged, OnSceneChanged);

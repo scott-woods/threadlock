@@ -102,6 +102,7 @@ namespace Nez
 			public const string DungeonFlows6 = @"Content\Data\DungeonFlows6.json";
 			public const string SimpleLoop = @"Content\Data\SimpleLoop.json";
 			public const string SingleRoom = @"Content\Data\SingleRoom.json";
+			public const string TestDialogue = @"Content\Data\TestDialogue.json";
 		}
 
 		public static class Effects

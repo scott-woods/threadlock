@@ -146,7 +146,7 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
                 StartAttack();
                 return true;
             }
-            if (Controls.Instance.Reload.IsPressed)
+            if (Ammo < MaxAmmo && Controls.Instance.Reload.IsPressed)
             {
                 Game1.StartCoroutine(Reload());
                 return true;

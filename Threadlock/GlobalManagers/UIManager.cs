@@ -1,0 +1,51 @@
+﻿using Nez;
+using Nez.Systems;
+using Nez.UI;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Threadlock.Models;
+using Threadlock.StaticData;
+using Threadlock.UI.Elements;
+using Threadlock.UI.Skins;
+
+namespace Threadlock.GlobalManagers
+{
+    public class UIManager : GlobalManager
+    {
+        public Emitter<UIEvents> Emitter = new Emitter<UIEvents>();
+
+        public IEnumerator ShowTextboxText(List<DialogueLine> dialogueSet)
+        {
+            var canvas = Game1.Scene.CreateEntity("textbox-ui").AddComponent(new UICanvas());
+            canvas.SetRenderLayer(RenderLayers.ScreenSpaceRenderLayer);
+            canvas.IsFullScreen = true;
+            var skin = Skins.GetDefaultSkin();
+
+            var baseTable = canvas.Stage.AddElement(new Table()).Bottom().SetFillParent(false);
+            baseTable.SetWidth(Game1.ResolutionManager.UIResolution.X);
+            baseTable.SetHeight(Game1.ResolutionManager.UIResolution.Y);
+            //baseTable.SetFillParent(false);d
+
+            var textbox = new Textbox(skin);
+            baseTable.Add(textbox).Expand().Bottom().SetPadBottom(Value.PercentHeight(.05f, baseTable)).Width(Value.PercentWidth(1f)).Height(Value.PercentHeight(1f));
+
+            Emitter.Emit(UIEvents.DialogueStarted);
+
+            yield return textbox.DisplayText(dialogueSet);
+
+            Emitter.Emit(UIEvents.DialogueEnded);
+
+            canvas.Entity.Destroy();
+        }
+    }
+    
+    public enum UIEvents
+    {
+        DialogueStarted,
+        DialogueEnded
+    }
+}

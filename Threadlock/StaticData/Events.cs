@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Threadlock.Components.TiledComponents;
 using Threadlock.Entities.Characters.Player;
 using Threadlock.Entities.Characters.Player.BasicWeapons;
+using Threadlock.Helpers;
 using Threadlock.Managers;
 
 namespace Threadlock.StaticData
@@ -19,7 +20,8 @@ namespace Threadlock.StaticData
             { "DungeonEncounter", DungeonEncounter },
             { "ExitArea", ExitArea },
             { "SpawnTestEnemy", SpawnTestEnemy },
-            { "ChangeWeapon", ChangeWeapon }
+            { "ChangeWeapon", ChangeWeapon },
+            { "Dialogue", Dialogue }
         };
 
         static bool VerifyArgs(List<string> args, int requiredCount)
@@ -28,6 +30,22 @@ namespace Threadlock.StaticData
         }
 
         #region EVENTS
+
+        public static IEnumerator Dialogue(Trigger trigger)
+        {
+            if (!VerifyArgs(trigger.Args, 2))
+                yield break;
+
+            var location = trigger.Args[0];
+            var id = trigger.Args[1];
+
+            var dialogueSet = DialogueLoader.GetDialogue(location, id);
+
+            if (dialogueSet == null)
+                yield break;
+
+            yield return Game1.UIManager.ShowTextboxText(dialogueSet);
+        }
 
         public static IEnumerator DungeonEncounter(Trigger trigger)
         {

@@ -1,0 +1,13 @@
+{
+  "TestDialogue": [
+    {
+      "Text": "I Zucked his Zock."
+    },
+    {
+      "Text": "...in poland."
+    },
+    {
+      "Text": "Long message that should spill over into the next line, kind of like the sort of spills that may occur during the Polish Zock Zucking mentioned previously."
+    }
+  ]
+}

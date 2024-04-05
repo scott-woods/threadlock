@@ -20,10 +20,13 @@ namespace Threadlock.Entities.Characters.Player.States
     public class PlayerState : State<Player>
     {
         const float _checkRadius = 20f;
+        const float _checkCooldown = 1f;
 
         protected StatusComponent _statusComponent;
         protected ApComponent _apComponent;
         protected ActionManager _actionManager;
+
+        bool _isCheckOnCooldown = false;
 
         public override void OnInitialized()
         {
@@ -37,6 +40,24 @@ namespace Threadlock.Entities.Characters.Player.States
 
             if (_context.TryGetComponent<ActionManager>(out var actionManager))
                 _actionManager = actionManager;
+
+            Game1.UIManager.Emitter.AddObserver(GlobalManagers.UIEvents.DialogueStarted, OnDialogueStarted);
+            Game1.UIManager.Emitter.AddObserver(GlobalManagers.UIEvents.DialogueEnded, OnDialogueEnded);
+        }
+
+        void OnDialogueStarted()
+        {
+            _machine.ChangeState<CutsceneState>();
+        }
+
+        void OnDialogueEnded()
+        {
+            _isCheckOnCooldown = true;
+            Game1.Schedule(_checkCooldown, timer =>
+            {
+                _isCheckOnCooldown = false;
+            });
+            _machine.ChangeState<Idle>();
         }
 
         public override void Update(float deltaTime)
@@ -117,7 +138,7 @@ namespace Threadlock.Entities.Characters.Player.States
 
         public bool TryInteract()
         {
-            if (Controls.Instance.Check.IsPressed)
+            if (!_isCheckOnCooldown && Controls.Instance.Check.IsPressed)
             {
                 var basePos = _context.Position;
                 if (_context.TryGetComponent<OriginComponent>(out var oc))
