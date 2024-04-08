@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Nez;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,9 @@ namespace Threadlock.Components.Hitboxes
         float PushForce { get; set; }
         Vector2 Direction { get; set; }
         string AttackId { get; set; }
+
+        event Action<Entity, int> OnHit;
+
+        public void Hit(Entity hitEntity, int damage);
     }
 }

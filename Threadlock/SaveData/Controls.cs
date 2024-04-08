@@ -55,6 +55,10 @@ namespace Threadlock.SaveData
             new VirtualButton.GamePadButton(0, Buttons.X)
             );
 
+        public VirtualButton AltAttack = new VirtualButton(
+            new VirtualButton.MouseRightButton()
+            );
+
         public VirtualButton Dodge = new VirtualButton(
             new VirtualButton.KeyboardKey(Settings.Instance.DodgeKey),
             new VirtualButton.GamePadButton(0, Buttons.B)

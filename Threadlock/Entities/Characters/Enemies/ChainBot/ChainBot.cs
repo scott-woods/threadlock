@@ -47,7 +47,7 @@ namespace Threadlock.Entities.Characters.Enemies.ChainBot
 
             _mover = AddComponent(new Mover());
 
-            _healthComponent = AddComponent(new HealthComponent(12, 12));
+            _healthComponent = AddComponent(new HealthComponent(10, 10));
 
             _velocityComponent = AddComponent(new VelocityComponent(_mover));
 
@@ -65,6 +65,7 @@ namespace Threadlock.Entities.Characters.Enemies.ChainBot
             _collider.CollidesWithLayers = 0;
             Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.Environment);
             Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.EnemyCollider);
+            Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.ProjectilePassableWall);
 
             _flipper = AddComponent(new SpriteFlipper());
 

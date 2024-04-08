@@ -25,7 +25,7 @@ namespace Threadlock.Entities.Characters.Player
     {
         public static Player Instance { get; private set; }
 
-        public float MoveSpeed = 150f;
+        public float MoveSpeed = 135f;
         public Vector2 DefaultSpriteOffset = new Vector2(13, -2);
 
         //state machine
@@ -72,7 +72,7 @@ namespace Threadlock.Entities.Characters.Player
             _velocityComponent = AddComponent(new VelocityComponent(_mover));
             _spriteFlipper = AddComponent(new SpriteFlipper());
             //_basicWeapon = AddComponent(new Sword());
-            _basicWeapon = AddComponent(new Gun());
+            _basicWeapon = AddComponent(new Sword());
             _dash = AddComponent(new Dash(1));
             _spriteTrail = AddComponent(new SpriteTrail());
             _spriteTrail.DisableSpriteTrail();
@@ -82,6 +82,7 @@ namespace Threadlock.Entities.Characters.Player
             Flags.SetFlagExclusive(ref _collider.PhysicsLayer, PhysicsLayers.PlayerCollider);
             _collider.CollidesWithLayers = 0;
             Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.Environment);
+            Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.ProjectilePassableWall);
 
             //hurtbox
             var hurtboxCollider = AddComponent(new BoxCollider(9, 16));

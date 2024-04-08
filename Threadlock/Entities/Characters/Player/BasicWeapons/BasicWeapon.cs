@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Threadlock.Components.Hitboxes;
 
 namespace Threadlock.Entities.Characters.Player.BasicWeapons
 {
@@ -17,6 +18,16 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
         public abstract bool Poll();
 
         public abstract void OnUnequipped();
+
+        public void WatchHitbox(IHitbox hitbox)
+        {
+            hitbox.OnHit += OnHit;
+        }
+
+        void OnHit(Entity hitEntity, int damage)
+        {
+            Emitter.Emit(BasicWeaponEventTypes.Hit, damage);
+        }
     }
 
     public enum BasicWeaponEventTypes

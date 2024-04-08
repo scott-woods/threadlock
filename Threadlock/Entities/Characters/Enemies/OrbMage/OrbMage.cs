@@ -71,7 +71,7 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
             Flags.SetFlagExclusive(ref hurtboxCollider.CollidesWithLayers, PhysicsLayers.PlayerHitbox);
             _hurtbox = AddComponent(new Hurtbox(hurtboxCollider, 0, Content.Audio.Sounds.Chain_bot_damaged));
 
-            _healthComponent = AddComponent(new HealthComponent(12, 12));
+            _healthComponent = AddComponent(new HealthComponent(8, 8));
 
             _velocityComponent = AddComponent(new VelocityComponent(_mover));
 
@@ -80,6 +80,7 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
             _collider.CollidesWithLayers = 0;
             Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.Environment);
             Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.EnemyCollider);
+            Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.ProjectilePassableWall);
 
             _originComponent = AddComponent(new OriginComponent(_collider));
 

@@ -8,8 +8,9 @@ namespace Threadlock.StaticData
 {
     public static class RenderLayers
     {
-        public const int Back = 2;
-        public const int Shadow = 1;
+        public const int Back = 3;
+        public const int Shadow = 2;
+        public const int Walls = 1;
         public const int YSort = 0;
         public const int Front = -10;
         public const int AboveFront = -20;

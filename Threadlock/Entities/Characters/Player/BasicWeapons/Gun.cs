@@ -13,8 +13,9 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
 {
     public class Gun : BasicWeapon
     {
-        const float _cooldown = .4f;
-        const float _reloadTime = 1f;
+        const float _cooldown = .33f;
+        const float _altAttackCooldown = .66f;
+        const float _reloadTime = 1.3f;
 
         public override bool CanMove => true;
 
@@ -60,7 +61,7 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
             //create gun entity
             _gunEntity = Entity.Scene.AddEntity(new GunEntity());
             _gunEntity.SetParent(Entity);
-            _gunEntity.OnProjectileHit += OnProjectileHit;
+            _gunEntity.OnProjectileCreated += OnProjectileCreated;
         }
 
         public override void OnRemovedFromEntity()
@@ -79,6 +80,31 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
         void StartAttack()
         {
             Game1.StartCoroutine(Fire());
+        }
+
+        IEnumerator SecondaryAttack()
+        {
+            if (_ammo <= 0)
+            {
+                yield return Reload();
+                yield break;
+            }
+
+            //fire shotgun shot
+            yield return _gunEntity.ShotgunBlast(Math.Min(_ammo, 5));
+
+            //handle ammo
+            Ammo -= Math.Min(_ammo, 5);
+
+            //start cooldown timer
+            var timer = 0f;
+            while (timer < _altAttackCooldown)
+            {
+                timer += Time.DeltaTime;
+                yield return null;
+            }
+
+            CompletionEmitter.Emit(BasicWeaponEventTypes.Completed);
         }
 
         IEnumerator Fire()
@@ -134,9 +160,9 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
             CompletionEmitter.Emit(BasicWeaponEventTypes.Completed);
         }
 
-        void OnProjectileHit(int damage)
+        void OnProjectileCreated(Projectile projectile)
         {
-            Emitter.Emit(BasicWeaponEventTypes.Hit, damage);
+            WatchHitbox(projectile.Hitbox);
         }
 
         public override bool Poll()
@@ -149,6 +175,11 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
             if (Ammo < MaxAmmo && Controls.Instance.Reload.IsPressed)
             {
                 Game1.StartCoroutine(Reload());
+                return true;
+            }
+            if (Controls.Instance.AltAttack.IsPressed)
+            {
+                Game1.StartCoroutine(SecondaryAttack());
                 return true;
             }
 

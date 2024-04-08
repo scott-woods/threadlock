@@ -36,6 +36,7 @@ namespace Nez
 				public const string _69_Die_02 = @"Content\Audio\Sounds\69_Die_02.wav";
 				public const string _81_Whip_woosh_1 = @"Content\Audio\Sounds\81_Whip_woosh_1.wav";
 				public const string _86_Whip_hit_03 = @"Content\Audio\Sounds\86_Whip_hit_03.wav";
+				public const string _8d82b5_doom_shotgun_firing_sound_effect = @"Content\Audio\Sounds\8d82b5_doom_shotgun_firing_sound_effect.wav";
 				public const string Ap_full = @"Content\Audio\Sounds\ap_full.wav";
 				public const string Ap_gain = @"Content\Audio\Sounds\ap_gain.wav";
 				public const string Attack = @"Content\Audio\Sounds\attack.wav";
@@ -55,6 +56,7 @@ namespace Nez
 				public const string Dollah_pickup = @"Content\Audio\Sounds\dollah_pickup.wav";
 				public const string Enemy_death_1 = @"Content\Audio\Sounds\enemy_death_1.wav";
 				public const string Enemy_spawn = @"Content\Audio\Sounds\enemy_spawn.wav";
+				public const string FartWithReverb = @"Content\Audio\Sounds\Fart With Reverb.wav";
 				public const string Freeze = @"Content\Audio\Sounds\freeze.wav";
 				public const string Gate_close = @"Content\Audio\Sounds\gate_close.wav";
 				public const string Ghoul_claw = @"Content\Audio\Sounds\ghoul_claw.wav";

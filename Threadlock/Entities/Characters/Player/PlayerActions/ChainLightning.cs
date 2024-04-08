@@ -22,7 +22,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
     {
         //consts
         const int _damage = 3;
-        const int _hitboxRadius = 12;
+        const int _hitboxRadius = 18;
         const int _hitboxDistFromPlayer = 12;
         const int _hitboxActiveFrame = 0;
 

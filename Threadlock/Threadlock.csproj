@@ -32,6 +32,8 @@
   <ItemGroup>
     <None Remove="Content\Audio\Music\melting idols.ogg" />
     <None Remove="Content\Audio\Music\the_bay.ogg" />
+    <None Remove="Content\Audio\Sounds\8d82b5_doom_shotgun_firing_sound_effect.mp3" />
+    <None Remove="Content\Audio\Sounds\Fart With Reverb.wav" />
     <None Remove="Content\Data\DungeonFlows2.json" />
     <None Remove="Content\Data\DungeonFlows3.json" />
     <None Remove="Content\Data\DungeonFlows4.json" />

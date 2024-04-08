@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Threadlock.Helpers;
 using Threadlock.Models;
 
 namespace Threadlock.Components
@@ -70,6 +71,8 @@ namespace Threadlock.Components
         void OnHurtboxHit(HurtboxHit hit)
         {
             Health -= hit.Hitbox.Damage;
+
+            hit.Hitbox.Hit(Entity, hit.Hitbox.Damage);
         }
 
         #endregion

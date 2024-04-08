@@ -131,6 +131,9 @@ namespace Threadlock.Components
 
         IEnumerator Knockback(Vector2 direction, float speed)
         {
+            //wait one frame so we don't mess up physics stuff
+            yield return null;
+
             //play animation if possible
             if (Entity.TryGetComponent<SpriteAnimator>(out var animator))
             {

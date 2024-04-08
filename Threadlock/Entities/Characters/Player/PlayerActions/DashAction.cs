@@ -22,6 +22,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
         //constants
         const int _range = 48;
         const int _damage = 4;
+        const float _hitboxOffset = 8f;
 
         //other components
         SpriteAnimator _animator;
@@ -49,7 +50,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             _target = Entity.AddComponent(new PrototypeSpriteRenderer(4, 4));
             _target.SetEnabled(false);
 
-            _hitbox = new BoxHitbox(_damage, 16, 8);
+            _hitbox = new BoxHitbox(_damage, 20, 10);
             Flags.SetFlagExclusive(ref _hitbox.PhysicsLayer, PhysicsLayers.PlayerHitbox);
             Flags.SetFlagExclusive(ref _hitbox.CollidesWithLayers, PhysicsLayers.EnemyHurtbox);
             _hitbox.SetEnabled(false);
@@ -74,6 +75,10 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
 
             if (Entity.TryGetComponent<VelocityComponent>(out var velocityComponent))
                 _velocityComponent = velocityComponent;
+
+            _hitboxEntity = Entity.Scene.AddEntity(new Entity("dash-hitbox"));
+            _hitboxEntity.SetParent(Entity);
+            _hitboxEntity.AddComponent(_hitbox);
         }
 
         public override void OnRemovedFromEntity()
@@ -86,6 +91,8 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
                 animator.Animations.Remove("ChargeDashDown");
                 animator.Animations.Remove("ChargeDashUp");
             }
+
+            _hitboxEntity?.Destroy();
         }
 
         #endregion
@@ -125,8 +132,9 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             Game1.AudioManager.PlaySound(Content.Audio.Sounds._20_Slash_02);
 
             //enable hitbox
-            _hitboxEntity = Entity.Scene.CreateEntity("dash-hitbox", Entity.Position);
-            _hitboxEntity.AddComponent(_hitbox);
+            //_hitboxEntity = Entity.Scene.CreateEntity("dash-hitbox", Entity.Position);
+            //_hitboxEntity.AddComponent(_hitbox);
+            _hitboxEntity.SetLocalPosition(_direction * _hitboxOffset);
             _hitboxEntity.SetRotationDegrees(angle);
             _hitbox.SetEnabled(true);
 
@@ -147,7 +155,6 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
                 var progress = (totalMovementTime - movementTimeRemaining) / totalMovementTime;
                 var lerpPosition = Vector2.Lerp(initialPosition, finalPosition, progress);
                 Entity.Position = lerpPosition;
-                _hitboxEntity.Position = lerpPosition;
 
                 yield return null;
             }
@@ -168,8 +175,8 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
 
             _target.SetEnabled(false);
             _hitbox.SetEnabled(false);
-            _hitboxEntity?.Destroy();
-            _hitboxEntity = null;
+            //_hitboxEntity?.Destroy();
+            //_hitboxEntity = null;
         }
 
         #endregion

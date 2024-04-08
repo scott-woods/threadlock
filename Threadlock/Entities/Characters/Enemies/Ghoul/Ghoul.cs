@@ -52,7 +52,7 @@ namespace Threadlock.Entities.Characters.Enemies.Ghoul
             _hurtbox = AddComponent(new Hurtbox(hurtboxCollider, 0, Content.Audio.Sounds.Chain_bot_damaged));
 
             //health
-            _healthComponent = AddComponent(new HealthComponent(9, 9));
+            _healthComponent = AddComponent(new HealthComponent(7, 7));
 
             //velocity
             _velocityComponent = AddComponent(new VelocityComponent(_mover));
@@ -64,6 +64,7 @@ namespace Threadlock.Entities.Characters.Enemies.Ghoul
             _collider.CollidesWithLayers = 0;
             Flags.SetFlag(ref _collider.CollidesWithLayers, (int)PhysicsLayers.Environment);
             Flags.SetFlag(ref _collider.CollidesWithLayers, (int)PhysicsLayers.EnemyCollider);
+            Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.ProjectilePassableWall);
 
             //origin
             _originComponent = AddComponent(new OriginComponent(_collider));

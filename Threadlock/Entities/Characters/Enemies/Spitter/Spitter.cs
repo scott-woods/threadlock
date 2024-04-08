@@ -68,13 +68,14 @@ namespace Threadlock.Entities.Characters.Enemies.Spitter
             _hurtbox = AddComponent(new Hurtbox(hurtboxCollider, 0, Content.Audio.Sounds.Chain_bot_damaged));
             _hurtbox.Emitter.AddObserver(HurtboxEventTypes.Hit, OnHurtboxHit);
 
-            _healthComponent = AddComponent(new HealthComponent(9, 9));
+            _healthComponent = AddComponent(new HealthComponent(8, 8));
 
             //collider
             _collider = AddComponent(new BoxCollider(-4, 8, 6, 6));
             Flags.SetFlagExclusive(ref _collider.PhysicsLayer, (int)PhysicsLayers.EnemyCollider);
             _collider.CollidesWithLayers = 0;
             Flags.SetFlag(ref _collider.CollidesWithLayers, (int)PhysicsLayers.Environment);
+            Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.ProjectilePassableWall);
 
             _pathfinder = AddComponent(new Pathfinder(_collider));
 

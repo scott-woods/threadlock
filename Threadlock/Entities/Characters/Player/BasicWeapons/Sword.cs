@@ -53,14 +53,12 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
         //added components
         CircleHitbox _hitbox;
 
-        //list of colliders hit during attack
-        List<Collider> _hitColliders = new List<Collider>();
-
         public override void Initialize()
         {
             base.Initialize();
 
             _hitbox = Entity.AddComponent(new CircleHitbox(_damage, 12));
+            WatchHitbox(_hitbox);
             Flags.SetFlagExclusive(ref _hitbox.PhysicsLayer, PhysicsLayers.PlayerHitbox);
             Flags.SetFlagExclusive(ref _hitbox.CollidesWithLayers, PhysicsLayers.EnemyHurtbox);
             _hitbox.SetEnabled(false);
@@ -168,20 +166,6 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
                     _hitbox.SetEnabled(true);
                 }
                 else _hitbox.SetEnabled(false);
-
-                //check for hit
-                var colliders = Physics.BoxcastBroadphaseExcludingSelf(_hitbox, _hitbox.CollidesWithLayers);
-                if (colliders.Count > 0)
-                {
-                    foreach (var collider in colliders)
-                    {
-                        if (!_hitColliders.Contains(collider))
-                        {
-                            Emitter.Emit(BasicWeaponEventTypes.Hit, _damage);
-                            _hitColliders.Add(collider);
-                        }
-                    }
-                }
             }
         }
 
@@ -228,9 +212,6 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
         {
             //increment combo
             _comboCounter++;
-
-            //clear hit colliders
-            _hitColliders.Clear();
 
             //set hitbox position
             var hitboxPosition = Entity.Position + dir * _hitboxOffset;
@@ -342,9 +323,6 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
 
             //hitbox
             _hitbox.SetEnabled(false);
-
-            //clear hit colliders
-            _hitColliders.Clear();
         }
 
         public void CancelAttack()

@@ -21,7 +21,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
         const int _baseDamage = 2;
         const int _damageAddedPerChain = 1;
         const float _delay = .1f;
-        const int _chainRadius = 50;
+        const int _chainRadius = 75;
 
         //components
         CircleHitbox _hitbox;

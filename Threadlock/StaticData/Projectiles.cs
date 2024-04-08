@@ -43,8 +43,30 @@ namespace Threadlock.StaticData
                 var sprites = Sprite.SpritesFromAtlas(texture, 16, 16);
                 return new ProjectileConfig()
                 {
-                    Damage = 1,
+                    Damage = 2,
                     Speed = 350,
+                    Radius = 4,
+                    SpritePath = path,
+                    TravelSprites = AnimatedSpriteHelper.GetSpriteArrayByRow(sprites, 0, 2, 4),
+                    BurstSprites = AnimatedSpriteHelper.GetSpriteArrayByRow(sprites, 1, 4, 4),
+                    PhysicsLayer = PhysicsLayers.PlayerHitbox,
+                    HitLayers = new List<int> { PhysicsLayers.EnemyHurtbox },
+                    DestroyOnWall = true
+                };
+            }
+        }
+
+        public static ProjectileConfig PlayerShotgunProjectile
+        {
+            get
+            {
+                var path = Nez.Content.Textures.Characters.Player.Player_gun_projectile;
+                var texture = Game1.Content.LoadTexture(path);
+                var sprites = Sprite.SpritesFromAtlas(texture, 16, 16);
+                return new ProjectileConfig()
+                {
+                    Damage = 1,
+                    Speed = 475,
                     Radius = 4,
                     SpritePath = path,
                     TravelSprites = AnimatedSpriteHelper.GetSpriteArrayByRow(sprites, 0, 2, 4),

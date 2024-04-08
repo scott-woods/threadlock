@@ -103,6 +103,25 @@
         {
             "color": "#ffa0a0a4",
             "drawFill": true,
+            "id": 14,
+            "members": [
+                {
+                    "name": "Passable",
+                    "type": "bool",
+                    "value": false
+                }
+            ],
+            "name": "PassableWallLayer",
+            "type": "class",
+            "useAs": [
+                "property",
+                "layer",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
             "id": 2,
             "members": [
                 {

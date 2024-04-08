@@ -25,6 +25,13 @@ namespace Threadlock.Components.Hitboxes
         string _attackId;
         public string AttackId { get => _attackId; set => _attackId = value; }
 
+        public event Action<Entity, int> OnHit;
+
+        public void Hit(Entity hitEntity, int damage)
+        {
+            OnHit?.Invoke(hitEntity, damage);
+        }
+
         #endregion
 
         /// <summary>
@@ -50,7 +57,7 @@ namespace Threadlock.Components.Hitboxes
         {
             base.Initialize();
 
-            IsTrigger = true;
+            IsTrigger = false;
         }
 
         public override void OnEnabled()

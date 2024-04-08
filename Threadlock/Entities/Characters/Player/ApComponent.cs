@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
 using Threadlock.Entities.Characters.Player.BasicWeapons;
+using Threadlock.Helpers;
+using Threadlock.Models;
 
 namespace Threadlock.Entities.Characters.Player
 {
@@ -36,6 +38,8 @@ namespace Threadlock.Entities.Characters.Player
         int _progress = 0;
         int _damageRequired = 10;
 
+        BasicWeapon _weapon;
+
         public ApComponent(int maxAp)
         {
             MaxActionPoints = maxAp;
@@ -54,8 +58,12 @@ namespace Threadlock.Entities.Characters.Player
 
             if (Entity.TryGetComponent<BasicWeapon>(out var weapon))
             {
+                _weapon = weapon;
                 weapon.Emitter.AddObserver(BasicWeaponEventTypes.Hit, OnBasicAttackHit);
             }
+
+            if (Entity is Player player)
+                player.OnWeaponChanged += OnWeaponChanged;
         }
 
         public override void OnRemovedFromEntity()
@@ -71,6 +79,9 @@ namespace Threadlock.Entities.Characters.Player
             {
                 weapon.Emitter.RemoveObserver(BasicWeaponEventTypes.Hit, OnBasicAttackHit);
             }
+
+            if (Entity is Player player)
+                player.OnWeaponChanged -= OnWeaponChanged;
         }
 
         #endregion
@@ -105,6 +116,13 @@ namespace Threadlock.Entities.Characters.Player
                 return;
 
             AddProgress((oldValue - newValue) * _hurtMultiplier);
+        }
+
+        void OnWeaponChanged(BasicWeapon weapon)
+        {
+            _weapon?.Emitter.RemoveObserver(BasicWeaponEventTypes.Hit, OnBasicAttackHit);
+            _weapon = weapon;
+            _weapon.Emitter.AddObserver(BasicWeaponEventTypes.Hit, OnBasicAttackHit);
         }
     }
 }

@@ -18,5 +18,6 @@ namespace Threadlock.StaticData
         public const int PlayerHurtbox = 7;
         public const int Trigger = 8;
         public const int CombatArea = 9;
+        public const int ProjectilePassableWall = 10;
     }
 }

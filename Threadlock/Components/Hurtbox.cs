@@ -19,7 +19,7 @@ namespace Threadlock.Components
     /// <summary>
     /// Collider that detects when entity is hit by an enemy attack, and emits with info about the hit
     /// </summary>
-    public class Hurtbox : Component, IUpdatable
+    public class Hurtbox : Component, ITriggerListener, IUpdatable
     {
         public Emitter<HurtboxEventTypes, HurtboxHit> Emitter = new Emitter<HurtboxEventTypes, HurtboxHit>();
 
@@ -43,6 +43,7 @@ namespace Threadlock.Components
         public Hurtbox(Collider collider, float recoveryTime, string damageSound)
         {
             _collider = collider;
+            _collider.IsTrigger = true;
             _recoveryTime = recoveryTime;
             _damageSound = damageSound;
         }
@@ -67,20 +68,10 @@ namespace Threadlock.Components
 
         public void Update()
         {
-            if (Entity.GetType() == typeof(Player) && !DebugSettings.PlayerHurtboxEnabled)
-                return;
-
-            var hitboxes = Physics.BoxcastBroadphaseExcludingSelf(_collider, _collider.CollidesWithLayers).ToList();
-            for (int i = 0; i < hitboxes.Count; i++)
+            var colliders = Physics.BoxcastBroadphaseExcludingSelf(_collider, _collider.CollidesWithLayers);
+            foreach (var collider in colliders)
             {
-                var hitbox = hitboxes[i] as IHitbox;
-                if (!_recentAttackIds.Contains(hitbox.AttackId))
-                {
-                    var id = hitbox.AttackId;
-                    _recentAttackIds.Add(id);
-                    Game1.Schedule(_attackLifespan, timer => _recentAttackIds.Remove(id));
-                    HandleHit(hitbox);
-                }
+                OnTriggerEnter(collider, _collider);
             }
         }
 
@@ -96,6 +87,8 @@ namespace Threadlock.Components
 
             //get collision result
             var collider = hitbox as Collider;
+
+            //add effects and such only if we can get a the collision normal
             if (collider.CollidesWith(_collider, out CollisionResult collisionResult))
             {
                 //get angle from normal
@@ -112,18 +105,22 @@ namespace Threadlock.Components
 
                 //hit effect
                 var effectEntity = Entity.Scene.AddEntity(new HitEffect(effect));
-                effectEntity.SetPosition(collisionResult.Point);
+                effectEntity.SetPosition(Entity.Position);
                 effectEntity.SetRotation(angle);
+            }
 
+            //start recovery timer if necessary
+            if (_recoveryTime > 0)
+            {
                 SetEnabled(false);
                 _recoveryTimer = Game1.Schedule(_recoveryTime, timer =>
                 {
                     SetEnabled(true);
                 });
-
-                //emit hit signal
-                Emitter.Emit(HurtboxEventTypes.Hit, new HurtboxHit(collisionResult, hitbox));
             }
+
+            //emit hit signal
+            Emitter.Emit(HurtboxEventTypes.Hit, new HurtboxHit(collisionResult, hitbox));
         }
 
         void OnDeathStarted(Entity entity)
@@ -132,6 +129,33 @@ namespace Threadlock.Components
 
             _recoveryTimer?.Stop();
             _recoveryTimer = null;
+        }
+
+        public void OnTriggerEnter(Collider other, Collider local)
+        {
+            if (!Enabled)
+                return;
+
+            if (Entity.GetType() == typeof(Player) && !DebugSettings.PlayerHurtboxEnabled)
+                return;
+
+            var hitbox = other as IHitbox;
+
+            if (hitbox == null)
+                return;
+
+            if (!_recentAttackIds.Contains(hitbox.AttackId))
+            {
+                var id = hitbox.AttackId;
+                _recentAttackIds.Add(id);
+                Game1.Schedule(_attackLifespan, timer => _recentAttackIds.Remove(id));
+                HandleHit(hitbox);
+            }
+        }
+
+        public void OnTriggerExit(Collider other, Collider local)
+        {
+
         }
     }
 

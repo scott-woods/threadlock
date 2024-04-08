@@ -115,7 +115,7 @@ namespace Threadlock.Entities
             RoomId = dungeonNode.Id;
             Type = dungeonNode.Type;
             _childrenIds = dungeonNode.Children.Select(c => c.ChildNodeId).ToList();
-            _textComponent = AddComponent(new TextComponent(Graphics.Instance.BitmapFont, $"{dungeonNode.Id}", Vector2.Zero, Color.Black));
+            //_textComponent = AddComponent(new TextComponent(Graphics.Instance.BitmapFont, $"{dungeonNode.Id}", Vector2.Zero, Color.Black));
         }
 
         #region LIFECYCLE
@@ -135,25 +135,72 @@ namespace Threadlock.Entities
         {
             Map = map;
 
-            var backAndWallsLayers = new[] { "Back", "Walls" };
-            var mapRenderer = AddComponent(new TiledMapRenderer(map, "Walls"));
-            mapRenderer.SetLayersToRender(map.Layers
-                .Where(l => backAndWallsLayers.Any(x => l.Name.StartsWith(x)))
-                .Select(l => l.Name)
-                .ToArray());
-            mapRenderer.RenderLayer = RenderLayers.Back;
-            Flags.SetFlagExclusive(ref mapRenderer.PhysicsLayer, PhysicsLayers.Environment);
-            TiledHelper.CreateEntitiesForTiledObjects(mapRenderer);
+            List<TmxLayer> backLayers = new List<TmxLayer>();
+            List<TmxLayer> wallLayers = new List<TmxLayer>();
+            List<TmxLayer> passableWallLayers = new List<TmxLayer>();
+            List<TmxLayer> frontLayers = new List<TmxLayer>();
+            List<TmxLayer> aboveFrontLayers = new List<TmxLayer>();
 
-            var frontLayers = new[] { "Front", "AboveFront" };
-            var frontRenderer = AddComponent(new TiledMapRenderer(map));
-            frontRenderer.SetLayersToRender(map.Layers
-                .Where(l => frontLayers.Any(x => l.Name.StartsWith(x)))
-                .Select(l => l.Name)
-                .ToArray());
-            frontRenderer.RenderLayer = RenderLayers.Front;
+            foreach (var layer in map.TileLayers)
+            {
+                if (layer.Name.StartsWith("Back"))
+                    backLayers.Add(layer);
+                if (layer.Name.StartsWith("Walls"))
+                {
+                    if (layer.Properties != null && layer.Properties.TryGetValue("Passable", out var passable))
+                    {
+                        if (passable.ToLower() == "true")
+                            passableWallLayers.Add(layer);
+                    }
+                    else
+                        wallLayers.Add(layer);
+                }
+                if (layer.Name.StartsWith("Front"))
+                    frontLayers.Add(layer);
+                if (layer.Name.StartsWith("AboveFront"))
+                    aboveFrontLayers.Add(layer);
+            }
 
-            _textComponent.SetLocalOffset(new Vector2(map.WorldWidth / 2, map.WorldHeight / 2));
+            if (backLayers.Any())
+            {
+                var mapRenderer = AddComponent(new TiledMapRenderer(map));
+                mapRenderer.SetLayersToRender(backLayers.Select(l => l.Name).ToArray());
+                mapRenderer.RenderLayer = RenderLayers.Back;
+                TiledHelper.CreateEntitiesForTiledObjects(mapRenderer);
+            }
+
+            //wall layers need one renderer each, since a tiledmaprenderer can only have one collision layer
+            foreach (var wallLayer in wallLayers)
+            {
+                var wallRenderer = AddComponent(new TiledMapRenderer(map, wallLayer.Name));
+                wallRenderer.SetLayersToRender(wallLayer.Name);
+                wallRenderer.RenderLayer = RenderLayers.Walls;
+                Flags.SetFlagExclusive(ref wallRenderer.PhysicsLayer, PhysicsLayers.Environment);
+            }
+
+            foreach (var passableLayer in passableWallLayers)
+            {
+                var passableWallRenderer = AddComponent(new TiledMapRenderer(map, passableLayer.Name));
+                passableWallRenderer.SetLayersToRender(passableLayer.Name);
+                passableWallRenderer.RenderLayer = RenderLayers.Walls;
+                Flags.SetFlagExclusive(ref passableWallRenderer.PhysicsLayer, PhysicsLayers.ProjectilePassableWall);
+            }
+
+            if (frontLayers.Any())
+            {
+                var frontRenderer = AddComponent(new TiledMapRenderer(map));
+                frontRenderer.SetLayersToRender(frontLayers.Select(l => l.Name).ToArray());
+                frontRenderer.RenderLayer = RenderLayers.Front;
+            }
+
+            if (aboveFrontLayers.Any())
+            {
+                var aboveFrontRenderer = AddComponent(new TiledMapRenderer(map));
+                aboveFrontRenderer.SetLayersToRender(aboveFrontLayers.Select(l => l.Name).ToArray());
+                aboveFrontRenderer.RenderLayer = RenderLayers.AboveFront;
+            }
+
+            //_textComponent.SetLocalOffset(new Vector2(map.WorldWidth / 2, map.WorldHeight / 2));
         }
 
         public void MoveRoom(Vector2 movementAmount, bool moveChildComposites = false)

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Nez;
 using Nez.Sprites;
+using Nez.Tweens;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ using Threadlock.Components;
 using Threadlock.Helpers;
 using Threadlock.SaveData;
 using Threadlock.StaticData;
+using Random = Nez.Random;
 
 namespace Threadlock.Entities.Characters.Player.BasicWeapons
 {
@@ -18,9 +20,14 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
     {
         const float _horizontalRadius = 10f;
         const float _verticalRadius = 8f;
+        const float _shotgunSpread = 18f;
+        const float _projectileOffset = 5f;
+        const float _shotgunPosVariance = 3f;
+        const float _shotgunLifetime = .2f;
+        const float _bulletFadeTime = .04f;
         readonly Vector2 _staticOffset = new Vector2(0, 2);
 
-        public event Action<int> OnProjectileHit;
+        public event Action<Projectile> OnProjectileCreated;
 
         SpriteRenderer _renderer;
         OriginComponent _originComponent;
@@ -69,9 +76,37 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
         public IEnumerator Fire()
         {
             var projectile = Scene.AddEntity(new Projectile(_direction, Projectiles.PlayerGunProjectile));
-            projectile.SetPosition(Position);
-            projectile.OnHit += OnHit;
+            projectile.SetPosition(Position + (_projectileOffset * _direction));
             Game1.AudioManager.PlaySound(Nez.Content.Audio.Sounds.Quickshot_fire);
+            OnProjectileCreated?.Invoke(projectile);
+
+            yield break;
+        }
+
+        public IEnumerator ShotgunBlast(int bulletCount)
+        {
+            for (int i = 0; i < bulletCount; i++)
+            {
+                var angleOffset = Random.Range(-_shotgunSpread, _shotgunSpread);
+                var angleOffsetRadians = MathHelper.ToRadians(angleOffset);
+                var sin = (float)Math.Sin(angleOffsetRadians);
+                var cos = (float)Math.Cos(angleOffsetRadians);
+                var bulletDir = new Vector2(cos * _direction.X - sin * _direction.Y, sin * _direction.X + cos * _direction.Y);
+                var pos = Position + (_direction * _projectileOffset);
+                pos.X += Random.Range(-_shotgunPosVariance, _shotgunPosVariance);
+                pos.Y += Random.Range(-_shotgunPosVariance, _shotgunPosVariance);
+                var projectile = Scene.AddEntity(new Projectile(bulletDir, Projectiles.PlayerShotgunProjectile));
+                projectile.SetPosition(pos);
+                OnProjectileCreated?.Invoke(projectile);
+
+                Game1.Schedule(_shotgunLifetime, timer =>
+                {
+                    Game1.StartCoroutine(projectile.Fade(_bulletFadeTime));
+                });
+            }
+
+            Game1.AudioManager.PlaySound(Nez.Content.Audio.Sounds._8d82b5_doom_shotgun_firing_sound_effect);
+            Game1.AudioManager.PlaySound(Nez.Content.Audio.Sounds.FartWithReverb);
 
             yield break;
         }
@@ -96,11 +131,6 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
             }
 
             _isReloading = false;
-        }
-
-        void OnHit(Collider collider, int damage)
-        {
-            OnProjectileHit?.Invoke(damage);
         }
 
         void HandleDirection()
