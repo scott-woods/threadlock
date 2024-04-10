@@ -19,5 +19,6 @@ namespace Threadlock.StaticData
         public const int Trigger = 8;
         public const int CombatArea = 9;
         public const int ProjectilePassableWall = 10;
+        public const int Selectable = 11;
     }
 }

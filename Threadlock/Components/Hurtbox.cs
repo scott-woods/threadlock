@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Nez;
 using Nez.Systems;
+using Nez.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,7 @@ namespace Threadlock.Components
     public class Hurtbox : Component, ITriggerListener, IUpdatable
     {
         public Emitter<HurtboxEventTypes, HurtboxHit> Emitter = new Emitter<HurtboxEventTypes, HurtboxHit>();
+        public event Action<int> OnHit;
 
         //consts
         const float _attackLifespan = 2f;
@@ -77,7 +79,29 @@ namespace Threadlock.Components
 
         #endregion
 
-        void HandleHit(IHitbox hitbox)
+        public void ManualHit(int damage)
+        {
+            //play sound
+            if (!String.IsNullOrWhiteSpace(_damageSound))
+            {
+                Game1.AudioManager.PlaySound(_damageSound);
+            }
+
+            //start recovery timer if necessary
+            if (_recoveryTime > 0)
+            {
+                SetEnabled(false);
+                _recoveryTimer = Game1.Schedule(_recoveryTime, timer =>
+                {
+                    SetEnabled(true);
+                });
+            }
+
+            //emit hit signal
+            OnHit?.Invoke(damage);
+        }
+
+        public void HandleHit(IHitbox hitbox)
         {
             //play sound
             if (!String.IsNullOrWhiteSpace(_damageSound))

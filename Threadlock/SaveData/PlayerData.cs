@@ -23,7 +23,7 @@ namespace Threadlock.SaveData
         }
 
         public PlayerActionType OffensiveAction1 = PlayerActionType.FromType(typeof(DashAction));
-        public PlayerActionType OffensiveAction2 = PlayerActionType.FromType(typeof(ChainLightning));
+        public PlayerActionType OffensiveAction2 = PlayerActionType.FromType(typeof(Grip));
         public PlayerActionType SupportAction = PlayerActionType.FromType(typeof(Teleport));
 
         private PlayerData()

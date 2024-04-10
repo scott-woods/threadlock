@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
+using Threadlock.Effects;
 using Threadlock.Entities.Characters.Player.BasicWeapons;
 using Threadlock.Entities.Characters.Player.PlayerActions;
 using Threadlock.Entities.Characters.Player.States;
@@ -207,6 +208,27 @@ namespace Threadlock.Entities.Characters.Player
                 _animator.Play(animation);
 
             _velocityComponent.Direction = Vector2.Zero;
+        }
+
+        public void IdleInFacingDirection()
+        {
+            var dir = GetFacingDirection();
+
+            string animation = "";
+            if (dir.Y < 0 && Math.Abs(dir.X) < .75f)
+                animation = "IdleUp";
+            else if (dir.Y > 0 && Math.Abs(dir.X) < .75f)
+                animation = "IdleDown";
+            else
+                animation = "Idle";
+
+            if (_basicWeapon.GetType() != typeof(Sword))
+                animation += "NoSword";
+
+            if (!_animator.IsAnimationActive(animation))
+                _animator.Play(animation);
+
+            _velocityComponent.LastNonZeroDirection = dir;
         }
 
         public BasicWeapon EquipNewWeapon<T>() where T : BasicWeapon, new()

@@ -96,6 +96,8 @@ namespace Threadlock.Entities.Characters.Enemies.Spitter
 
             var shadow = AddComponent(new Shadow(_animator));
 
+            AddComponent(new SelectionComponent(_animator, 10));
+
             BeginCooldown();
         }
 

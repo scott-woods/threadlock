@@ -28,6 +28,8 @@ namespace Nez
 				public const string _14_Impact_flesh_01 = @"Content\Audio\Sounds\14_Impact_flesh_01.wav";
 				public const string _18_Impact_flesh_05 = @"Content\Audio\Sounds\18_Impact_flesh_05.wav";
 				public const string _20_Slash_02 = @"Content\Audio\Sounds\20_Slash_02.wav";
+				public const string _22_Slash_04 = @"Content\Audio\Sounds\22_Slash_04.wav";
+				public const string _23_Slash_05 = @"Content\Audio\Sounds\23_Slash_05.wav";
 				public const string _26_Pierce_03 = @"Content\Audio\Sounds\26_Pierce_03.wav";
 				public const string _31_swoosh_sword_1 = @"Content\Audio\Sounds\31_swoosh_sword_1.wav";
 				public const string _32_Swoosh_sword_2 = @"Content\Audio\Sounds\32_Swoosh_sword_2.wav";
@@ -78,6 +80,7 @@ namespace Nez
 				public const string Quickshot_draw = @"Content\Audio\Sounds\quickshot_draw.wav";
 				public const string Quickshot_fire = @"Content\Audio\Sounds\quickshot_fire.wav";
 				public const string Quickshot_reload_1 = @"Content\Audio\Sounds\quickshot_reload_1.wav";
+				public const string RetroAlarmed06 = @"Content\Audio\Sounds\Retro Alarmed 06.wav";
 				public const string Small_lightning = @"Content\Audio\Sounds\small_lightning.wav";
 				public const string Space_ship_3 = @"Content\Audio\Sounds\space_ship_3.wav";
 				public const string Special_chest_sound = @"Content\Audio\Sounds\special_chest_sound.wav";
@@ -92,6 +95,7 @@ namespace Nez
 		public static class CompiledEffects
 		{
 			public const string JitterDestroyer = @"Content\CompiledEffects\JitterDestroyer.fxb";
+			public const string SpriteOutline = @"Content\CompiledEffects\SpriteOutline.fxb";
 		}
 
 		public static class Data
@@ -102,6 +106,8 @@ namespace Nez
 			public const string DungeonFlows4 = @"Content\Data\DungeonFlows4.json";
 			public const string DungeonFlows5 = @"Content\Data\DungeonFlows5.json";
 			public const string DungeonFlows6 = @"Content\Data\DungeonFlows6.json";
+			public const string FairyForestTiles = @"Content\Data\FairyForestTiles.json";
+			public const string FairyForestTiles2 = @"Content\Data\FairyForestTiles2.json";
 			public const string SimpleLoop = @"Content\Data\SimpleLoop.json";
 			public const string SingleRoom = @"Content\Data\SingleRoom.json";
 			public const string TestDialogue = @"Content\Data\TestDialogue.json";
@@ -110,6 +116,7 @@ namespace Nez
 		public static class Effects
 		{
 			public const string JitterDestroyer = @"Content\Effects\JitterDestroyer.fx";
+			public const string SpriteOutline = @"Content\Effects\SpriteOutline.fx";
 		}
 
 		public static class Fonts

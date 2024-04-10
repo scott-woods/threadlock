@@ -25,15 +25,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="content\effects\JItterFree.fx\**" />
+    <Compile Remove="content\effects\OutlineShader.fx\**" />
     <Content Remove="content\effects\JItterFree.fx\**" />
+    <Content Remove="content\effects\OutlineShader.fx\**" />
     <EmbeddedResource Remove="content\effects\JItterFree.fx\**" />
+    <EmbeddedResource Remove="content\effects\OutlineShader.fx\**" />
     <None Remove="content\effects\JItterFree.fx\**" />
+    <None Remove="content\effects\OutlineShader.fx\**" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Content\Audio\Music\melting idols.ogg" />
     <None Remove="Content\Audio\Music\the_bay.ogg" />
+    <None Remove="Content\Audio\Sounds\22_Slash_04.wav" />
+    <None Remove="Content\Audio\Sounds\23_Slash_05.wav" />
     <None Remove="Content\Audio\Sounds\8d82b5_doom_shotgun_firing_sound_effect.mp3" />
     <None Remove="Content\Audio\Sounds\Fart With Reverb.wav" />
+    <None Remove="Content\Audio\Sounds\Retro Alarmed 06.wav" />
+    <None Remove="Content\CompiledEffects\SpriteOutline.fxb" />
     <None Remove="Content\Data\DungeonFlows2.json" />
     <None Remove="Content\Data\DungeonFlows3.json" />
     <None Remove="Content\Data\DungeonFlows4.json" />
@@ -45,6 +53,7 @@
     <None Remove="Content\Data\SingleRoom.json" />
     <None Remove="Content\Data\TestDialogue.json" />
     <None Remove="Content\Effects\JitterDestroyer.fx" />
+    <None Remove="content\effects\OutlineShader.fx" />
     <None Remove="Content\Textures\Characters\ChainBot\attack.png" />
     <None Remove="Content\Textures\Characters\ChainBot\charge.png" />
     <None Remove="Content\Textures\Characters\ChainBot\death.png" />

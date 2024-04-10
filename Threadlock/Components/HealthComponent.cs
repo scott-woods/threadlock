@@ -53,7 +53,10 @@ namespace Threadlock.Components
             base.OnAddedToEntity();
 
             if (Entity.TryGetComponent<Hurtbox>(out var hurtbox))
+            {
                 hurtbox.Emitter.AddObserver(HurtboxEventTypes.Hit, OnHurtboxHit);
+                hurtbox.OnHit += OnHurtboxManualHit;
+            }
         }
 
         public override void OnRemovedFromEntity()
@@ -61,7 +64,10 @@ namespace Threadlock.Components
             base.OnRemovedFromEntity();
 
             if (Entity.TryGetComponent<Hurtbox>(out var hurtbox))
+            {
                 hurtbox.Emitter.RemoveObserver(HurtboxEventTypes.Hit, OnHurtboxHit);
+                hurtbox.OnHit -= OnHurtboxManualHit;
+            }
         }
 
         #endregion
@@ -73,6 +79,11 @@ namespace Threadlock.Components
             Health -= hit.Hitbox.Damage;
 
             hit.Hitbox.Hit(Entity, hit.Hitbox.Damage);
+        }
+
+        void OnHurtboxManualHit(int damage)
+        {
+            Health -= damage;
         }
 
         #endregion

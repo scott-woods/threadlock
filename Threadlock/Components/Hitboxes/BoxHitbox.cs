@@ -25,6 +25,7 @@ namespace Threadlock.Components.Hitboxes
 
         public string AttackId { get => _attackId; set => _attackId = value; }
 
+
         public event Action<Entity, int> OnHit;
 
         public void Hit(Entity hitEntity, int damage)

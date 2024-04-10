@@ -80,6 +80,8 @@ namespace Threadlock.Entities.Characters.Enemies.ChainBot
             AddComponent(new LootDropper(LootTables.BasicEnemy));
 
             var shadow = AddComponent(new Shadow(_animator));
+
+            AddComponent(new SelectionComponent(_animator, 10));
         }
 
         #endregion

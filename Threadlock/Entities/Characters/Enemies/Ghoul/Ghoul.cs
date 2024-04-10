@@ -47,7 +47,8 @@ namespace Threadlock.Entities.Characters.Enemies.Ghoul
             //hurtbox
             var hurtboxCollider = AddComponent(new BoxCollider(10, 17));
             hurtboxCollider.IsTrigger = true;
-            Flags.SetFlagExclusive(ref hurtboxCollider.PhysicsLayer, (int)PhysicsLayers.EnemyHurtbox);
+            hurtboxCollider.PhysicsLayer = 0;
+            Flags.SetFlag(ref hurtboxCollider.PhysicsLayer, (int)PhysicsLayers.EnemyHurtbox);
             Flags.SetFlagExclusive(ref hurtboxCollider.CollidesWithLayers, (int)PhysicsLayers.PlayerHitbox);
             _hurtbox = AddComponent(new Hurtbox(hurtboxCollider, 0, Content.Audio.Sounds.Chain_bot_damaged));
 
@@ -77,6 +78,8 @@ namespace Threadlock.Entities.Characters.Enemies.Ghoul
             _animator.SetRenderLayer(RenderLayers.YSort);
             _animator.Speed = 1.5f;
             AddAnimations();
+
+            AddComponent(new SelectionComponent(_animator, 10));
 
             //sprite flipper
             _spriteFlipper = AddComponent(new SpriteFlipper());

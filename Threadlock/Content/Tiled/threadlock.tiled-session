@@ -39,8 +39,8 @@
             "scale": 1.5,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 255.33333333333334,
-                "y": 346.66666666666663
+                "x": 480,
+                "y": 256
             }
         },
         "C:/Users/scott/Desktop/Content (unpacked)/Maps/Woods.tmx#Paths": {
@@ -134,8 +134,8 @@
             "scale": 1,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 115.5,
-                "y": 109
+                "x": 256,
+                "y": 256
             }
         },
         "Tilemaps/FairyForest/forest_hallway_test.tmx": {
@@ -165,8 +165,8 @@
             "scale": 1.5,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 355,
-                "y": 318
+                "x": 545,
+                "y": 376
             }
         },
         "Tilemaps/Forge/Doorways/forge_bottom.tmx": {
