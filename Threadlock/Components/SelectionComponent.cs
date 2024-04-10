@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Nez;
 using Nez.BitmapFonts;
+using Nez.PhysicsShapes;
 using Nez.Sprites;
 using System;
 using System.Collections.Generic;
@@ -33,22 +34,16 @@ namespace Threadlock.Components
             {
                 if (hurtbox.Collider is BoxCollider collider)
                 {
-                    var boxClone = collider.Clone() as BoxCollider;
-                    _collider = Entity.AddComponent(boxClone);
-                    boxClone.Width += _padding;
-                    boxClone.Height += _padding;
-                    //boxClone.LocalOffset -= new Vector2(_padding / 2, _padding / 2);
+                    _collider = Entity.AddComponent(new BoxCollider(collider.Width + _padding, collider.Height + _padding));
                 }
                 if (hurtbox.Collider is CircleCollider circleCollider)
                 {
-                    var circleClone = circleCollider.Clone() as CircleCollider;
-                    _collider = Entity.AddComponent(circleClone);
-                    circleClone.Radius += (_padding * 2);
+                    _collider = Entity.AddComponent(new CircleCollider(circleCollider.Radius + (_padding * 2)));
                 }
                 if (hurtbox.Collider is PolygonCollider polygonCollider)
                 {
-                    var polygonClone = polygonCollider.Clone() as PolygonCollider;
-                    _collider = Entity.AddComponent(polygonClone);
+                    var shape = polygonCollider.Shape as Polygon;
+                    _collider = Entity.AddComponent(new PolygonCollider(shape.Points));
                 }                
 
                 Flags.SetFlagExclusive(ref _collider.PhysicsLayer, PhysicsLayers.Selectable);
@@ -71,6 +66,7 @@ namespace Threadlock.Components
         {
             var outline = new SpriteOutline();
             outline.OutlineColor = color;
+            outline.TextureSize = _renderer.Bounds.Size;
             _renderer.Material = new Material(BlendState.NonPremultiplied, outline);
         }
 

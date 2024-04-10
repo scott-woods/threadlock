@@ -16,77 +16,28 @@ namespace Threadlock.Entities.Characters.Enemies.ChainBot
 {
     public class ChainBot : Enemy<ChainBot>
     {
-        //property overrides
-        const float _speed = 110f;
-
-        //components
-        SpriteAnimator _animator;
-        Mover _mover;
-        HealthComponent _healthComponent;
-        VelocityComponent _velocityComponent;
-        KnockbackComponent _knockbackComponent;
-        Hurtbox _hurtbox;
-        BoxCollider _collider;
-        SpriteFlipper _flipper;
-        DeathComponent _deathComponent;
-        Pathfinder _pathfinder;
-        OriginComponent _originComponent;
-
         //actions
         ChainBotMelee _chainBotMelee;
 
-        #region LIFECYCLE
+        #region ENEMY OVERRIDES
 
-        public override void OnAddedToScene()
+        public override int MaxHealth => 10;
+
+        public override float BaseSpeed => 110f;
+
+        public override Vector2 HurtboxSize => new Vector2(8, 18);
+
+        public override Vector2 ColliderSize => new Vector2(10, 5);
+
+        public override Vector2 ColliderOffset => new Vector2(-1, 7);
+
+        public override void Setup()
         {
-            base.OnAddedToScene();
-
-            _animator = AddComponent(new SpriteAnimator());
-            _animator.SetRenderLayer(RenderLayers.YSort);
+            SetupBasicEnemy(this);
             AddAnimations();
 
-            _mover = AddComponent(new Mover());
-
-            _healthComponent = AddComponent(new HealthComponent(10, 10));
-
-            _velocityComponent = AddComponent(new VelocityComponent(_mover));
-
-            _knockbackComponent = AddComponent(new KnockbackComponent(_velocityComponent, 150, .5f));
-
-            var hurtboxCollider = AddComponent(new BoxCollider(8, 18));
-            hurtboxCollider.IsTrigger = true;
-            Flags.SetFlagExclusive(ref hurtboxCollider.PhysicsLayer, PhysicsLayers.EnemyHurtbox);
-            Flags.SetFlagExclusive(ref hurtboxCollider.CollidesWithLayers, PhysicsLayers.PlayerHitbox);
-            _hurtbox = AddComponent(new Hurtbox(hurtboxCollider, 0f, Nez.Content.Audio.Sounds.Chain_bot_damaged));
-
-            _collider = AddComponent(new BoxCollider(10, 5));
-            _collider.SetLocalOffset(new Vector2(-1, 7));
-            Flags.SetFlagExclusive(ref _collider.PhysicsLayer, PhysicsLayers.EnemyCollider);
-            _collider.CollidesWithLayers = 0;
-            Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.Environment);
-            Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.EnemyCollider);
-            Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.ProjectilePassableWall);
-
-            _flipper = AddComponent(new SpriteFlipper());
-
-            _deathComponent = AddComponent(new DeathComponent("Die", Nez.Content.Audio.Sounds.Enemy_death_1));
-
-            _pathfinder = AddComponent(new Pathfinder(_collider));
-
-            _originComponent = AddComponent(new OriginComponent(_collider));
-
             _chainBotMelee = AddComponent(new ChainBotMelee(this));
-
-            AddComponent(new LootDropper(LootTables.BasicEnemy));
-
-            var shadow = AddComponent(new Shadow(_animator));
-
-            AddComponent(new SelectionComponent(_animator, 10));
         }
-
-        #endregion
-
-        #region ENEMY OVERRIDES
 
         public override BehaviorTree<ChainBot> CreateSubTree()
         {
@@ -103,7 +54,7 @@ namespace Threadlock.Entities.Characters.Enemies.ChainBot
                             .EndComposite()
                         .EndComposite()
                         .Sequence(AbortTypes.LowerPriority)
-                            .Action(c => c.MoveToTarget(TargetEntity, _speed))
+                            .Action(c => c.MoveToTarget(TargetEntity, BaseSpeed))
                         .EndComposite()
                     .EndComposite()
                 .EndComposite()
@@ -129,48 +80,51 @@ namespace Threadlock.Entities.Characters.Enemies.ChainBot
 
         void AddAnimations()
         {
-            //Idle
-            var idleTexture = Scene.Content.LoadTexture(Content.Textures.Characters.ChainBot.Idle);
-            var idleSprites = Sprite.SpritesFromAtlas(idleTexture, 126, 39);
-            _animator.AddAnimation("IdleLeft", AnimatedSpriteHelper.GetSpriteArray(idleSprites, new List<int> { 1, 3, 5, 7, 9 }));
-            _animator.AddAnimation("Idle", AnimatedSpriteHelper.GetSpriteArray(idleSprites, new List<int> { 0, 2, 4, 6, 8 }));
+            if (TryGetComponent<SpriteAnimator>(out var animator))
+            {
+                //Idle
+                var idleTexture = Scene.Content.LoadTexture(Content.Textures.Characters.ChainBot.Idle);
+                var idleSprites = Sprite.SpritesFromAtlas(idleTexture, 126, 39);
+                animator.AddAnimation("IdleLeft", AnimatedSpriteHelper.GetSpriteArray(idleSprites, new List<int> { 1, 3, 5, 7, 9 }));
+                animator.AddAnimation("Idle", AnimatedSpriteHelper.GetSpriteArray(idleSprites, new List<int> { 0, 2, 4, 6, 8 }));
 
-            //Run
-            var runTexture = Scene.Content.LoadTexture(Content.Textures.Characters.ChainBot.Run);
-            var runSprites = Sprite.SpritesFromAtlas(runTexture, 126, 39);
-            var leftSprites = runSprites.Where((sprite, index) => index % 2 != 0);
-            var rightSprites = runSprites.Where((sprite, index) => index % 2 == 0);
-            _animator.AddAnimation("RunLeft", leftSprites.ToArray());
-            _animator.AddAnimation("Run", rightSprites.ToArray());
+                //Run
+                var runTexture = Scene.Content.LoadTexture(Content.Textures.Characters.ChainBot.Run);
+                var runSprites = Sprite.SpritesFromAtlas(runTexture, 126, 39);
+                var leftSprites = runSprites.Where((sprite, index) => index % 2 != 0);
+                var rightSprites = runSprites.Where((sprite, index) => index % 2 == 0);
+                animator.AddAnimation("RunLeft", leftSprites.ToArray());
+                animator.AddAnimation("Run", rightSprites.ToArray());
 
-            //Attack
-            var attackTexture = Scene.Content.LoadTexture(Content.Textures.Characters.ChainBot.Attack);
-            var attackSprites = Sprite.SpritesFromAtlas(attackTexture, 126, 39);
-            _animator.AddAnimation("AttackLeft", attackSprites.Where((sprite, index) => index % 2 != 0).ToArray());
-            _animator.AddAnimation("AttackRight", attackSprites.Where((sprite, index) => index % 2 == 0).ToArray());
+                //Attack
+                var attackTexture = Scene.Content.LoadTexture(Content.Textures.Characters.ChainBot.Attack);
+                var attackSprites = Sprite.SpritesFromAtlas(attackTexture, 126, 39);
+                animator.AddAnimation("AttackLeft", attackSprites.Where((sprite, index) => index % 2 != 0).ToArray());
+                animator.AddAnimation("AttackRight", attackSprites.Where((sprite, index) => index % 2 == 0).ToArray());
 
-            //transition to charge
-            var transitionTexture = Scene.Content.LoadTexture(Content.Textures.Characters.ChainBot.Transitiontocharge);
-            var transitionSprites = Sprite.SpritesFromAtlas(transitionTexture, 126, 39);
-            _animator.AddAnimation("TransitionLeft", transitionSprites.Where((sprite, index) => index % 2 != 0).ToArray());
-            _animator.AddAnimation("TransitionRight", transitionSprites.Where((sprite, index) => index % 2 == 0).ToArray());
+                //transition to charge
+                var transitionTexture = Scene.Content.LoadTexture(Content.Textures.Characters.ChainBot.Transitiontocharge);
+                var transitionSprites = Sprite.SpritesFromAtlas(transitionTexture, 126, 39);
+                animator.AddAnimation("TransitionLeft", transitionSprites.Where((sprite, index) => index % 2 != 0).ToArray());
+                animator.AddAnimation("TransitionRight", transitionSprites.Where((sprite, index) => index % 2 == 0).ToArray());
 
-            //charge
-            var chargeTexture = Scene.Content.LoadTexture(Content.Textures.Characters.ChainBot.Charge);
-            var chargeSprites = Sprite.SpritesFromAtlas(chargeTexture, 126, 39);
-            _animator.AddAnimation("ChargeLeft", chargeSprites.Where((sprite, index) => index % 2 != 0).ToArray());
-            _animator.AddAnimation("ChargeRight", chargeSprites.Where((sprite, index) => index % 2 == 0).ToArray());
+                //charge
+                var chargeTexture = Scene.Content.LoadTexture(Content.Textures.Characters.ChainBot.Charge);
+                var chargeSprites = Sprite.SpritesFromAtlas(chargeTexture, 126, 39);
+                animator.AddAnimation("ChargeLeft", chargeSprites.Where((sprite, index) => index % 2 != 0).ToArray());
+                animator.AddAnimation("ChargeRight", chargeSprites.Where((sprite, index) => index % 2 == 0).ToArray());
 
-            //hit
-            var hitTexture = Scene.Content.LoadTexture(Content.Textures.Characters.ChainBot.Hit);
-            var hitSprites = Sprite.SpritesFromAtlas(hitTexture, 126, 39);
-            _animator.AddAnimation("HurtLeft", AnimatedSpriteHelper.GetSpriteArray(hitSprites, new List<int>() { 1, 3 }));
-            _animator.AddAnimation("Hit", AnimatedSpriteHelper.GetSpriteArray(hitSprites, new List<int>() { 0, 2 }));
+                //hit
+                var hitTexture = Scene.Content.LoadTexture(Content.Textures.Characters.ChainBot.Hit);
+                var hitSprites = Sprite.SpritesFromAtlas(hitTexture, 126, 39);
+                animator.AddAnimation("HurtLeft", AnimatedSpriteHelper.GetSpriteArray(hitSprites, new List<int>() { 1, 3 }));
+                animator.AddAnimation("Hit", AnimatedSpriteHelper.GetSpriteArray(hitSprites, new List<int>() { 0, 2 }));
 
-            //die
-            var dieTexture = Scene.Content.LoadTexture(Content.Textures.Characters.ChainBot.Death);
-            var dieSprites = Sprite.SpritesFromAtlas(dieTexture, 126, 39);
-            _animator.AddAnimation("Die", AnimatedSpriteHelper.GetSpriteArrayFromRange(dieSprites, 0, 4));
+                //die
+                var dieTexture = Scene.Content.LoadTexture(Content.Textures.Characters.ChainBot.Death);
+                var dieSprites = Sprite.SpritesFromAtlas(dieTexture, 126, 39);
+                animator.AddAnimation("Die", AnimatedSpriteHelper.GetSpriteArrayFromRange(dieSprites, 0, 4));
+            }
         }
     }
 }

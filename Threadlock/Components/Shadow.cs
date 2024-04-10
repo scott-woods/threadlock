@@ -26,6 +26,11 @@ namespace Threadlock.Components
             var texture = Game1.Content.LoadTexture(Nez.Content.Textures.Effects.Shadow);
             SetTexture(texture);
             SetRenderLayer(RenderLayers.Shadow);
+        }
+
+        public override void OnAddedToEntity()
+        {
+            base.OnAddedToEntity();
 
             if (Entity.TryGetComponent<OriginComponent>(out var oc))
                 SetLocalOffset(new Vector2(Math.Abs(oc.Origin.X - Entity.Position.X), Math.Abs(oc.Origin.Y - Entity.Position.Y)));

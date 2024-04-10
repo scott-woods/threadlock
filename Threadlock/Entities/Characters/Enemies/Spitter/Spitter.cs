@@ -18,30 +18,15 @@ namespace Threadlock.Entities.Characters.Enemies.Spitter
     {
         //consts
         const float _minDistance = 64;
-        const float _moveSpeed = 50f;
         const float _fastMoveSpeed = 80f;
         const float _attackRange = 128f;
         const float _attackCooldown = 2.5f;
         const float _pursuitDuration = 3f;
 
-        //components
-        Mover _mover;
-        SpriteAnimator _animator;
-        Hurtbox _hurtbox;
-        HealthComponent _healthComponent;
-        Pathfinder _pathfinder;
-        BoxCollider _collider;
-        VelocityComponent _velocityComponent;
-        KnockbackComponent _knockbackComponent;
-        SpriteFlipper _spriteFlipper;
-        OriginComponent _originComponent;
-        DeathComponent _deathComponent;
-
         //actions
         SpitAttack _spitAttack;
 
         //misc
-        //float _cooldownTimer = _cooldown;
         bool _isOnCooldown = false;
         bool _isPursued = false;
         ITimer _cooldownTimer;
@@ -53,59 +38,16 @@ namespace Threadlock.Entities.Characters.Enemies.Spitter
         {
             base.OnAddedToScene();
 
-            _mover = AddComponent(new Mover());
-
-            _animator = AddComponent(new SpriteAnimator());
-            _animator.SetLocalOffset(new Vector2(2, -6));
-            _animator.SetRenderLayer(RenderLayers.YSort);
-            AddAnimations();
-
-            //hurtbox
-            var hurtboxCollider = AddComponent(new BoxCollider(11, 20));
-            hurtboxCollider.IsTrigger = true;
-            Flags.SetFlagExclusive(ref hurtboxCollider.PhysicsLayer, (int)PhysicsLayers.EnemyHurtbox);
-            Flags.SetFlagExclusive(ref hurtboxCollider.CollidesWithLayers, (int)PhysicsLayers.PlayerHitbox);
-            _hurtbox = AddComponent(new Hurtbox(hurtboxCollider, 0, Content.Audio.Sounds.Chain_bot_damaged));
-            _hurtbox.Emitter.AddObserver(HurtboxEventTypes.Hit, OnHurtboxHit);
-
-            _healthComponent = AddComponent(new HealthComponent(8, 8));
-
-            //collider
-            _collider = AddComponent(new BoxCollider(-4, 8, 6, 6));
-            Flags.SetFlagExclusive(ref _collider.PhysicsLayer, (int)PhysicsLayers.EnemyCollider);
-            _collider.CollidesWithLayers = 0;
-            Flags.SetFlag(ref _collider.CollidesWithLayers, (int)PhysicsLayers.Environment);
-            Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.ProjectilePassableWall);
-
-            _pathfinder = AddComponent(new Pathfinder(_collider));
-
-            _velocityComponent = AddComponent(new VelocityComponent(_mover));
-
-            _knockbackComponent = AddComponent(new KnockbackComponent(_velocityComponent));
-
-            _originComponent = AddComponent(new OriginComponent(_collider));
-
-            _deathComponent = AddComponent(new DeathComponent("Die", Nez.Content.Audio.Sounds.Enemy_death_1));
-
-            _spriteFlipper = AddComponent(new SpriteFlipper());
-
-            //actions
-            _spitAttack = AddComponent(new SpitAttack(this));
-
-            AddComponent(new LootDropper(LootTables.BasicEnemy));
-
-            var shadow = AddComponent(new Shadow(_animator));
-
-            AddComponent(new SelectionComponent(_animator, 10));
-
-            BeginCooldown();
+            if (TryGetComponent<Hurtbox>(out var hurtbox))
+                hurtbox.Emitter.AddObserver(HurtboxEventTypes.Hit, OnHurtboxHit);
         }
 
         public override void OnRemovedFromScene()
         {
             base.OnRemovedFromScene();
 
-            _hurtbox.Emitter.RemoveObserver(HurtboxEventTypes.Hit, OnHurtboxHit);
+            if (TryGetComponent<Hurtbox>(out var hurtbox))
+                hurtbox.Emitter.RemoveObserver(HurtboxEventTypes.Hit, OnHurtboxHit);
 
             _cooldownTimer?.Stop();
             _cooldownTimer = null;
@@ -116,21 +58,27 @@ namespace Threadlock.Entities.Characters.Enemies.Spitter
 
         #endregion
 
-        #region SETUP
+        #region ENEMY OVERRIDES
 
-        void AddAnimations()
+        public override int MaxHealth => 8;
+
+        public override float BaseSpeed => 50f;
+
+        public override Vector2 AnimatorOffset => new Vector2(2, -6);
+
+        public override Vector2 HurtboxSize => new Vector2(11, 20);
+
+        public override Vector2 ColliderSize => new Vector2(6, 6);
+
+        public override Vector2 ColliderOffset => new Vector2(-4, 8);
+
+        public override void Setup()
         {
-            var texture = Scene.Content.LoadTexture(Content.Textures.Characters.Spitter.Spitter_sheet);
-            var sprites = Sprite.SpritesFromAtlas(texture, 77, 39);
+            SetupBasicEnemy(this);
+            AddAnimations();
 
-            _animator.AddAnimation("Idle", AnimatedSpriteHelper.GetSpriteArrayByRow(sprites, 0, 6, 9));
-            _animator.AddAnimation("Run", AnimatedSpriteHelper.GetSpriteArrayByRow(sprites, 1, 7, 9));
-            _animator.AddAnimation("Attack", AnimatedSpriteHelper.GetSpriteArrayByRow(sprites, 2, 8, 9));
-            _animator.AddAnimation("Hit", AnimatedSpriteHelper.GetSpriteArrayByRow(sprites, 3, 3, 9));
-            _animator.AddAnimation("Die", AnimatedSpriteHelper.GetSpriteArrayByRow(sprites, 4, 9, 9));
+            _spitAttack = AddComponent(new SpitAttack(this));
         }
-
-        #endregion
 
         public override BehaviorTree<Spitter> CreateSubTree()
         {
@@ -153,7 +101,7 @@ namespace Threadlock.Entities.Characters.Enemies.Spitter
                         //if no LoS or out of range, move towards target
                         .ConditionalDecorator(x => !EntityHelper.HasLineOfSight(x, TargetEntity) || !x.IsInRange())
                         .Sequence()
-                            .Action(x => x.MoveToTarget(TargetEntity, _moveSpeed))
+                            .Action(x => x.MoveToTarget(TargetEntity, BaseSpeed))
                         .EndComposite()
 
                         //otherwise idle (tracking target
@@ -167,6 +115,23 @@ namespace Threadlock.Entities.Characters.Enemies.Spitter
 
             tree.UpdatePeriod = 0;
             return tree;
+        }
+
+        #endregion
+
+        void AddAnimations()
+        {
+            if (TryGetComponent<SpriteAnimator>(out var animator))
+            {
+                var texture = Scene.Content.LoadTexture(Content.Textures.Characters.Spitter.Spitter_sheet);
+                var sprites = Sprite.SpritesFromAtlas(texture, 77, 39);
+
+                animator.AddAnimation("Idle", AnimatedSpriteHelper.GetSpriteArrayByRow(sprites, 0, 6, 9));
+                animator.AddAnimation("Run", AnimatedSpriteHelper.GetSpriteArrayByRow(sprites, 1, 7, 9));
+                animator.AddAnimation("Attack", AnimatedSpriteHelper.GetSpriteArrayByRow(sprites, 2, 8, 9));
+                animator.AddAnimation("Hit", AnimatedSpriteHelper.GetSpriteArrayByRow(sprites, 3, 3, 9));
+                animator.AddAnimation("Die", AnimatedSpriteHelper.GetSpriteArrayByRow(sprites, 4, 9, 9));
+            }
         }
 
         bool CanFire()

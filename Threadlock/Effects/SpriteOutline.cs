@@ -11,6 +11,8 @@ namespace Threadlock.Effects
 {
     public class SpriteOutline : Effect
     {
+        const float _sizeScale = 8;
+
         public Color OutlineColor
         {
             get => new Color(_outlineColor);
@@ -33,7 +35,7 @@ namespace Threadlock.Effects
                 if (_textureSize != value)
                 {
                     _textureSize = value;
-                    _textureSizeParam.SetValue(_textureSize);
+                    _textureSizeParam.SetValue(_textureSize * _sizeScale);
                 }
             }
         }
@@ -49,7 +51,7 @@ namespace Threadlock.Effects
             _outlineColorParam.SetValue(_outlineColor);
 
             _textureSizeParam = Parameters["_textureSize"];
-            _textureSizeParam.SetValue(_textureSize);
+            _textureSizeParam.SetValue(_textureSize * _sizeScale);
         }
     }
 }

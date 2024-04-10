@@ -18,26 +18,12 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
     public class OrbMage : Enemy<OrbMage>
     {
         //consts
-        const float _speed = 45f;
         const float _minDistanceToPlayer = 48f;
         const float _attackRange = 128f;
         const float _preferredDistanceToPlayer = 80f;
         const float _sweepAttackRange = 64f;
         const float _attackPrepTime = 3f;
         const float _attackCooldown = 2.5f;
-
-        //components
-        Mover _mover;
-        SpriteAnimator _animator;
-        Hurtbox _hurtbox;
-        HealthComponent _healthComponent;
-        Pathfinder _pathfinder;
-        BoxCollider _collider;
-        VelocityComponent _velocityComponent;
-        KnockbackComponent _knockbackComponent;
-        OriginComponent _originComponent;
-        DeathComponent _deathComponent;
-        SpriteFlipper _spriteFlipper;
 
         //actions
         OrbMageAttack _orbMageAttack;
@@ -49,56 +35,6 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
 
         #region LIFECYCLE
 
-        public override void OnAddedToScene()
-        {
-            base.OnAddedToScene();
-
-            //actions
-            _orbMageAttack = AddComponent(new OrbMageAttack(this));
-            _orbMageSweepAttack = AddComponent(new OrbMageSweepAttack(this));
-
-            _mover = AddComponent(new Mover());
-
-            _animator = AddComponent(new SpriteAnimator());
-            _animator.SetLocalOffset(new Vector2(38, -5));
-            _animator.SetRenderLayer(RenderLayers.YSort);
-            AddAnimations();
-
-            //hurtbox
-            var hurtboxCollider = AddComponent(new BoxCollider(9, 24));
-            hurtboxCollider.IsTrigger = true;
-            Flags.SetFlagExclusive(ref hurtboxCollider.PhysicsLayer, PhysicsLayers.EnemyHurtbox);
-            Flags.SetFlagExclusive(ref hurtboxCollider.CollidesWithLayers, PhysicsLayers.PlayerHitbox);
-            _hurtbox = AddComponent(new Hurtbox(hurtboxCollider, 0, Content.Audio.Sounds.Chain_bot_damaged));
-
-            _healthComponent = AddComponent(new HealthComponent(8, 8));
-
-            _velocityComponent = AddComponent(new VelocityComponent(_mover));
-
-            _collider = AddComponent(new BoxCollider(-5, 5, 10, 7));
-            Flags.SetFlagExclusive(ref _collider.PhysicsLayer, PhysicsLayers.EnemyCollider);
-            _collider.CollidesWithLayers = 0;
-            Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.Environment);
-            Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.EnemyCollider);
-            Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.ProjectilePassableWall);
-
-            _originComponent = AddComponent(new OriginComponent(_collider));
-
-            _pathfinder = AddComponent(new Pathfinder(_collider));
-
-            _spriteFlipper = AddComponent(new SpriteFlipper());
-
-            _deathComponent = AddComponent(new DeathComponent("Die", Nez.Content.Audio.Sounds.Enemy_death_1));
-
-            _knockbackComponent = AddComponent(new KnockbackComponent(_velocityComponent));
-
-            AddComponent(new LootDropper(LootTables.BasicEnemy));
-
-            var shadow = AddComponent(new Shadow(_animator));
-
-            AddComponent(new SelectionComponent(_animator, 10));
-        }
-
         public override void OnRemovedFromScene()
         {
             base.OnRemovedFromScene();
@@ -109,38 +45,28 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
 
         #endregion
 
-        #region SETUP
-
-        void AddAnimations()
-        {
-            var idleTexture = Scene.Content.LoadTexture(Nez.Content.Textures.Characters.OrbMage.Idle);
-            var idleSprites = Sprite.SpritesFromAtlas(idleTexture, 119, 34);
-            _animator.AddAnimation("Idle", idleSprites.ToArray());
-
-            var moveTexture = Scene.Content.LoadTexture(Nez.Content.Textures.Characters.OrbMage.Move);
-            var moveSprites = Sprite.SpritesFromAtlas(moveTexture, 119, 34);
-            _animator.AddAnimation("Run", moveSprites.ToArray());
-
-            var attackTexture = Scene.Content.LoadTexture(Nez.Content.Textures.Characters.OrbMage.Attack);
-            var attackSprites = Sprite.SpritesFromAtlas(attackTexture, 119, 34);
-            _animator.AddAnimation("Attack", attackSprites.ToArray());
-
-            var sweepAttackTexture = Scene.Content.LoadTexture(Nez.Content.Textures.Characters.OrbMage.Sweepattack);
-            var sweepAttackSprites = Sprite.SpritesFromAtlas(sweepAttackTexture, 119, 34);
-            _animator.AddAnimation("SweepAttack", sweepAttackSprites.ToArray());
-
-            var hitTexture = Scene.Content.LoadTexture(Nez.Content.Textures.Characters.OrbMage.Hit);
-            var hitSprites = Sprite.SpritesFromAtlas(hitTexture, 119, 34);
-            _animator.AddAnimation("Hit", hitSprites.ToArray());
-
-            var deathTexture = Scene.Content.LoadTexture(Nez.Content.Textures.Characters.OrbMage.Death);
-            var deathSprites = Sprite.SpritesFromAtlas(deathTexture, 119, 34);
-            _animator.AddAnimation("Die", deathSprites.ToArray());
-        }
-
-        #endregion
-
         #region OVERRIDES
+
+        public override int MaxHealth => 8;
+
+        public override float BaseSpeed => 45f;
+
+        public override Vector2 AnimatorOffset => new Vector2(38, -5);
+
+        public override Vector2 HurtboxSize => new Vector2(6, 18);
+
+        public override Vector2 ColliderSize => new Vector2(10, 7);
+
+        public override Vector2 ColliderOffset => new Vector2(-5, 5);
+
+        public override void Setup()
+        {
+            SetupBasicEnemy(this);
+            AddAnimations();
+
+            _orbMageAttack = AddComponent(new OrbMageAttack(this));
+            _orbMageSweepAttack = AddComponent(new OrbMageSweepAttack(this));
+        }
 
         public override BehaviorTree<OrbMage> CreateSubTree()
         {
@@ -173,11 +99,11 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
                     .Selector() //move or idle
                         .Sequence(AbortTypes.LowerPriority)
                             .Conditional(x => x.IsPlayerTooClose())
-                            .Action(x => x.MoveAway(TargetEntity, _speed, _minDistanceToPlayer))
+                            .Action(x => x.MoveAway(TargetEntity, BaseSpeed, _minDistanceToPlayer))
                         .EndComposite()
                         .Sequence(AbortTypes.LowerPriority) //move towards player if too far away
                             .Conditional(x => x.IsPlayerTooFar())
-                            .Action(x => x.MoveToTarget(TargetEntity, _speed))
+                            .Action(x => x.MoveToTarget(TargetEntity, BaseSpeed))
                         .EndComposite()
                         .ParallelSelector() //idle
                             .Action(x => x.TrackTarget(TargetEntity))
@@ -193,6 +119,36 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
         }
 
         #endregion
+
+        void AddAnimations()
+        {
+            if (TryGetComponent<SpriteAnimator>(out var animator))
+            {
+                var idleTexture = Scene.Content.LoadTexture(Nez.Content.Textures.Characters.OrbMage.Idle);
+                var idleSprites = Sprite.SpritesFromAtlas(idleTexture, 119, 34);
+                animator.AddAnimation("Idle", idleSprites.ToArray());
+
+                var moveTexture = Scene.Content.LoadTexture(Nez.Content.Textures.Characters.OrbMage.Move);
+                var moveSprites = Sprite.SpritesFromAtlas(moveTexture, 119, 34);
+                animator.AddAnimation("Run", moveSprites.ToArray());
+
+                var attackTexture = Scene.Content.LoadTexture(Nez.Content.Textures.Characters.OrbMage.Attack);
+                var attackSprites = Sprite.SpritesFromAtlas(attackTexture, 119, 34);
+                animator.AddAnimation("Attack", attackSprites.ToArray());
+
+                var sweepAttackTexture = Scene.Content.LoadTexture(Nez.Content.Textures.Characters.OrbMage.Sweepattack);
+                var sweepAttackSprites = Sprite.SpritesFromAtlas(sweepAttackTexture, 119, 34);
+                animator.AddAnimation("SweepAttack", sweepAttackSprites.ToArray());
+
+                var hitTexture = Scene.Content.LoadTexture(Nez.Content.Textures.Characters.OrbMage.Hit);
+                var hitSprites = Sprite.SpritesFromAtlas(hitTexture, 119, 34);
+                animator.AddAnimation("Hit", hitSprites.ToArray());
+
+                var deathTexture = Scene.Content.LoadTexture(Nez.Content.Textures.Characters.OrbMage.Death);
+                var deathSprites = Sprite.SpritesFromAtlas(deathTexture, 119, 34);
+                animator.AddAnimation("Die", deathSprites.ToArray());
+            }
+        }
 
         bool IsInMagicAttackRange()
         {
@@ -258,7 +214,7 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
             //slowly move towards player if not at preferred distance
             if (distToPlayer > _preferredDistanceToPlayer)
             {
-                MoveToTarget(TargetEntity, _speed);
+                MoveToTarget(TargetEntity, BaseSpeed);
             }
             else
             {

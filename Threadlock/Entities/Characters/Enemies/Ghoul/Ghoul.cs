@@ -16,107 +16,28 @@ namespace Threadlock.Entities.Characters.Enemies.Ghoul
 {
     public class Ghoul : Enemy<Ghoul>
     {
-        //constants
-        float _speed = 165f;
-
-        //components
-        Mover _mover;
-        SpriteAnimator _animator;
-        Hurtbox _hurtbox;
-        HealthComponent _healthComponent;
-        Pathfinder _pathfinder;
-        BoxCollider _collider;
-        VelocityComponent _velocityComponent;
-        KnockbackComponent _knockbackComponent;
-        OriginComponent _originComponent;
-        DeathComponent _deathComponent;
-        SpriteFlipper _spriteFlipper;
-
         //actions
         GhoulAttack _ghoulAttack;
 
-        #region LIFECYCLE
+        #region ENEMY OVERRIDES
 
-        public override void OnAddedToScene()
+        public override int MaxHealth => 7;
+
+        public override float BaseSpeed => 165f;
+
+        public override Vector2 HurtboxSize => new Vector2(10, 17);
+
+        public override Vector2 ColliderSize => new Vector2(9, 6);
+
+        public override Vector2 ColliderOffset => new Vector2(0, 9);
+
+        public override void Setup()
         {
-            base.OnAddedToScene();
-
-            //Mover
-            _mover = AddComponent(new Mover());
-
-            //hurtbox
-            var hurtboxCollider = AddComponent(new BoxCollider(10, 17));
-            hurtboxCollider.IsTrigger = true;
-            hurtboxCollider.PhysicsLayer = 0;
-            Flags.SetFlag(ref hurtboxCollider.PhysicsLayer, (int)PhysicsLayers.EnemyHurtbox);
-            Flags.SetFlagExclusive(ref hurtboxCollider.CollidesWithLayers, (int)PhysicsLayers.PlayerHitbox);
-            _hurtbox = AddComponent(new Hurtbox(hurtboxCollider, 0, Content.Audio.Sounds.Chain_bot_damaged));
-
-            //health
-            _healthComponent = AddComponent(new HealthComponent(7, 7));
-
-            //velocity
-            _velocityComponent = AddComponent(new VelocityComponent(_mover));
-
-            //collider
-            _collider = AddComponent(new BoxCollider(9, 6));
-            _collider.SetLocalOffset(new Vector2(0, 9));
-            Flags.SetFlagExclusive(ref _collider.PhysicsLayer, (int)PhysicsLayers.EnemyCollider);
-            _collider.CollidesWithLayers = 0;
-            Flags.SetFlag(ref _collider.CollidesWithLayers, (int)PhysicsLayers.Environment);
-            Flags.SetFlag(ref _collider.CollidesWithLayers, (int)PhysicsLayers.EnemyCollider);
-            Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.ProjectilePassableWall);
-
-            //origin
-            _originComponent = AddComponent(new OriginComponent(_collider));
-
-            //pathfinding
-            _pathfinder = AddComponent(new Pathfinder(_collider));
-
-            //animator
-            _animator = AddComponent(new SpriteAnimator());
-            _animator.SetRenderLayer(RenderLayers.YSort);
-            _animator.Speed = 1.5f;
+            SetupBasicEnemy(this);
             AddAnimations();
 
-            AddComponent(new SelectionComponent(_animator, 10));
-
-            //sprite flipper
-            _spriteFlipper = AddComponent(new SpriteFlipper());
-
-            //death
-            _deathComponent = AddComponent(new DeathComponent("Die", Content.Audio.Sounds.Enemy_death_1));
-
-            //knockback
-            _knockbackComponent = AddComponent(new KnockbackComponent(_velocityComponent, 150f));
-
-            //actions
             _ghoulAttack = AddComponent(new GhoulAttack(this));
-
-            AddComponent(new LootDropper(LootTables.BasicEnemy));
-
-            var shadow = AddComponent(new Shadow(_animator));
         }
-
-        #endregion
-
-        #region SETUP
-
-        void AddAnimations()
-        {
-            var texture = Scene.Content.LoadTexture(Content.Textures.Characters.Ghoul.Ghoul_sprites);
-            var sprites = Sprite.SpritesFromAtlas(texture, 62, 33);
-            _animator.AddAnimation("Idle", AnimatedSpriteHelper.GetSpriteArrayByRow(sprites, 0, 4, 11));
-            _animator.AddAnimation("Run", AnimatedSpriteHelper.GetSpriteArrayByRow(sprites, 1, 9, 11));
-            _animator.AddAnimation("Attack", AnimatedSpriteHelper.GetSpriteArrayByRow(sprites, 2, 7, 11));
-            _animator.AddAnimation("Hit", AnimatedSpriteHelper.GetSpriteArrayByRow(sprites, 3, 2, 11));
-            _animator.AddAnimation("Die", AnimatedSpriteHelper.GetSpriteArrayByRow(sprites, 4, 8, 11));
-            _animator.AddAnimation("Spawn", AnimatedSpriteHelper.GetSpriteArrayByRow(sprites, 5, 11, 11));
-        }
-
-        #endregion
-
-        #region ENEMY OVERRIDES
 
         public override BehaviorTree<Ghoul> CreateSubTree()
         {
@@ -133,7 +54,7 @@ namespace Threadlock.Entities.Characters.Enemies.Ghoul
                             .EndComposite()
                         .EndComposite()
                         .Sequence(AbortTypes.LowerPriority)
-                            .Action(c => c.MoveToTarget(TargetEntity, _speed))
+                            .Action(c => c.MoveToTarget(TargetEntity, BaseSpeed))
                         .EndComposite()
                     .EndComposite()
                 .EndComposite()
@@ -145,6 +66,21 @@ namespace Threadlock.Entities.Characters.Enemies.Ghoul
         }
 
         #endregion
+
+        void AddAnimations()
+        {
+            if (TryGetComponent<SpriteAnimator>(out var animator))
+            {
+                var texture = Scene.Content.LoadTexture(Content.Textures.Characters.Ghoul.Ghoul_sprites);
+                var sprites = Sprite.SpritesFromAtlas(texture, 62, 33);
+                animator.AddAnimation("Idle", AnimatedSpriteHelper.GetSpriteArrayByRow(sprites, 0, 4, 11));
+                animator.AddAnimation("Run", AnimatedSpriteHelper.GetSpriteArrayByRow(sprites, 1, 9, 11));
+                animator.AddAnimation("Attack", AnimatedSpriteHelper.GetSpriteArrayByRow(sprites, 2, 7, 11));
+                animator.AddAnimation("Hit", AnimatedSpriteHelper.GetSpriteArrayByRow(sprites, 3, 2, 11));
+                animator.AddAnimation("Die", AnimatedSpriteHelper.GetSpriteArrayByRow(sprites, 4, 8, 11));
+                animator.AddAnimation("Spawn", AnimatedSpriteHelper.GetSpriteArrayByRow(sprites, 5, 11, 11));
+            }
+        }
 
         bool IsInAttackRange()
         {

@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
 using Threadlock.DebugTools;
+using Threadlock.Entities.Characters.Enemies.ChainBot;
+using Threadlock.Entities.Characters.Player.States;
 using Threadlock.Helpers;
 using Threadlock.StaticData;
 using TaskStatus = Nez.AI.BehaviorTrees.TaskStatus;
@@ -67,6 +69,9 @@ namespace Threadlock.Entities.Characters.Enemies
 
             //add components
             _statusComponent = AddComponent(new StatusComponent(StatusPriority.Normal));
+
+            //additional setup
+            Setup();
 
             //create sub tree
             _subTree = CreateSubTree();
@@ -152,6 +157,8 @@ namespace Threadlock.Entities.Characters.Enemies
         #region ABSTRACT METHODS
 
         public abstract BehaviorTree<T> CreateSubTree();
+
+        public abstract void Setup();
 
         #endregion
 
