@@ -32,5 +32,31 @@
    <wangtile tileid="139" wangid="0,0,0,2,0,2,0,2"/>
    <wangtile tileid="141" wangid="0,2,0,2,0,2,0,0"/>
   </wangset>
+  <wangset name="Leaves" type="corner" tile="-1">
+   <wangcolor name="Leaves" color="#ff0000" tile="61" probability="1"/>
+   <wangtile tileid="10" wangid="0,0,0,1,0,0,0,0"/>
+   <wangtile tileid="11" wangid="0,0,0,1,0,1,0,0"/>
+   <wangtile tileid="12" wangid="0,0,0,1,0,1,0,0"/>
+   <wangtile tileid="13" wangid="0,0,0,0,0,1,0,0"/>
+   <wangtile tileid="35" wangid="0,1,0,1,0,0,0,0"/>
+   <wangtile tileid="36" wangid="0,1,0,1,0,1,0,1"/>
+   <wangtile tileid="37" wangid="0,1,0,1,0,1,0,1"/>
+   <wangtile tileid="38" wangid="0,0,0,0,0,1,0,1"/>
+   <wangtile tileid="60" wangid="0,1,0,1,0,0,0,0"/>
+   <wangtile tileid="61" wangid="0,1,0,1,0,1,0,1"/>
+   <wangtile tileid="62" wangid="0,1,0,1,0,1,0,1"/>
+   <wangtile tileid="63" wangid="0,0,0,0,0,1,0,1"/>
+   <wangtile tileid="85" wangid="0,1,0,0,0,0,0,0"/>
+   <wangtile tileid="86" wangid="0,1,0,0,0,0,0,1"/>
+   <wangtile tileid="87" wangid="0,1,0,0,0,0,0,1"/>
+   <wangtile tileid="88" wangid="0,0,0,0,0,0,0,1"/>
+   <wangtile tileid="110" wangid="0,1,0,0,0,1,0,1"/>
+   <wangtile tileid="112" wangid="0,1,0,1,0,0,0,1"/>
+   <wangtile tileid="113" wangid="0,1,0,1,0,1,0,1"/>
+   <wangtile tileid="138" wangid="0,1,0,1,0,1,0,1"/>
+   <wangtile tileid="160" wangid="0,0,0,1,0,1,0,1"/>
+   <wangtile tileid="162" wangid="0,1,0,1,0,1,0,0"/>
+   <wangtile tileid="163" wangid="0,1,0,1,0,1,0,1"/>
+  </wangset>
  </wangsets>
 </tileset>

@@ -12,6 +12,7 @@ namespace Threadlock.Components.TiledComponents
     {
         public TmxObject TmxObject { get; set; }
         public Entity MapEntity { get; set; }
+        public TmxMap ParentMap { get; set; }
 
         public List<T> FindComponentsOnMap<T>() where T : TiledComponent
         {

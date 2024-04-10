@@ -3,20 +3,21 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "Tilemaps/Forge/forge_normal_2.tmx",
+    "activeFile": "Tilemaps/FairyForest/forest_test_2.tmx",
     "expandedProjectPaths": [
-        "Tilemaps/Hub",
-        "Tilemaps/Forge",
-        "RuleMaps",
-        "Tilesets",
-        "Tilemaps",
-        "Tilemaps/Forge/Doorways",
         ".",
+        "Tilesets",
         "Templates",
-        "Tilemaps/HubMaps"
+        "Tilemaps/Hub",
+        "RuleMaps",
+        "Tilemaps/FairyForest",
+        "Tilemaps"
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
+        "": {
+            "scaleInEditor": 3
+        },
         ":/automap-tiles.tsx": {
             "scaleInDock": 1
         },
@@ -30,6 +31,24 @@
         },
         "C:/Users/scott/Desktop/Content (unpacked)/Maps/WitchSwamp.tmx#wt": {
             "scaleInDock": 1
+        },
+        "C:/Users/scott/Desktop/Content (unpacked)/Maps/Woods.tmx": {
+            "expandedObjectLayers": [
+                6
+            ],
+            "scale": 1.5,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 255.33333333333334,
+                "y": 346.66666666666663
+            }
+        },
+        "C:/Users/scott/Desktop/Content (unpacked)/Maps/Woods.tmx#Paths": {
+            "scaleInDock": 1
+        },
+        "C:/Users/scott/Desktop/Content (unpacked)/Maps/Woods.tmx#untitled tile sheet": {
+            "scaleInDock": 2,
+            "scaleInEditor": 2
         },
         "C:/Users/scott/Desktop/Game-Dev/MonoGame/Personal-Projects/PuppetRogueliteFNA/puppet-roguelite/PuppetRoguelite/Content/Tiled/Tilemaps/DungeonPrison/dp_b_1.tmx": {
             "scale": 1.3705729166666665,
@@ -56,6 +75,34 @@
         "C:/Users/scott/Desktop/Game-Dev/MonoGame/Personal-Projects/PuppetRogueliteFNA/puppet-roguelite/PuppetRoguelite/Content/Tiled/Tilesets/prototype_tileset.tsx": {
             "scaleInDock": 1
         },
+        "C:/Users/scott/Desktop/Game-Dev/Reference Projects/SNES_stuff/dizworld/dizworld.tmx": {
+            "scale": 4,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 219.75,
+                "y": 753
+            }
+        },
+        "C:/Users/scott/Desktop/Game-Dev/Reference Projects/SNES_stuff/dizworld/dizworld.tmx#tileset": {
+            "scaleInDock": 1,
+            "scaleInEditor": 4
+        },
+        "RuleMaps/fairy_forest_cliff_rules.tmx": {
+            "scale": 2,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 243,
+                "y": 238.5
+            }
+        },
+        "RuleMaps/forge_clutter_rules.tmx": {
+            "scale": 3,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 67.83333333333333,
+                "y": 102.33333333333331
+            }
+        },
         "RuleMaps/forge_floor_rules.tmx": {
             "expandedGroupLayers": [
                 55
@@ -79,8 +126,47 @@
             "scale": 2,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 141.25,
-                "y": 218
+                "x": 139.75,
+                "y": 215
+            }
+        },
+        "RuleMaps/stardew_leaves_rules.tmx": {
+            "scale": 1,
+            "selectedLayer": 4,
+            "viewCenter": {
+                "x": 115.5,
+                "y": 109
+            }
+        },
+        "Tilemaps/FairyForest/forest_hallway_test.tmx": {
+            "scale": 4,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 244.625,
+                "y": 325.5
+            }
+        },
+        "Tilemaps/FairyForest/forest_test_1.tmx": {
+            "scale": 2,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 269.5,
+                "y": 270
+            }
+        },
+        "Tilemaps/FairyForest/forest_test_1.tmx#fairy_forest_tileset": {
+            "scaleInDock": 2,
+            "scaleInEditor": 2
+        },
+        "Tilemaps/FairyForest/forest_test_2.tmx": {
+            "expandedObjectLayers": [
+                17
+            ],
+            "scale": 1.5,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 355,
+                "y": 318
             }
         },
         "Tilemaps/Forge/Doorways/forge_bottom.tmx": {
@@ -355,22 +441,22 @@
             "expandedObjectLayers": [
                 35
             ],
-            "scale": 0.75,
+            "scale": 1.5,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 377.33333333333337,
-                "y": 409.33333333333326
+                "x": 317,
+                "y": 234.66666666666663
             }
         },
         "Tilemaps/Forge/forge_normal_2.tmx": {
             "expandedObjectLayers": [
                 21
             ],
-            "scale": 0.5,
+            "scale": 1.5,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 506,
-                "y": 464
+                "x": 807,
+                "y": 118.66666666666664
             }
         },
         "Tilemaps/Forge/forge_normal_3.tmx": {
@@ -475,8 +561,8 @@
             "scale": 1,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 165,
-                "y": 213
+                "x": 164,
+                "y": 212
             }
         },
         "Tilemaps/Forge/forge_test.tmx": {
@@ -530,61 +616,70 @@
         },
         "Tilesets/dungeon_prison.tsx": {
             "scaleInDock": 1.5,
-            "scaleInEditor": 3
+            "scaleInEditor": 1
+        },
+        "Tilesets/fairy_forest_props.tsx": {
+            "scaleInDock": 0.75,
+            "scaleInEditor": 1
+        },
+        "Tilesets/fairy_forest_tileset.tsx": {
+            "scaleInDock": 2,
+            "scaleInEditor": 2
+        },
+        "Tilesets/fairy_forest_trees.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
         },
         "Tilesets/forge_tileset.tsx": {
-            "scaleInDock": 1.5,
+            "scaleInDock": 0.75,
             "scaleInEditor": 3
         },
         "Tilesets/prototype_tileset.tsx": {
             "scaleInDock": 1,
             "scaleInEditor": 1
+        },
+        "Tilesets/stardew_spring.tsx": {
+            "scaleInDock": 1.5,
+            "scaleInEditor": 1.5
         }
     },
+    "last.externalTilesetPath": "C:/Users/scott/Desktop/Game-Dev/FNA/Threadlock/Threadlock/Content/Tiled/Tilesets",
     "last.imagePath": "C:/Users/scott/Desktop/Game-Dev/FNA/Threadlock/Threadlock/Content/Textures/Tilesets",
     "last.objectTemplatePath": "C:/Users/scott/Desktop/Game-Dev/FNA/Threadlock/Threadlock/Content/Tiled/Templates",
-    "map.fixedSize": false,
+    "map.fixedSize": true,
     "map.height": 32,
     "map.lastUsedFormat": "tmx",
     "map.tileHeight": 16,
     "map.tileWidth": 16,
     "map.width": 32,
     "openFiles": [
-        "Tilemaps/Forge/Doorways/forge_top_open.tmx",
-        "Tilemaps/Forge/Doorways/forge_left_open.tmx",
-        "Tilemaps/Forge/Doorways/forge_right_open.tmx",
-        "Tilemaps/Forge/Doorways/forge_bottom_closed.tmx",
-        "Tilemaps/Forge/forge_normal_1.tmx",
-        "Tilemaps/Forge/Doorways/forge_right_closed.tmx",
-        "Tilesets/forge_tileset.tsx",
-        "Tilemaps/Forge/forge_reward.tmx",
-        "Tilemaps/Forge/forge_pre_boss_2.tmx",
-        "Tilemaps/Forge/forge_exit.tmx",
-        "Tilemaps/Forge/forge_boss.tmx",
-        "Tilemaps/Forge/Doorways/forge_top_closed.tmx",
-        "Tilemaps/Forge/forge_start.tmx",
-        "Tilemaps/Forge/Doorways/forge_bottom_open.tmx",
-        "Tilemaps/Forge/forge_normal_2.tmx",
-        "Tilemaps/HubMaps/hub.tmx",
-        "Tilemaps/Forge/forge_hub_1.tmx"
+        "Tilesets/fairy_forest_props.tsx",
+        "Tilesets/fairy_forest_trees.tsx",
+        "RuleMaps/fairy_forest_cliff_rules.tmx",
+        "C:/Users/scott/Desktop/Content (unpacked)/Maps/Woods.tmx",
+        "Tilemaps/FairyForest/forest_test_2.tmx",
+        "Tilesets/fairy_forest_tileset.tsx",
+        "Tilesets/stardew_spring.tsx",
+        "RuleMaps/stardew_leaves_rules.tmx"
     ],
     "project": "threadlock.tiled-project",
-    "property.type": "bool",
+    "property.type": "DoorwayPointDirection",
     "recentFiles": [
-        "Tilemaps/Forge/forge_boss.tmx",
-        "Tilemaps/Forge/forge_exit.tmx",
-        "Tilemaps/Forge/forge_hub_1.tmx",
-        "Tilemaps/Forge/forge_pre_boss_2.tmx",
-        "Tilemaps/Forge/forge_reward.tmx",
-        "Tilemaps/HubMaps/hub.tmx",
-        "Tilemaps/Forge/forge_normal_4.tmx",
-        "Tilemaps/Forge/forge_normal_3.tmx",
-        "C:/Users/scott/Desktop/Content (unpacked)/Maps/WitchSwamp.tmx",
-        "Tilemaps/Forge/Doorways/forge_left_open.tmx",
-        "Tilemaps/Forge/Doorways/forge_top_open.tmx",
-        "Tilemaps/Forge/Doorways/forge_right_open.tmx"
+        "Tilemaps/FairyForest/forest_hallway_test.tmx",
+        "Tilesets/stardew_spring.tsx",
+        "Tilesets/fairy_forest_tileset.tsx",
+        "Tilemaps/Forge/forge_normal_2.tmx",
+        "Tilesets/forge_tileset.tsx",
+        "Tilesets/fairy_forest_props.tsx",
+        "Tilesets/fairy_forest_trees.tsx",
+        "RuleMaps/fairy_forest_cliff_rules.tmx",
+        "C:/Users/scott/Desktop/Content (unpacked)/Maps/Woods.tmx",
+        "RuleMaps/stardew_leaves_rules.tmx",
+        "Tilemaps/FairyForest/forest_test_2.tmx",
+        "C:/Users/scott/Desktop/Game-Dev/Reference Projects/SNES_stuff/dizworld/dizworld.tmx"
     ],
     "resizeMap.removeObjects": false,
+    "tileset.lastUsedFilter": "Tiled tileset files (*.tsx *.xml)",
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
         "height": 16,

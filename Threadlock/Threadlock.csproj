@@ -39,6 +39,8 @@
     <None Remove="Content\Data\DungeonFlows4.json" />
     <None Remove="Content\Data\DungeonFlows5.json" />
     <None Remove="Content\Data\DungeonFlows6.json" />
+    <None Remove="Content\Data\FairyForestTiles.json" />
+    <None Remove="Content\Data\FairyForestTiles2.json" />
     <None Remove="Content\Data\SimpleLoop.json" />
     <None Remove="Content\Data\SingleRoom.json" />
     <None Remove="Content\Data\TestDialogue.json" />

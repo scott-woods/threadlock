@@ -8,20 +8,91 @@ using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
 using Threadlock.Components.TiledComponents;
+using Threadlock.StaticData;
 
 namespace Threadlock.Helpers
 {
     public static class TiledHelper
     {
+        public static void SetupMap(Entity mapEntity, TmxMap map)
+        {
+            List<TmxLayer> backLayers = new List<TmxLayer>();
+            List<TmxLayer> wallLayers = new List<TmxLayer>();
+            List<TmxLayer> passableWallLayers = new List<TmxLayer>();
+            List<TmxLayer> frontLayers = new List<TmxLayer>();
+            List<TmxLayer> aboveFrontLayers = new List<TmxLayer>();
+
+            foreach (var layer in map.TileLayers)
+            {
+                if (layer.Name.StartsWith("Back"))
+                    backLayers.Add(layer);
+                if (layer.Name.StartsWith("Walls"))
+                {
+                    if (layer.Properties != null && layer.Properties.TryGetValue("Passable", out var passable))
+                    {
+                        if (passable.ToLower() == "true")
+                            passableWallLayers.Add(layer);
+                    }
+                    else
+                        wallLayers.Add(layer);
+                }
+                if (layer.Name.StartsWith("Front"))
+                    frontLayers.Add(layer);
+                if (layer.Name.StartsWith("AboveFront"))
+                    aboveFrontLayers.Add(layer);
+            }
+
+            if (backLayers.Any())
+            {
+                var mapRenderer = mapEntity.AddComponent(new TiledMapRenderer(map));
+                mapRenderer.SetLayersToRender(backLayers.Select(l => l.Name).ToArray());
+                mapRenderer.RenderLayer = RenderLayers.Back;
+                CreateEntitiesForTiledObjects(mapRenderer);
+            }
+
+            //wall layers need one renderer each, since a tiledmaprenderer can only have one collision layer
+            foreach (var wallLayer in wallLayers)
+            {
+                var wallRenderer = mapEntity.AddComponent(new TiledMapRenderer(map, wallLayer.Name));
+                wallRenderer.SetLayersToRender(wallLayer.Name);
+                wallRenderer.RenderLayer = RenderLayers.Walls;
+                Flags.SetFlagExclusive(ref wallRenderer.PhysicsLayer, PhysicsLayers.Environment);
+            }
+
+            foreach (var passableLayer in passableWallLayers)
+            {
+                var passableWallRenderer = mapEntity.AddComponent(new TiledMapRenderer(map, passableLayer.Name));
+                passableWallRenderer.SetLayersToRender(passableLayer.Name);
+                passableWallRenderer.RenderLayer = RenderLayers.Walls;
+                Flags.SetFlagExclusive(ref passableWallRenderer.PhysicsLayer, PhysicsLayers.ProjectilePassableWall);
+            }
+
+            if (frontLayers.Any())
+            {
+                var frontRenderer = mapEntity.AddComponent(new TiledMapRenderer(map));
+                frontRenderer.SetLayersToRender(frontLayers.Select(l => l.Name).ToArray());
+                frontRenderer.RenderLayer = RenderLayers.Front;
+            }
+
+            if (aboveFrontLayers.Any())
+            {
+                var aboveFrontRenderer = mapEntity.AddComponent(new TiledMapRenderer(map));
+                aboveFrontRenderer.SetLayersToRender(aboveFrontLayers.Select(l => l.Name).ToArray());
+                aboveFrontRenderer.RenderLayer = RenderLayers.AboveFront;
+            }
+        }
+
         public static void CreateEntitiesForTiledObjects(TiledMapRenderer mapRenderer)
         {
             foreach (var obj in mapRenderer.TiledMap.ObjectGroups.SelectMany(g => g.Objects))
             {
-                if (string.IsNullOrWhiteSpace(obj.Type)) return;
+                if (string.IsNullOrWhiteSpace(obj.Type)) continue;
                 var type = Type.GetType("Threadlock.Components.TiledComponents." + obj.Type);
+                if (type == null) continue;
                 var instance = Activator.CreateInstance(type) as TiledComponent;
                 instance.TmxObject = obj;
                 instance.MapEntity = mapRenderer.Entity;
+                instance.ParentMap = mapRenderer.TiledMap;
 
                 var position = new Vector2();
                 switch (obj.ObjectType)

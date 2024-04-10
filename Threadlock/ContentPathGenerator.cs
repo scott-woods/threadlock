@@ -275,10 +275,20 @@ namespace Nez
 
 			public static class Tilesets
 			{
+				public static class FairyForest
+				{
+					public const string Light = @"Content\Textures\Tilesets\Fairy Forest\Light.png";
+					public const string Props = @"Content\Textures\Tilesets\Fairy Forest\Props.png";
+					public const string Shadown = @"Content\Textures\Tilesets\Fairy Forest\Shadown.png";
+					public const string Tiles = @"Content\Textures\Tilesets\Fairy Forest\Tiles.png";
+					public const string Tree = @"Content\Textures\Tilesets\Fairy Forest\Tree.png";
+				}
+
 				public const string Dungeon_prison_props = @"Content\Textures\Tilesets\dungeon_prison_props.png";
 				public const string Dungeon_prison_tileset = @"Content\Textures\Tilesets\dungeon_prison_tileset.png";
 				public const string Forge_tileset = @"Content\Textures\Tilesets\forge_tileset.png";
 				public const string Prototype_tileset = @"Content\Textures\Tilesets\prototype_tileset.png";
+				public const string StardewSpringOutdoors = @"Content\Textures\Tilesets\Stardew-Spring-Outdoors.png";
 			}
 
 			public static class UI
@@ -1047,6 +1057,7 @@ namespace Nez
 			public static class RuleMaps
 			{
 				public const string Collision_rules = @"Content\Tiled\RuleMaps\collision_rules.tmx";
+				public const string Fairy_forest_cliff_rules = @"Content\Tiled\RuleMaps\fairy_forest_cliff_rules.tmx";
 				public const string Forge_clutter_rules = @"Content\Tiled\RuleMaps\forge_clutter_rules.tmx";
 				public const string Forge_floor_rules = @"Content\Tiled\RuleMaps\forge_floor_rules.tmx";
 				public const string Forge_lava_rules = @"Content\Tiled\RuleMaps\forge_lava_rules.tmx";
@@ -1054,11 +1065,20 @@ namespace Nez
 				public const string Forge_walls_rules = @"Content\Tiled\RuleMaps\forge_walls_rules.tmx";
 				public const string Prison_floor_rules_one_overlap = @"Content\Tiled\RuleMaps\prison_floor_rules_one_overlap.tmx";
 				public const string Prison_walls_rules_one_overlap_3 = @"Content\Tiled\RuleMaps\prison_walls_rules_one_overlap_3.tmx";
+				public const string Stardew_leaves_rules = @"Content\Tiled\RuleMaps\stardew_leaves_rules.tmx";
 				public const string Wooden_floor_rules_2 = @"Content\Tiled\RuleMaps\wooden_floor_rules_2.tmx";
 			}
 
 			public static class Tilemaps
 			{
+				public static class FairyForest
+				{
+					public const string Forest_hallway_test = @"Content\Tiled\Tilemaps\FairyForest\forest_hallway_test.tmx";
+					public const string Forest_test_1 = @"Content\Tiled\Tilemaps\FairyForest\forest_test_1.tmx";
+					public const string Forest_test_2 = @"Content\Tiled\Tilemaps\FairyForest\forest_test_2.tmx";
+					public const string Rules = @"Content\Tiled\Tilemaps\FairyForest\rules.txt";
+				}
+
 				public static class Forge
 				{
 					public static class Doorways
@@ -1121,8 +1141,12 @@ namespace Nez
 			public static class Tilesets
 			{
 				public const string Dungeon_prison = @"Content\Tiled\Tilesets\dungeon_prison.tsx";
+				public const string Fairy_forest_props = @"Content\Tiled\Tilesets\fairy_forest_props.tsx";
+				public const string Fairy_forest_tileset = @"Content\Tiled\Tilesets\fairy_forest_tileset.tsx";
+				public const string Fairy_forest_trees = @"Content\Tiled\Tilesets\fairy_forest_trees.tsx";
 				public const string Forge_tileset = @"Content\Tiled\Tilesets\forge_tileset.tsx";
 				public const string Prototype_tileset = @"Content\Tiled\Tilesets\prototype_tileset.tsx";
+				public const string Stardew_spring = @"Content\Tiled\Tilesets\stardew_spring.tsx";
 			}
 
 			public const string Threadlock = @"Content\Tiled\threadlock.tiled-project";

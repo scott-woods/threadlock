@@ -1,0 +1,259 @@
+{
+  "Center": {
+    "Tiles": [
+      {
+        "TileIds": [ 157, 110, 123, 136, 149, 162, 175 ],
+        "Layer": "Back",
+        "Offset": ""
+      }
+    ]
+  },
+  "TopLeft": {
+    "Tiles": [
+      {
+        "TileIds": [ 143 ],
+        "Layer": "Back",
+        "Offset": ""
+      },
+      {
+        "TileIds": [ 274 ],
+        "Layer": "AboveFront",
+        "Offset": ""
+      },
+      {
+        "TileIds": [ 273 ],
+        "Layer": "Walls",
+        "Offset": "-1 0"
+      },
+      {
+        "TileIds": [ 260 ],
+        "Layer": "Walls",
+        "Offset": "-1 -1"
+      },
+      {
+        "TileIds": [ 261 ],
+        "Layer": "Walls",
+        "Offset": "0 -1"
+      }
+    ]
+  },
+  "TopEdge": {
+    "Tiles": [
+      {
+        "TileIds": [ 144 ],
+        "Layer": "Back",
+        "Offset": ""
+      },
+      {
+        "TileIds": [ 275, 276 ],
+        "Layer": "AboveFront",
+        "Offset": ""
+      },
+      {
+        "TileIds": [ 262, 263 ],
+        "Layer": "Walls",
+        "Offset": "0 -1"
+      }
+    ]
+  },
+  "TopRight": {
+    "Tiles": [
+      {
+        "TileIds": [ 145 ],
+        "Layer": "Back",
+        "Offset": ""
+      },
+      {
+        "TileIds": [ 277 ],
+        "Layer": "AboveFront",
+        "Offset": ""
+      },
+      {
+        "TileIds": [264],
+        "Layer": "Walls",
+        "Offset": "0 -1"
+      },
+      {
+        "TileIds": [265],
+        "Layer": "Walls",
+        "Offset": "1 -1"
+      },
+      {
+        "TileIds": [278],
+        "Layer": "Walls",
+        "Offset": "1 0"
+      }
+    ]
+  },
+  "LeftEdge": {
+    "Tiles": [
+      {
+        "TileIds": [ 156 ],
+        "Layer": "Back",
+        "Offset": ""
+      },
+      {
+        "TileIds": [ 287, 300 ],
+        "Layer": "AboveFront",
+        "Offset": ""
+      },
+      {
+        "TileIds": [ 286, 299 ],
+        "Layer": "Walls",
+        "Offset": "-1 0"
+      }
+    ]
+  },
+  "BottomLeft": {
+    "Tiles": [
+      {
+        "TileIds": [ 169 ],
+        "Layer": "Back",
+        "Offset": ""
+      },
+      {
+        "TileIds": [ 313 ],
+        "Layer": "AboveFront",
+        "Offset": ""
+      },
+      {
+        "TileIds": [312],
+        "Layer": "Walls",
+        "Offset": "-1 0"
+      },
+      {
+        "TileIds": [325],
+        "Layer": "Walls",
+        "Offset": "-1 1"
+      },
+      {
+        "TileIds": [326],
+        "Layer": "Walls",
+        "Offset": "0 1"
+      }
+    ]
+  },
+  "BottomEdge": {
+    "Tiles": [
+      {
+        "TileIds": [170],
+        "Layer": "Back",
+        "Offset": ""
+      },
+      {
+        "TileIds": [ 314, 315 ],
+        "Layer": "AboveFront",
+        "Offset": ""
+      },
+      {
+        "TileIds": [ 327, 328 ],
+        "Layer": "Walls",
+        "Offset": "0 1"
+      }
+    ]
+  },
+  "BottomRight": {
+    "Tiles": [
+      {
+        "TileIds": [ 171 ],
+        "Layer": "Back",
+        "Offset": ""
+      },
+      {
+        "TileIds": [ 316 ],
+        "Layer": "AboveFront",
+        "Offset": ""
+      },
+      {
+        "TileIds": [329],
+        "Layer": "Walls",
+        "Offset": "0 1"
+      },
+      {
+        "TileIds": [330],
+        "Layer": "Walls",
+        "Offset": "1 1"
+      },
+      {
+        "TileIds": [317],
+        "Layer": "Walls",
+        "Offset": "1 0"
+      }
+    ]
+  },
+  "RightEdge": {
+    "Tiles": [
+      {
+        "TileIds": [ 158 ],
+        "Layer": "Back",
+        "Offset": ""
+      },
+      {
+        "TileIds": [ 290, 303 ],
+        "Layer": "AboveFront",
+        "Offset": ""
+      },
+      {
+        "TileIds": [ 291, 304 ],
+        "Layer": "Walls",
+        "Offset": "1 0"
+      }
+    ]
+  },
+  "TopLeftInverse": {
+    "Tiles": [
+      {
+        "TileIds": [ 146 ],
+        "Layer": "Back",
+        "Offset": ""
+      },
+      {
+        "TileIds": [ 302 ],
+        "Layer": "AboveFront",
+        "Offset": ""
+      }
+    ]
+  },
+  "TopRightInverse": {
+    "Tiles": [
+      {
+        "TileIds": [ 148 ],
+        "Layer": "Back",
+        "Offset": ""
+      },
+      {
+        "TileIds": [ 301 ],
+        "Layer": "AboveFront",
+        "Offset": ""
+      }
+    ]
+  },
+  "BottomRightInverse": {
+    "Tiles": [
+      {
+        "TileIds": [ 172 ],
+        "Layer": "Back",
+        "Offset": ""
+      },
+      {
+        "TileIds": [ 288 ],
+        "Layer": "AboveFront",
+        "Offset": ""
+      }
+    ]
+  },
+  "BottomLeftInverse": {
+    "Tiles": [
+      {
+        "TileIds": [ 174 ],
+        "Layer": "Back",
+        "Offset": ""
+      },
+      {
+        "TileIds": [ 290 ],
+        "Layer": "AboveFront",
+        "Offset": ""
+      }
+    ]
+  }
+}

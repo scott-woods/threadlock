@@ -25,6 +25,40 @@
             "valuesAsFlags": false
         },
         {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 16,
+            "members": [
+                {
+                    "name": "Direction",
+                    "propertyType": "DoorwayPointDirection",
+                    "type": "string",
+                    "value": "None"
+                }
+            ],
+            "name": "DoorwayPoint",
+            "type": "class",
+            "useAs": [
+                "property",
+                "object",
+                "project"
+            ]
+        },
+        {
+            "id": 17,
+            "name": "DoorwayPointDirection",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "None",
+                "Up",
+                "Down",
+                "Left",
+                "Right"
+            ],
+            "valuesAsFlags": false
+        },
+        {
             "id": 13,
             "name": "DungeonArea",
             "storageType": "string",
@@ -93,6 +127,20 @@
                 }
             ],
             "name": "EnemySpawnPoint",
+            "type": "class",
+            "useAs": [
+                "property",
+                "object",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 15,
+            "members": [
+            ],
+            "name": "FlexDoorway",
             "type": "class",
             "useAs": [
                 "property",
