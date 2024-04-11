@@ -296,6 +296,7 @@ namespace Nez
 				public const string Forge_tileset = @"Content\Textures\Tilesets\forge_tileset.png";
 				public const string Prototype_tileset = @"Content\Textures\Tilesets\prototype_tileset.png";
 				public const string StardewSpringOutdoors = @"Content\Textures\Tilesets\Stardew-Spring-Outdoors.png";
+				public const string Tech_shop = @"Content\Textures\Tilesets\tech_shop.png";
 			}
 
 			public static class UI
@@ -1123,6 +1124,7 @@ namespace Nez
 						public const string Testinggak = @"Content\Tiled\Tilemaps\Forge\Halls\testing gak.tmx";
 					}
 
+					public const string Forge_action_store = @"Content\Tiled\Tilemaps\Forge\forge_action_store.tmx";
 					public const string Forge_boss = @"Content\Tiled\Tilemaps\Forge\forge_boss.tmx";
 					public const string Forge_exit = @"Content\Tiled\Tilemaps\Forge\forge_exit.tmx";
 					public const string Forge_hub_1 = @"Content\Tiled\Tilemaps\Forge\forge_hub_1.tmx";
@@ -1154,6 +1156,7 @@ namespace Nez
 				public const string Forge_tileset = @"Content\Tiled\Tilesets\forge_tileset.tsx";
 				public const string Prototype_tileset = @"Content\Tiled\Tilesets\prototype_tileset.tsx";
 				public const string Stardew_spring = @"Content\Tiled\Tilesets\stardew_spring.tsx";
+				public const string Tech_shop = @"Content\Tiled\Tilesets\tech_shop.tsx";
 			}
 
 			public const string Threadlock = @"Content\Tiled\threadlock.tiled-project";

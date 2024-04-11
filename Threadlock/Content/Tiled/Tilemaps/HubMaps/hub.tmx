@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" class="DungeonMap" orientation="orthogonal" renderorder="right-down" width="31" height="24" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="22">
+<map version="1.10" tiledversion="1.10.2" class="DungeonMap" orientation="orthogonal" renderorder="right-down" width="31" height="24" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="22">
  <properties>
   <property name="Area" value="Forge"/>
  </properties>
  <tileset firstgid="1" source="../../Tilesets/dungeon_prison.tsx"/>
  <tileset firstgid="626" source="../../Tilesets/forge_tileset.tsx"/>
+ <tileset firstgid="1251" source="../../Tilesets/prototype_tileset.tsx"/>
  <layer id="1" name="Back" width="31" height="24">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

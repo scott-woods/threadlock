@@ -21,7 +21,8 @@ namespace Threadlock.StaticData
             { "ExitArea", ExitArea },
             { "SpawnTestEnemy", SpawnTestEnemy },
             { "ChangeWeapon", ChangeWeapon },
-            { "Dialogue", Dialogue }
+            { "Dialogue", Dialogue },
+            { "ActionShop", ActionShop }
         };
 
         static bool VerifyArgs(List<string> args, int requiredCount)
@@ -30,6 +31,16 @@ namespace Threadlock.StaticData
         }
 
         #region EVENTS
+
+        public static IEnumerator ActionShop(Trigger trigger)
+        {
+            var dialogueSet = DialogueLoader.GetDialogue("TestDialogue", "ActionShop");
+
+            if (dialogueSet == null)
+                yield break;
+
+            yield return Game1.UIManager.ShowTextboxText(dialogueSet);
+        }
 
         public static IEnumerator Dialogue(Trigger trigger)
         {

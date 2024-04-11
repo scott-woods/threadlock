@@ -199,7 +199,8 @@
                 "boss",
                 "exit",
                 "reward",
-                "hub"
+                "hub",
+                "shop"
             ],
             "valuesAsFlags": false
         },

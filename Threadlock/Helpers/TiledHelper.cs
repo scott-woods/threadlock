@@ -54,7 +54,10 @@ namespace Threadlock.Helpers
             foreach (var wallLayer in wallLayers)
             {
                 var wallRenderer = mapEntity.AddComponent(new TiledMapRenderer(map, wallLayer.Name));
-                wallRenderer.SetLayersToRender(wallLayer.Name);
+                if (wallLayer.Properties != null && wallLayer.Properties.ContainsKey("Hide"))
+                    wallRenderer.LayerIndicesToRender = Array.Empty<int>();
+                else
+                    wallRenderer.SetLayersToRender(wallLayer.Name);
                 wallRenderer.RenderLayer = RenderLayers.Walls;
                 Flags.SetFlagExclusive(ref wallRenderer.PhysicsLayer, PhysicsLayers.Environment);
             }

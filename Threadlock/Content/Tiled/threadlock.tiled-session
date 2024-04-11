@@ -39,8 +39,8 @@
             "scale": 1.5,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 480,
-                "y": 256
+                "x": 479.3333333333333,
+                "y": 255.33333333333331
             }
         },
         "C:/Users/scott/Desktop/Content (unpacked)/Maps/Woods.tmx#Paths": {
@@ -165,8 +165,8 @@
             "scale": 1.5,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 545,
-                "y": 376
+                "x": 750,
+                "y": 433.33333333333326
             }
         },
         "Tilemaps/Forge/Doorways/forge_bottom.tmx": {
@@ -397,12 +397,23 @@
                 "y": 255.33333333333331
             }
         },
+        "Tilemaps/Forge/forge_action_store.tmx": {
+            "expandedObjectLayers": [
+                7
+            ],
+            "scale": 1.5,
+            "selectedLayer": 4,
+            "viewCenter": {
+                "x": 232.66666666666663,
+                "y": 159.33333333333334
+            }
+        },
         "Tilemaps/Forge/forge_boss.tmx": {
             "scale": 1.0279296875,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 255.85407562226868,
-                "y": 255.8540756222687
+                "x": 254.8812464373931,
+                "y": 254.88124643739317
             }
         },
         "Tilemaps/Forge/forge_doorway_testing.tmx": {
@@ -444,8 +455,8 @@
             "scale": 1.5,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 294.3333333333333,
-                "y": 283.3333333333333
+                "x": 233.33333333333334,
+                "y": 389.33333333333326
             }
         },
         "Tilemaps/Forge/forge_normal_2.tmx": {
@@ -586,10 +597,10 @@
                 5
             ],
             "scale": 1.5,
-            "selectedLayer": 3,
+            "selectedLayer": -1,
             "viewCenter": {
-                "x": 166,
-                "y": 198
+                "x": 163.33333333333334,
+                "y": 195.33333333333334
             }
         },
         "Tilemaps/enemy_test_zone.tmx": {
@@ -599,8 +610,8 @@
             "scale": 1,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 173,
-                "y": 53
+                "x": 205,
+                "y": 193
             }
         },
         "Tilemaps/test.tmx": {
@@ -635,18 +646,28 @@
             "scaleInEditor": 3
         },
         "Tilesets/prototype_tileset.tsx": {
+            "dynamicWrapping": false,
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
         "Tilesets/stardew_spring.tsx": {
             "scaleInDock": 1.5,
             "scaleInEditor": 1.5
+        },
+        "Tilesets/tech_shop.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "tech_shop.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
         }
     },
     "last.externalTilesetPath": "C:/Users/scott/Desktop/Game-Dev/FNA/Threadlock/Threadlock/Content/Tiled/Tilesets",
     "last.imagePath": "C:/Users/scott/Desktop/Game-Dev/FNA/Threadlock/Threadlock/Content/Textures/Tilesets",
     "last.objectTemplatePath": "C:/Users/scott/Desktop/Game-Dev/FNA/Threadlock/Threadlock/Content/Tiled/Templates",
-    "map.fixedSize": true,
+    "map.fixedSize": false,
     "map.height": 32,
     "map.lastUsedFormat": "tmx",
     "map.tileHeight": 16,
@@ -663,26 +684,26 @@
         "RuleMaps/stardew_leaves_rules.tmx"
     ],
     "project": "threadlock.tiled-project",
-    "property.type": "DoorwayPointDirection",
+    "property.type": "string",
     "recentFiles": [
-        "Tilemaps/FairyForest/forest_hallway_test.tmx",
-        "Tilesets/stardew_spring.tsx",
-        "Tilesets/fairy_forest_tileset.tsx",
-        "Tilemaps/Forge/forge_normal_2.tmx",
-        "Tilesets/forge_tileset.tsx",
+        "Tilemaps/HubMaps/hub.tmx",
+        "Tilesets/prototype_tileset.tsx",
+        "Tilesets/tech_shop.tsx",
+        "Tilemaps/Forge/forge_action_store.tmx",
+        "tech_shop.tsx",
         "Tilesets/fairy_forest_props.tsx",
         "Tilesets/fairy_forest_trees.tsx",
         "RuleMaps/fairy_forest_cliff_rules.tmx",
         "C:/Users/scott/Desktop/Content (unpacked)/Maps/Woods.tmx",
-        "RuleMaps/stardew_leaves_rules.tmx",
         "Tilemaps/FairyForest/forest_test_2.tmx",
-        "C:/Users/scott/Desktop/Game-Dev/Reference Projects/SNES_stuff/dizworld/dizworld.tmx"
+        "Tilesets/fairy_forest_tileset.tsx",
+        "Tilesets/stardew_spring.tsx"
     ],
     "resizeMap.removeObjects": false,
     "tileset.lastUsedFilter": "Tiled tileset files (*.tsx *.xml)",
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
-        "height": 16,
-        "width": 16
+        "height": 108,
+        "width": 108
     }
 }
