@@ -39,8 +39,8 @@
             "scale": 1.5,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 479.3333333333333,
-                "y": 255.33333333333331
+                "x": 478.66666666666663,
+                "y": 254.66666666666666
             }
         },
         "C:/Users/scott/Desktop/Content (unpacked)/Maps/Woods.tmx#Paths": {
@@ -165,8 +165,8 @@
             "scale": 1.5,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 750,
-                "y": 433.33333333333326
+                "x": 963.9999999999999,
+                "y": 490
             }
         },
         "Tilemaps/Forge/Doorways/forge_bottom.tmx": {
@@ -401,11 +401,11 @@
             "expandedObjectLayers": [
                 7
             ],
-            "scale": 1.5,
+            "scale": 0.75,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 232.66666666666663,
-                "y": 159.33333333333334
+                "x": 267.99999999999994,
+                "y": 137.33333333333334
             }
         },
         "Tilemaps/Forge/forge_boss.tmx": {
@@ -444,30 +444,30 @@
             "scale": 0.8223437499999999,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 350.21850655519665,
-                "y": 227.39882196465894
+                "x": 349.00247007410223,
+                "y": 226.1827854835645
             }
         },
         "Tilemaps/Forge/forge_normal_1.tmx": {
             "expandedObjectLayers": [
                 35
             ],
-            "scale": 1.5,
+            "scale": 1,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 233.33333333333334,
-                "y": 389.33333333333326
+                "x": 236,
+                "y": 278
             }
         },
         "Tilemaps/Forge/forge_normal_2.tmx": {
             "expandedObjectLayers": [
                 21
             ],
-            "scale": 1.5,
+            "scale": 0.75,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 807,
-                "y": 118.66666666666664
+                "x": 249.33333333333331,
+                "y": 293.33333333333326
             }
         },
         "Tilemaps/Forge/forge_normal_3.tmx": {
@@ -477,8 +477,8 @@
             "scale": 0.75,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 165.33333333333331,
-                "y": 253.3333333333333
+                "x": 163.99999999999994,
+                "y": 252
             }
         },
         "Tilemaps/Forge/forge_normal_4.tmx": {

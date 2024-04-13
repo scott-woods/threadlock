@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using Threadlock.Components.TiledComponents;
 using Threadlock.Helpers;
 using Threadlock.Models;
@@ -83,25 +84,38 @@ namespace Threadlock.Entities
         {
             get
             {
-                var collisionRenderer = GetComponents<TiledMapRenderer>().FirstOrDefault(r => r.CollisionLayer != null);
-                if (collisionRenderer != null)
+                var collisionRenderers = GetComponents<TiledMapRenderer>().Where(r => r.CollisionLayer != null);
+                var tiles = collisionRenderers.SelectMany(r => r.CollisionLayer.Tiles.Where(t => t != null));
+                var minX = int.MaxValue;
+                var maxX = int.MinValue;
+                var minY = int.MaxValue;
+                var maxY = int.MinValue;
+                foreach (var tile in tiles)
                 {
-                    var positions = collisionRenderer.CollisionLayer.Tiles
-                        .Where(t => t != null)
-                        .ToList();
-                    //positions.AddRange(FloorTilePositions);
-
-                    var minX = positions.Select(t => t.X * t.Tileset.TileWidth).Min();
-                    var maxX = positions.Select(t => t.X * t.Tileset.TileWidth).Max();
-                    var minY = positions.Select(t => t.Y * t.Tileset.TileHeight).Min();
-                    var maxY = positions.Select(t => t.Y * t.Tileset.TileHeight).Max();
-                    var pos = new Vector2(minX, minY);
-                    pos += Position;
-                    var size = new Vector2(maxX + collisionRenderer.TiledMap.TileWidth - minX, maxY + collisionRenderer.TiledMap.TileHeight - minY);
-                    return new RectangleF(pos, size);
+                    var x = tile.X * tile.Tileset.TileWidth;
+                    var y = tile.Y * tile.Tileset.TileHeight;
+                    minX = Math.Min(minX, x);
+                    maxX = Math.Max(maxX, x + tile.Tileset.TileWidth);
+                    minY = Math.Min(minY, y);
+                    maxY = Math.Max(maxY, y + tile.Tileset.TileHeight);
                 }
 
-                return new RectangleF();
+                var rectPos = new Vector2(minX, minY);
+                var bottomRight = new Vector2(maxX, maxY);
+                var rectSize = bottomRight - rectPos;
+
+                return new RectangleF(rectPos + Position, rectSize);
+            }
+        }
+
+        public List<Vector2> AllCollisionTilePositions
+        {
+            get
+            {
+                var collisionRenderers = GetComponents<TiledMapRenderer>().Where(r => r.CollisionLayer != null);
+                var tiles = collisionRenderers.SelectMany(r => r.CollisionLayer.Tiles.Where(t => t != null));
+
+                return tiles.Select(t => Position + new Vector2(t.X * t.Tileset.TileWidth, t.Y * t.Tileset.TileHeight)).ToList();
             }
         }
 
@@ -259,77 +273,96 @@ namespace Threadlock.Entities
             return overlappingPositions.Any();
         }
 
-        public bool OverlapsRoom(DungeonRoomEntity otherRoom, bool checkDoorways = true)
+        public bool OverlapsRoom(DungeonRoomEntity otherRoom, Vector2? movement = null)
         {
-            //if there is no overlap, continue
-            if (!Bounds.Intersects(otherRoom.Bounds))
-                return false;
-
-            var otherRoomRenderer = otherRoom.GetComponents<TiledMapRenderer>().FirstOrDefault(r => r.CollisionLayer != null);
-            if (otherRoomRenderer == null)
-                return false;
-
-            var roomRenderer = GetComponents<TiledMapRenderer>().FirstOrDefault(r => r.CollisionLayer != null);
-            if (roomRenderer == null)
-                return false;
-
-
-            var otherRoomCollisionRect = GetCollisionLayerRect(otherRoomRenderer);
-            var roomCollisionRect = GetCollisionLayerRect(roomRenderer);
-
-            if (roomCollisionRect.Intersects(otherRoomCollisionRect))
-                return true;
-
-            List<Vector2> tilePositions = new List<Vector2>();
-            List<Vector2> otherRoomTilePositions = new List<Vector2>();
-
-            if (checkDoorways)
+            var localCollisionBounds = CollisionBounds;
+            var localCollisionTiles = AllCollisionTilePositions;
+            var localFloorPositions = FloorTilePositions;
+            var localDoorways = FindComponentsOnMap<DungeonDoorway>().Select(d => d.Bounds).ToList();
+            if (movement != null)
             {
-                //var doorways = FindComponentsOnMap<DungeonDoorway>();
-                //foreach (var doorway in doorways)
-                //{
-                //    for (int y = 0; y < doorway.TmxObject.Height / 16; y++)
-                //    {
-                //        for (int x = 0; x < doorway.TmxObject.Width / 16; x++)
-                //        {
-                //            var doorwayTileWorldPos = doorway.Entity.Position + new Vector2(x * 16, y * 16);
-                //            tilePositions.Add(doorwayTileWorldPos);
-                //        }
-                //    }
-                //}
-
-                //var otherDoorways = otherRoom.FindComponentsOnMap<DungeonDoorway>();
-                //foreach (var doorway in otherDoorways)
-                //{
-                //    for (int y = 0; y < doorway.TmxObject.Height / 16; y++)
-                //    {
-                //        for (int x = 0; x < doorway.TmxObject.Width / 16; x++)
-                //        {
-                //            var doorwayTileWorldPos = doorway.Entity.Position + new Vector2(x * 16, y * 16);
-                //            otherRoomTilePositions.Add(doorwayTileWorldPos);
-                //        }
-                //    }
-                //}
+                localCollisionBounds.Location += movement.Value;
+                localCollisionTiles = localCollisionTiles.Select(t => t + movement.Value).ToList();
+                localFloorPositions = localFloorPositions.Select(p => p + movement.Value).ToList();
+                localDoorways = localDoorways.Select(d =>
+                {
+                    d.Location += movement.Value;
+                    return d;
+                }).ToList();
             }
 
-            //return tilePositions.Any(t => otherRoomTilePositions.Contains(t));
+            var otherCollisionBounds = otherRoom.CollisionBounds;
+            var otherCollisionTiles = otherRoom.AllCollisionTilePositions;
+            var otherFloorPositions = otherRoom.FloorTilePositions;
+            var otherDoorways = otherRoom.FindComponentsOnMap<DungeonDoorway>().Select(d => d.Bounds).ToList();
+
+            foreach (var localPos in localFloorPositions)
+            {
+                if (otherDoorways.Any(d => d.Contains(localPos)))
+                    return true;
+
+                if (otherCollisionBounds.Contains(localPos))
+                {
+                    if (otherCollisionTiles.Contains(localPos))
+                        return true;
+                }
+            }
+
+            foreach (var localDoor in localDoorways)
+            {
+                if (otherFloorPositions.Any(op => localDoor.Contains(op)))
+                    return true;
+
+                if (otherDoorways.Any(od => od.Intersects(localDoor)))
+                    return true;
+
+                if (otherCollisionBounds.Intersects(localDoor))
+                {
+                    if (otherCollisionTiles.Any(p => localDoor.Contains(p)))
+                        return true;
+                }
+            }
+
+            if (localCollisionBounds.Intersects(otherCollisionBounds))
+            {
+                if (localCollisionTiles.Any(p => otherCollisionTiles.Any(op => p == op)))
+                    return true;
+            }
+
+            foreach (var pos in otherFloorPositions)
+            {
+                if (localCollisionBounds.Contains(pos))
+                {
+                    if (localCollisionTiles.Any(p => p == pos))
+                        return true;
+                }
+            }
+
+            foreach (var otherDoor in otherDoorways)
+            {
+                if (localCollisionBounds.Intersects(otherDoor))
+                {
+                    if (localCollisionTiles.Any(p => otherDoor.Contains(p)))
+                        return true;
+                }
+            }
 
             return false;
-        }
 
-        Rectangle GetCollisionLayerRect(TiledMapRenderer renderer)
-        {
-            if (renderer.CollisionLayer == null)
-                return new Rectangle();
+            ////check if local doorways intersect other doorways or other floor positions
+            //if (localDoorways.Any(ld => otherDoorways.Any(od => od.Intersects(ld)) || otherFloorPositions.Any(op => ld.Contains(op))))
+            //    return true;
 
-            var minX = renderer.CollisionLayer.Tiles.Where(t => t != null).Select(t => t.X).Min();
-            var maxX = renderer.CollisionLayer.Tiles.Where(t => t != null).Select(t => t.X).Max();
-            var minY = renderer.CollisionLayer.Tiles.Where(t => t != null).Select(t => t.Y).Min();
-            var maxY = renderer.CollisionLayer.Tiles.Where(t => t != null).Select(t => t.Y).Max();
+            ////check if local floor positions are overlapping any other room doorways
+            //if (localFloorPositions.Any(lp => otherDoorways.Any(od => od.Contains(lp))))
+            //    return true;
 
-            var rect = new Rectangle(minX, minY, (maxX - minX) * 16, (maxY - minY) * 16);
-            rect.Location += renderer.Entity.Position.ToPoint();
-            return rect;
+            //if (!localCollisionBounds.Intersects(otherCollisionBounds)
+            //    && !otherDoorways.Any(od => od.Intersects(localCollisionBounds))
+            //    && !otherFloorPositions.Any(localCollisionBounds.Contains)
+            //    && !localDoorways.Any(ld => ld.Intersects(otherCollisionBounds))
+            //    && !localFloorPositions.Any(lp => otherCollisionBounds.Contains(lp)))
+            //    return false;
         }
     }
 }

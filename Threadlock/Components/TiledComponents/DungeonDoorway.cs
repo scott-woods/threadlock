@@ -44,6 +44,14 @@ namespace Threadlock.Components.TiledComponents
         public DungeonRoom DungeonRoom;
         public DungeonRoomEntity DungeonRoomEntity { get => MapEntity as DungeonRoomEntity; }
 
+        public RectangleF Bounds
+        {
+            get
+            {
+                return new RectangleF(Entity.Position, new Vector2(TmxObject.Width, TmxObject.Height));
+            }
+        }
+
         List<TiledMapRenderer> _mapRenderers = new List<TiledMapRenderer>();
         TmxMap _map;
         public TmxMap Map { get { return _map; } }

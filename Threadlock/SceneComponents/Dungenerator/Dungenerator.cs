@@ -26,6 +26,8 @@ namespace Threadlock.SceneComponents.Dungenerator
     public class Dungenerator : SceneComponent
     {
         const int _maxAttempts = 100;
+        const int _maxLoopAttempts = 5;
+
         List<DungeonRoomEntity> _allMapEntities = new List<DungeonRoomEntity>();
         List<DungeonComposite> _allComposites = new List<DungeonComposite>();
         List<TmxMap> _allMaps = new List<TmxMap>();
@@ -115,8 +117,6 @@ namespace Threadlock.SceneComponents.Dungenerator
                     _allMapEntities.Clear();
                     continue;
                 }
-
-                //GetPathfindingGraph(_allMapEntities, out var graph, out var graphRect, true);
 
                 //paint corridor tiles
                 var allFloorPositions = _allMapEntities
@@ -307,21 +307,21 @@ namespace Threadlock.SceneComponents.Dungenerator
         {
             foreach (var loop in loops)
             {
-                var processedRooms = new List<DungeonRoomEntity>();
-
-                //get placement order
-                var placementOrder = new List<DungeonRoomEntity>();
-                for (int i = 0; i < (loop.RoomEntities.Count + 1) / 2; i++)
-                {
-                    placementOrder.Add(loop.RoomEntities[i]);
-                    if (i != loop.RoomEntities.Count - i - 1)
-                        placementOrder.Add(loop.RoomEntities[loop.RoomEntities.Count - i - 1]);
-                }
-
                 var attempts = 0;
-                while (attempts < _maxAttempts)
+                while (attempts < _maxLoopAttempts)
                 {
                     attempts++;
+
+                    var processedRooms = new List<DungeonRoomEntity>();
+
+                    //get placement order
+                    var placementOrder = new List<DungeonRoomEntity>();
+                    for (int i = 0; i < (loop.RoomEntities.Count + 1) / 2; i++)
+                    {
+                        placementOrder.Add(loop.RoomEntities[i]);
+                        if (i != loop.RoomEntities.Count - i - 1)
+                            placementOrder.Add(loop.RoomEntities[loop.RoomEntities.Count - i - 1]);
+                    }
 
                     string oddLineDir = "";
                     string evenLineDir = "";
@@ -406,8 +406,6 @@ namespace Threadlock.SceneComponents.Dungenerator
 
                             var possiblePairs = GetValidDoorwayPairs(prevDoorways, nextDoorways, false);
 
-                            
-
                             //filter possible pairs differently based on where we are in loop
                             if (i == 1)
                             {
@@ -418,7 +416,7 @@ namespace Threadlock.SceneComponents.Dungenerator
                             //filter for before halfway through loop
                             else if (i == 2 || i <= (placementOrder.Count + 1) / 2)
                             {
-                                
+
                                 possiblePairs = possiblePairs
                                     .OrderByDescending(p => p.Item2.Direction == currentDir)
                                     .ThenByDescending(p => p.Item1.IsDirectMatch(p.Item2))
@@ -513,26 +511,6 @@ namespace Threadlock.SceneComponents.Dungenerator
                             break;
                         else
                             pairs.Remove(pair);
-
-                        //GetPathfindingGraph(processedRooms, out var graph, out var graphRect);
-
-                        ////try to find a path between the doorways
-                        //if (CorridorGenerator.ConnectDoorways(pair.Item1, pair.Item2, graph, processedRooms, graphRect, out List<Vector2> floorPositions))
-                        //{
-                        //    //found a valid path, set doorways as open
-                        //    pair.Item1.SetOpen(true);
-                        //    pair.Item2.SetOpen(true);
-
-                        //    endEntity.FloorTilePositions.AddRange(floorPositions);
-                        //}
-                        //else
-                        //{
-                        //    //pair was invalid, remove and try again
-                        //    pairs.Remove(pair);
-                        //    continue;
-                        //}
-
-                        //break;
                     }
 
                     //if no pairs were valid, try making loop from scratch
@@ -541,18 +519,20 @@ namespace Threadlock.SceneComponents.Dungenerator
                         //clear any processed rooms
                         loop.Reset();
                         processedRooms.Clear();
-
                         continue;
                     }
 
+                    //finished with loop. add all map entities from this loop to the total list
+                    _allMapEntities.AddRange(processedRooms);
+
                     break;
                 }
-
-                if (attempts == _maxAttempts)
+                
+                //loop failed after all attempts, start over
+                if (attempts >= _maxLoopAttempts)
+                {
                     return false;
-
-                //finished with loop. add all map entities from this loop to the total list
-                _allMapEntities.AddRange(processedRooms);
+                }
             }
 
             return true;
@@ -614,58 +594,6 @@ namespace Threadlock.SceneComponents.Dungenerator
 
                         if (pairsListCopy.Count == 0)
                             return false;
-
-                        //simple pairs failed, try pathfinding now
-                        //if (pairsListCopy.Count == 0)
-                        //{
-                        //    pairsListCopy = new List<Tuple<DungeonDoorway, DungeonDoorway>>(pairsList);
-
-                        //    while (pairsListCopy.Count > 0)
-                        //    {
-                        //        //pick random pair, preference for perfect pairs
-                        //        var pair = pairsListCopy.Any(p => p.Item1.IsDirectMatch(p.Item2))
-                        //            ? pairsListCopy.Where(p => p.Item1.IsDirectMatch(p.Item2)).ToList().RandomItem()
-                        //            : pairsListCopy.Any(p => p.Item1.Direction != p.Item2.Direction)
-                        //            ? pairsListCopy.Where(p => p.Item1.Direction != p.Item2.Direction).ToList().RandomItem()
-                        //            : pairsListCopy.RandomItem();
-
-                        //        var minRadius = 4;
-                        //        var maxRadius = 20;
-                        //        bool connectionSuccessful = false;
-                        //        for (int x = -maxRadius; x <= maxRadius; x++)
-                        //        {
-                        //            if (Math.Abs(x) < minRadius)
-                        //                continue;
-                        //            for (int y = -maxRadius; y <= maxRadius; y++)
-                        //            {
-                        //                if (Math.Abs(y) < minRadius)
-                        //                    continue;
-
-                        //                var targetPos = pair.Item1.PathfindingOrigin + new Vector2(x * 16, y * 16);
-                        //                var movement = targetPos - pair.Item2.PathfindingOrigin;
-                        //                if (!ValidateRoomMovement(movement, childEntity.ParentComposite.RoomEntities, roomsToCheck))
-                        //                    continue;
-
-                        //                foreach (var compRoom in childEntity.ParentComposite.RoomEntities)
-                        //                    compRoom.MoveRoom(movement);
-
-                        //                if (CorridorGenerator.ConnectStaticDoorways(pair.Item1, pair.Item2, roomsToCheck))
-                        //                    connectionSuccessful = true; break;
-                        //            }
-
-                        //            if (connectionSuccessful)
-                        //                break;
-                        //        }
-
-                        //        if (connectionSuccessful)
-                        //            break;
-                        //        else
-                        //            pairsListCopy.Remove(pair);
-                        //    }
-
-                        //    if (pairsListCopy.Count == 0)
-                        //        return false;
-                        //}
                     }
                 }
             }
@@ -700,28 +628,28 @@ namespace Threadlock.SceneComponents.Dungenerator
                 .OrderBy(t => t.Position.Y)
                 .ThenBy(t => t.Position.X)
                 .ToList();
-            var topSegments = GetTileSegments(topEdges);
+            var topSegments = FloorTile.GetTileSegments(topEdges);
 
             var bottomEdges = floorTiles
                 .Where(t => t.TileOrientation == TileOrientation.BottomEdge)
                 .OrderBy(t => t.Position.Y)
                 .ThenBy(t => t.Position.X)
                 .ToList();
-            var bottomSegments = GetTileSegments(bottomEdges);
+            var bottomSegments = FloorTile.GetTileSegments(bottomEdges);
 
             var leftEdges = floorTiles
                 .Where(t => t.TileOrientation == TileOrientation.LeftEdge)
                 .OrderBy(t => t.Position.X)
                 .ThenBy(t => t.Position.Y)
                 .ToList();
-            var leftSegments = GetTileSegments(leftEdges);
+            var leftSegments = FloorTile.GetTileSegments(leftEdges);
 
             var rightEdges = floorTiles
                 .Where(t => t.TileOrientation == TileOrientation.RightEdge)
                 .OrderBy(t => t.Position.X)
                 .ThenBy(t => t.Position.Y)
                 .ToList();
-            var rightSegments = GetTileSegments(rightEdges);
+            var rightSegments = FloorTile.GetTileSegments(rightEdges);
 
             var atlas = Scene.Content.LoadSpriteAtlas($"Content/Textures/Decorations/Forge/Atlas/forge_decorations.atlas");
             foreach (var segment in topSegments)
@@ -745,17 +673,6 @@ namespace Threadlock.SceneComponents.Dungenerator
                 var decorationEntity = new DungeonDecoration(tile.Position, new Vector2(16, 16), sprites.RandomItem());
                 Scene.AddEntity(decorationEntity);
             }
-
-            //var start = Random.Range(0, segment.Count);
-            //var end = Random.Range(start + 1, segment.Count);
-
-            //for (int i = start; i < end; i++)
-            //{
-            //    var tile = segment[i];
-            //    var sprites = atlas.Sprites.Where(s => s.SourceRect.Width == 16).ToList();
-            //    var decorationEntity = new DungeonDecoration(tile.Position, new Vector2(16, 16), sprites.RandomItem());
-            //    Scene.AddEntity(decorationEntity);
-            //}
         }
 
         #endregion
@@ -768,45 +685,16 @@ namespace Threadlock.SceneComponents.Dungenerator
             return success;
         }
 
+        /// <summary>
+        /// check that if a set of rooms is moved by a certain amount, if any of those rooms will overlap with another set of rooms
+        /// </summary>
+        /// <param name="movementAmount"></param>
+        /// <param name="roomsToMove"></param>
+        /// <param name="roomsToCheck"></param>
+        /// <returns></returns>
         public static bool ValidateRoomMovement(Vector2 movementAmount, List<DungeonRoomEntity> roomsToMove, List<DungeonRoomEntity> roomsToCheck)
         {
-            var floorPositionsToCheck = roomsToCheck.SelectMany(r => r.FloorTilePositions).ToList();
-
-            return !roomsToMove.Any(roomToMove =>
-            {
-                var rect = roomToMove.CollisionBounds;
-                rect.Location += movementAmount;
-
-                //make sure rooms wouldn't overlap
-                if (roomsToCheck.Any(roomToCheck => roomToCheck.OverlapsRoom(rect)))
-                    return true;
-
-                //make sure doorways wouldn't overlap
-                var doorways = roomToMove.FindComponentsOnMap<DungeonDoorway>();
-                if (doorways.Any(doorway =>
-                {
-                    var doorwayRect = new RectangleF(doorway.Entity.Position, new Vector2(doorway.TmxObject.Width, doorway.TmxObject.Height));
-                    doorwayRect.Location += movementAmount;
-                    if (roomsToCheck.Any(roomToCheck => roomToCheck.OverlapsRoom(doorwayRect)))
-                        return true;
-                    if (floorPositionsToCheck.Any(f => doorwayRect.Contains(f)))
-                        return true;
-                    return false;
-                }))
-                    return true;
-
-                if (roomToMove.FloorTilePositions.Any())
-                {
-                    var floorPositions = roomToMove.FloorTilePositions.Select(f => f + movementAmount).ToList();
-                    if (roomsToCheck.Any(roomToCheck => roomToCheck.OverlapsRoom(floorPositions, out var overlaps)))
-                        return true;
-                }
-
-                if (floorPositionsToCheck.Any(f => rect.Contains(f)))
-                    return true;
-
-                return false;
-            });
+            return !roomsToMove.Any(roomToMove => roomsToCheck.Any(roomToCheck => roomToMove.OverlapsRoom(roomToCheck, movementAmount)));
         }
 
         public List<TmxMap> GetValidMaps(DungeonRoomEntity room)
@@ -843,51 +731,6 @@ namespace Threadlock.SceneComponents.Dungenerator
                 pairsList = pairs.ToList();
 
             return pairsList;
-        }
-
-        List<List<FloorTile>> GetTileSegments(List<FloorTile> tiles)
-        {
-            List<List<FloorTile>> segments = new List<List<FloorTile>>();
-            var currentSegment = new List<FloorTile> { tiles.First() };
-            for (int i = 1; i < tiles.Count; i++)
-            {
-                var currentTile = tiles[i - 1];
-                var nextTile = tiles[i];
-
-                if (currentSegment.Count < 8 && IsTileAdjacent(currentTile, nextTile))
-                    currentSegment.Add(nextTile);
-                else
-                {
-                    segments.Add(currentSegment);
-                    currentSegment = new List<FloorTile> { nextTile };
-                }
-            }
-
-            segments.Add(currentSegment);
-            segments.RemoveAll(s => s.Count < 3);
-
-            return segments;
-        }
-
-        bool IsTileAdjacent(FloorTile currentTile, FloorTile nextTile)
-        {
-            if (currentTile.TileOrientation != nextTile.TileOrientation)
-                return false;
-
-            if (currentTile.TileOrientation == TileOrientation.TopEdge || currentTile.TileOrientation == TileOrientation.BottomEdge)
-            {
-                if (currentTile.Position.Y != nextTile.Position.Y)
-                    return false;
-                return currentTile.Position.X + 16 == nextTile.Position.X;
-            }
-            else if (currentTile.TileOrientation == TileOrientation.LeftEdge || currentTile.TileOrientation == TileOrientation.RightEdge)
-            {
-                if (currentTile.Position.X != nextTile.Position.X)
-                    return false;
-                return currentTile.Position.Y + 16 == nextTile.Position.Y;
-            }
-
-            return false;
         }
 
         #endregion
