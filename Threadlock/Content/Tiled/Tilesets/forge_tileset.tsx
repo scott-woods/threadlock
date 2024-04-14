@@ -155,6 +155,7 @@
    <wangtile tileid="160" wangid="0,0,0,0,0,3,0,0"/>
    <wangtile tileid="161" wangid="0,3,0,0,0,3,0,3"/>
    <wangtile tileid="163" wangid="0,3,0,3,0,0,0,3"/>
+   <wangtile tileid="175" wangid="0,1,0,1,0,1,0,1"/>
    <wangtile tileid="176" wangid="0,0,0,1,0,0,0,0"/>
    <wangtile tileid="177" wangid="0,0,0,1,0,1,0,0"/>
    <wangtile tileid="178" wangid="0,0,0,0,0,1,0,0"/>
@@ -163,6 +164,7 @@
    <wangtile tileid="183" wangid="0,3,0,3,0,0,0,0"/>
    <wangtile tileid="184" wangid="0,3,0,3,0,3,0,3"/>
    <wangtile tileid="185" wangid="0,0,0,0,0,3,0,3"/>
+   <wangtile tileid="200" wangid="0,1,0,1,0,1,0,1"/>
    <wangtile tileid="201" wangid="0,1,0,1,0,0,0,0"/>
    <wangtile tileid="202" wangid="0,1,0,1,0,1,0,1"/>
    <wangtile tileid="203" wangid="0,0,0,0,0,1,0,1"/>
@@ -171,6 +173,7 @@
    <wangtile tileid="210" wangid="0,0,0,0,0,0,0,3"/>
    <wangtile tileid="211" wangid="0,0,0,3,0,3,0,3"/>
    <wangtile tileid="213" wangid="0,3,0,3,0,3,0,0"/>
+   <wangtile tileid="225" wangid="0,1,0,1,0,1,0,1"/>
    <wangtile tileid="226" wangid="0,1,0,0,0,0,0,0"/>
    <wangtile tileid="227" wangid="0,1,0,0,0,0,0,1"/>
    <wangtile tileid="228" wangid="0,0,0,0,0,0,0,1"/>

@@ -231,7 +231,7 @@
   "BottomRightInverse": {
     "Tiles": [
       {
-        "TileIds": [ 172 ],
+        "TileIds": [ 174 ],
         "Layer": "Back",
         "Offset": ""
       },
@@ -245,12 +245,12 @@
   "BottomLeftInverse": {
     "Tiles": [
       {
-        "TileIds": [ 174 ],
+        "TileIds": [ 172 ],
         "Layer": "Back",
         "Offset": ""
       },
       {
-        "TileIds": [ 290 ],
+        "TileIds": [ 289 ],
         "Layer": "AboveFront",
         "Offset": ""
       }

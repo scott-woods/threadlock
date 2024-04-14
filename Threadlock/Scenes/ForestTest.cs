@@ -64,54 +64,57 @@ namespace Threadlock.Scenes
             var pathWidth = 5;
             var halfWidth = pathWidth / 2;
 
-            var minX = 0;
-            var minY = 0;
-            var maxX = 0;
-            var maxY = 0;
+            //var minX = 0;
+            //var minY = 0;
+            //var maxX = 0;
+            //var maxY = 0;
 
-            switch (doorwayPoint.Direction)
-            {
-                case DoorwayPointDirection.Up:
-                    minX -= halfWidth;
-                    maxX += halfWidth;
-                    minY += 1;
-                    maxY += halfWidth;
-                    break;
-                case DoorwayPointDirection.Down:
-                    minX -= halfWidth;
-                    maxX += halfWidth;
-                    minY -= halfWidth;
-                    maxY -= 1;
-                    break;
-                case DoorwayPointDirection.Left:
-                    minX += 1;
-                    maxX += halfWidth;
-                    minY -= halfWidth;
-                    maxY += halfWidth;
-                    break;
-                case DoorwayPointDirection.Right:
-                    minX -= halfWidth;
-                    maxX -= 1;
-                    minY -= halfWidth;
-                    maxY += halfWidth;
-                    break;
-            }
+            //switch (doorwayPoint.Direction)
+            //{
+            //    case DoorwayPointDirection.Up:
+            //        minX -= halfWidth;
+            //        maxX += halfWidth;
+            //        minY += 1;
+            //        maxY += halfWidth;
+            //        break;
+            //    case DoorwayPointDirection.Down:
+            //        minX -= halfWidth;
+            //        maxX += halfWidth;
+            //        minY -= halfWidth;
+            //        maxY -= 1;
+            //        break;
+            //    case DoorwayPointDirection.Left:
+            //        minX += 1;
+            //        maxX += halfWidth;
+            //        minY -= halfWidth;
+            //        maxY += halfWidth;
+            //        break;
+            //    case DoorwayPointDirection.Right:
+            //        minX -= halfWidth;
+            //        maxX -= 1;
+            //        minY -= halfWidth;
+            //        maxY += halfWidth;
+            //        break;
+            //}
 
-            List<Vector2> reservedPositions = new List<Vector2>();
-            for (int x = minX; x <= maxX; x++)
-            {
-                for (int y = minY; y <= maxY; y++)
-                {
-                    var pos = new Vector2(x * 16, y * 16) + doorwayPoint.Entity.Position;
-                    reservedPositions.Add(pos);
-                }
-            }
+            //List<Vector2> reservedPositions = new List<Vector2>();
+            //for (int x = minX; x <= maxX; x++)
+            //{
+            //    for (int y = minY; y <= maxY; y++)
+            //    {
+            //        var pos = new Vector2(x * 16, y * 16) + doorwayPoint.Entity.Position;
+            //        reservedPositions.Add(pos);
+            //    }
+            //}
 
-            var pathDict = GetLargerPath(pathPoints, reservedPositions, pathWidth);
+            pathPoints.RemoveRange(0, halfWidth);
+
+            //var pathDict = GetLargerPath(pathPoints, reservedPositions, pathWidth);
+            var pathDict = GetLargerPath(pathPoints, new List<Vector2>(), pathWidth);
 
             var finalPath = pathDict.SelectMany(p => p.Value).Distinct().ToList();
 
-            PaintTiles(finalPath, reservedPositions);
+            PaintTiles(finalPath, new List<Vector2>());
         }
 
         void HandleDoorway()
@@ -176,7 +179,7 @@ namespace Threadlock.Scenes
 
         void PaintTiles(List<Vector2> path, List<Vector2> reservedPositions)
         {
-            List<Vector2> backPositions = new List<Vector2>(path);
+            List<Vector2> backPositions = new List<Vector2>();
             List<Vector2> wallPositions = new List<Vector2>();
             List<Vector2> aboveFrontPositions = new List<Vector2>();
 
@@ -189,6 +192,9 @@ namespace Threadlock.Scenes
                 aboveFrontPositions.AddRange(HandleLayer(renderer, RenderLayers.AboveFront, "AboveFront", path));
             }
 
+            backPositions.RemoveAll(p => wallPositions.Contains(p));
+            backPositions.AddRange(path);
+
             if (File.Exists("Content/Data/FairyForestTiles2.json"))
             {
                 var json = File.ReadAllText("Content/Data/FairyForestTiles2.json");
@@ -197,7 +203,7 @@ namespace Threadlock.Scenes
                 Dictionary<string, List<SingleDungeonTile>> layerTilesDict = new Dictionary<string, List<SingleDungeonTile>>();
                 foreach (var pathPos in path)
                 {
-                    var orientation = CorridorPainter.GetTileOrientation(pathPos, path.Concat(reservedPositions).ToList());
+                    var orientation = CorridorPainter.GetTileOrientation(pathPos, backPositions.ToList());
 
                     if (tileDict.TryGetValue(orientation, out var tileConfig))
                     {
@@ -256,7 +262,7 @@ namespace Threadlock.Scenes
                         var dict = new Dictionary<Vector2, SingleTile>();
                         foreach (var wallTile in wallTiles)
                             dict.Add(wallTile.Position, new SingleTile(wallTile.TileId, wallTile.IsCollider));
-                        var corridorRenderer = CreateEntity("").AddComponent(new CorridorRenderer(tileset, dict));
+                        var corridorRenderer = CreateEntity("").AddComponent(new CorridorRenderer(tileset, dict, true));
                         corridorRenderer.SetRenderLayer(RenderLayers.Walls);
                     }
                     if (layerTilesDict.TryGetValue("AboveFront", out var aboveFrontTiles))

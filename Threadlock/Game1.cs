@@ -61,7 +61,7 @@ namespace Threadlock
             Screen.SetSize(1920, 1080);
             Screen.ApplyChanges();
 
-            Scene = new Hub();
+            Scene = new ForestTest();
         }
     }
 }
