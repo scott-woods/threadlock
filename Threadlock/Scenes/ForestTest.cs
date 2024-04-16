@@ -80,7 +80,7 @@ namespace Threadlock.Scenes
             var pathPoints = new List<Vector2>() { currentPos };
             for (int i = 0; i < Nez.Random.Range(7, 9); i++)
             {
-                currentPos += new Vector2(16, 0);
+                currentPos += new Vector2(-16, 0);
                 pathPoints.Add(currentPos);
             }
             for (int i = 0; i < Nez.Random.Range(3, 6); i++)
@@ -99,9 +99,9 @@ namespace Threadlock.Scenes
             PaintTiles(pathDict);
         }
 
-        public static List<TileInfo> GetLargerPath(List<Vector2> positions, int size)
+        public static List<TileInfo<ForestTileType>> GetLargerPath(List<Vector2> positions, int size)
         {
-            var largerPath = new Dictionary<Vector2, TileInfo>();
+            var largerPath = new Dictionary<Vector2, TileInfo<ForestTileType>>();
             var halfWidth = size / 2;
             for (int i = 0; i < positions.Count; i++)
             {
@@ -114,7 +114,7 @@ namespace Threadlock.Scenes
                         var pos = new Vector2(x * 16, y * 16) + positions[i];
 
                         if (!largerPath.TryGetValue(pos, out var existingTile) || existingTile.Priority < priority)
-                            largerPath[pos] = new TileInfo(pos, tileType, priority);
+                            largerPath[pos] = new TileInfo<ForestTileType>(pos, tileType, priority);
                     }
                 }
             }
@@ -122,7 +122,14 @@ namespace Threadlock.Scenes
             return largerPath.Values.ToList();
         }
 
-        List<TmxLayerTile> HandleRenderer(TiledMapRenderer renderer, string layerName, List<TileInfo> pathTiles)
+        /// <summary>
+        /// for a specific renderer, get tiles on a certain layer. Remove tiles that would overlap those in the existing path
+        /// </summary>
+        /// <param name="renderer"></param>
+        /// <param name="layerName"></param>
+        /// <param name="pathTiles"></param>
+        /// <returns></returns>
+        List<TmxLayerTile> HandleRenderer<TEnum>(TiledMapRenderer renderer, string layerName, List<TileInfo<TEnum>> pathTiles) where TEnum : struct, Enum
         {
             List<TmxLayerTile> tiles = new List<TmxLayerTile>();
 
@@ -148,7 +155,7 @@ namespace Threadlock.Scenes
             return tiles;
         }
 
-        void PaintTiles(List<TileInfo> path)
+        void PaintTiles<TEnum>(List<TileInfo<TEnum>> path) where TEnum : struct, Enum
         {
             List<TmxLayerTile> backTiles = new List<TmxLayerTile>();
             List<TmxLayerTile> wallTiles = new List<TmxLayerTile>();
@@ -167,8 +174,7 @@ namespace Threadlock.Scenes
             }
 
             //filter tiles
-            backTiles.RemoveAll(t => wallTiles.Any(x => x.X == t.X && x.Y == t.Y));
-            var backTileInfo = backTiles.Distinct().Select(t => new TileInfo(t)).ToList();
+            var backTileInfo = backTiles.Distinct().Select(t => new TileInfo<TEnum>(t)).ToList();
             wallTiles = wallTiles.Distinct().ToList();
             aboveFrontTiles = aboveFrontTiles.Distinct().ToList();
 
@@ -191,7 +197,7 @@ namespace Threadlock.Scenes
                     {
                         if (tile.Value.Properties != null)
                         {
-                            var tilesetTileMask = TileInfo.GetMask<ForestTileType>(tile.Value);
+                            var tilesetTileMask = TileBitmaskHelper.GetMask<TEnum>(tile.Value);
                             if (!tileDict.ContainsKey(tilesetTileMask))
                                 tileDict.Add(tilesetTileMask, new List<int>());
                             tileDict[tilesetTileMask].Add(tile.Key);
@@ -201,7 +207,7 @@ namespace Threadlock.Scenes
                     {
                         if (tile.Value.Properties != null)
                         {
-                            var tilesetTileMask = TileInfo.GetMask<WallTileType>(tile.Value);
+                            var tilesetTileMask = TileBitmaskHelper.GetMask<WallTileType>(tile.Value);
                             if (!wallTileDict.ContainsKey(tilesetTileMask))
                                 wallTileDict.Add(tilesetTileMask, new List<int>());
                             wallTileDict[tilesetTileMask].Add(tile.Key);
@@ -247,12 +253,7 @@ namespace Threadlock.Scenes
                         });
                     }
                     else
-                    {
-                        HandleDirection(ref posMask, pathTile, DirectionHelper.UpLeft, joinedTiles, Corners.TopLeft, Corners.BottomRight, 2);
-                        HandleDirection(ref posMask, pathTile, DirectionHelper.UpRight, joinedTiles, Corners.TopRight, Corners.BottomLeft, 2);
-                        HandleDirection(ref posMask, pathTile, DirectionHelper.DownLeft, joinedTiles, Corners.BottomLeft, Corners.TopRight, 2);
-                        HandleDirection(ref posMask, pathTile, DirectionHelper.DownRight, joinedTiles, Corners.BottomRight, Corners.TopLeft, 2);
-                    }
+                        posMask = TileBitmaskHelper.GetPositionalMask(pathTile, joinedTiles);
 
                     pathTile.PositionalMask = posMask;
 
@@ -261,21 +262,22 @@ namespace Threadlock.Scenes
                     if (tileId == -1)
                         continue;
 
-                    pathTile.Mask = pathTile.MaskIgnoringNone;
+                    pathTile.TerrainMask = pathTile.MaskIgnoringNone;
                     pathTile.TileId = tileId;
 
                     foreach (Corners corner in Enum.GetValues(typeof(Corners)))
                     {
                         //figure out where we need walls
-                        var positionalTerrainType = pathTile.GetPositionalTerrainType(corner, 2);
-                        if (positionalTerrainType == ForestTileType.None)
+                        var positionalTerrainType = TileBitmaskHelper.GetTerrainInCorner<TEnum>(pathTile.PositionalMask, corner);
+                        if (Convert.ToInt32(positionalTerrainType) == 0)
                         {
-                            var wallPos = pathTile.Position + (GetDirectionToCorner(corner) * 16);
+                            var wallPos = pathTile.Position + (TileBitmaskHelper.CornerDirectionDict[corner] * 16);
                             if (!wallPositions.Contains(wallPos))
                                 wallPositions.Add(wallPos);
                         }
 
-                        var terrainType = pathTile.GetTerrainType(corner, 2);
+                        //update neighbors
+                        var terrainType = TileBitmaskHelper.GetTerrainInCorner<TEnum>(pathTile.TerrainMask, corner);
                         var dirsToHandle = _matchingCornersDict[corner];
                         foreach (var pair in dirsToHandle)
                         {
@@ -285,7 +287,7 @@ namespace Threadlock.Scenes
                             var neighbor = path.FirstOrDefault(p => p.Position == neighborPos);
                             if (neighbor != null && neighbor.Priority <= pathTile.Priority)
                             {
-                                neighbor.SetMaskValue(terrainType, neighborCorner, 2);
+                                neighbor.SetTerrainMaskValue(terrainType, neighborCorner);
 
                                 //var neighborTileId = FindMatchingTile(neighbor.MaskIgnoringNone, tileDict);
                                 //if (tileId == -1)
@@ -307,7 +309,7 @@ namespace Threadlock.Scenes
                     var wallMask = 0;
                     foreach (Corners corner in Enum.GetValues(typeof(Corners)))
                     {
-                        var dir = GetDirectionToCorner(corner);
+                        var dir = TileBitmaskHelper.CornerDirectionDict[corner];
                         var pos = wallPos + (dir * 16);
                         WallTileType wallTileType = WallTileType.None;
                         if (joinedTiles.Any(t => t.Position == pos))
@@ -324,7 +326,7 @@ namespace Threadlock.Scenes
                         wallMask = 0;
                         foreach (Corners corner in Enum.GetValues(typeof(Corners)))
                         {
-                            var dir = GetDirectionToCorner(corner);
+                            var dir = TileBitmaskHelper.CornerDirectionDict[corner];
                             var pos = wallPos + (dir * 16);
                             WallTileType wallTileType = WallTileType.None;
                             if (joinedTiles.Any(t => t.Position == pos))
@@ -425,23 +427,6 @@ namespace Threadlock.Scenes
             }
         }
 
-        Vector2 GetDirectionToCorner(Corners corner)
-        {
-            switch (corner)
-            {
-                case Corners.TopLeft:
-                    return DirectionHelper.UpLeft;
-                case Corners.TopRight:
-                    return DirectionHelper.UpRight;
-                case Corners.BottomLeft:
-                    return DirectionHelper.DownLeft;
-                case Corners.BottomRight:
-                    return DirectionHelper.DownRight;
-                default:
-                    return Vector2.Zero;
-            }
-        }
-
         int FindMatchingTile(int posMask, Dictionary<int, List<int>> tileDict)
         {
             if (tileDict.TryGetValue(posMask, out var ids))
@@ -468,22 +453,6 @@ namespace Threadlock.Scenes
             }
 
             return true;
-        }
-
-        void HandleDirection(ref int mask, TileInfo pathTile, Vector2 direction, List<TileInfo> joinedTiles, Corners currentCorner, Corners checkCorner, int shift)
-        {
-            var pos = pathTile.Position + (direction * 16);
-            var tile = joinedTiles.FirstOrDefault(t => t.Position == pos);
-            if (tile != null)
-            {
-                //extract corner from other tile
-                var terrainType = (ForestTileType)((tile.Mask >> (int)checkCorner * shift) & 0b11);
-
-                //apply it to the corner of the current tile
-                mask |= ((int)terrainType << (int)currentCorner * shift);
-            }
-            else
-                mask |= ((int)ForestTileType.None << (int)currentCorner * shift);
         }
     }
 }

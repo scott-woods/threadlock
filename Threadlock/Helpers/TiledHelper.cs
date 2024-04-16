@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Nez;
 using Nez.Tiled;
+using Nez.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
 using Threadlock.Components.TiledComponents;
+using Threadlock.Models;
 using Threadlock.StaticData;
+using static Nez.Content.Textures.UI;
+using static Threadlock.SceneComponents.Dungenerator.CorridorPainter;
 
 namespace Threadlock.Helpers
 {

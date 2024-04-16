@@ -1043,5 +1043,8 @@
    <wangtile tileid="315" wangid="0,0,0,1,0,1,0,0"/>
    <wangtile tileid="316" wangid="0,1,0,1,0,1,0,0"/>
   </wangset>
+  <wangset name="Test" type="mixed" tile="-1">
+   <wangcolor name="" color="#ff0000" tile="-1" probability="1"/>
+  </wangset>
  </wangsets>
 </tileset>
