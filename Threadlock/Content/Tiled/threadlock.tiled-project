@@ -149,6 +149,19 @@
             ]
         },
         {
+            "id": 20,
+            "name": "ForestTileType",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "None",
+                "DarkGrass",
+                "Dirt",
+                "LightGrass"
+            ],
+            "valuesAsFlags": false
+        },
+        {
             "color": "#ffa0a0a4",
             "drawFill": true,
             "id": 14,
@@ -207,6 +220,44 @@
         {
             "color": "#ffa0a0a4",
             "drawFill": true,
+            "id": 18,
+            "members": [
+                {
+                    "name": "BottomLeft",
+                    "propertyType": "ForestTileType",
+                    "type": "string",
+                    "value": "None"
+                },
+                {
+                    "name": "BottomRight",
+                    "propertyType": "ForestTileType",
+                    "type": "string",
+                    "value": "None"
+                },
+                {
+                    "name": "TopLeft",
+                    "propertyType": "ForestTileType",
+                    "type": "string",
+                    "value": "None"
+                },
+                {
+                    "name": "TopRight",
+                    "propertyType": "ForestTileType",
+                    "type": "string",
+                    "value": "None"
+                }
+            ],
+            "name": "TerrainTile",
+            "type": "class",
+            "useAs": [
+                "property",
+                "tile",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
             "id": 11,
             "members": [
                 {
@@ -243,6 +294,56 @@
                 "None",
                 "Area",
                 "Interact"
+            ],
+            "valuesAsFlags": false
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 21,
+            "members": [
+                {
+                    "name": "BottomLeft",
+                    "propertyType": "WallTileType",
+                    "type": "string",
+                    "value": "None"
+                },
+                {
+                    "name": "BottomRight",
+                    "propertyType": "WallTileType",
+                    "type": "string",
+                    "value": "None"
+                },
+                {
+                    "name": "TopLeft",
+                    "propertyType": "WallTileType",
+                    "type": "string",
+                    "value": "None"
+                },
+                {
+                    "name": "TopRight",
+                    "propertyType": "WallTileType",
+                    "type": "string",
+                    "value": "None"
+                }
+            ],
+            "name": "WallTile",
+            "type": "class",
+            "useAs": [
+                "property",
+                "tile",
+                "project"
+            ]
+        },
+        {
+            "id": 22,
+            "name": "WallTileType",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "None",
+                "Floor",
+                "Wall"
             ],
             "valuesAsFlags": false
         }

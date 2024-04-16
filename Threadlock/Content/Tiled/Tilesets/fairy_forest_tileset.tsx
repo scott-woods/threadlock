@@ -1,6 +1,750 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tileset version="1.10" tiledversion="1.10.2" name="fairy_forest_tileset" tilewidth="16" tileheight="16" tilecount="338" columns="13">
  <image source="../../Textures/Tilesets/Fairy Forest/Tiles.png" width="208" height="416"/>
+ <tile id="104" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="DarkGrass"/>
+  </properties>
+ </tile>
+ <tile id="105" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="DarkGrass"/>
+  </properties>
+ </tile>
+ <tile id="106" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="DarkGrass"/>
+  </properties>
+ </tile>
+ <tile id="107" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopRight" propertytype="ForestTileType" value="Dirt"/>
+  </properties>
+ </tile>
+ <tile id="108" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopRight" propertytype="ForestTileType" value="Dirt"/>
+  </properties>
+ </tile>
+ <tile id="109" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopRight" propertytype="ForestTileType" value="Dirt"/>
+  </properties>
+ </tile>
+ <tile id="110" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopRight" propertytype="ForestTileType" value="Dirt"/>
+  </properties>
+ </tile>
+ <tile id="117" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="Dirt"/>
+  </properties>
+ </tile>
+ <tile id="118" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopRight" propertytype="ForestTileType" value="Dirt"/>
+  </properties>
+ </tile>
+ <tile id="119" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopRight" propertytype="ForestTileType" value="DarkGrass"/>
+  </properties>
+ </tile>
+ <tile id="120" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopRight" propertytype="ForestTileType" value="DarkGrass"/>
+  </properties>
+ </tile>
+ <tile id="121" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="DarkGrass"/>
+  </properties>
+ </tile>
+ <tile id="122" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="Dirt"/>
+  </properties>
+ </tile>
+ <tile id="123" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopRight" propertytype="ForestTileType" value="Dirt"/>
+  </properties>
+ </tile>
+ <tile id="130" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="Dirt"/>
+  </properties>
+ </tile>
+ <tile id="131" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopRight" propertytype="ForestTileType" value="Dirt"/>
+  </properties>
+ </tile>
+ <tile id="132" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopRight" propertytype="ForestTileType" value="DarkGrass"/>
+  </properties>
+ </tile>
+ <tile id="133" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopRight" propertytype="ForestTileType" value="DarkGrass"/>
+  </properties>
+ </tile>
+ <tile id="134" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="DarkGrass"/>
+  </properties>
+ </tile>
+ <tile id="135" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="Dirt"/>
+  </properties>
+ </tile>
+ <tile id="136" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopRight" propertytype="ForestTileType" value="Dirt"/>
+  </properties>
+ </tile>
+ <tile id="143" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="LightGrass"/>
+  </properties>
+ </tile>
+ <tile id="144" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="LightGrass"/>
+  </properties>
+ </tile>
+ <tile id="145" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="LightGrass"/>
+  </properties>
+ </tile>
+ <tile id="146" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopRight" propertytype="ForestTileType" value="Dirt"/>
+  </properties>
+ </tile>
+ <tile id="147" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopRight" propertytype="ForestTileType" value="Dirt"/>
+  </properties>
+ </tile>
+ <tile id="148" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopRight" propertytype="ForestTileType" value="Dirt"/>
+  </properties>
+ </tile>
+ <tile id="149" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopRight" propertytype="ForestTileType" value="Dirt"/>
+  </properties>
+ </tile>
+ <tile id="156" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="Dirt"/>
+  </properties>
+ </tile>
+ <tile id="157" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopRight" propertytype="ForestTileType" value="Dirt"/>
+  </properties>
+ </tile>
+ <tile id="158" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopRight" propertytype="ForestTileType" value="LightGrass"/>
+  </properties>
+ </tile>
+ <tile id="159" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopRight" propertytype="ForestTileType" value="LightGrass"/>
+  </properties>
+ </tile>
+ <tile id="160" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="LightGrass"/>
+  </properties>
+ </tile>
+ <tile id="161" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="Dirt"/>
+  </properties>
+ </tile>
+ <tile id="162" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopRight" propertytype="ForestTileType" value="Dirt"/>
+  </properties>
+ </tile>
+ <tile id="169" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="Dirt"/>
+  </properties>
+ </tile>
+ <tile id="170" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopRight" propertytype="ForestTileType" value="Dirt"/>
+  </properties>
+ </tile>
+ <tile id="171" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopRight" propertytype="ForestTileType" value="LightGrass"/>
+  </properties>
+ </tile>
+ <tile id="172" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopRight" propertytype="ForestTileType" value="LightGrass"/>
+  </properties>
+ </tile>
+ <tile id="173" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="LightGrass"/>
+  </properties>
+ </tile>
+ <tile id="174" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="Dirt"/>
+  </properties>
+ </tile>
+ <tile id="175" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="Dirt"/>
+   <property name="TopRight" propertytype="ForestTileType" value="Dirt"/>
+  </properties>
+ </tile>
+ <tile id="182" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="LightGrass"/>
+  </properties>
+ </tile>
+ <tile id="183" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="LightGrass"/>
+  </properties>
+ </tile>
+ <tile id="184" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="LightGrass"/>
+  </properties>
+ </tile>
+ <tile id="185" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="DarkGrass"/>
+  </properties>
+ </tile>
+ <tile id="186" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="DarkGrass"/>
+  </properties>
+ </tile>
+ <tile id="187" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="DarkGrass"/>
+  </properties>
+ </tile>
+ <tile id="188" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="DarkGrass"/>
+  </properties>
+ </tile>
+ <tile id="195" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="DarkGrass"/>
+  </properties>
+ </tile>
+ <tile id="196" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="DarkGrass"/>
+  </properties>
+ </tile>
+ <tile id="197" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="LightGrass"/>
+  </properties>
+ </tile>
+ <tile id="198" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="LightGrass"/>
+  </properties>
+ </tile>
+ <tile id="199" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="LightGrass"/>
+  </properties>
+ </tile>
+ <tile id="200" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="DarkGrass"/>
+  </properties>
+ </tile>
+ <tile id="201" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="DarkGrass"/>
+  </properties>
+ </tile>
+ <tile id="208" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="DarkGrass"/>
+  </properties>
+ </tile>
+ <tile id="209" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="DarkGrass"/>
+  </properties>
+ </tile>
+ <tile id="210" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="LightGrass"/>
+  </properties>
+ </tile>
+ <tile id="211" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="LightGrass"/>
+  </properties>
+ </tile>
+ <tile id="212" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="LightGrass"/>
+  </properties>
+ </tile>
+ <tile id="213" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="DarkGrass"/>
+  </properties>
+ </tile>
+ <tile id="214" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="DarkGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="DarkGrass"/>
+  </properties>
+ </tile>
+ <tile id="228" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="LightGrass"/>
+  </properties>
+ </tile>
+ <tile id="241" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="LightGrass"/>
+  </properties>
+ </tile>
+ <tile id="254" type="TerrainTile">
+  <properties>
+   <property name="BottomLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="BottomRight" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopLeft" propertytype="ForestTileType" value="LightGrass"/>
+   <property name="TopRight" propertytype="ForestTileType" value="LightGrass"/>
+  </properties>
+ </tile>
+ <tile id="260" type="WallTile">
+  <properties>
+   <property name="BottomLeft" propertytype="WallTileType" value="None"/>
+   <property name="BottomRight" propertytype="WallTileType" value="Floor"/>
+   <property name="TopLeft" propertytype="WallTileType" value="None"/>
+   <property name="TopRight" propertytype="WallTileType" value="None"/>
+  </properties>
+ </tile>
+ <tile id="261" type="WallTile">
+  <properties>
+   <property name="BottomLeft" propertytype="WallTileType" value="Wall"/>
+   <property name="BottomRight" propertytype="WallTileType" value="Floor"/>
+   <property name="TopLeft" propertytype="WallTileType" value="None"/>
+   <property name="TopRight" propertytype="WallTileType" value="None"/>
+  </properties>
+ </tile>
+ <tile id="262" type="WallTile">
+  <properties>
+   <property name="BottomLeft" propertytype="WallTileType" value="Floor"/>
+   <property name="BottomRight" propertytype="WallTileType" value="Floor"/>
+   <property name="TopLeft" propertytype="WallTileType" value="None"/>
+   <property name="TopRight" propertytype="WallTileType" value="None"/>
+  </properties>
+ </tile>
+ <tile id="263" type="WallTile">
+  <properties>
+   <property name="BottomLeft" propertytype="WallTileType" value="Floor"/>
+   <property name="BottomRight" propertytype="WallTileType" value="Floor"/>
+   <property name="TopLeft" propertytype="WallTileType" value="None"/>
+   <property name="TopRight" propertytype="WallTileType" value="None"/>
+  </properties>
+ </tile>
+ <tile id="264" type="WallTile">
+  <properties>
+   <property name="BottomLeft" propertytype="WallTileType" value="Floor"/>
+   <property name="BottomRight" propertytype="WallTileType" value="Wall"/>
+   <property name="TopLeft" propertytype="WallTileType" value="None"/>
+   <property name="TopRight" propertytype="WallTileType" value="None"/>
+  </properties>
+ </tile>
+ <tile id="265" type="WallTile">
+  <properties>
+   <property name="BottomLeft" propertytype="WallTileType" value="Floor"/>
+   <property name="BottomRight" propertytype="WallTileType" value="None"/>
+   <property name="TopLeft" propertytype="WallTileType" value="None"/>
+   <property name="TopRight" propertytype="WallTileType" value="None"/>
+  </properties>
+ </tile>
+ <tile id="266" type="WallTile">
+  <properties>
+   <property name="BottomLeft" propertytype="WallTileType" value="Wall"/>
+   <property name="BottomRight" propertytype="WallTileType" value="Wall"/>
+   <property name="TopLeft" propertytype="WallTileType" value="Wall"/>
+   <property name="TopRight" propertytype="WallTileType" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="267" type="WallTile">
+  <properties>
+   <property name="BottomLeft" propertytype="WallTileType" value="None"/>
+   <property name="BottomRight" propertytype="WallTileType" value="Floor"/>
+   <property name="TopLeft" propertytype="WallTileType" value="Floor"/>
+   <property name="TopRight" propertytype="WallTileType" value="Floor"/>
+  </properties>
+ </tile>
+ <tile id="273" type="WallTile">
+  <properties>
+   <property name="BottomLeft" propertytype="WallTileType" value="None"/>
+   <property name="BottomRight" propertytype="WallTileType" value="Floor"/>
+   <property name="TopLeft" propertytype="WallTileType" value="None"/>
+   <property name="TopRight" propertytype="WallTileType" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="278" type="WallTile">
+  <properties>
+   <property name="BottomLeft" propertytype="WallTileType" value="Floor"/>
+   <property name="BottomRight" propertytype="WallTileType" value="None"/>
+   <property name="TopLeft" propertytype="WallTileType" value="Wall"/>
+   <property name="TopRight" propertytype="WallTileType" value="None"/>
+  </properties>
+ </tile>
+ <tile id="279" type="WallTile">
+  <properties>
+   <property name="BottomLeft" propertytype="WallTileType" value="Wall"/>
+   <property name="BottomRight" propertytype="WallTileType" value="Wall"/>
+   <property name="TopLeft" propertytype="WallTileType" value="Wall"/>
+   <property name="TopRight" propertytype="WallTileType" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="280" type="WallTile">
+  <properties>
+   <property name="BottomLeft" propertytype="WallTileType" value="Floor"/>
+   <property name="BottomRight" propertytype="WallTileType" value="Floor"/>
+   <property name="TopLeft" propertytype="WallTileType" value="None"/>
+   <property name="TopRight" propertytype="WallTileType" value="Floor"/>
+  </properties>
+ </tile>
+ <tile id="286" type="WallTile">
+  <properties>
+   <property name="BottomLeft" propertytype="WallTileType" value="None"/>
+   <property name="BottomRight" propertytype="WallTileType" value="Floor"/>
+   <property name="TopLeft" propertytype="WallTileType" value="None"/>
+   <property name="TopRight" propertytype="WallTileType" value="Floor"/>
+  </properties>
+ </tile>
+ <tile id="291" type="WallTile">
+  <properties>
+   <property name="BottomLeft" propertytype="WallTileType" value="Floor"/>
+   <property name="BottomRight" propertytype="WallTileType" value="None"/>
+   <property name="TopLeft" propertytype="WallTileType" value="Floor"/>
+   <property name="TopRight" propertytype="WallTileType" value="None"/>
+  </properties>
+ </tile>
+ <tile id="292" type="WallTile">
+  <properties>
+   <property name="BottomLeft" propertytype="WallTileType" value="Wall"/>
+   <property name="BottomRight" propertytype="WallTileType" value="Wall"/>
+   <property name="TopLeft" propertytype="WallTileType" value="Wall"/>
+   <property name="TopRight" propertytype="WallTileType" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="293" type="WallTile">
+  <properties>
+   <property name="BottomLeft" propertytype="WallTileType" value="Floor"/>
+   <property name="BottomRight" propertytype="WallTileType" value="Floor"/>
+   <property name="TopLeft" propertytype="WallTileType" value="Floor"/>
+   <property name="TopRight" propertytype="WallTileType" value="None"/>
+  </properties>
+ </tile>
+ <tile id="299" type="WallTile">
+  <properties>
+   <property name="BottomLeft" propertytype="WallTileType" value="None"/>
+   <property name="BottomRight" propertytype="WallTileType" value="Floor"/>
+   <property name="TopLeft" propertytype="WallTileType" value="None"/>
+   <property name="TopRight" propertytype="WallTileType" value="Floor"/>
+  </properties>
+ </tile>
+ <tile id="304" type="WallTile">
+  <properties>
+   <property name="BottomLeft" propertytype="WallTileType" value="Floor"/>
+   <property name="BottomRight" propertytype="WallTileType" value="None"/>
+   <property name="TopLeft" propertytype="WallTileType" value="Floor"/>
+   <property name="TopRight" propertytype="WallTileType" value="None"/>
+  </properties>
+ </tile>
+ <tile id="306" type="WallTile">
+  <properties>
+   <property name="BottomLeft" propertytype="WallTileType" value="Floor"/>
+   <property name="BottomRight" propertytype="WallTileType" value="None"/>
+   <property name="TopLeft" propertytype="WallTileType" value="Floor"/>
+   <property name="TopRight" propertytype="WallTileType" value="Floor"/>
+  </properties>
+ </tile>
+ <tile id="312" type="WallTile">
+  <properties>
+   <property name="BottomLeft" propertytype="WallTileType" value="None"/>
+   <property name="BottomRight" propertytype="WallTileType" value="Wall"/>
+   <property name="TopLeft" propertytype="WallTileType" value="None"/>
+   <property name="TopRight" propertytype="WallTileType" value="Floor"/>
+  </properties>
+ </tile>
+ <tile id="317" type="WallTile">
+  <properties>
+   <property name="BottomLeft" propertytype="WallTileType" value="Wall"/>
+   <property name="BottomRight" propertytype="WallTileType" value="None"/>
+   <property name="TopLeft" propertytype="WallTileType" value="Floor"/>
+   <property name="TopRight" propertytype="WallTileType" value="None"/>
+  </properties>
+ </tile>
+ <tile id="325" type="WallTile">
+  <properties>
+   <property name="BottomLeft" propertytype="WallTileType" value="None"/>
+   <property name="BottomRight" propertytype="WallTileType" value="None"/>
+   <property name="TopLeft" propertytype="WallTileType" value="None"/>
+   <property name="TopRight" propertytype="WallTileType" value="Floor"/>
+  </properties>
+ </tile>
+ <tile id="326" type="WallTile">
+  <properties>
+   <property name="BottomLeft" propertytype="WallTileType" value="None"/>
+   <property name="BottomRight" propertytype="WallTileType" value="None"/>
+   <property name="TopLeft" propertytype="WallTileType" value="Wall"/>
+   <property name="TopRight" propertytype="WallTileType" value="Floor"/>
+  </properties>
+ </tile>
+ <tile id="327" type="WallTile">
+  <properties>
+   <property name="BottomLeft" propertytype="WallTileType" value="None"/>
+   <property name="BottomRight" propertytype="WallTileType" value="None"/>
+   <property name="TopLeft" propertytype="WallTileType" value="Floor"/>
+   <property name="TopRight" propertytype="WallTileType" value="Floor"/>
+  </properties>
+ </tile>
+ <tile id="328" type="WallTile">
+  <properties>
+   <property name="BottomLeft" propertytype="WallTileType" value="None"/>
+   <property name="BottomRight" propertytype="WallTileType" value="None"/>
+   <property name="TopLeft" propertytype="WallTileType" value="Floor"/>
+   <property name="TopRight" propertytype="WallTileType" value="Floor"/>
+  </properties>
+ </tile>
+ <tile id="329" type="WallTile">
+  <properties>
+   <property name="BottomLeft" propertytype="WallTileType" value="None"/>
+   <property name="BottomRight" propertytype="WallTileType" value="None"/>
+   <property name="TopLeft" propertytype="WallTileType" value="Floor"/>
+   <property name="TopRight" propertytype="WallTileType" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="330" type="WallTile">
+  <properties>
+   <property name="BottomLeft" propertytype="WallTileType" value="None"/>
+   <property name="BottomRight" propertytype="WallTileType" value="None"/>
+   <property name="TopLeft" propertytype="WallTileType" value="Floor"/>
+   <property name="TopRight" propertytype="WallTileType" value="None"/>
+  </properties>
+ </tile>
  <wangsets>
   <wangset name="GrassyCliff" type="corner" tile="-1">
    <wangcolor name="Grass" color="#ff0000" tile="28" probability="1"/>

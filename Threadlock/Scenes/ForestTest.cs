@@ -17,12 +17,44 @@ using Threadlock.SaveData;
 using Threadlock.SceneComponents;
 using Threadlock.SceneComponents.Dungenerator;
 using Threadlock.StaticData;
+using static Nez.Content.Tiled;
 using static Threadlock.SceneComponents.Dungenerator.CorridorPainter;
 
 namespace Threadlock.Scenes
 {
     public class ForestTest : BaseScene
     {
+        const int _pathWidth = 5;
+        int _halfWidth { get => _pathWidth / 2; }
+
+        readonly Dictionary<Corners, List<Tuple<Vector2, Corners>>> _matchingCornersDict = new Dictionary<Corners, List<Tuple<Vector2, Corners>>>()
+        {
+            [Corners.TopLeft] = new List<Tuple<Vector2, Corners>>()
+            {
+                new Tuple<Vector2, Corners>(DirectionHelper.Left, Corners.TopRight),
+                new Tuple<Vector2, Corners>(DirectionHelper.Up, Corners.BottomLeft),
+                new Tuple<Vector2, Corners>(DirectionHelper.UpLeft, Corners.BottomRight),
+            },
+            [Corners.TopRight] = new List<Tuple<Vector2, Corners>>()
+            {
+                new Tuple<Vector2, Corners>(DirectionHelper.Right, Corners.TopLeft),
+                new Tuple<Vector2, Corners>(DirectionHelper.Up, Corners.BottomRight),
+                new Tuple<Vector2, Corners>(DirectionHelper.UpRight, Corners.BottomLeft),
+            },
+            [Corners.BottomLeft] = new List<Tuple<Vector2, Corners>>()
+            {
+                new Tuple<Vector2, Corners>(DirectionHelper.Left, Corners.BottomRight),
+                new Tuple<Vector2, Corners>(DirectionHelper.Down, Corners.TopLeft),
+                new Tuple<Vector2, Corners>(DirectionHelper.DownLeft, Corners.TopRight),
+            },
+            [Corners.BottomRight] = new List<Tuple<Vector2, Corners>>()
+            {
+                new Tuple<Vector2, Corners>(DirectionHelper.Right, Corners.BottomLeft),
+                new Tuple<Vector2, Corners>(DirectionHelper.Down, Corners.TopRight),
+                new Tuple<Vector2, Corners>(DirectionHelper.DownRight, Corners.TopLeft),
+            },
+        };
+
         public override void Initialize()
         {
             base.Initialize();
@@ -41,241 +73,362 @@ namespace Threadlock.Scenes
 
             var followCam = Camera.AddComponent(new CustomFollowCamera(player));
 
-            //HandleDoorway();
-
             HandlePoint();
         }
 
         void HandlePoint()
         {
+            //find doorway point
             var doorwayPoint = FindComponentOfType<DoorwayPoint>();
             if (doorwayPoint == null) return;
 
             var currentPos = doorwayPoint.Entity.Position;
-            var targetPos = currentPos + new Vector2(128, 0);
             var pathPoints = new List<Vector2>() { currentPos };
-            
-            while (currentPos != targetPos)
+            for (int i = 0; i < Nez.Random.Range(7, 9); i++)
             {
                 currentPos += new Vector2(16, 0);
                 pathPoints.Add(currentPos);
             }
-
-            var pathWidth = 5;
-            var halfWidth = pathWidth / 2;
-
-            //var minX = 0;
-            //var minY = 0;
-            //var maxX = 0;
-            //var maxY = 0;
-
-            //switch (doorwayPoint.Direction)
-            //{
-            //    case DoorwayPointDirection.Up:
-            //        minX -= halfWidth;
-            //        maxX += halfWidth;
-            //        minY += 1;
-            //        maxY += halfWidth;
-            //        break;
-            //    case DoorwayPointDirection.Down:
-            //        minX -= halfWidth;
-            //        maxX += halfWidth;
-            //        minY -= halfWidth;
-            //        maxY -= 1;
-            //        break;
-            //    case DoorwayPointDirection.Left:
-            //        minX += 1;
-            //        maxX += halfWidth;
-            //        minY -= halfWidth;
-            //        maxY += halfWidth;
-            //        break;
-            //    case DoorwayPointDirection.Right:
-            //        minX -= halfWidth;
-            //        maxX -= 1;
-            //        minY -= halfWidth;
-            //        maxY += halfWidth;
-            //        break;
-            //}
-
-            //List<Vector2> reservedPositions = new List<Vector2>();
-            //for (int x = minX; x <= maxX; x++)
-            //{
-            //    for (int y = minY; y <= maxY; y++)
-            //    {
-            //        var pos = new Vector2(x * 16, y * 16) + doorwayPoint.Entity.Position;
-            //        reservedPositions.Add(pos);
-            //    }
-            //}
-
-            pathPoints.RemoveRange(0, halfWidth);
-
-            //var pathDict = GetLargerPath(pathPoints, reservedPositions, pathWidth);
-            var pathDict = GetLargerPath(pathPoints, new List<Vector2>(), pathWidth);
-
-            var finalPath = pathDict.SelectMany(p => p.Value).Distinct().ToList();
-
-            PaintTiles(finalPath, new List<Vector2>());
-        }
-
-        void HandleDoorway()
-        {
-            var doorway = FindComponentOfType<FlexDoorway>();
-            if (doorway == null) return;
-
-            doorway.GetTiles();
-        }
-
-        public static Dictionary<Vector2, List<Vector2>> GetLargerPath(List<Vector2> positions, List<Vector2> reservedPositions, int size)
-        {
-            Dictionary<Vector2, List<Vector2>> posDictionary = new Dictionary<Vector2, List<Vector2>>();
-            List<Vector2> visitedPositions = new List<Vector2>();
-            var halfWidth = size / 2;
-            for (int i = 1; i < positions.Count + 1; i++)
+            for (int i = 0; i < Nez.Random.Range(3, 6); i++)
             {
-                posDictionary[positions[i - 1]] = new List<Vector2>();
+                currentPos += new Vector2(0, 16);
+                pathPoints.Add(currentPos);
+            }
+
+            //get a path to some random location
+            //var currentPos = doorwayPoint.Entity.Position;
+            //var targetPos = currentPos + new Vector2(128, 0);
+            //var pathPoints = new List<Vector2>() { currentPos };
+            //while (currentPos != targetPos)
+            //{
+            //    currentPos += new Vector2(16, 0);
+            //    pathPoints.Add(currentPos);
+            //}
+
+            //remove the first few points, they'll be added in the larger path
+            pathPoints.RemoveRange(0, _halfWidth);
+
+            //get the expanded path
+            var pathDict = GetLargerPath(pathPoints, _pathWidth);
+
+            //DEBUG TEST ENTITIES
+            foreach (var pos in pathDict)
+            {
+                var ent = CreateEntity("").AddComponent(new PrototypeSpriteRenderer(2, 2));
+                ent.Entity.SetPosition(pos.Position);
+            }
+
+            //place actual tiles
+            PaintTiles(pathDict);
+        }
+
+        public static List<TileInfo> GetLargerPath(List<Vector2> positions, int size)
+        {
+            var largerPath = new Dictionary<Vector2, TileInfo>();
+            var halfWidth = size / 2;
+            for (int i = 0; i < positions.Count; i++)
+            {
                 for (int x = -halfWidth; x <= halfWidth; x++)
                 {
                     for (int y = -halfWidth; y <= halfWidth; y++)
                     {
-                        var pos = new Vector2(x * 16, y * 16) + positions[i - 1];
-                        if (!visitedPositions.Contains(pos) && !reservedPositions.Contains(pos))
-                        {
-                            posDictionary[positions[i - 1]].Add(pos);
-                            visitedPositions.Add(pos);
-                        }
+                        var tileType = (x == 0 && y == 0) ? ForestTileType.Dirt : ForestTileType.DarkGrass;
+                        var priority = tileType == ForestTileType.Dirt ? 1 : 0;
+                        var pos = new Vector2(x * 16, y * 16) + positions[i];
+
+                        if (!largerPath.TryGetValue(pos, out var existingTile) || existingTile.Priority < priority)
+                            largerPath[pos] = new TileInfo(pos, tileType, priority);
                     }
                 }
             }
 
-            return posDictionary;
+            return largerPath.Values.ToList();
         }
 
-        List<Vector2> HandleLayer(TiledMapRenderer renderer, int renderLayer, string layerName, List<Vector2> path)
+        List<TmxLayerTile> HandleRenderer(TiledMapRenderer renderer, string layerName, List<TileInfo> pathTiles)
         {
-            List<Vector2> positions = new List<Vector2>();
+            List<TmxLayerTile> tiles = new List<TmxLayerTile>();
 
-            if (renderer.RenderLayer == renderLayer)
+            if (string.IsNullOrWhiteSpace(layerName))
+                return tiles;
+
+            var layers = renderer.TiledMap.TileLayers.Where(l => l.Name.StartsWith(layerName));
+
+            foreach (var layer in layers)
             {
-                var layer = renderer.TiledMap.TileLayers.FirstOrDefault(l => l.Name.StartsWith(layerName));
-                if (layer != null)
+                foreach (var layerTile in layer.Tiles)
                 {
-                    var tiles = layer.Tiles.Where(t => t != null);
-                    foreach (var tile in tiles)
-                    {
-                        //get tile pos in world space
-                        var adjustedTilePos = renderer.Entity.Position + new Vector2(tile.X * renderer.TiledMap.TileWidth, tile.Y * renderer.TiledMap.TileHeight);
+                    if (layerTile == null)
+                        continue;
 
-                        //if on the path, remove tile from the layer. it will be handled by path generation
-                        if (path.Contains(adjustedTilePos))
-                            layer.RemoveTile(tile.X, tile.Y);
-                        else if (!positions.Contains(adjustedTilePos))
-                            positions.Add(adjustedTilePos);
-                    }
+                    if (pathTiles.Any(t => t.Position == new Vector2(layerTile.X * layerTile.Tileset.TileWidth, layerTile.Y * layerTile.Tileset.TileHeight)))
+                        layer.RemoveTile(layerTile.X, layerTile.Y);
+                    else
+                        tiles.Add(layerTile);
                 }
             }
 
-            return positions;
+            return tiles;
         }
 
-        void PaintTiles(List<Vector2> path, List<Vector2> reservedPositions)
+        void PaintTiles(List<TileInfo> path)
         {
-            List<Vector2> backPositions = new List<Vector2>();
-            List<Vector2> wallPositions = new List<Vector2>();
-            List<Vector2> aboveFrontPositions = new List<Vector2>();
+            List<TmxLayerTile> backTiles = new List<TmxLayerTile>();
+            List<TmxLayerTile> wallTiles = new List<TmxLayerTile>();
+            List<TmxLayerTile> aboveFrontTiles = new List<TmxLayerTile>();
 
+            //get tiles in this map by layer
             var renderers = FindComponentsOfType<TiledMapRenderer>();
             foreach (var renderer in renderers)
             {
-                //handle Back renderers
-                backPositions.AddRange(HandleLayer(renderer, RenderLayers.Back, "Back", path));
-                wallPositions.AddRange(HandleLayer(renderer, RenderLayers.Walls, "Walls", path));
-                aboveFrontPositions.AddRange(HandleLayer(renderer, RenderLayers.AboveFront, "AboveFront", path));
+                if (renderer.RenderLayer == RenderLayers.Back)
+                    backTiles.AddRange(HandleRenderer(renderer, "Back", path));
+                if (renderer.RenderLayer == RenderLayers.Walls)
+                    wallTiles.AddRange(HandleRenderer(renderer, "Walls", path));
+                if (renderer.RenderLayer == RenderLayers.AboveFront)
+                    aboveFrontTiles.AddRange(HandleRenderer(renderer, "AboveFront", path));
             }
 
-            backPositions.RemoveAll(p => wallPositions.Contains(p));
-            backPositions.AddRange(path);
+            //filter tiles
+            backTiles.RemoveAll(t => wallTiles.Any(x => x.X == t.X && x.Y == t.Y));
+            var backTileInfo = backTiles.Distinct().Select(t => new TileInfo(t)).ToList();
+            wallTiles = wallTiles.Distinct().ToList();
+            aboveFrontTiles = aboveFrontTiles.Distinct().ToList();
 
-            if (File.Exists("Content/Data/FairyForestTiles2.json"))
+            //open tileset
+            Dictionary<int, List<int>> tileDict = new Dictionary<int, List<int>>();
+            Dictionary<int, List<int>> wallTileDict = new Dictionary<int, List<int>>();
+            using (var stream = TitleContainer.OpenStream(Nez.Content.Tiled.Tilesets.Fairy_forest_tileset))
             {
-                var json = File.ReadAllText("Content/Data/FairyForestTiles2.json");
-                var tileDict = Json.FromJson<Dictionary<TileOrientation, TileConfiguration>>(json);
+                var xDocTileset = XDocument.Load(stream);
 
-                Dictionary<string, List<SingleDungeonTile>> layerTilesDict = new Dictionary<string, List<SingleDungeonTile>>();
-                foreach (var pathPos in path)
+                string tsxDir = Path.GetDirectoryName(Nez.Content.Tiled.Tilesets.Fairy_forest_tileset);
+                var tileset = new TmxTileset().LoadTmxTileset(null, xDocTileset.Element("tileset"), 0, tsxDir);
+                tileset.TmxDirectory = tsxDir;
+
+                //get tileset tile mask dictionary 
+                foreach (var tile in tileset.Tiles)
                 {
-                    var orientation = CorridorPainter.GetTileOrientation(pathPos, backPositions.ToList());
-
-                    if (tileDict.TryGetValue(orientation, out var tileConfig))
+                    if (tile.Value.Type == "TerrainTile")
                     {
-                        var tiles = tileConfig.Tiles;
-                        foreach (var tile in tiles)
+                        if (tile.Value.Properties != null)
                         {
-                            Vector2 offset = Vector2.Zero;
-                            var offsetArray = tile.Offset.Split(' ');
-                            if (offsetArray.Length == 2)
-                                offset = new Vector2(Convert.ToInt32(offsetArray[0]), Convert.ToInt32(offsetArray[1]));
-
-                            var pos = pathPos + (offset * 16);
-                            var id = tile.TileIds.RandomItem();
-
-                            var singleTile = new SingleDungeonTile(pos, id, tile.Layer == "Walls");
-
-                            if (!layerTilesDict.ContainsKey(tile.Layer))
-                                layerTilesDict[tile.Layer] = new List<SingleDungeonTile>();
-                            layerTilesDict[tile.Layer].Add(singleTile);
+                            var tilesetTileMask = TileInfo.GetMask<ForestTileType>(tile.Value);
+                            if (!tileDict.ContainsKey(tilesetTileMask))
+                                tileDict.Add(tilesetTileMask, new List<int>());
+                            tileDict[tilesetTileMask].Add(tile.Key);
+                        }
+                    }
+                    else if (tile.Value.Type == "WallTile")
+                    {
+                        if (tile.Value.Properties != null)
+                        {
+                            var tilesetTileMask = TileInfo.GetMask<WallTileType>(tile.Value);
+                            if (!wallTileDict.ContainsKey(tilesetTileMask))
+                                wallTileDict.Add(tilesetTileMask, new List<int>());
+                            wallTileDict[tilesetTileMask].Add(tile.Key);
                         }
                     }
                 }
 
-                foreach (var renderer in renderers)
+                List<Vector2> wallPositions = new List<Vector2>();
+                var joinedTiles = path.Concat(backTileInfo).ToList();
+                Dictionary<Vector2, SingleTile> backTileDict = new Dictionary<Vector2, SingleTile>();
+                path = path.OrderByDescending(t => t.Priority).ToList();
+                for (int i = 0; i < path.Count; i++)
                 {
-                    foreach (var layer in renderer.TiledMap.TileLayers)
+                    var pathTile = path[i];
+
+                    var posMask = 0;
+                    if (pathTile.Priority == 1)
                     {
-                        foreach (var tile in layerTilesDict.SelectMany(t => t.Value))
+                        posMask = CreateTileMask(new Dictionary<Corners, ForestTileType>()
                         {
-                            var layerTile = layer.GetTileAtWorldPosition(tile.Position);
-                            if (layerTile != null)
-                                layer.RemoveTile(layerTile.X, layerTile.Y);
+                            [Corners.TopLeft] = ForestTileType.Dirt,
+                            [Corners.TopRight] = ForestTileType.Dirt,
+                            [Corners.BottomLeft] = ForestTileType.Dirt,
+                            [Corners.BottomRight] = ForestTileType.Dirt,
+                        });
+                    }
+                    else
+                    {
+                        HandleDirection(ref posMask, pathTile, DirectionHelper.UpLeft, joinedTiles, Corners.TopLeft, Corners.BottomRight, 2);
+                        HandleDirection(ref posMask, pathTile, DirectionHelper.UpRight, joinedTiles, Corners.TopRight, Corners.BottomLeft, 2);
+                        HandleDirection(ref posMask, pathTile, DirectionHelper.DownLeft, joinedTiles, Corners.BottomLeft, Corners.TopRight, 2);
+                        HandleDirection(ref posMask, pathTile, DirectionHelper.DownRight, joinedTiles, Corners.BottomRight, Corners.TopLeft, 2);
+                    }
+
+                    pathTile.PositionalMask = posMask;
+
+                    //get the appropriate floor tile based on the mask, considering none as matching the primary terrain
+                    var tileId = FindMatchingTile(pathTile.MaskIgnoringNone, tileDict);
+                    if (tileId == -1)
+                        continue;
+
+                    pathTile.Mask = pathTile.MaskIgnoringNone;
+                    pathTile.TileId = tileId;
+
+                    foreach (Corners corner in Enum.GetValues(typeof(Corners)))
+                    {
+                        //figure out where we need walls
+                        var positionalTerrainType = pathTile.GetPositionalTerrainType(corner, 2);
+                        if (positionalTerrainType == ForestTileType.None)
+                        {
+                            var wallPos = pathTile.Position + (GetDirectionToCorner(corner) * 16);
+                            if (!wallPositions.Contains(wallPos))
+                                wallPositions.Add(wallPos);
+                        }
+
+                        var terrainType = pathTile.GetTerrainType(corner, 2);
+                        var dirsToHandle = _matchingCornersDict[corner];
+                        foreach (var pair in dirsToHandle)
+                        {
+                            var dir = pair.Item1;
+                            var neighborCorner = pair.Item2;
+                            var neighborPos = pathTile.Position + (dir * 16);
+                            var neighbor = path.FirstOrDefault(p => p.Position == neighborPos);
+                            if (neighbor != null && neighbor.Priority <= pathTile.Priority)
+                            {
+                                neighbor.SetMaskValue(terrainType, neighborCorner, 2);
+
+                                //var neighborTileId = FindMatchingTile(neighbor.MaskIgnoringNone, tileDict);
+                                //if (tileId == -1)
+                                //    continue;
+
+                                //neighbor.Mask = neighbor.MaskIgnoringNone;
+                                //neighbor.TileId = neighborTileId;
+                            }
                         }
                     }
                 }
 
-                //open tileset
-                using (var stream = TitleContainer.OpenStream(Nez.Content.Tiled.Tilesets.Fairy_forest_tileset))
+                //handle walls
+                var wallDict = new Dictionary<Vector2, SingleTile>();
+                foreach (var wallPos in wallPositions)
                 {
-                    var xDocTileset = XDocument.Load(stream);
+                    var wallMask = 0;
+                    foreach (Corners corner in Enum.GetValues(typeof(Corners)))
+                    {
+                        var dir = GetDirectionToCorner(corner);
+                        var pos = wallPos + (dir * 16);
+                        WallTileType wallTileType = WallTileType.None;
+                        if (joinedTiles.Any(t => t.Position == pos))
+                            wallTileType = WallTileType.Floor;
+                        else if (wallPositions.Contains(pos) || wallTiles.Any(t => new Vector2(t.X * t.Tileset.TileWidth, t.Y * t.Tileset.TileHeight) == wallPos))
+                            wallTileType = WallTileType.Wall;
 
-                    string tsxDir = Path.GetDirectoryName(Nez.Content.Tiled.Tilesets.Fairy_forest_tileset);
-                    var tileset = new TmxTileset().LoadTmxTileset(null, xDocTileset.Element("tileset"), 0, tsxDir);
-                    tileset.TmxDirectory = tsxDir;
+                        wallMask |= ((int)wallTileType << (int)corner * 2);
+                    }
 
-                    if (layerTilesDict.TryGetValue("Back", out var backTiles))
+                    var tileId = FindMatchingTile(wallMask, wallTileDict);
+                    if (tileId < 0)
                     {
-                        var dict = new Dictionary<Vector2, SingleTile>();
-                        foreach (var backTile in backTiles)
-                            dict.Add(backTile.Position, new SingleTile(backTile.TileId, backTile.IsCollider));
-                        var corridorRenderer = CreateEntity("").AddComponent(new CorridorRenderer(tileset, dict));
-                        corridorRenderer.SetRenderLayer(RenderLayers.Back);
+                        wallMask = 0;
+                        foreach (Corners corner in Enum.GetValues(typeof(Corners)))
+                        {
+                            var dir = GetDirectionToCorner(corner);
+                            var pos = wallPos + (dir * 16);
+                            WallTileType wallTileType = WallTileType.None;
+                            if (joinedTiles.Any(t => t.Position == pos))
+                                wallTileType = WallTileType.Floor;
+
+                            wallMask |= ((int)wallTileType << (int)corner * 2);
+                        }
+
+                        tileId = FindMatchingTile(wallMask, wallTileDict);
+                        if (tileId < 0)
+                            continue;
                     }
-                    if (layerTilesDict.TryGetValue("Walls", out var wallTiles))
+
+                    var existingWallTile = wallTiles.FirstOrDefault(t => new Vector2(t.X * t.Tileset.TileWidth, t.Y * t.Tileset.TileHeight) == wallPos);
+                    if (existingWallTile != null)
                     {
-                        var dict = new Dictionary<Vector2, SingleTile>();
-                        foreach (var wallTile in wallTiles)
-                            dict.Add(wallTile.Position, new SingleTile(wallTile.TileId, wallTile.IsCollider));
-                        var corridorRenderer = CreateEntity("").AddComponent(new CorridorRenderer(tileset, dict, true));
-                        corridorRenderer.SetRenderLayer(RenderLayers.Walls);
+                        existingWallTile.Gid = tileId;
                     }
-                    if (layerTilesDict.TryGetValue("AboveFront", out var aboveFrontTiles))
+                    else
                     {
-                        var dict = new Dictionary<Vector2, SingleTile>();
-                        foreach (var aboveFrontTile in aboveFrontTiles)
-                            dict.Add(aboveFrontTile.Position, new SingleTile(aboveFrontTile.TileId, aboveFrontTile.IsCollider));
-                        var corridorRenderer = CreateEntity("").AddComponent(new CorridorRenderer(tileset, dict));
-                        corridorRenderer.SetRenderLayer(RenderLayers.AboveFront);
+                        var singleTile = new SingleTile(tileId, true);
+                        wallDict.Add(wallPos, singleTile);
                     }
                 }
-                
+
+                //convert to single tiles
+                foreach (var pathTile in path)
+                {
+                    if (pathTile.TileId != null && pathTile.TileId >= 0)
+                    {
+                        var singleTile = new SingleTile(pathTile.TileId.Value, false);
+                        backTileDict.Add(pathTile.Position, singleTile);
+                    }
+                }
+
+                //make corridor renderers
+                var corridorRenderer = CreateEntity("").AddComponent(new CorridorRenderer(tileset, backTileDict));
+                corridorRenderer.SetRenderLayer(RenderLayers.Back);
+                var wallRenderer = CreateEntity("").AddComponent(new CorridorRenderer(tileset, wallDict, true));
+                wallRenderer.SetRenderLayer(RenderLayers.Walls);
             }
+        }
+
+        Vector2 GetDirectionToCorner(Corners corner)
+        {
+            switch (corner)
+            {
+                case Corners.TopLeft:
+                    return DirectionHelper.UpLeft;
+                case Corners.TopRight:
+                    return DirectionHelper.UpRight;
+                case Corners.BottomLeft:
+                    return DirectionHelper.DownLeft;
+                case Corners.BottomRight:
+                    return DirectionHelper.DownRight;
+                default:
+                    return Vector2.Zero;
+            }
+        }
+
+        int FindMatchingTile(int posMask, Dictionary<int, List<int>> tileDict)
+        {
+            if (tileDict.TryGetValue(posMask, out var ids))
+                return ids.RandomItem();
+
+            foreach (var tileMask in tileDict.Keys)
+            {
+                if (IsMaskMatch(tileMask, posMask))
+                    return tileDict[tileMask].RandomItem();
+            }
+
+            return -1;
+        }
+
+        bool IsMaskMatch(int tilesetTileMask, int desiredMask)
+        {
+            foreach (Corners corner in Enum.GetValues(typeof(Corners)))
+            {
+                var tilesetTileTerrainType = (tilesetTileMask >> (int)corner * 2) & 0b11;
+                var desiredTerrainType = (desiredMask >> (int)corner * 2) & 0b11;
+
+                if (desiredTerrainType != 0 && tilesetTileTerrainType != desiredTerrainType)
+                    return false;
+            }
+
+            return true;
+        }
+
+        void HandleDirection(ref int mask, TileInfo pathTile, Vector2 direction, List<TileInfo> joinedTiles, Corners currentCorner, Corners checkCorner, int shift)
+        {
+            var pos = pathTile.Position + (direction * 16);
+            var tile = joinedTiles.FirstOrDefault(t => t.Position == pos);
+            if (tile != null)
+            {
+                //extract corner from other tile
+                var terrainType = (ForestTileType)((tile.Mask >> (int)checkCorner * shift) & 0b11);
+
+                //apply it to the corner of the current tile
+                mask |= ((int)terrainType << (int)currentCorner * shift);
+            }
+            else
+                mask |= ((int)ForestTileType.None << (int)currentCorner * shift);
         }
     }
 }

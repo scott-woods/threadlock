@@ -11,6 +11,7 @@ using Threadlock.Helpers;
 using Threadlock.StaticData;
 using Microsoft.Xna.Framework;
 using Threadlock.Models;
+using static Threadlock.Scenes.ForestTest;
 
 namespace Threadlock.SceneComponents.Dungenerator
 {
@@ -28,6 +29,26 @@ namespace Threadlock.SceneComponents.Dungenerator
             TopRight = 1 << 5,
             BottomLeft = 1 << 6,
             BottomRight = 1 << 7,
+        }
+
+        public enum TileDirection2
+        {
+            Top,
+            Bottom,
+            Left,
+            Right,
+            TopLeft,
+            TopRight,
+            BottomLeft,
+            BottomRight
+        }
+
+        public enum Corners
+        {
+            TopLeft,
+            TopRight,
+            BottomLeft,
+            BottomRight
         }
 
         public enum TileOrientation
@@ -48,6 +69,23 @@ namespace Threadlock.SceneComponents.Dungenerator
             BottomRightInverse
         }
 
+        [Flags]
+        public enum ForestTileType
+        {
+            None = 0,
+            DarkGrass = 1,
+            Dirt = 2,
+            LightGrass = 3
+        }
+
+        [Flags]
+        public enum WallTileType
+        {
+            None = 0,
+            Floor = 1,
+            Wall = 2
+        }
+
         static TileDirection TopLeftRequiredDirs { get => TileDirection.Bottom | TileDirection.Right; }
         static TileDirection TopRightRequiredDirs { get => TileDirection.Left | TileDirection.Bottom; }
         static TileDirection BottomLeftRequiredDirs { get => TileDirection.Top | TileDirection.Right; }
@@ -56,6 +94,33 @@ namespace Threadlock.SceneComponents.Dungenerator
         static TileDirection LeftEdgeRequiredDirs { get => TileDirection.Top | TileDirection.Bottom | TileDirection.Right; }
         static TileDirection BottomEdgeRequiredDirs { get => TileDirection.Left | TileDirection.Right; }
         static TileDirection RightEdgeRequiredDirs { get => TileDirection.Top | TileDirection.Bottom | TileDirection.Left; }
+
+        public static int SetTileType(int mask, ForestTileType tileType, TileDirection2 direction)
+        {
+            int typeBits = (int)tileType;
+            int shift = (int)direction * 2; //each position has 2 bits, at least for forest tile type
+            int maskClear = ~(3 << shift);
+            mask &= maskClear;
+            mask |= (typeBits << shift);
+            return mask;
+        }
+
+        public static int CreateTileMask(Dictionary<Corners, ForestTileType> tileSections)
+        {
+            int mask = 0;
+
+            foreach (Corners corner in Enum.GetValues(typeof(Corners)))
+            {
+                var bitPos = (int)corner * 2;
+
+                if (tileSections.TryGetValue(corner, out var tileType))
+                {
+                    mask |= ((int)tileType << bitPos);
+                }
+            }
+
+            return mask;
+        }
 
         public static TileOrientation GetTileOrientation(Vector2 tilePosition, List<Vector2> allTilePositions)
         {

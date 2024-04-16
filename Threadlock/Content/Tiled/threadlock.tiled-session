@@ -3,15 +3,15 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "Tilemaps/Forge/forge_normal_4.tmx",
+    "activeFile": "Tilemaps/FairyForest/forest_hallway_test.tmx",
     "expandedProjectPaths": [
         "Tilesets",
-        "Tilemaps",
-        "Tilemaps/Forge",
-        "RuleMaps",
-        "Tilemaps/Hub",
         ".",
-        "Templates"
+        "Tilemaps/Hub",
+        "Tilemaps/FairyForest",
+        "Templates",
+        "Tilemaps/Forge",
+        "Tilemaps"
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
@@ -150,11 +150,11 @@
             }
         },
         "Tilemaps/FairyForest/forest_hallway_test.tmx": {
-            "scale": 4,
-            "selectedLayer": 0,
+            "scale": 3,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 188.25,
-                "y": 393.75
+                "x": 434.5,
+                "y": 427.66666666666663
             }
         },
         "Tilemaps/FairyForest/forest_test_1.tmx": {
@@ -173,11 +173,11 @@
             "expandedObjectLayers": [
                 17
             ],
-            "scale": 4,
-            "selectedLayer": 0,
+            "scale": 1,
+            "selectedLayer": 3,
             "viewCenter": {
-                "x": 371,
-                "y": 262.25
+                "x": 266.5,
+                "y": 294
             }
         },
         "Tilemaps/Forge/Doorways/forge_bottom.tmx": {
@@ -466,8 +466,8 @@
             "scale": 2,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 151.5,
-                "y": 612
+                "x": 115.25,
+                "y": 489
             }
         },
         "Tilemaps/Forge/forge_normal_2.tmx": {
@@ -653,8 +653,8 @@
             "scaleInEditor": 1
         },
         "Tilesets/forge_tileset.tsx": {
-            "scaleInDock": 0.75,
-            "scaleInEditor": 3
+            "scaleInDock": 2,
+            "scaleInEditor": 4
         },
         "Tilesets/prototype_tileset.tsx": {
             "dynamicWrapping": false,
@@ -685,36 +685,27 @@
     "map.tileWidth": 16,
     "map.width": 32,
     "openFiles": [
-        "Tilesets/fairy_forest_props.tsx",
-        "Tilesets/fairy_forest_trees.tsx",
-        "RuleMaps/fairy_forest_cliff_rules.tmx",
-        "C:/Users/scott/Desktop/Content (unpacked)/Maps/Woods.tmx",
+        "Tilemaps/Forge/forge_normal_1.tmx",
         "Tilemaps/FairyForest/forest_test_2.tmx",
         "Tilesets/fairy_forest_tileset.tsx",
-        "Tilesets/stardew_spring.tsx",
-        "RuleMaps/stardew_leaves_rules.tmx",
-        "Tilemaps/Forge/forge_normal_1.tmx",
-        "Tilemaps/Forge/forge_action_store.tmx",
-        "Tilemaps/Forge/forge_hub_1.tmx",
-        "Tilemaps/Forge/forge_normal_2.tmx",
-        "Tilemaps/Forge/forge_normal_3.tmx",
-        "Tilemaps/Forge/forge_normal_4.tmx"
+        "Tilesets/forge_tileset.tsx",
+        "Tilemaps/FairyForest/forest_hallway_test.tmx"
     ],
     "project": "threadlock.tiled-project",
-    "property.type": "string",
+    "property.type": "WallTileType",
     "recentFiles": [
+        "Tilemaps/Forge/forge_normal_1.tmx",
+        "Tilemaps/FairyForest/forest_test_2.tmx",
+        "Tilesets/fairy_forest_tileset.tsx",
+        "Tilesets/forge_tileset.tsx",
+        "Tilemaps/FairyForest/forest_hallway_test.tmx",
         "Tilemaps/Forge/forge_pre_boss_2.tmx",
         "Tilemaps/FairyForest/forest_test_1.tmx",
-        "Tilemaps/FairyForest/forest_hallway_test.tmx",
         "Tilesets/stardew_spring.tsx",
         "Tilesets/fairy_forest_props.tsx",
         "Tilesets/fairy_forest_trees.tsx",
         "RuleMaps/fairy_forest_cliff_rules.tmx",
-        "Tilemaps/FairyForest/forest_test_2.tmx",
-        "Tilesets/fairy_forest_tileset.tsx",
-        "RuleMaps/stardew_leaves_rules.tmx",
-        "Tilemaps/Forge/forge_normal_1.tmx",
-        "Tilemaps/Forge/forge_action_store.tmx"
+        "RuleMaps/stardew_leaves_rules.tmx"
     ],
     "resizeMap.removeObjects": false,
     "tileset.lastUsedFilter": "Tiled tileset files (*.tsx *.xml)",
