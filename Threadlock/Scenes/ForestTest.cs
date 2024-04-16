@@ -1,23 +1,17 @@
 ﻿using Microsoft.Xna.Framework;
 using Nez;
-using Nez.Persistence;
 using Nez.Tiled;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using Threadlock.Components;
 using Threadlock.Components.TiledComponents;
 using Threadlock.Helpers;
 using Threadlock.Models;
-using Threadlock.SaveData;
 using Threadlock.SceneComponents;
-using Threadlock.SceneComponents.Dungenerator;
 using Threadlock.StaticData;
-using static Nez.Content.Tiled;
 using static Threadlock.SceneComponents.Dungenerator.CorridorPainter;
 
 namespace Threadlock.Scenes
@@ -95,28 +89,11 @@ namespace Threadlock.Scenes
                 pathPoints.Add(currentPos);
             }
 
-            //get a path to some random location
-            //var currentPos = doorwayPoint.Entity.Position;
-            //var targetPos = currentPos + new Vector2(128, 0);
-            //var pathPoints = new List<Vector2>() { currentPos };
-            //while (currentPos != targetPos)
-            //{
-            //    currentPos += new Vector2(16, 0);
-            //    pathPoints.Add(currentPos);
-            //}
-
             //remove the first few points, they'll be added in the larger path
             pathPoints.RemoveRange(0, _halfWidth);
 
             //get the expanded path
             var pathDict = GetLargerPath(pathPoints, _pathWidth);
-
-            //DEBUG TEST ENTITIES
-            foreach (var pos in pathDict)
-            {
-                var ent = CreateEntity("").AddComponent(new PrototypeSpriteRenderer(2, 2));
-                ent.Entity.SetPosition(pos.Position);
-            }
 
             //place actual tiles
             PaintTiles(pathDict);

@@ -21,6 +21,20 @@
         ":/automap-tiles.tsx": {
             "scaleInDock": 1
         },
+        "C:/Modding/Stardew Content (unpacked)/Maps/Woods.tmx": {
+            "scale": 2,
+            "selectedLayer": 4,
+            "viewCenter": {
+                "x": 761.5,
+                "y": 184
+            }
+        },
+        "C:/Modding/Stardew Content (unpacked)/Maps/Woods.tmx#Paths": {
+            "scaleInDock": 1
+        },
+        "C:/Modding/Stardew Content (unpacked)/Maps/Woods.tmx#untitled tile sheet": {
+            "scaleInDock": 1.5
+        },
         "C:/Users/scott/Desktop/Content (unpacked)/Maps/WitchSwamp.tmx": {
             "scale": 1,
             "selectedLayer": 0,
@@ -145,16 +159,16 @@
             "scale": 1,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 215,
-                "y": 159
+                "x": 214,
+                "y": 158
             }
         },
         "Tilemaps/FairyForest/forest_hallway_test.tmx": {
             "scale": 3,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 433.99999999999994,
-                "y": 427.33333333333326
+                "x": 432.99999999999994,
+                "y": 426.33333333333326
             }
         },
         "Tilemaps/FairyForest/forest_test_1.tmx": {
@@ -174,10 +188,10 @@
                 17
             ],
             "scale": 2,
-            "selectedLayer": 2,
+            "selectedLayer": 3,
             "viewCenter": {
-                "x": 314.5,
-                "y": 303
+                "x": 359.5,
+                "y": 327.5
             }
         },
         "Tilemaps/Forge/Doorways/forge_bottom.tmx": {

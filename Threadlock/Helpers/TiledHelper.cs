@@ -159,28 +159,6 @@ namespace Threadlock.Helpers
         }
 
         /// <summary>
-        /// check that a world space position is not in a collision tile or a null tile for a specific map renderer
-        /// </summary>
-        /// <param name="mapRenderer"></param>
-        /// <param name="position"></param>
-        /// <returns></returns>
-        public static bool ValidatePosition(TiledMapRenderer mapRenderer, Vector2 position)
-        {
-            if (mapRenderer != null)
-            {
-                if (!mapRenderer.Bounds.Contains(position))
-                    return false;
-                var collidingTile = mapRenderer.GetTileAtWorldPosition(position);
-                if (collidingTile != null)
-                    return false;
-                if (!mapRenderer.TiledMap.TileLayers.Any(l => l.GetTileAtWorldPosition(position - mapRenderer.Entity.Position) != null))
-                    return false;
-            }
-
-            return true;
-        }
-
-        /// <summary>
         /// checks that a position is not in any tiled map walls, and that it is on a non-null tile
         /// </summary>
         /// <param name="scene"></param>
