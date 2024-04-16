@@ -137,6 +137,36 @@
         {
             "color": "#ffa0a0a4",
             "drawFill": true,
+            "id": 23,
+            "members": [
+                {
+                    "name": "Layer",
+                    "propertyType": "Layer",
+                    "type": "string",
+                    "value": "None"
+                },
+                {
+                    "name": "Offset",
+                    "type": "string",
+                    "value": ""
+                },
+                {
+                    "name": "ParentTileIds",
+                    "type": "string",
+                    "value": ""
+                }
+            ],
+            "name": "ExtraTile",
+            "type": "class",
+            "useAs": [
+                "property",
+                "tile",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
             "id": 15,
             "members": [
             ],
@@ -158,6 +188,19 @@
                 "DarkGrass",
                 "Dirt",
                 "LightGrass"
+            ],
+            "valuesAsFlags": false
+        },
+        {
+            "id": 24,
+            "name": "Layer",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "Back",
+                "AboveFront",
+                "Walls",
+                "None"
             ],
             "valuesAsFlags": false
         },

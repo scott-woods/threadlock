@@ -198,6 +198,7 @@ namespace Threadlock.Scenes
             //open tileset
             Dictionary<int, List<int>> tileDict = new Dictionary<int, List<int>>();
             Dictionary<int, List<int>> wallTileDict = new Dictionary<int, List<int>>();
+            Dictionary<int, List<ExtraTile>> extraTileDict = new Dictionary<int, List<ExtraTile>>();
             using (var stream = TitleContainer.OpenStream(Nez.Content.Tiled.Tilesets.Fairy_forest_tileset))
             {
                 var xDocTileset = XDocument.Load(stream);
@@ -227,6 +228,24 @@ namespace Threadlock.Scenes
                             if (!wallTileDict.ContainsKey(tilesetTileMask))
                                 wallTileDict.Add(tilesetTileMask, new List<int>());
                             wallTileDict[tilesetTileMask].Add(tile.Key);
+                        }
+                    }
+                    else if (tile.Value.Type == "ExtraTile")
+                    {
+                        if (tile.Value.Properties != null)
+                        {
+                            if (tile.Value.Properties.TryGetValue("ParentTileIds", out var parentIds)
+                                && tile.Value.Properties.TryGetValue("Layer", out var layerName)
+                                && tile.Value.Properties.TryGetValue("Offset", out var offset))
+                            {
+                                var splitParentIds = parentIds.Split(' ').Select(i => Convert.ToInt32(i)).ToList();
+                                foreach (var parentId in splitParentIds)
+                                {
+                                    if (!extraTileDict.ContainsKey(parentId))
+                                        extraTileDict.Add(parentId, new List<ExtraTile>());
+                                    extraTileDict[parentId].Add(new ExtraTile(tile.Key, layerName, offset));
+                                }
+                            }
                         }
                     }
                 }
@@ -302,6 +321,8 @@ namespace Threadlock.Scenes
                     }
                 }
 
+                Dictionary<Vector2, SingleTile> aboveFrontDict = new Dictionary<Vector2, SingleTile>();
+
                 //handle walls
                 var wallDict = new Dictionary<Vector2, SingleTile>();
                 foreach (var wallPos in wallPositions)
@@ -342,13 +363,41 @@ namespace Threadlock.Scenes
 
                     var existingWallTile = wallTiles.FirstOrDefault(t => new Vector2(t.X * t.Tileset.TileWidth, t.Y * t.Tileset.TileHeight) == wallPos);
                     if (existingWallTile != null)
-                    {
-                        existingWallTile.Gid = tileId;
-                    }
+                        existingWallTile.Gid = tileId + existingWallTile.Tileset.FirstGid;
                     else
                     {
                         var singleTile = new SingleTile(tileId, true);
                         wallDict.Add(wallPos, singleTile);
+                    }
+
+                    if (extraTileDict.TryGetValue(tileId, out var extraTiles))
+                    {
+                        var groupedTiles = extraTiles
+                            .GroupBy(t => t.Offset)
+                            .Select(g =>
+                            {
+                                int index = Nez.Random.NextInt(g.Count());
+                                return g.ElementAt(index);
+                            });
+                        foreach (var extraTile in groupedTiles)
+                        {
+                            var pos = wallPos + (extraTile.Offset * 16);
+                            switch (extraTile.RenderLayer)
+                            {
+                                case RenderLayers.Back:
+                                    if (!backTileDict.ContainsKey(pos))
+                                        backTileDict.Add(pos, new SingleTile(extraTile.TileId));
+                                    break;
+                                case RenderLayers.Walls:
+                                    if (!wallDict.ContainsKey(pos))
+                                        wallDict.Add(pos, new SingleTile(extraTile.TileId));
+                                    break;
+                                case RenderLayers.AboveFront:
+                                    if (!aboveFrontDict.ContainsKey(pos))
+                                        aboveFrontDict.Add(pos, new SingleTile(extraTile.TileId));
+                                    break;
+                            }
+                        }
                     }
                 }
 
@@ -362,11 +411,40 @@ namespace Threadlock.Scenes
                     }
                 }
 
+                foreach (var kvp in backTileDict)
+                {
+                    var singleTile = kvp.Value;
+                    if (extraTileDict.TryGetValue(singleTile.TileId, out var extraTiles))
+                    {
+                        foreach (var extraTile in extraTiles)
+                        {
+                            var pos = kvp.Key + (extraTile.Offset * 16);
+                            switch (extraTile.RenderLayer)
+                            {
+                                case RenderLayers.Back:
+                                    if (!backTileDict.ContainsKey(pos))
+                                        backTileDict.Add(pos, new SingleTile(extraTile.TileId));
+                                    break;
+                                case RenderLayers.Walls:
+                                    if (!wallDict.ContainsKey(pos))
+                                        wallDict.Add(pos, new SingleTile(extraTile.TileId));
+                                    break;
+                                case RenderLayers.AboveFront:
+                                    if (!aboveFrontDict.ContainsKey(pos))
+                                        aboveFrontDict.Add(pos, new SingleTile(extraTile.TileId));
+                                    break;
+                            }
+                        }
+                    }
+                }
+
                 //make corridor renderers
                 var corridorRenderer = CreateEntity("").AddComponent(new CorridorRenderer(tileset, backTileDict));
                 corridorRenderer.SetRenderLayer(RenderLayers.Back);
                 var wallRenderer = CreateEntity("").AddComponent(new CorridorRenderer(tileset, wallDict, true));
-                wallRenderer.SetRenderLayer(RenderLayers.Walls);
+                wallRenderer.SetRenderLayer(RenderLayers.AboveFront); //for the forest, walls should be AboveFront
+                var aboveFrontRenderer = CreateEntity("").AddComponent(new CorridorRenderer(tileset, aboveFrontDict));
+                aboveFrontRenderer.SetRenderLayer(RenderLayers.AboveFront);
             }
         }
 

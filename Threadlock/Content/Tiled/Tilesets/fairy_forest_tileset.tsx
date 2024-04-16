@@ -601,6 +601,34 @@
    <property name="TopRight" propertytype="WallTileType" value="Wall"/>
   </properties>
  </tile>
+ <tile id="274" type="ExtraTile">
+  <properties>
+   <property name="Layer" propertytype="Layer" value="AboveFront"/>
+   <property name="Offset" value="1 1"/>
+   <property name="ParentTileIds" value="260"/>
+  </properties>
+ </tile>
+ <tile id="275" type="ExtraTile">
+  <properties>
+   <property name="Layer" propertytype="Layer" value="AboveFront"/>
+   <property name="Offset" value="0 1"/>
+   <property name="ParentTileIds" value="262 263 293 280"/>
+  </properties>
+ </tile>
+ <tile id="276" type="ExtraTile">
+  <properties>
+   <property name="Layer" propertytype="Layer" value="AboveFront"/>
+   <property name="Offset" value="0 1"/>
+   <property name="ParentTileIds" value="262 263 293 280"/>
+  </properties>
+ </tile>
+ <tile id="277" type="ExtraTile">
+  <properties>
+   <property name="Layer" propertytype="Layer" value="AboveFront"/>
+   <property name="Offset" value="-1 1"/>
+   <property name="ParentTileIds" value="265"/>
+  </properties>
+ </tile>
  <tile id="278" type="WallTile">
   <properties>
    <property name="BottomLeft" propertytype="WallTileType" value="Floor"/>
@@ -631,6 +659,34 @@
    <property name="BottomRight" propertytype="WallTileType" value="Floor"/>
    <property name="TopLeft" propertytype="WallTileType" value="None"/>
    <property name="TopRight" propertytype="WallTileType" value="Floor"/>
+  </properties>
+ </tile>
+ <tile id="287" type="ExtraTile">
+  <properties>
+   <property name="Layer" propertytype="Layer" value="AboveFront"/>
+   <property name="Offset" value="1 0"/>
+   <property name="ParentTileIds" value="286 299 267 280"/>
+  </properties>
+ </tile>
+ <tile id="288" type="ExtraTile">
+  <properties>
+   <property name="Layer" propertytype="Layer" value="AboveFront"/>
+   <property name="Offset" value="1 1"/>
+   <property name="ParentTileIds" value="280"/>
+  </properties>
+ </tile>
+ <tile id="289" type="ExtraTile">
+  <properties>
+   <property name="Layer" propertytype="Layer" value="AboveFront"/>
+   <property name="Offset" value="-1 1"/>
+   <property name="ParentTileIds" value="293"/>
+  </properties>
+ </tile>
+ <tile id="290" type="ExtraTile">
+  <properties>
+   <property name="Layer" propertytype="Layer" value="AboveFront"/>
+   <property name="Offset" value="-1 0"/>
+   <property name="ParentTileIds" value="291 304 293 306"/>
   </properties>
  </tile>
  <tile id="291" type="WallTile">
@@ -665,6 +721,34 @@
    <property name="TopRight" propertytype="WallTileType" value="Floor"/>
   </properties>
  </tile>
+ <tile id="300" type="ExtraTile">
+  <properties>
+   <property name="Layer" propertytype="Layer" value="AboveFront"/>
+   <property name="Offset" value="1 0"/>
+   <property name="ParentTileIds" value="286 299 267 280"/>
+  </properties>
+ </tile>
+ <tile id="301" type="ExtraTile">
+  <properties>
+   <property name="Layer" propertytype="Layer" value="AboveFront"/>
+   <property name="Offset" value="1 -1"/>
+   <property name="ParentTileIds" value="267"/>
+  </properties>
+ </tile>
+ <tile id="302" type="ExtraTile">
+  <properties>
+   <property name="Layer" propertytype="Layer" value="AboveFront"/>
+   <property name="Offset" value="-1 -1"/>
+   <property name="ParentTileIds" value="306"/>
+  </properties>
+ </tile>
+ <tile id="303" type="ExtraTile">
+  <properties>
+   <property name="Layer" propertytype="Layer" value="AboveFront"/>
+   <property name="Offset" value="-1 0"/>
+   <property name="ParentTileIds" value="291 304 293 306"/>
+  </properties>
+ </tile>
  <tile id="304" type="WallTile">
   <properties>
    <property name="BottomLeft" propertytype="WallTileType" value="Floor"/>
@@ -687,6 +771,34 @@
    <property name="BottomRight" propertytype="WallTileType" value="Wall"/>
    <property name="TopLeft" propertytype="WallTileType" value="None"/>
    <property name="TopRight" propertytype="WallTileType" value="Floor"/>
+  </properties>
+ </tile>
+ <tile id="313" type="ExtraTile">
+  <properties>
+   <property name="Layer" propertytype="Layer" value="AboveFront"/>
+   <property name="Offset" value="1 -1"/>
+   <property name="ParentTileIds" value="325"/>
+  </properties>
+ </tile>
+ <tile id="314" type="ExtraTile">
+  <properties>
+   <property name="Layer" propertytype="Layer" value="AboveFront"/>
+   <property name="Offset" value="0 -1"/>
+   <property name="ParentTileIds" value="327 328 306 267"/>
+  </properties>
+ </tile>
+ <tile id="315" type="ExtraTile">
+  <properties>
+   <property name="Layer" propertytype="Layer" value="AboveFront"/>
+   <property name="Offset" value="0 -1"/>
+   <property name="ParentTileIds" value="327 328 306 267"/>
+  </properties>
+ </tile>
+ <tile id="316" type="ExtraTile">
+  <properties>
+   <property name="Layer" propertytype="Layer" value="AboveFront"/>
+   <property name="Offset" value="-1 -1"/>
+   <property name="ParentTileIds" value="330"/>
   </properties>
  </tile>
  <tile id="317" type="WallTile">

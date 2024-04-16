@@ -16,5 +16,14 @@ namespace Threadlock.StaticData
         public const int AboveFront = -20;
         public const int ScreenSpaceRenderLayer = -10000;
         public const int Cursor = -20000;
+
+        public static int GetLayerValue(string layerName)
+        {
+            var field = typeof(RenderLayers).GetField(layerName);
+            if (field != null && field.IsStatic && field.FieldType == typeof(int))
+                return (int)field.GetValue(null);
+            else
+                throw new ArgumentException("Invalid layer name", nameof(layerName));
+        }
     }
 }

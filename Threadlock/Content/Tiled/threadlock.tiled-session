@@ -3,15 +3,15 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "Tilemaps/FairyForest/forest_hallway_test.tmx",
+    "activeFile": "Tilesets/fairy_forest_tileset.tsx",
     "expandedProjectPaths": [
-        "Tilesets",
-        ".",
         "Tilemaps/Hub",
+        "Tilemaps",
         "Tilemaps/FairyForest",
         "Templates",
         "Tilemaps/Forge",
-        "Tilemaps"
+        ".",
+        "Tilesets"
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
@@ -145,16 +145,16 @@
             "scale": 1,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 256,
-                "y": 256
+                "x": 215,
+                "y": 159
             }
         },
         "Tilemaps/FairyForest/forest_hallway_test.tmx": {
             "scale": 3,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 434.5,
-                "y": 427.66666666666663
+                "x": 433.99999999999994,
+                "y": 427.33333333333326
             }
         },
         "Tilemaps/FairyForest/forest_test_1.tmx": {
@@ -173,11 +173,11 @@
             "expandedObjectLayers": [
                 17
             ],
-            "scale": 1,
-            "selectedLayer": 3,
+            "scale": 2,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 266.5,
-                "y": 294
+                "x": 314.5,
+                "y": 303
             }
         },
         "Tilemaps/Forge/Doorways/forge_bottom.tmx": {
@@ -466,8 +466,8 @@
             "scale": 2,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 115.25,
-                "y": 489
+                "x": 115,
+                "y": 488.5
             }
         },
         "Tilemaps/Forge/forge_normal_2.tmx": {
@@ -645,7 +645,7 @@
             "scaleInEditor": 1
         },
         "Tilesets/fairy_forest_tileset.tsx": {
-            "scaleInDock": 2,
+            "scaleInDock": 1.5,
             "scaleInEditor": 2
         },
         "Tilesets/fairy_forest_trees.tsx": {
@@ -654,7 +654,7 @@
         },
         "Tilesets/forge_tileset.tsx": {
             "scaleInDock": 2,
-            "scaleInEditor": 4
+            "scaleInEditor": 2
         },
         "Tilesets/prototype_tileset.tsx": {
             "dynamicWrapping": false,
@@ -692,13 +692,13 @@
         "Tilemaps/FairyForest/forest_hallway_test.tmx"
     ],
     "project": "threadlock.tiled-project",
-    "property.type": "WallTileType",
+    "property.type": "Layer",
     "recentFiles": [
         "Tilemaps/Forge/forge_normal_1.tmx",
         "Tilemaps/FairyForest/forest_test_2.tmx",
-        "Tilesets/fairy_forest_tileset.tsx",
-        "Tilesets/forge_tileset.tsx",
         "Tilemaps/FairyForest/forest_hallway_test.tmx",
+        "Tilesets/forge_tileset.tsx",
+        "Tilesets/fairy_forest_tileset.tsx",
         "Tilemaps/Forge/forge_pre_boss_2.tmx",
         "Tilemaps/FairyForest/forest_test_1.tmx",
         "Tilesets/stardew_spring.tsx",
