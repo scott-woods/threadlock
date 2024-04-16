@@ -187,11 +187,11 @@
             "expandedObjectLayers": [
                 17
             ],
-            "scale": 2,
-            "selectedLayer": 3,
+            "scale": 1.5,
+            "selectedLayer": 4,
             "viewCenter": {
-                "x": 359.5,
-                "y": 327.5
+                "x": 310,
+                "y": 406.66666666666663
             }
         },
         "Tilemaps/Forge/Doorways/forge_bottom.tmx": {
