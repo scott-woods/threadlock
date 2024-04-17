@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Nez;
+using Nez.DeferredLighting;
 using Nez.Tiled;
 using Nez.UI;
 using System;
@@ -201,6 +202,56 @@ namespace Threadlock.Helpers
                 return false;
 
             return true;
+        }
+
+        public static void SetupLightingTiles(Entity mapEntity, TmxMap map)
+        {
+            foreach (var layer in map.TileLayers)
+            {
+                if (layer.Name.StartsWith("Prototype"))
+                    continue;
+
+                foreach (var tile in layer.Tiles)
+                {
+                    if (tile == null || tile.TilesetTile == null)
+                        continue;
+
+                    var pos = new Vector2((tile.X * tile.Tileset.TileWidth) + (tile.Tileset.TileWidth / 2), (tile.Y * tile.Tileset.TileHeight) + (tile.Tileset.TileHeight / 2));
+                    pos += mapEntity.Position;
+
+                    if (tile.TilesetTile.Type == "LightSource")
+                    {
+                        Color lightColor = Color.White;
+                        float lightIntensity = .5f;
+                        float lightRadius = 50;
+                        if (tile.TilesetTile.Properties != null)
+                        {
+                            if (tile.TilesetTile.Properties.TryGetValue("Color", out var colorString))
+                            {
+                                var rgb = colorString.Split(' ').Select(c => Convert.ToInt32(c)).ToList();
+                                if (rgb.Count == 3)
+                                    lightColor = new Color(rgb[0], rgb[1], rgb[2]);
+                                else if (rgb.Count == 4)
+                                    lightColor = new Color(rgb[0], rgb[1], rgb[2], rgb[3]);
+                            }
+
+                            if (tile.TilesetTile.Properties.TryGetValue("Intensity", out var intensity))
+                                lightIntensity = float.Parse(intensity);
+
+                            if (tile.TilesetTile.Properties.TryGetValue("Radius", out var radius))
+                                lightRadius = float.Parse(radius);
+                        }
+
+                        var lightEntity = mapEntity.Scene.CreateEntity("light");
+                        lightEntity.SetPosition(pos);
+
+                        var light = lightEntity.AddComponent(new PointLight(lightColor));
+                        light.SetRenderLayer(RenderLayers.Light);
+                        light.SetRadius(lightRadius);
+                        light.SetIntensity(lightIntensity);
+                    }
+                }
+            }
         }
     }
 }

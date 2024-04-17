@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Nez;
+using Nez.DeferredLighting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +21,8 @@ namespace Threadlock.Scenes
 {
     public class Hub : BaseScene
     {
+        public override Color SceneColor => new Color(41, 16, 19, 255);
+
         public override void OnStart()
         {
             base.OnStart();
@@ -26,6 +30,7 @@ namespace Threadlock.Scenes
             var mapEntity = CreateEntity("map");
             var map = Content.LoadTiledMap(Nez.Content.Tiled.Tilemaps.HubMaps.Hub);
             TiledHelper.SetupMap(mapEntity, map);
+            TiledHelper.SetupLightingTiles(mapEntity, map);
             //var map = Content.LoadTiledMap(Nez.Content.Tiled.Tilemaps.HubMaps.Hub);
             //var mapEntity = CreateEntity("map");
             //var backAndWallsLayers = new[] { "Back", "Walls", "Entities" };

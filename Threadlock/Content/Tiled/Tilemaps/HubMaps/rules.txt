@@ -1,0 +1,7 @@
+..\..\RuleMaps\forge_floor_rules_2.tmx
+..\..\RuleMaps\forge_floor_rules_3.tmx
+..\..\RuleMaps\forge_trim_rules_2.tmx
+..\..\RuleMaps\forge_grate_rules.tmx
+..\..\RuleMaps\forge_lava_rules_2.tmx
+..\..\RuleMaps\forge_lava_rules_3.tmx
+..\..\RuleMaps\forge_walls_rules_2.tmx

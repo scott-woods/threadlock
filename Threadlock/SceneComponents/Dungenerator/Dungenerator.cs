@@ -158,6 +158,12 @@ namespace Threadlock.SceneComponents.Dungenerator
                     CorridorPainter.PaintCorridorTiles(allFloorPositions, reservedPositions, tileset);
                 }
 
+                foreach (var mapEntity in _allMapEntities)
+                {
+                    if (mapEntity.TryGetComponent<TiledMapRenderer>(out var renderer))
+                        TiledHelper.SetupLightingTiles(mapEntity, renderer.TiledMap);
+                }
+
                 //AddDecorations();
 
                 break;

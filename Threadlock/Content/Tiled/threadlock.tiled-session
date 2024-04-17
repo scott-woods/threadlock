@@ -19,7 +19,8 @@
             "scaleInEditor": 3
         },
         ":/automap-tiles.tsx": {
-            "scaleInDock": 1
+            "scaleInDock": 1,
+            "scaleInEditor": 1
         },
         "C:/Modding/Stardew Content (unpacked)/Maps/Woods.tmx": {
             "scale": 2,
@@ -133,10 +134,34 @@
                 55
             ],
             "scale": 2,
-            "selectedLayer": 3,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 139.75,
-                "y": 116
+                "x": 138.5,
+                "y": 114.5
+            }
+        },
+        "RuleMaps/forge_floor_rules_2.tmx": {
+            "scale": 4,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 34.75,
+                "y": 41.5
+            }
+        },
+        "RuleMaps/forge_floor_rules_3.tmx": {
+            "scale": 2,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 111.5,
+                "y": 113
+            }
+        },
+        "RuleMaps/forge_grate_rules.tmx": {
+            "scale": 2,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 72.5,
+                "y": 66.5
             }
         },
         "RuleMaps/forge_lava_rules.tmx": {
@@ -147,12 +172,52 @@
                 "y": 160.51681550446511
             }
         },
+        "RuleMaps/forge_lava_rules_2.tmx": {
+            "scale": 2,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 68.5,
+                "y": 68
+            }
+        },
+        "RuleMaps/forge_lava_rules_3.tmx": {
+            "scale": 2,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 95.5,
+                "y": 54.5
+            }
+        },
+        "RuleMaps/forge_trim_rules.tmx": {
+            "scale": 1.0279296875,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 256.8269048071443,
+                "y": 256.8269048071443
+            }
+        },
+        "RuleMaps/forge_trim_rules_2.tmx": {
+            "scale": 1.5,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 118.66666666666664,
+                "y": 150
+            }
+        },
         "RuleMaps/forge_walls_rules.tmx": {
             "scale": 2,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 139.75,
-                "y": 215
+                "x": 106.5,
+                "y": 56.5
+            }
+        },
+        "RuleMaps/forge_walls_rules_2.tmx": {
+            "scale": 1.5,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 115.33333333333334,
+                "y": 147.33333333333334
             }
         },
         "RuleMaps/stardew_leaves_rules.tmx": {
@@ -167,8 +232,8 @@
             "scale": 3,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 255.99999999999997,
-                "y": 255.99999999999997
+                "x": 431.33333333333326,
+                "y": 424.66666666666663
             }
         },
         "Tilemaps/FairyForest/forest_test_1.tmx": {
@@ -190,8 +255,8 @@
             "scale": 1.5,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 236.66666666666666,
-                "y": 256
+                "x": 243.33333333333334,
+                "y": 283.3333333333333
             }
         },
         "Tilemaps/Forge/Doorways/forge_bottom.tmx": {
@@ -478,10 +543,10 @@
                 35
             ],
             "scale": 2,
-            "selectedLayer": 2,
+            "selectedLayer": 4,
             "viewCenter": {
-                "x": 312.5,
-                "y": 319.5
+                "x": 251,
+                "y": 313.5
             }
         },
         "Tilemaps/Forge/forge_normal_2.tmx": {
@@ -595,10 +660,10 @@
                 9
             ],
             "scale": 1,
-            "selectedLayer": 3,
+            "selectedLayer": 5,
             "viewCenter": {
-                "x": 164,
-                "y": 212
+                "x": 163,
+                "y": 211
             }
         },
         "Tilemaps/Forge/forge_test.tmx": {
@@ -619,13 +684,13 @@
         },
         "Tilemaps/HubMaps/hub.tmx": {
             "expandedObjectLayers": [
-                5
+                260
             ],
-            "scale": 1.5,
-            "selectedLayer": -1,
+            "scale": 1,
+            "selectedLayer": 6,
             "viewCenter": {
-                "x": 163.33333333333334,
-                "y": 195.33333333333334
+                "x": 164,
+                "y": 238
             }
         },
         "Tilemaps/enemy_test_zone.tmx": {
@@ -663,7 +728,7 @@
             "scaleInEditor": 2
         },
         "Tilesets/fairy_forest_trees.tsx": {
-            "scaleInDock": 1,
+            "scaleInDock": 0.33,
             "scaleInEditor": 1
         },
         "Tilesets/forge_tileset.tsx": {
@@ -676,7 +741,7 @@
             "scaleInEditor": 1
         },
         "Tilesets/stardew_spring.tsx": {
-            "scaleInDock": 1.5,
+            "scaleInDock": 0.75,
             "scaleInEditor": 1.5
         },
         "Tilesets/tech_shop.tsx": {
@@ -706,20 +771,20 @@
         "Tilemaps/FairyForest/forest_hallway_test.tmx"
     ],
     "project": "threadlock.tiled-project",
-    "property.type": "Layer",
+    "property.type": "string",
     "recentFiles": [
-        "Tilemaps/Forge/forge_normal_1.tmx",
-        "Tilemaps/FairyForest/forest_test_2.tmx",
-        "Tilemaps/FairyForest/forest_hallway_test.tmx",
+        "RuleMaps/forge_walls_rules.tmx",
         "Tilesets/forge_tileset.tsx",
+        "RuleMaps/forge_floor_rules_2.tmx",
+        "RuleMaps/forge_lava_rules_3.tmx",
+        "RuleMaps/forge_lava_rules_2.tmx",
+        "RuleMaps/forge_grate_rules.tmx",
+        "RuleMaps/forge_floor_rules_3.tmx",
+        "RuleMaps/forge_floor_rules.tmx",
+        ":/automap-tiles.tsx",
+        "Tilemaps/FairyForest/forest_hallway_test.tmx",
         "Tilesets/fairy_forest_tileset.tsx",
-        "Tilemaps/Forge/forge_pre_boss_2.tmx",
-        "Tilemaps/FairyForest/forest_test_1.tmx",
-        "Tilesets/stardew_spring.tsx",
-        "Tilesets/fairy_forest_props.tsx",
-        "Tilesets/fairy_forest_trees.tsx",
-        "RuleMaps/fairy_forest_cliff_rules.tmx",
-        "RuleMaps/stardew_leaves_rules.tmx"
+        "Tilemaps/FairyForest/forest_test_2.tmx"
     ],
     "resizeMap.removeObjects": false,
     "tileset.lastUsedFilter": "Tiled tileset files (*.tsx *.xml)",

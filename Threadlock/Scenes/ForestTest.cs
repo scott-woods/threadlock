@@ -19,6 +19,8 @@ namespace Threadlock.Scenes
 {
     public class ForestTest : BaseScene
     {
+        public override Color SceneColor => Color.Red;
+
         const int _pathWidth = 5;
         int _halfWidth { get => _pathWidth / 2; }
 

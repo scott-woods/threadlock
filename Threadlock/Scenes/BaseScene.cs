@@ -18,8 +18,10 @@ using Nez.DeferredLighting;
 
 namespace Threadlock.Scenes
 {
-    public class BaseScene : Scene, IFinalRenderDelegate
+    public abstract class BaseScene : Scene, IFinalRenderDelegate
     {
+        public virtual Color SceneColor { get => Color.Black; }
+
         readonly List<int> _lightRenderLayers = new List<int>()
         {
             RenderLayers.Back,
@@ -38,7 +40,7 @@ namespace Threadlock.Scenes
         {
             base.Initialize();
 
-            ClearColor = Color.Black;
+            ClearColor = SceneColor;
 
             //add cursor
             var mouseCursor = AddEntity(new MouseCursor());
@@ -71,8 +73,8 @@ namespace Threadlock.Scenes
 
             //lighting
             _deferredLightingRenderer = AddRenderer(new YSortDeferredLightingRenderer(0, RenderLayers.Light, _lightRenderLayers.ToArray()));
-            _deferredLightingRenderer.SetClearColor(Color.Black);
-            _deferredLightingRenderer.SetAmbientColor(new Color(100, 100, 100, 255));
+            _deferredLightingRenderer.SetClearColor(SceneColor);
+            _deferredLightingRenderer.SetAmbientColor(new Color(200, 200, 200, 255));
 
             FinalRenderDelegate = this;
         }

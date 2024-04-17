@@ -141,6 +141,8 @@ namespace Threadlock.Renderers
                 if (renderable.Enabled && renderable.IsVisibleFromCamera(cam))
                     renderable.DebugRender(Graphics.Instance.Batcher);
             }
+
+            base.DebugRender(scene, cam);
         }
 
 

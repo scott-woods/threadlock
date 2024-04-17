@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Nez;
 using Nez.AI.FSM;
+using Nez.DeferredLighting;
 using Nez.Particles;
 using Nez.Sprites;
 using Nez.Textures;
@@ -141,6 +142,11 @@ namespace Threadlock.Entities.Characters.Player
             _deathComponent.Emitter.AddObserver(DeathEventTypes.Finished, OnDeath);
 
             _shadow = AddComponent(new Shadow(_animator));
+
+            var pointLight = AddComponent(new PointLight(Color.White));
+            pointLight.SetRenderLayer(RenderLayers.Light);
+            pointLight.SetIntensity(.5f);
+            pointLight.SetRadius(100f);
         }
 
         #region LIFECYCLE

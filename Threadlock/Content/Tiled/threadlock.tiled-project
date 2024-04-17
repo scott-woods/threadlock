@@ -209,12 +209,28 @@
             "drawFill": true,
             "id": 25,
             "members": [
+                {
+                    "name": "Color",
+                    "type": "string",
+                    "value": ""
+                },
+                {
+                    "name": "Intensity",
+                    "type": "string",
+                    "value": ""
+                },
+                {
+                    "name": "Radius",
+                    "type": "string",
+                    "value": ""
+                }
             ],
             "name": "LightSource",
             "type": "class",
             "useAs": [
                 "property",
                 "object",
+                "tile",
                 "project"
             ]
         },
