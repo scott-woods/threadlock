@@ -6,10 +6,10 @@
    <property name="Color" value="246 85 16"/>
   </properties>
   <animation>
-   <frame tileid="344" duration="200"/>
-   <frame tileid="419" duration="200"/>
-   <frame tileid="494" duration="200"/>
-   <frame tileid="569" duration="200"/>
+   <frame tileid="344" duration="100"/>
+   <frame tileid="419" duration="100"/>
+   <frame tileid="494" duration="100"/>
+   <frame tileid="569" duration="100"/>
   </animation>
  </tile>
  <tile id="345" type="LightSource">
@@ -17,10 +17,10 @@
    <property name="Color" value="246 85 16"/>
   </properties>
   <animation>
-   <frame tileid="345" duration="200"/>
-   <frame tileid="420" duration="200"/>
-   <frame tileid="495" duration="200"/>
-   <frame tileid="570" duration="200"/>
+   <frame tileid="345" duration="100"/>
+   <frame tileid="420" duration="100"/>
+   <frame tileid="495" duration="100"/>
+   <frame tileid="570" duration="100"/>
   </animation>
  </tile>
  <tile id="346" type="LightSource">
@@ -28,10 +28,10 @@
    <property name="Color" value="246 85 16"/>
   </properties>
   <animation>
-   <frame tileid="346" duration="200"/>
-   <frame tileid="421" duration="200"/>
-   <frame tileid="496" duration="200"/>
-   <frame tileid="571" duration="200"/>
+   <frame tileid="346" duration="100"/>
+   <frame tileid="421" duration="100"/>
+   <frame tileid="496" duration="100"/>
+   <frame tileid="571" duration="100"/>
   </animation>
  </tile>
  <tile id="347" type="LightSource">
@@ -39,10 +39,10 @@
    <property name="Color" value="246 85 16"/>
   </properties>
   <animation>
-   <frame tileid="347" duration="200"/>
-   <frame tileid="422" duration="200"/>
-   <frame tileid="497" duration="200"/>
-   <frame tileid="572" duration="200"/>
+   <frame tileid="347" duration="100"/>
+   <frame tileid="422" duration="100"/>
+   <frame tileid="497" duration="100"/>
+   <frame tileid="572" duration="100"/>
   </animation>
  </tile>
  <tile id="348" type="LightSource">
@@ -50,10 +50,10 @@
    <property name="Color" value="246 85 16"/>
   </properties>
   <animation>
-   <frame tileid="348" duration="200"/>
-   <frame tileid="423" duration="200"/>
-   <frame tileid="498" duration="200"/>
-   <frame tileid="573" duration="200"/>
+   <frame tileid="348" duration="100"/>
+   <frame tileid="423" duration="100"/>
+   <frame tileid="498" duration="100"/>
+   <frame tileid="573" duration="100"/>
   </animation>
  </tile>
  <tile id="349" type="LightSource">
@@ -61,10 +61,10 @@
    <property name="Color" value="246 85 16"/>
   </properties>
   <animation>
-   <frame tileid="349" duration="200"/>
-   <frame tileid="424" duration="200"/>
-   <frame tileid="499" duration="200"/>
-   <frame tileid="574" duration="200"/>
+   <frame tileid="349" duration="100"/>
+   <frame tileid="424" duration="100"/>
+   <frame tileid="499" duration="100"/>
+   <frame tileid="574" duration="100"/>
   </animation>
  </tile>
  <tile id="369" type="LightSource">
@@ -72,10 +72,10 @@
    <property name="Color" value="246 85 16"/>
   </properties>
   <animation>
-   <frame tileid="369" duration="200"/>
-   <frame tileid="444" duration="200"/>
-   <frame tileid="519" duration="200"/>
-   <frame tileid="594" duration="200"/>
+   <frame tileid="369" duration="100"/>
+   <frame tileid="444" duration="100"/>
+   <frame tileid="519" duration="100"/>
+   <frame tileid="594" duration="100"/>
   </animation>
  </tile>
  <tile id="370" type="LightSource">
@@ -83,10 +83,10 @@
    <property name="Color" value="246 85 16"/>
   </properties>
   <animation>
-   <frame tileid="370" duration="200"/>
-   <frame tileid="445" duration="200"/>
-   <frame tileid="520" duration="200"/>
-   <frame tileid="595" duration="200"/>
+   <frame tileid="370" duration="100"/>
+   <frame tileid="445" duration="100"/>
+   <frame tileid="520" duration="100"/>
+   <frame tileid="595" duration="100"/>
   </animation>
  </tile>
  <tile id="371" type="LightSource">
@@ -94,10 +94,10 @@
    <property name="Color" value="246 85 16"/>
   </properties>
   <animation>
-   <frame tileid="371" duration="200"/>
-   <frame tileid="446" duration="200"/>
-   <frame tileid="521" duration="200"/>
-   <frame tileid="596" duration="200"/>
+   <frame tileid="371" duration="100"/>
+   <frame tileid="446" duration="100"/>
+   <frame tileid="521" duration="100"/>
+   <frame tileid="596" duration="100"/>
   </animation>
  </tile>
  <tile id="372" type="LightSource">
@@ -105,18 +105,18 @@
    <property name="Color" value="246 85 16"/>
   </properties>
   <animation>
-   <frame tileid="372" duration="200"/>
-   <frame tileid="447" duration="200"/>
-   <frame tileid="522" duration="200"/>
-   <frame tileid="597" duration="200"/>
+   <frame tileid="372" duration="100"/>
+   <frame tileid="447" duration="100"/>
+   <frame tileid="522" duration="100"/>
+   <frame tileid="597" duration="100"/>
   </animation>
  </tile>
  <tile id="373">
   <animation>
-   <frame tileid="373" duration="200"/>
-   <frame tileid="448" duration="200"/>
-   <frame tileid="523" duration="200"/>
-   <frame tileid="598" duration="200"/>
+   <frame tileid="373" duration="100"/>
+   <frame tileid="448" duration="100"/>
+   <frame tileid="523" duration="100"/>
+   <frame tileid="598" duration="100"/>
   </animation>
  </tile>
  <tile id="374" type="LightSource">
@@ -124,10 +124,10 @@
    <property name="Color" value="246 85 16"/>
   </properties>
   <animation>
-   <frame tileid="374" duration="200"/>
-   <frame tileid="449" duration="200"/>
-   <frame tileid="524" duration="200"/>
-   <frame tileid="599" duration="200"/>
+   <frame tileid="374" duration="100"/>
+   <frame tileid="449" duration="100"/>
+   <frame tileid="524" duration="100"/>
+   <frame tileid="599" duration="100"/>
   </animation>
  </tile>
  <tile id="394" type="LightSource">
@@ -135,10 +135,10 @@
    <property name="Color" value="246 85 16"/>
   </properties>
   <animation>
-   <frame tileid="394" duration="200"/>
-   <frame tileid="469" duration="200"/>
-   <frame tileid="544" duration="200"/>
-   <frame tileid="619" duration="200"/>
+   <frame tileid="394" duration="100"/>
+   <frame tileid="469" duration="100"/>
+   <frame tileid="544" duration="100"/>
+   <frame tileid="619" duration="100"/>
   </animation>
  </tile>
  <tile id="395" type="LightSource">
@@ -146,10 +146,10 @@
    <property name="Color" value="246 85 16"/>
   </properties>
   <animation>
-   <frame tileid="395" duration="200"/>
-   <frame tileid="470" duration="200"/>
-   <frame tileid="545" duration="200"/>
-   <frame tileid="620" duration="200"/>
+   <frame tileid="395" duration="100"/>
+   <frame tileid="470" duration="100"/>
+   <frame tileid="545" duration="100"/>
+   <frame tileid="620" duration="100"/>
   </animation>
  </tile>
  <tile id="396" type="LightSource">
@@ -157,10 +157,10 @@
    <property name="Color" value="246 85 16"/>
   </properties>
   <animation>
-   <frame tileid="396" duration="200"/>
-   <frame tileid="471" duration="200"/>
-   <frame tileid="546" duration="200"/>
-   <frame tileid="621" duration="200"/>
+   <frame tileid="396" duration="100"/>
+   <frame tileid="471" duration="100"/>
+   <frame tileid="546" duration="100"/>
+   <frame tileid="621" duration="100"/>
   </animation>
  </tile>
  <tile id="397" type="LightSource">
@@ -168,10 +168,10 @@
    <property name="Color" value="246 85 16"/>
   </properties>
   <animation>
-   <frame tileid="397" duration="200"/>
-   <frame tileid="472" duration="200"/>
-   <frame tileid="547" duration="200"/>
-   <frame tileid="622" duration="200"/>
+   <frame tileid="397" duration="100"/>
+   <frame tileid="472" duration="100"/>
+   <frame tileid="547" duration="100"/>
+   <frame tileid="622" duration="100"/>
   </animation>
  </tile>
  <tile id="398" type="LightSource">
@@ -179,10 +179,10 @@
    <property name="Color" value="246 85 16"/>
   </properties>
   <animation>
-   <frame tileid="398" duration="200"/>
-   <frame tileid="473" duration="200"/>
-   <frame tileid="548" duration="200"/>
-   <frame tileid="623" duration="200"/>
+   <frame tileid="398" duration="100"/>
+   <frame tileid="473" duration="100"/>
+   <frame tileid="548" duration="100"/>
+   <frame tileid="623" duration="100"/>
   </animation>
  </tile>
  <tile id="399" type="LightSource">
@@ -190,10 +190,10 @@
    <property name="Color" value="246 85 16"/>
   </properties>
   <animation>
-   <frame tileid="399" duration="200"/>
-   <frame tileid="474" duration="200"/>
-   <frame tileid="549" duration="200"/>
-   <frame tileid="624" duration="200"/>
+   <frame tileid="399" duration="100"/>
+   <frame tileid="474" duration="100"/>
+   <frame tileid="549" duration="100"/>
+   <frame tileid="624" duration="100"/>
   </animation>
  </tile>
  <wangsets>

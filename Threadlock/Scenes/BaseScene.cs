@@ -15,6 +15,7 @@ using Threadlock.Components;
 using Threadlock.Entities;
 using Threadlock.Renderers;
 using Nez.DeferredLighting;
+using Nez.Tiled;
 
 namespace Threadlock.Scenes
 {
@@ -77,6 +78,33 @@ namespace Threadlock.Scenes
             _deferredLightingRenderer.SetAmbientColor(new Color(200, 200, 200, 255));
 
             FinalRenderDelegate = this;
+        }
+
+        public override void Update()
+        {
+            base.Update();
+
+            List<TmxMap> visitedMaps = new List<TmxMap>();
+            List<TmxTileset> visitedTilesets = new List<TmxTileset>();
+
+            var mapRenderers = FindComponentsOfType<TiledMapRenderer>();
+            foreach (var renderer in mapRenderers)
+            {
+                if (visitedMaps.Contains(renderer.TiledMap))
+                    continue;
+
+                visitedMaps.Add(renderer.TiledMap);
+
+                foreach (var tileset in renderer.TiledMap.Tilesets)
+                {
+                    if (visitedTilesets.Contains(tileset))
+                        continue;
+
+                    visitedTilesets.Add(tileset);
+
+                    tileset.Update();
+                }
+            }
         }
 
         #region FINAL RENDER DELEGATE

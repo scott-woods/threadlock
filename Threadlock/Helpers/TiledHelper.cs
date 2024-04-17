@@ -52,6 +52,7 @@ namespace Threadlock.Helpers
                 var mapRenderer = mapEntity.AddComponent(new TiledMapRenderer(map));
                 mapRenderer.SetLayersToRender(backLayers.Select(l => l.Name).ToArray());
                 mapRenderer.RenderLayer = RenderLayers.Back;
+                mapRenderer.AutoUpdateTilesets = false;
                 CreateEntitiesForTiledObjects(mapRenderer);
             }
 
@@ -64,6 +65,7 @@ namespace Threadlock.Helpers
                 else
                     wallRenderer.SetLayersToRender(wallLayer.Name);
                 wallRenderer.RenderLayer = RenderLayers.Walls;
+                wallRenderer.AutoUpdateTilesets = false;
                 Flags.SetFlagExclusive(ref wallRenderer.PhysicsLayer, PhysicsLayers.Environment);
             }
 
@@ -72,6 +74,7 @@ namespace Threadlock.Helpers
                 var passableWallRenderer = mapEntity.AddComponent(new TiledMapRenderer(map, passableLayer.Name));
                 passableWallRenderer.SetLayersToRender(passableLayer.Name);
                 passableWallRenderer.RenderLayer = RenderLayers.Walls;
+                passableWallRenderer.AutoUpdateTilesets = false;
                 Flags.SetFlagExclusive(ref passableWallRenderer.PhysicsLayer, PhysicsLayers.ProjectilePassableWall);
             }
 
@@ -80,6 +83,7 @@ namespace Threadlock.Helpers
                 var frontRenderer = mapEntity.AddComponent(new TiledMapRenderer(map));
                 frontRenderer.SetLayersToRender(frontLayers.Select(l => l.Name).ToArray());
                 frontRenderer.RenderLayer = RenderLayers.Front;
+                frontRenderer.AutoUpdateTilesets = false;
             }
 
             if (aboveFrontLayers.Any())
@@ -87,6 +91,7 @@ namespace Threadlock.Helpers
                 var aboveFrontRenderer = mapEntity.AddComponent(new TiledMapRenderer(map));
                 aboveFrontRenderer.SetLayersToRender(aboveFrontLayers.Select(l => l.Name).ToArray());
                 aboveFrontRenderer.RenderLayer = RenderLayers.AboveFront;
+                aboveFrontRenderer.AutoUpdateTilesets = false;
             }
         }
 
@@ -221,26 +226,7 @@ namespace Threadlock.Helpers
 
                     if (tile.TilesetTile.Type == "LightSource")
                     {
-                        Color lightColor = Color.White;
-                        float lightIntensity = .5f;
-                        float lightRadius = 50;
-                        if (tile.TilesetTile.Properties != null)
-                        {
-                            if (tile.TilesetTile.Properties.TryGetValue("Color", out var colorString))
-                            {
-                                var rgb = colorString.Split(' ').Select(c => Convert.ToInt32(c)).ToList();
-                                if (rgb.Count == 3)
-                                    lightColor = new Color(rgb[0], rgb[1], rgb[2]);
-                                else if (rgb.Count == 4)
-                                    lightColor = new Color(rgb[0], rgb[1], rgb[2], rgb[3]);
-                            }
-
-                            if (tile.TilesetTile.Properties.TryGetValue("Intensity", out var intensity))
-                                lightIntensity = float.Parse(intensity);
-
-                            if (tile.TilesetTile.Properties.TryGetValue("Radius", out var radius))
-                                lightRadius = float.Parse(radius);
-                        }
+                        ParseLightingProperties(tile.TilesetTile.Properties, out var lightColor, out var lightRadius, out var lightIntensity);
 
                         var lightEntity = mapEntity.Scene.CreateEntity("light");
                         lightEntity.SetPosition(pos);
@@ -251,6 +237,31 @@ namespace Threadlock.Helpers
                         light.SetIntensity(lightIntensity);
                     }
                 }
+            }
+        }
+
+        public static void ParseLightingProperties(Dictionary<string, string> properties, out Color lightColor, out float lightRadius, out float lightIntensity)
+        {
+            lightColor = Color.White;
+            lightIntensity = .5f;
+            lightRadius = 50;
+
+            if (properties != null)
+            {
+                if (properties.TryGetValue("Color", out var colorString))
+                {
+                    var rgb = colorString.Split(' ').Select(c => Convert.ToInt32(c)).ToList();
+                    if (rgb.Count == 3)
+                        lightColor = new Color(rgb[0], rgb[1], rgb[2]);
+                    else if (rgb.Count == 4)
+                        lightColor = new Color(rgb[0], rgb[1], rgb[2], rgb[3]);
+                }
+
+                if (properties.TryGetValue("Intensity", out var intensity))
+                    lightIntensity = float.Parse(intensity);
+
+                if (properties.TryGetValue("Radius", out var radius))
+                    lightRadius = float.Parse(radius);
             }
         }
     }

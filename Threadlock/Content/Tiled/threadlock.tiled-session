@@ -232,8 +232,8 @@
             "scale": 3,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 431.33333333333326,
-                "y": 424.66666666666663
+                "x": 430.83333333333326,
+                "y": 424.33333333333326
             }
         },
         "Tilemaps/FairyForest/forest_test_1.tmx": {
@@ -255,8 +255,8 @@
             "scale": 1.5,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 243.33333333333334,
-                "y": 283.3333333333333
+                "x": 243,
+                "y": 282
             }
         },
         "Tilemaps/Forge/Doorways/forge_bottom.tmx": {
@@ -545,8 +545,8 @@
             "scale": 2,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 251,
-                "y": 313.5
+                "x": 185.75,
+                "y": 191.5
             }
         },
         "Tilemaps/Forge/forge_normal_2.tmx": {
