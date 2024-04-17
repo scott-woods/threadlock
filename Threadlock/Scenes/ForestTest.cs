@@ -12,6 +12,7 @@ using Threadlock.Helpers;
 using Threadlock.Models;
 using Threadlock.SceneComponents;
 using Threadlock.StaticData;
+using Threadlock.UI.Canvases;
 using static Threadlock.SceneComponents.Dungenerator.CorridorPainter;
 
 namespace Threadlock.Scenes
@@ -56,6 +57,8 @@ namespace Threadlock.Scenes
             var map = Content.LoadTiledMap(Nez.Content.Tiled.Tilemaps.FairyForest.Forest_test_2);
             var mapEntity = CreateEntity("map");
             TiledHelper.SetupMap(mapEntity, map);
+
+            var ui = CreateEntity("ui").AddComponent(new CombatUI());
         }
 
         public override void OnStart()

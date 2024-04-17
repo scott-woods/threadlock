@@ -207,6 +207,20 @@
         {
             "color": "#ffa0a0a4",
             "drawFill": true,
+            "id": 25,
+            "members": [
+            ],
+            "name": "LightSource",
+            "type": "class",
+            "useAs": [
+                "property",
+                "object",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
             "id": 14,
             "members": [
                 {

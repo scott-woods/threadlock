@@ -25,8 +25,8 @@
             "scale": 2,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 761.5,
-                "y": 184
+                "x": 761,
+                "y": 183.5
             }
         },
         "C:/Modding/Stardew Content (unpacked)/Maps/Woods.tmx#Paths": {
@@ -167,8 +167,8 @@
             "scale": 3,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 432.99999999999994,
-                "y": 426.33333333333326
+                "x": 255.99999999999997,
+                "y": 255.99999999999997
             }
         },
         "Tilemaps/FairyForest/forest_test_1.tmx": {
@@ -188,10 +188,10 @@
                 17
             ],
             "scale": 1.5,
-            "selectedLayer": 1,
+            "selectedLayer": 4,
             "viewCenter": {
-                "x": 294,
-                "y": 293.3333333333333
+                "x": 236.66666666666666,
+                "y": 256
             }
         },
         "Tilemaps/Forge/Doorways/forge_bottom.tmx": {
@@ -480,8 +480,8 @@
             "scale": 2,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 115,
-                "y": 488.5
+                "x": 312.5,
+                "y": 319.5
             }
         },
         "Tilemaps/Forge/forge_normal_2.tmx": {
