@@ -264,5 +264,41 @@ namespace Threadlock.Helpers
                     lightRadius = float.Parse(radius);
             }
         }
+
+        public static Rectangle GetActualBounds(Entity mapEntity)
+        {
+            var renderers = mapEntity.GetComponents<TiledMapRenderer>();
+
+            var minX = int.MaxValue;
+            var minY = int.MaxValue;
+            var maxX = int.MinValue;
+            var maxY = int.MinValue;
+
+            foreach (var renderer in renderers)
+            {
+                for (int i = 0; i < renderer.TiledMap.TileLayers.Count; i++)
+                {
+                    var layer = renderer.TiledMap.TileLayers[i];
+
+                    if (!renderer.LayerIndicesToRender.Contains(i))
+                        continue;
+
+                    foreach (var tile in layer.Tiles)
+                    {
+                        if (tile == null)
+                            continue;
+
+                        minX = Math.Min(minX, tile.X * tile.Tileset.TileWidth);
+                        minY = Math.Min(minY, tile.Y * tile.Tileset.TileHeight);
+                        maxX = Math.Max(maxX, (tile.X * tile.Tileset.TileWidth) + tile.Tileset.TileWidth);
+                        maxY = Math.Max(maxY, (tile.Y * tile.Tileset.TileHeight) + tile.Tileset.TileHeight);
+                    }
+                }
+            }
+
+            var rect = new Rectangle(minX, minY, maxX - minX, maxY - minY);
+            rect.Location += mapEntity.Position.ToPoint();
+            return rect;
+        }
     }
 }

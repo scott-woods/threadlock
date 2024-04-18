@@ -31,32 +31,14 @@ namespace Threadlock.Scenes
             var map = Content.LoadTiledMap(Nez.Content.Tiled.Tilemaps.HubMaps.Hub);
             TiledHelper.SetupMap(mapEntity, map);
             TiledHelper.SetupLightingTiles(mapEntity, map);
-            //var map = Content.LoadTiledMap(Nez.Content.Tiled.Tilemaps.HubMaps.Hub);
-            //var mapEntity = CreateEntity("map");
-            //var backAndWallsLayers = new[] { "Back", "Walls", "Entities" };
-            //var mapRenderer = mapEntity.AddComponent(new TiledMapRenderer(map, "Walls"));
-            //mapRenderer.SetLayersToRender(map.Layers
-            //    .Where(l => backAndWallsLayers.Any(x => l.Name.StartsWith(x)))
-            //    .Select(l => l.Name)
-            //    .ToArray());
-            //mapRenderer.RenderLayer = RenderLayers.Back;
-            //Flags.SetFlagExclusive(ref mapRenderer.PhysicsLayer, PhysicsLayers.Environment);
-            //TiledHelper.CreateEntitiesForTiledObjects(mapRenderer);
-
-            //var frontLayers = new[] { "Front", "AboveFront" };
-            //var frontRenderer = mapEntity.AddComponent(new TiledMapRenderer(map));
-            //frontRenderer.SetLayersToRender(map.Layers
-            //    .Where(l => frontLayers.Any(x => l.Name.StartsWith(x)))
-            //    .Select(l => l.Name)
-            //    .ToArray());
-            //frontRenderer.RenderLayer = RenderLayers.Front;
 
             var ui = CreateEntity("ui").AddComponent(new CombatUI());
 
             var playerSpawner = AddSceneComponent(new PlayerSpawner());
             var player = playerSpawner.SpawnPlayer();
 
-            var followCam = Camera.AddComponent(new CustomFollowCamera(player));
+            var mapBounds = TiledHelper.GetActualBounds(mapEntity);
+            var followCam = Camera.AddComponent(new CustomFollowCamera(player, mapBounds.Location.ToVector2(), (mapBounds.Location + mapBounds.GetSize()).ToVector2()));
 
             Game1.AudioManager.PlayMusic(Nez.Content.Audio.Music.The_bay);
 
