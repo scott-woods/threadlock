@@ -22,6 +22,7 @@ namespace Threadlock.Scenes
     public abstract class BaseScene : Scene, IFinalRenderDelegate
     {
         public virtual Color SceneColor { get => Color.Black; }
+        public virtual Color AmbientLightColor { get => new Color(200, 200, 200, 255); }
 
         readonly List<int> _lightRenderLayers = new List<int>()
         {
@@ -75,7 +76,7 @@ namespace Threadlock.Scenes
             //lighting
             _deferredLightingRenderer = AddRenderer(new YSortDeferredLightingRenderer(0, RenderLayers.Light, _lightRenderLayers.ToArray()));
             _deferredLightingRenderer.SetClearColor(SceneColor);
-            _deferredLightingRenderer.SetAmbientColor(new Color(200, 200, 200, 255));
+            _deferredLightingRenderer.SetAmbientColor(AmbientLightColor);
 
             FinalRenderDelegate = this;
         }

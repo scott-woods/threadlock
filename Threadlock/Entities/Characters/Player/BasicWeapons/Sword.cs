@@ -21,7 +21,7 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
     public class Sword : BasicWeapon, IUpdatable
     {
         //constants
-        const float _initialMoveSpeed = 170f;
+        const float _initialMoveSpeed = 125f;
         const float _finalMoveSpeed = 0f;
         const float _finisherDelay = .08f;
         const int _damage = 1;

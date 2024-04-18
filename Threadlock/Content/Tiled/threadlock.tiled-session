@@ -686,11 +686,11 @@
             "expandedObjectLayers": [
                 260
             ],
-            "scale": 1,
-            "selectedLayer": 6,
+            "scale": 1.5,
+            "selectedLayer": 8,
             "viewCenter": {
-                "x": 164,
-                "y": 238
+                "x": 263,
+                "y": 215.33333333333331
             }
         },
         "Tilemaps/enemy_test_zone.tmx": {

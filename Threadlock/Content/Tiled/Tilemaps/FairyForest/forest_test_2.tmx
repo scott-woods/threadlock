@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="16" tileheight="16" infinite="0" nextlayerid="18" nextobjectid="5">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="16" tileheight="16" infinite="0" nextlayerid="18" nextobjectid="12">
  <tileset firstgid="1" source="../../Tilesets/fairy_forest_tileset.tsx"/>
  <tileset firstgid="339" source="../../Tilesets/dungeon_prison.tsx"/>
  <tileset firstgid="964" source="../../Tilesets/fairy_forest_trees.tsx"/>
@@ -158,7 +158,46 @@
    </properties>
    <point/>
   </object>
-  <object id="4" type="LightSource" x="192" y="240">
+  <object id="6" type="LightSource" x="256" y="176">
+   <properties>
+    <property name="Intensity" value="3"/>
+    <property name="Radius" value="50"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="7" type="LightSource" x="256" y="176">
+   <properties>
+    <property name="Intensity" value="1"/>
+    <property name="Radius" value="200"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="8" type="LightSource" x="192" y="240">
+   <properties>
+    <property name="Intensity" value="3"/>
+    <property name="Radius" value="50"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="9" type="LightSource" x="192" y="240">
+   <properties>
+    <property name="Intensity" value="1"/>
+    <property name="Radius" value="200"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="10" type="LightSource" x="232" y="280">
+   <properties>
+    <property name="Intensity" value="3"/>
+    <property name="Radius" value="50"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="11" type="LightSource" x="232" y="280">
+   <properties>
+    <property name="Intensity" value="1"/>
+    <property name="Radius" value="200"/>
+   </properties>
    <point/>
   </object>
  </objectgroup>

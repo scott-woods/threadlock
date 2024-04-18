@@ -19,7 +19,8 @@ namespace Threadlock.Scenes
 {
     public class ForestTest : BaseScene
     {
-        public override Color SceneColor => Color.Red;
+        public override Color SceneColor => new Color(12, 56, 33);
+        public override Color AmbientLightColor => new Color(150, 150, 150);
 
         const int _pathWidth = 5;
         int _halfWidth { get => _pathWidth / 2; }
