@@ -32,20 +32,39 @@ namespace Threadlock.Scenes
 
             _dungenerator = AddSceneComponent(new Dungenerator());
             _playerSpawner = AddSceneComponent(new PlayerSpawner());
-        }
 
-        public override void OnStart()
-        {
-            base.OnStart();
-
-            //_generator.Generate();
             _dungenerator.Generate();
 
-            Game1.AudioManager.PlayMusic(Nez.Content.Audio.Music.Meltingidols);
+            //GenerateDungeonAsync().ContinueWith(t =>
+            //{
+            //    //Game1.AudioManager.PlayMusic(Nez.Content.Audio.Music.Meltingidols);
 
-            var player = _playerSpawner.SpawnPlayer();
+            //    //var player = _playerSpawner.SpawnPlayer();
 
-            Camera.Entity.AddComponent(new CustomFollowCamera(player));
+            //    //Camera.Entity.AddComponent(new CustomFollowCamera(player));
+            //});
+        }
+
+        //public override void OnStart()
+        //{
+        //    base.OnStart();
+
+        //    GenerateDungeonAsync().ContinueWith(t =>
+        //    {
+        //        Game1.AudioManager.PlayMusic(Nez.Content.Audio.Music.Meltingidols);
+
+        //        var player = _playerSpawner.SpawnPlayer();
+
+        //        Camera.Entity.AddComponent(new CustomFollowCamera(player));
+        //    });
+        //}
+
+        Task GenerateDungeonAsync()
+        {
+            return Task.Run(() =>
+            {
+                _dungenerator.Generate();
+            });
         }
     }
 }

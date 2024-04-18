@@ -150,15 +150,14 @@ namespace Threadlock.StaticData
                 yield break;
             var targetSpawn = trigger.Args[1];
 
+            bool stopMusic = true;
             if (trigger.Args.Count >= 3)
             {
                 var stopMusicString = trigger.Args[2];
-                var stopMusic = Convert.ToBoolean(stopMusicString);
-                if (stopMusic)
-                    Game1.AudioManager.StopMusic();
+                stopMusic = Convert.ToBoolean(stopMusicString);
             }
 
-            Game1.SceneManager.ChangeScene(targetSceneType, targetSpawn);
+            Game1.SceneManager.ChangeScene(targetSceneType, targetSpawn, stopMusic);
 
             trigger.Entity.Destroy();
 

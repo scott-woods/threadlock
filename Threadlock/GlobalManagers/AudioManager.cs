@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
 using Nez;
+using Nez.Tweens;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -127,6 +128,27 @@ namespace Threadlock.GlobalManagers
             //FAudio.FAudioSourceVoice_Stop(_musicVoiceHandle, 0, FAudio.FAUDIO_COMMIT_NOW);
             //FAudio.FAudioSourceVoice_FlushSourceBuffers(_musicVoiceHandle);
             //MediaPlayer.Stop();
+        }
+
+        public IEnumerator FadeoutMusic(float time)
+        {
+            if (_musicVoice == null)
+                yield break;
+
+            var timer = time;
+            var initialVolume = _musicVoice.Volume;
+            while (timer > 0)
+            {
+                timer -= Time.DeltaTime;
+
+                var progress = (time - timer) / time;
+                var lerpVolume = Lerps.Lerp(initialVolume, 0, progress);
+                _musicVoice.SetVolume(lerpVolume);
+
+                yield return null;
+            }
+
+            _musicVoice.Unload();
         }
 
         public void UpdateMusicVolume()
