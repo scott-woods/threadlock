@@ -6,6 +6,7 @@ using Nez.Systems;
 using Nez.Textures;
 using Nez.Tweens;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,33 +19,27 @@ using Threadlock.StaticData;
 
 namespace Threadlock.Entities.Characters.Player.BasicWeapons
 {
-    public class Sword : BasicWeapon, IUpdatable
+    public class Sword : BasicWeapon
     {
         //constants
-        const float _initialMoveSpeed = 125f;
-        const float _finalMoveSpeed = 0f;
-        const float _finisherDelay = .08f;
+        const float _moveSpeed = 150f;
+        const float _finisherMoveSpeed = 200f;
         const int _damage = 1;
         const float _normalPushForce = 1f;
         const float _finisherPushForce = 1.5f;
-        const int _movementFrames = 3; //the number of frames that we are moving for
         const float _hitboxOffset = 12f;
+        const float _progressRequiredToContinue = .7f;
+        const float _progressRequiredForFinisher = 1f;
+        EaseType _normalEaseType = EaseType.CubicOut;
+        EaseType _finisherEaseType = EaseType.CubicOut;
+        readonly Dictionary<int, string> _soundDictionary = new Dictionary<int, string>()
+        {
+            [1] = Content.Audio.Sounds._32_Swoosh_sword_2,
+            [2] = Content.Audio.Sounds._33_Swoosh_Sword_3,
+            [3] = Content.Audio.Sounds._31_swoosh_sword_1
+        };
 
         public override bool CanMove => false;
-
-        public float Speed = 1f;
-        float _originalAnimatorSpeed;
-
-        int _comboCounter = 0;
-        bool _continueCombo = false;
-        float _elapsedTime = 0f;
-        bool _isAttacking = false;
-        bool _shouldPerformFinisher = false;
-        Vector2 _direction;
-
-        List<int> _hitboxActiveFrames = new List<int>();
-        List<int> _postAttackFrames = new List<int>();
-        int _preFinisherFrame;
 
         //passed components
         SpriteAnimator _animator;
@@ -52,6 +47,10 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
 
         //added components
         CircleHitbox _hitbox;
+
+        ICoroutine _attackCoroutine;
+
+        #region LIFECYCLE
 
         public override void Initialize()
         {
@@ -72,108 +71,15 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
             _velocityComponent = Entity.GetComponent<VelocityComponent>();
         }
 
-        public void Update()
-        {
-            if (_isAttacking)
-            {
-                //if it's been at least one frame, check for combos
-                if (_animator.CurrentFrame > 0)
-                {
-                    //check if we can move to the next attack
-                    if (_comboCounter < 3)
-                    {
-                        //if left click
-                        if (Controls.Instance.Melee.IsPressed)
-                        {
-                            //get direction
-                            var dir = Player.Instance.GetFacingDirection();
-                            if (dir != Vector2.Zero)
-                            {
-                                dir.Normalize();
-                                _direction = dir;
-                            }
+        #endregion
 
-                            if (_comboCounter == 2)
-                            {
-                                //queue up finisher
-                                _shouldPerformFinisher = true;
-                            }
-                            else
-                            {
-                                //queue up next in combo
-                                _continueCombo = true;
-                            }
-                        }
-
-                        //if next in combo is queued but not on finisher
-                        if (_continueCombo && _postAttackFrames.Contains(_animator.CurrentFrame))
-                        {
-                            _continueCombo = false;
-                            _isAttacking = false;
-                            _elapsedTime = 0;
-
-                            PerformAttack(_direction);
-                            return;
-                        }
-
-                        //if finisher is queued and we are on pre finisher frame get ready
-                        if (_shouldPerformFinisher && _animator.CurrentFrame >= _preFinisherFrame)
-                        {
-                            _shouldPerformFinisher = false;
-                            _isAttacking = false;
-                            _elapsedTime = 0;
-
-                            _animator.Pause();
-                            _animator.SetSprite(_animator.CurrentAnimation.Sprites[_preFinisherFrame]);
-
-                            Core.Schedule(_finisherDelay / Speed, timer =>
-                            {
-                                PerformAttack(_direction);
-                            });
-
-                            return;
-                        }
-                    }
-                }
-
-                //increment time
-                _elapsedTime += Time.DeltaTime;
-
-                //get animation duration
-                //var animationDuration = _animator.CurrentAnimation.Sprites.Count() / _animator.CurrentAnimation.FrameRate;
-                if (_animator.CurrentAnimation == null)
-                    return;
-                var animationDuration = _movementFrames / (_animator.CurrentAnimation.FrameRates[0] * _animator.Speed);
-
-                //if elapsed time is less than duration, we are still attacking
-                if (_elapsedTime < animationDuration)
-                {
-                    //get lerp factor
-                    float lerpFactor = _elapsedTime / animationDuration;
-
-                    //determine move speed based on which combo we are on
-                    var initialSpeed = _initialMoveSpeed;
-                    if (_comboCounter == 2) initialSpeed *= 1.1f;
-                    else if (_comboCounter == 3) initialSpeed *= 2f;
-
-                    float currentSpeed = Lerps.Lerp(initialSpeed, _finalMoveSpeed, lerpFactor);
-                    _velocityComponent.Move(_direction, currentSpeed);
-                }
-
-                //handle hitbox
-                if (_hitboxActiveFrames.Contains(_animator.CurrentFrame))
-                {
-                    _hitbox.SetEnabled(true);
-                }
-                else _hitbox.SetEnabled(false);
-            }
-        }
+        #region BASIC WEAPON
 
         public override bool Poll()
         {
             if (Controls.Instance.Melee.IsPressed)
             {
-                StartAttack();
+                _attackCoroutine = Game1.StartCoroutine(StartMeleeAttack(1, Player.GetFacingDirection()));
                 return true;
             }
 
@@ -185,150 +91,87 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
 
         }
 
-        /// <summary>
-        /// called from player state, starts a new attack
-        /// </summary>
-        /// <param name="attackCompletedCallback"></param>
-        void StartAttack()
+        public override void Reset()
         {
-            //set animation handler
-            _animator.OnAnimationCompletedEvent += OnAnimationFinished;
-
-            //set original animator speed to return to once finished attack
-            _originalAnimatorSpeed = _animator.Speed;
-
-            //set animator speed
-            _animator.Speed *= Speed;
-
-            //attack in direction of mouse
-            var dir = Player.Instance.GetFacingDirection();
-            dir.Normalize();
-            _direction = dir;
-
-            PerformAttack(dir);
-        }
-
-        void PerformAttack(Vector2 dir)
-        {
-            //increment combo
-            _comboCounter++;
-
-            //set hitbox position
-            var hitboxPosition = Entity.Position + dir * _hitboxOffset;
-            _hitbox.SetLocalOffset(hitboxPosition - Entity.Position);
-            _hitbox.Direction = dir;
-            //_hitbox.SetEnabled(true);
-
-            //update hitbox push force
-            if (_comboCounter > 2)
-            {
-                _hitbox.PushForce = _finisherPushForce;
-            }
-            else _hitbox.PushForce = _normalPushForce;
-
-            //get angle in degrees
-            var angle = MathHelper.ToDegrees(Mathf.AngleBetweenVectors(Entity.Position, hitboxPosition));
-            angle = (angle + 360) % 360;
-
-            //animation
-            var animation = "";
-            if (_comboCounter == 1 || _comboCounter == 3)
-            {
-                animation = "Thrust";
-            }
-            else
-            {
-                animation = "Slash";
-            }
-
-            //account for angle
-            if (dir.Y < 0 && Math.Abs(dir.X) < .75f)
-                animation += "Up";
-            else if (dir.Y > 0 && Math.Abs(dir.X) < .75f)
-                animation += "Down";
-
-            //if (angle >= 45 && angle < 135) animation += "Down";
-            //else if (angle >= 225 && angle < 315) animation += "Up";
-
-            switch (animation)
-            {
-                case "ThrustDown":
-                case "ThrustUp":
-                case "Thrust":
-                case "Slash":
-                    _hitboxActiveFrames = new List<int> { 0 };
-                    _postAttackFrames = new List<int> { 2, 3 };
-                    _preFinisherFrame = 2;
-                    break;
-                case "SlashUp":
-                case "SlashDown":
-                    _hitboxActiveFrames = new List<int> { 0 };
-                    _postAttackFrames = new List<int> { 2, 3 };
-                    _preFinisherFrame = 2;
-                    break;
-            }
-
-            //determine and play sound
-            switch (_comboCounter)
-            {
-                case 1:
-                    Game1.AudioManager.PlaySound(Content.Audio.Sounds._32_Swoosh_sword_2);
-                    break;
-                case 2:
-                    Game1.AudioManager.PlaySound(Content.Audio.Sounds._33_Swoosh_Sword_3);
-                    break;
-                case 3:
-                    Game1.AudioManager.PlaySound(Content.Audio.Sounds._31_swoosh_sword_1);
-                    break;
-            }
-
-            Debug.Log($"Playing animation: {animation}");
-
-            //play animation
-            _animator.Play(animation, SpriteAnimator.LoopMode.Once);
-
-            //set is attacking to true so update starts moving and reset elapsed time
-            _isAttacking = true;
-            _elapsedTime = 0f;
-        }
-
-        void OnAnimationFinished(string animationName)
-        {
-            Debug.Log("Finished melee attack animation: " + animationName);
-
-            //remove event handler
-            _animator.OnAnimationCompletedEvent -= OnAnimationFinished;
-
-            //hold last frame so it doesn't look weird
-            _animator.SetSprite(_animator.CurrentAnimation.Sprites.Last());
-
-            //reset
-            Reset();
-
-            CompletionEmitter.Emit(BasicWeaponEventTypes.Completed);
-        }
-
-        void Reset()
-        {
-            //animator
-            _animator.Speed = _originalAnimatorSpeed != 0 ? _originalAnimatorSpeed : 1f;
-            _animator.OnAnimationCompletedEvent -= OnAnimationFinished;
-
-            //fields
-            _comboCounter = 0;
-            _continueCombo = false;
-            _elapsedTime = 0f;
-            _isAttacking = false;
-            _shouldPerformFinisher = false;
-
             //hitbox
             _hitbox.SetEnabled(false);
+            _hitbox.PushForce = _normalPushForce;
+
+            //coroutines
+            _attackCoroutine?.Stop();
+            _attackCoroutine = null;
         }
 
-        public void CancelAttack()
+        #endregion
+
+        IEnumerator StartMeleeAttack(int comboCount, Vector2 dir)
         {
-            Debug.Log("Cancel melee attack");
-            Reset();
+            //update hitbox
+            _hitbox.PushForce = comboCount == 3 ? _finisherPushForce : _normalPushForce;
+            _hitbox.SetLocalOffset(dir * _hitboxOffset);
+            _hitbox.Direction = dir;
+
+            //play sound
+            Game1.AudioManager.PlaySound(_soundDictionary[comboCount]);
+
+            //play animation
+            var animation = comboCount == 2 ? "Slash" : "Thrust";
+            animation += DirectionHelper.GetDirectionStringByVector(dir);
+            _animator.Play(animation, SpriteAnimator.LoopMode.Once);
+            var animDuration = AnimatedSpriteHelper.GetAnimationDuration(_animator);
+            var movementTime = animDuration;
+
+            //while animation is playing...
+            var initialSpeed = comboCount == 3 ? _finisherMoveSpeed : _moveSpeed;
+            bool shouldAttackAgain = false;
+            Vector2 nextAttackDir = Vector2.Zero;
+            var requiredProgress = comboCount == 3 ? _progressRequiredForFinisher : _progressRequiredToContinue;
+            var elapsedTime = 0f;
+            var easeType = comboCount == 3 ? _finisherEaseType : _normalEaseType;
+            while (_animator.CurrentAnimationName == animation && _animator.AnimationState != SpriteAnimator.State.Completed)
+            {
+                //soon as we're not on the first frame, start checking for next attack
+                if (comboCount < 3 && elapsedTime > 0)
+                {
+                    if (Controls.Instance.Melee.IsPressed)
+                    {
+                        shouldAttackAgain = true;
+                        nextAttackDir = Player.GetFacingDirection();
+                    }
+                }
+
+                //handle hitbox
+                if (_animator.CurrentFrame == 0 && !_hitbox.Enabled)
+                    _hitbox.SetEnabled(true);
+                else if (_animator.CurrentFrame != 0 && _hitbox.Enabled)
+                    _hitbox.SetEnabled(false);
+
+                //move player
+                var progress = elapsedTime / animDuration;
+                if (elapsedTime <= movementTime)
+                {
+                    var movementLerp = Lerps.Ease(easeType, initialSpeed, 0, Math.Clamp(elapsedTime, 0, movementTime), movementTime);
+                    _velocityComponent.Move(dir, movementLerp);
+                }
+
+                //once more than halfway through, if we've queued up another, go ahead and start it
+                if (shouldAttackAgain && progress > requiredProgress)
+                    break;
+
+                elapsedTime += Time.DeltaTime;
+
+                yield return null;
+            }
+
+            //disable hitbox just in case it's somehow still enabled
+            if (_hitbox.Enabled)
+                _hitbox.SetEnabled(false);
+
+            //if should continue combo, start new coroutine
+            if (shouldAttackAgain)
+                _attackCoroutine = Game1.StartCoroutine(StartMeleeAttack(comboCount + 1, nextAttackDir));
+            else
+                CompletionEmitter.Emit(BasicWeaponEventTypes.Completed);
         }
     }
 }

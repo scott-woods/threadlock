@@ -48,7 +48,11 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
         public event Action<int> OnMaxAmmoChanged;
         public event Action<float> OnReloadStarted;
 
+        ICoroutine _activeCoroutine;
+
         GunEntity _gunEntity;
+
+        #region LIFECYCLE
 
         public override void OnAddedToEntity()
         {
@@ -72,15 +76,43 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
             _gunEntity = null;
         }
 
+        #endregion
+
+        #region BASIC WEAPON
+
+        public override bool Poll()
+        {
+            if (Controls.Instance.Melee.IsPressed)
+            {
+                _activeCoroutine = Game1.StartCoroutine(Fire());
+                return true;
+            }
+            if (Ammo < MaxAmmo && Controls.Instance.Reload.IsPressed)
+            {
+                _activeCoroutine = Game1.StartCoroutine(Reload());
+                return true;
+            }
+            if (Controls.Instance.AltAttack.IsPressed)
+            {
+                _activeCoroutine = Game1.StartCoroutine(SecondaryAttack());
+                return true;
+            }
+
+            return false;
+        }
+
         public override void OnUnequipped()
         {
             _gunEntity.SetEnabled(false);
         }
 
-        void StartAttack()
+        public override void Reset()
         {
-            Game1.StartCoroutine(Fire());
+            _activeCoroutine?.Stop();
+            _activeCoroutine = null;
         }
+
+        #endregion
 
         IEnumerator SecondaryAttack()
         {
@@ -163,27 +195,6 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
         void OnProjectileCreated(Projectile projectile)
         {
             WatchHitbox(projectile.Hitbox);
-        }
-
-        public override bool Poll()
-        {
-            if (Controls.Instance.Melee.IsPressed)
-            {
-                StartAttack();
-                return true;
-            }
-            if (Ammo < MaxAmmo && Controls.Instance.Reload.IsPressed)
-            {
-                Game1.StartCoroutine(Reload());
-                return true;
-            }
-            if (Controls.Instance.AltAttack.IsPressed)
-            {
-                Game1.StartCoroutine(SecondaryAttack());
-                return true;
-            }
-
-            return false;
         }
     }
 }

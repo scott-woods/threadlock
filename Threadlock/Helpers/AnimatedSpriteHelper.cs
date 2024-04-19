@@ -1,4 +1,5 @@
-﻿using Nez.Textures;
+﻿using Nez.Sprites;
+using Nez.Textures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,6 +66,24 @@ namespace Threadlock.Helpers
             }
             
             return newSpriteList.ToArray();
+        }
+
+        public static float GetAnimationDuration(SpriteAnimator animator)
+        {
+            if (!string.IsNullOrWhiteSpace(animator.CurrentAnimationName))
+                return GetAnimationDuration(animator, animator.CurrentAnimationName);
+            return 0f;
+        }
+
+        public static float GetAnimationDuration(SpriteAnimator animator, string animationName)
+        {
+            if (!animator.Animations.ContainsKey(animationName))
+                return 0;
+
+            var secondsPerFrame = 1 / (animator.Animations[animationName].FrameRates[0] * animator.Speed);
+            var iterationDuration = secondsPerFrame * animator.Animations[animationName].Sprites.Length;
+
+            return iterationDuration;
         }
     }
 }

@@ -24,14 +24,6 @@ namespace Threadlock.Entities.Characters.Player.States
             _context.OnWeaponChanged += OnWeaponChanged;
         }
 
-        //public override void Begin()
-        //{
-        //    base.Begin();
-
-        //    _basicWeapon = _context.GetComponent<BasicWeapon>();
-        //    _basicWeapon.BeginAttack(AttackCompletedCallback);
-        //}
-
         public override void Update(float deltaTime)
         {
             if (_basicWeapon.CanMove)
@@ -42,11 +34,19 @@ namespace Threadlock.Entities.Characters.Player.States
                     _context.Idle();
             }
         }
-        
+
+        public override void End()
+        {
+            base.End();
+
+            _basicWeapon.Reset();
+        }
+
         void OnWeaponChanged(BasicWeapon weapon)
         {
             if (_basicWeapon != null && _basicWeapon != weapon)
             {
+                _basicWeapon.Reset();
                 _basicWeapon.CompletionEmitter.RemoveObserver(BasicWeaponEventTypes.Completed, AttackCompletedCallback);
                 _basicWeapon = null;
             }

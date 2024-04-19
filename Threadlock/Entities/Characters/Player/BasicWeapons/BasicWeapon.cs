@@ -13,9 +13,21 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
     {
         public Emitter<BasicWeaponEventTypes, int> Emitter = new Emitter<BasicWeaponEventTypes, int>();
         public Emitter<BasicWeaponEventTypes> CompletionEmitter = new Emitter<BasicWeaponEventTypes>();
+
+        public Player Player { get => Entity as Player; }
+
+        /// <summary>
+        /// is player allowed to move while attacking with this weapon
+        /// </summary>
         public abstract bool CanMove { get; }
 
+        /// <summary>
+        /// poll for input, returns true if weapon wants to do something
+        /// </summary>
+        /// <returns></returns>
         public abstract bool Poll();
+
+        public abstract void Reset();
 
         public abstract void OnUnequipped();
 
