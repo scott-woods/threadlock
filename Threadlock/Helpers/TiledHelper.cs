@@ -19,7 +19,7 @@ namespace Threadlock.Helpers
 {
     public static class TiledHelper
     {
-        public static void SetupMap(Entity mapEntity, TmxMap map)
+        public static List<Entity> SetupMap(Entity mapEntity, TmxMap map, bool addEntitiesToScene = true)
         {
             List<TmxLayer> backLayers = new List<TmxLayer>();
             List<TmxLayer> wallLayers = new List<TmxLayer>();
@@ -53,7 +53,6 @@ namespace Threadlock.Helpers
                 mapRenderer.SetLayersToRender(backLayers.Select(l => l.Name).ToArray());
                 mapRenderer.RenderLayer = RenderLayers.Back;
                 mapRenderer.AutoUpdateTilesets = false;
-                CreateEntitiesForTiledObjects(mapRenderer);
             }
 
             //wall layers need one renderer each, since a tiledmaprenderer can only have one collision layer
@@ -93,19 +92,23 @@ namespace Threadlock.Helpers
                 aboveFrontRenderer.RenderLayer = RenderLayers.AboveFront;
                 aboveFrontRenderer.AutoUpdateTilesets = false;
             }
+
+            return CreateEntitiesForTiledObjects(mapEntity, map, addEntitiesToScene);
         }
 
-        public static void CreateEntitiesForTiledObjects(TiledMapRenderer mapRenderer)
+        public static List<Entity> CreateEntitiesForTiledObjects(Entity mapEntity, TmxMap map, bool addEntitiesToScene = true)
         {
-            foreach (var obj in mapRenderer.TiledMap.ObjectGroups.SelectMany(g => g.Objects))
+            var entities = new List<Entity>();
+
+            foreach (var obj in map.ObjectGroups.SelectMany(g => g.Objects))
             {
                 if (string.IsNullOrWhiteSpace(obj.Type)) continue;
                 var type = Type.GetType("Threadlock.Components.TiledComponents." + obj.Type);
                 if (type == null) continue;
                 var instance = Activator.CreateInstance(type) as TiledComponent;
                 instance.TmxObject = obj;
-                instance.MapEntity = mapRenderer.Entity;
-                instance.ParentMap = mapRenderer.TiledMap;
+                instance.MapEntity = mapEntity;
+                instance.ParentMap = map;
 
                 var position = new Vector2();
                 switch (obj.ObjectType)
@@ -128,10 +131,23 @@ namespace Threadlock.Helpers
 
                 }
 
-                var entity = mapRenderer.Entity.Scene.CreateEntity(obj.Name, position);
-                entity.SetParent(mapRenderer.Entity);
+                var entity = new Entity(obj.Name);
+                entity.SetPosition(position);
+                entity.SetParent(mapEntity);
                 entity.AddComponent(instance);
+
+                if (addEntitiesToScene)
+                    mapEntity.Scene.AddEntity(entity);
+
+                entities.Add(entity);
             }
+
+            return entities;
+        }
+
+        public static List<Entity> CreateEntitiesForTiledObjects(TiledMapRenderer mapRenderer, bool addEntitiesToScene = true)
+        {
+            return CreateEntitiesForTiledObjects(mapRenderer.Entity, mapRenderer.TiledMap, addEntitiesToScene);
         }
 
         /// <summary>
@@ -209,8 +225,10 @@ namespace Threadlock.Helpers
             return true;
         }
 
-        public static void SetupLightingTiles(Entity mapEntity, TmxMap map)
+        public static List<Entity> SetupLightingTiles(Entity mapEntity, TmxMap map, bool addEntitiesToScene = true)
         {
+            var entities = new List<Entity>();
+
             foreach (var layer in map.TileLayers)
             {
                 if (layer.Name.StartsWith("Prototype"))
@@ -228,16 +246,24 @@ namespace Threadlock.Helpers
                     {
                         ParseLightingProperties(tile.TilesetTile.Properties, out var lightColor, out var lightRadius, out var lightIntensity);
 
-                        var lightEntity = mapEntity.Scene.CreateEntity("light");
+                        var lightEntity = new Entity("light");
                         lightEntity.SetPosition(pos);
 
                         var light = lightEntity.AddComponent(new PointLight(lightColor));
+                        light.DebugRenderEnabled = false;
                         light.SetRenderLayer(RenderLayers.Light);
                         light.SetRadius(lightRadius);
                         light.SetIntensity(lightIntensity);
+
+                        if (addEntitiesToScene)
+                            mapEntity.Scene.AddEntity(lightEntity);
+
+                        entities.Add(lightEntity);
                     }
                 }
             }
+
+            return entities;
         }
 
         public static void ParseLightingProperties(Dictionary<string, string> properties, out Color lightColor, out float lightRadius, out float lightIntensity)

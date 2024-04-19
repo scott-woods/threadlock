@@ -244,7 +244,7 @@ namespace Threadlock.SceneComponents.Dungenerator
             }
         }
 
-        public static void PaintCorridorTiles(List<Vector2> floorPositions, List<Vector2> reservedPositions, TmxTileset tileset)
+        public static List<CorridorRenderer> PaintCorridorTiles(List<Vector2> floorPositions, List<Vector2> reservedPositions, TmxTileset tileset)
         {
             var allTilesForMask = floorPositions.Concat(reservedPositions).ToList();
 
@@ -432,11 +432,17 @@ namespace Threadlock.SceneComponents.Dungenerator
                 }
             }
 
-            var tileRenderer = Game1.Scene.CreateEntity("").AddComponent(new CorridorRenderer(tileset, backTiles, true));
-            tileRenderer.RenderLayer = RenderLayers.Back;
+            var corridorRenderers = new List<CorridorRenderer>();
 
-            var frontRenderer = Game1.Scene.CreateEntity("").AddComponent(new CorridorRenderer(tileset, frontTiles));
+            var tileRenderer = new CorridorRenderer(tileset, backTiles, true);
+            tileRenderer.RenderLayer = RenderLayers.Back;
+            corridorRenderers.Add(tileRenderer);
+
+            var frontRenderer = new CorridorRenderer(tileset, frontTiles);
             frontRenderer.RenderLayer = RenderLayers.Front;
+            corridorRenderers.Add(frontRenderer);
+
+            return corridorRenderers;
         }
     }
 }

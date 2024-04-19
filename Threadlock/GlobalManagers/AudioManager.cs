@@ -20,6 +20,7 @@ namespace Threadlock.GlobalManagers
         const float _volumeReductionFactor = .01f;
 
         StreamingVoice _musicVoice;
+        Queue<StreamingVoice> _musicVoices = new Queue<StreamingVoice>();
 
         public AudioDevice AudioDevice { get; }
 
@@ -97,7 +98,7 @@ namespace Threadlock.GlobalManagers
         /// <param name="looping"></param>
         public unsafe void PlayMusic(string filePath, bool looping = true)
         {
-            StopMusic();
+            //StopMusic();
 
             var audioDataOgg = new AudioDataOgg(AudioDevice, filePath);
 
@@ -105,11 +106,34 @@ namespace Threadlock.GlobalManagers
 
             _musicVoice.Load(audioDataOgg);
 
-            _musicVoice.SetVolume(_defaultMusicVolume * Settings.Instance.MusicVolume);
+            _musicVoice.SetVolume(0);
 
             _musicVoice.Loop = looping;
 
             _musicVoice.Play();
+
+            Game1.StartCoroutine(FadeIn(1.5f));
+        }
+
+        IEnumerator FadeIn(float time)
+        {
+            if (_musicVoice == null)
+                yield break;
+
+            var voice = _musicVoice;
+
+            var timer = time;
+            var initialVolume = 0;
+            while (timer > 0)
+            {
+                timer -= Time.DeltaTime;
+
+                var progress = (time - timer) / time;
+                var lerpVolume = Lerps.Lerp(0, _defaultMusicVolume * Settings.Instance.MusicVolume, progress);
+                voice.SetVolume(lerpVolume);
+
+                yield return null;
+            }
         }
 
         public void PauseMusic()
@@ -135,20 +159,22 @@ namespace Threadlock.GlobalManagers
             if (_musicVoice == null)
                 yield break;
 
+            var voice = _musicVoice;
+
             var timer = time;
-            var initialVolume = _musicVoice.Volume;
+            var initialVolume = voice.Volume;
             while (timer > 0)
             {
                 timer -= Time.DeltaTime;
 
                 var progress = (time - timer) / time;
                 var lerpVolume = Lerps.Lerp(initialVolume, 0, progress);
-                _musicVoice.SetVolume(lerpVolume);
+                voice.SetVolume(lerpVolume);
 
                 yield return null;
             }
 
-            _musicVoice.Unload();
+            voice.Unload();
         }
 
         public void UpdateMusicVolume()

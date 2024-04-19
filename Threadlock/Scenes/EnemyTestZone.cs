@@ -36,6 +36,8 @@ namespace Threadlock.Scenes
             var player = playerSpawner.SpawnPlayer();
 
             var followCam = Camera.AddComponent(new CustomFollowCamera(player));
+
+            Game1.AudioManager.PlayMusic(Nez.Content.Audio.Music.Meltingidols);
         }
     }
 }

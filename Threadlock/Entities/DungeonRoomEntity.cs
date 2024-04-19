@@ -31,13 +31,15 @@ namespace Threadlock.Entities
         /// <summary>
         /// all children rooms
         /// </summary>
-        public List<DungeonRoomEntity> AllChildren
-        {
-            get
-            {
-                return Scene.EntitiesOfType<DungeonRoomEntity>().Where(d => _childrenIds.Contains(d.RoomId)).ToList();
-            }
-        }
+        //public List<DungeonRoomEntity> AllChildren
+        //{
+        //    get
+        //    {
+        //        return Scene.EntitiesOfType<DungeonRoomEntity>().Where(d => _childrenIds.Contains(d.RoomId)).ToList();
+        //    }
+        //}
+
+        public List<DungeonRoomEntity> AllChildren = new List<DungeonRoomEntity>();
 
         /// <summary>
         /// children rooms in the same composite as this room
@@ -46,7 +48,7 @@ namespace Threadlock.Entities
         {
             get
             {
-                return ParentComposite.RoomEntities.Where(r => _childrenIds.Contains(r.RoomId)).ToList();
+                return ParentComposite.RoomEntities.Where(r => ChildrenIds.Contains(r.RoomId)).ToList();
             }
         }
 
@@ -57,8 +59,9 @@ namespace Threadlock.Entities
         {
             get
             {
+                return AllChildren.Where(c => c.ParentComposite != ParentComposite).ToList();
                 return Scene.EntitiesOfType<DungeonRoomEntity>()
-                    .Where(r => _childrenIds.Contains(r.RoomId) && !ParentComposite.RoomEntities.Contains(r))
+                    .Where(r => ChildrenIds.Contains(r.RoomId) && !ParentComposite.RoomEntities.Contains(r))
                     .ToList();
             }
         }
@@ -121,14 +124,15 @@ namespace Threadlock.Entities
 
         public List<Vector2> FloorTilePositions = new List<Vector2>();
 
-        List<int> _childrenIds = new List<int>();
+        public List<int> ChildrenIds = new List<int>();
+        public List<Entity> TiledObjectEntities = new List<Entity>();
 
         public DungeonRoomEntity(DungeonComposite composite, DungeonNode dungeonNode) : base(dungeonNode.Id.ToString())
         {
             ParentComposite = composite;
             RoomId = dungeonNode.Id;
             Type = dungeonNode.Type;
-            _childrenIds = dungeonNode.Children.Select(c => c.ChildNodeId).ToList();
+            ChildrenIds = dungeonNode.Children.Select(c => c.ChildNodeId).ToList();
             //_textComponent = AddComponent(new TextComponent(Graphics.Instance.BitmapFont, $"{dungeonNode.Id}", Vector2.Zero, Color.Black));
         }
 
@@ -138,18 +142,29 @@ namespace Threadlock.Entities
         {
             base.OnRemovedFromScene();
 
-            var comps = Scene.FindComponentsOfType<TiledComponent>().Where(c => c.MapEntity == this);
-            foreach (var comp in comps)
-                comp.Entity.Destroy();
+            foreach (var ent in TiledObjectEntities)
+                ent.Destroy();
         }
 
         #endregion
+
+        public void SetComponentsOnMapEnabled(bool enabled)
+        {
+            foreach (var ent in TiledObjectEntities)
+                ent.SetEnabled(enabled);
+        }
 
         public void CreateMap(TmxMap map)
         {
             Map = map;
 
-            TiledHelper.SetupMap(this, map);
+            foreach (var ent in TiledObjectEntities)
+                ent.Destroy();
+
+            TiledObjectEntities.Clear();
+
+            TiledObjectEntities = TiledHelper.SetupMap(this, map, false);
+            SetComponentsOnMapEnabled(false);
 
             //_textComponent.SetLocalOffset(new Vector2(map.WorldWidth / 2, map.WorldHeight / 2));
         }
@@ -169,7 +184,7 @@ namespace Threadlock.Entities
 
         public List<T> FindComponentsOnMap<T>() where T : TiledComponent
         {
-            return Scene.FindComponentsOfType<T>().Where(c => c.MapEntity == this).ToList();
+            return TiledObjectEntities.SelectMany(e => e.GetComponents<T>()).ToList();
         }
 
         public void ClearMap()
@@ -185,9 +200,14 @@ namespace Threadlock.Entities
                 RemoveComponent(renderer);
             }
 
-            var comps = Scene.FindComponentsOfType<TiledComponent>().Where(c => c.MapEntity == this);
-            foreach (var comp in comps)
-                comp.Entity.Destroy();
+            foreach (var ent in TiledObjectEntities)
+                ent.Destroy();
+
+            TiledObjectEntities.Clear();
+
+            //var comps = Scene.FindComponentsOfType<TiledComponent>().Where(c => c.MapEntity == this);
+            //foreach (var comp in comps)
+            //    comp.Entity.Destroy();
         }
 
         public bool OverlapsRoom(RectangleF rectangle, bool checkDoorways = true)

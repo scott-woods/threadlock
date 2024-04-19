@@ -44,7 +44,9 @@ namespace Threadlock.Models
         {
             foreach (var node in roomNodes)
             {
-                var roomEntity = Game1.Scene.AddEntity(new DungeonRoomEntity(this, node));
+                var roomEntity = new DungeonRoomEntity(this, node);
+                roomEntity.SetEnabled(false);
+                roomEntity.SetComponentsOnMapEnabled(false);
                 RoomEntities.Add(roomEntity);
             }
 

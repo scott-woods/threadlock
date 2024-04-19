@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Threadlock.Components;
 using Threadlock.Components.TiledComponents;
+using Threadlock.GlobalManagers;
 using Threadlock.Helpers;
 using Threadlock.SceneComponents;
 using Threadlock.SceneComponents.Dungenerator;
@@ -28,43 +29,37 @@ namespace Threadlock.Scenes
         {
             base.Initialize();
 
-            CreateEntity("ui").AddComponent(new CombatUI());
-
             _dungenerator = AddSceneComponent(new Dungenerator());
             _playerSpawner = AddSceneComponent(new PlayerSpawner());
 
-            _dungenerator.Generate();
-
-            //GenerateDungeonAsync().ContinueWith(t =>
-            //{
-            //    //Game1.AudioManager.PlayMusic(Nez.Content.Audio.Music.Meltingidols);
-
-            //    //var player = _playerSpawner.SpawnPlayer();
-
-            //    //Camera.Entity.AddComponent(new CustomFollowCamera(player));
-            //});
+            Game1.SceneManager.Emitter.AddObserver(SceneManagerEvents.FadeInStarted, OnFadeInStarted);
         }
 
-        //public override void OnStart()
-        //{
-        //    base.OnStart();
-
-        //    GenerateDungeonAsync().ContinueWith(t =>
-        //    {
-        //        Game1.AudioManager.PlayMusic(Nez.Content.Audio.Music.Meltingidols);
-
-        //        var player = _playerSpawner.SpawnPlayer();
-
-        //        Camera.Entity.AddComponent(new CustomFollowCamera(player));
-        //    });
-        //}
-
-        Task GenerateDungeonAsync()
+        public override void End()
         {
-            return Task.Run(() =>
-            {
-                _dungenerator.Generate();
-            });
+            base.End();
+
+            Game1.SceneManager.Emitter.RemoveObserver(SceneManagerEvents.FadeInStarted, OnFadeInStarted);
+        }
+
+        public void GenerateDungeon()
+        {
+            _dungenerator.Generate();
+        }
+
+        public void FinalizeDungeon()
+        {
+            _dungenerator.FinalizeDungeon();
+
+            var player = _playerSpawner.SpawnPlayer();
+
+            Camera.Entity.AddComponent(new CustomFollowCamera(player));
+        }
+
+        void OnFadeInStarted()
+        {
+            Game1.AudioManager.PlayMusic(Nez.Content.Audio.Music.Meltingidols);
+            CreateEntity("ui").AddComponent(new CombatUI());
         }
     }
 }

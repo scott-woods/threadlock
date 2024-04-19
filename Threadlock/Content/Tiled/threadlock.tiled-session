@@ -376,8 +376,8 @@
             "scale": 4,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 40,
-                "y": 40
+                "x": 39.875,
+                "y": 39.75
             }
         },
         "Tilemaps/Forge/Doorways/forge_top_open.tmx": {
@@ -689,8 +689,8 @@
             "scale": 1.5,
             "selectedLayer": 8,
             "viewCenter": {
-                "x": 263,
-                "y": 215.33333333333331
+                "x": 161,
+                "y": 168
             }
         },
         "Tilemaps/enemy_test_zone.tmx": {

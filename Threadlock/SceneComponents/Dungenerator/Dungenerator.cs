@@ -1,7 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Nez;
-using Nez.AI.Pathfinding;
-using Nez.BitmapFonts;
 using Nez.Persistence;
 using Nez.Sprites;
 using Nez.Tiled;
@@ -10,7 +8,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using Threadlock.Components;
 using Threadlock.Components.TiledComponents;
@@ -20,21 +17,25 @@ using Threadlock.Models;
 using Threadlock.StaticData;
 using static Threadlock.SceneComponents.Dungenerator.CorridorPainter;
 using Random = Nez.Random;
-using RectangleF = Nez.RectangleF;
 
 namespace Threadlock.SceneComponents.Dungenerator
 {
     public class Dungenerator : SceneComponent
     {
+        public bool IsGenerationInProgress = false;
+
         const int _maxAttempts = 100;
         const int _maxLoopAttempts = 5;
 
         List<DungeonRoomEntity> _allMapEntities = new List<DungeonRoomEntity>();
         List<DungeonComposite> _allComposites = new List<DungeonComposite>();
         List<TmxMap> _allMaps = new List<TmxMap>();
+        List<CorridorRenderer> _corridorRenderers = new List<CorridorRenderer>();
 
         public void Generate()
         {
+            IsGenerationInProgress = true;
+
             //read flow file
             DungeonFlow flow = new DungeonFlow();
             if (File.Exists("Content/Data/DungeonFlows5.json"))
@@ -57,6 +58,10 @@ namespace Threadlock.SceneComponents.Dungenerator
                 var composite = new DungeonComposite(tree, DungeonCompositeType.Tree);
                 _allComposites.Add(composite);
             }
+
+            var allRooms = _allComposites.SelectMany(c => c.RoomEntities);
+            foreach (var room in allRooms)
+                room.AllChildren = allRooms.Where(r => room.ChildrenIds.Contains(r.RoomId)).ToList();
 
             //load all maps for this area
             Dictionary<TmxMap, string> mapDictionary = new Dictionary<TmxMap, string>(); //dictionary so unused maps can be unloaded
@@ -136,13 +141,13 @@ namespace Threadlock.SceneComponents.Dungenerator
                     var back2Positions = TiledHelper.GetTilePositionsByLayer(map, "Back2");
                     reservedPositions.AddRange(positions);
                     reservedPositions.AddRange(back2Positions);
-                }
 
-                foreach (var doorway in Scene.FindComponentsOfType<DungeonDoorway>())
-                {
-                    if (doorway.HasConnection)
-                        reservedPositions.AddRange(TiledHelper.GetTilePositionsByLayer(doorway.Entity, "Back"));
-                    allFloorPositions.AddRange(TiledHelper.GetTilePositionsByLayer(doorway.Entity, "Fill"));
+                    foreach (var doorway in map.FindComponentsOnMap<DungeonDoorway>())
+                    {
+                        if (doorway.HasConnection)
+                            reservedPositions.AddRange(TiledHelper.GetTilePositionsByLayer(doorway.Entity, "Back"));
+                        allFloorPositions.AddRange(TiledHelper.GetTilePositionsByLayer(doorway.Entity, "Fill"));
+                    }
                 }
 
                 allFloorPositions = allFloorPositions.Distinct().ToList();
@@ -156,13 +161,13 @@ namespace Threadlock.SceneComponents.Dungenerator
                     var tileset = new TmxTileset().LoadTmxTileset(null, xDocTileset.Element("tileset"), 0, tsxDir);
                     tileset.TmxDirectory = tsxDir;
 
-                    CorridorPainter.PaintCorridorTiles(allFloorPositions, reservedPositions, tileset);
+                    _corridorRenderers = CorridorPainter.PaintCorridorTiles(allFloorPositions, reservedPositions, tileset);
                 }
 
                 foreach (var mapEntity in _allMapEntities)
                 {
                     if (mapEntity.TryGetComponent<TiledMapRenderer>(out var renderer))
-                        TiledHelper.SetupLightingTiles(mapEntity, renderer.TiledMap);
+                        mapEntity.TiledObjectEntities.AddRange(TiledHelper.SetupLightingTiles(mapEntity, renderer.TiledMap, false));
                 }
 
                 //AddDecorations();
@@ -181,6 +186,31 @@ namespace Threadlock.SceneComponents.Dungenerator
                     }
                 }
             }
+
+            //re enable everything
+            foreach (var room in _allMapEntities)
+            {
+                room.SetEnabled(true);
+                room.SetComponentsOnMapEnabled(true);
+            }
+
+            IsGenerationInProgress = false;
+        }
+
+        public void FinalizeDungeon()
+        {
+            foreach (var room in _allMapEntities)
+            {
+                Scene.AddEntity(room);
+                foreach (var obj in room.TiledObjectEntities)
+                {
+                    if (obj.Parent?.Entity != room)
+                        Scene.AddEntity(obj);
+                }
+            }
+
+            foreach (var renderer in _corridorRenderers)
+                Scene.CreateEntity("corridor-renderer").AddComponent(renderer);
         }
 
         #region HANDLE LOOPS/TREES

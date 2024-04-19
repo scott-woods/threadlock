@@ -16,6 +16,7 @@ using Threadlock.Entities;
 using Threadlock.Renderers;
 using Nez.DeferredLighting;
 using Nez.Tiled;
+using Threadlock.SceneComponents.Dungenerator;
 
 namespace Threadlock.Scenes
 {
@@ -84,6 +85,10 @@ namespace Threadlock.Scenes
         public override void Update()
         {
             base.Update();
+
+            var dungenerator = GetSceneComponent<Dungenerator>();
+            if (dungenerator != null && dungenerator.IsGenerationInProgress)
+                return;
 
             List<TmxMap> visitedMaps = new List<TmxMap>();
             List<TmxTileset> visitedTilesets = new List<TmxTileset>();

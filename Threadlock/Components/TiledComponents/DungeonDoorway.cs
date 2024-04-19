@@ -25,7 +25,7 @@ namespace Threadlock.Components.TiledComponents
                 if (_parentMap != null && _parentMap.Properties != null && _parentMap.Properties.TryGetValue("Area", out var area))
                 {
                     var mapName = $"{area.ToLower()}_{Direction.ToLower()}_open";
-                    var openMap = base.Entity.Scene.Content.LoadTiledMap($@"Content\Tiled\Tilemaps\{area}\Doorways\{mapName}.tmx");
+                    var openMap = Game1.Scene.Content.LoadTiledMap($@"Content\Tiled\Tilemaps\{area}\Doorways\{mapName}.tmx");
 
                     if (openMap != null && openMap.ObjectGroups != null && openMap.ObjectGroups.SelectMany(g => g.Objects) != null)
                     {
@@ -175,7 +175,7 @@ namespace Threadlock.Components.TiledComponents
                 tiledMapDetailsRenderer.RenderLayer = RenderLayers.Front;
                 //tiledMapDetailsRenderer.Material = Material.StencilWrite();
 
-                TiledHelper.CreateEntitiesForTiledObjects(mapRenderer);
+                TiledHelper.CreateEntitiesForTiledObjects(mapRenderer, false);
 
                 _mapRenderers.Add(mapRenderer);
                 _mapRenderers.Add(tiledMapDetailsRenderer);
