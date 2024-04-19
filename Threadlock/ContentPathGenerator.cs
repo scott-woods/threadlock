@@ -265,6 +265,7 @@ namespace Nez
 
 			public static class Drops
 			{
+				public const string CollectablesSheet = @"Content\Textures\Drops\Collectables-Sheet.png";
 				public const string Health_orb = @"Content\Textures\Drops\health_orb.png";
 			}
 
@@ -1068,9 +1069,16 @@ namespace Nez
 				public const string Fairy_forest_cliff_rules = @"Content\Tiled\RuleMaps\fairy_forest_cliff_rules.tmx";
 				public const string Forge_clutter_rules = @"Content\Tiled\RuleMaps\forge_clutter_rules.tmx";
 				public const string Forge_floor_rules = @"Content\Tiled\RuleMaps\forge_floor_rules.tmx";
+				public const string Forge_floor_rules_2 = @"Content\Tiled\RuleMaps\forge_floor_rules_2.tmx";
+				public const string Forge_floor_rules_3 = @"Content\Tiled\RuleMaps\forge_floor_rules_3.tmx";
+				public const string Forge_grate_rules = @"Content\Tiled\RuleMaps\forge_grate_rules.tmx";
 				public const string Forge_lava_rules = @"Content\Tiled\RuleMaps\forge_lava_rules.tmx";
+				public const string Forge_lava_rules_2 = @"Content\Tiled\RuleMaps\forge_lava_rules_2.tmx";
+				public const string Forge_lava_rules_3 = @"Content\Tiled\RuleMaps\forge_lava_rules_3.tmx";
 				public const string Forge_trim_rules = @"Content\Tiled\RuleMaps\forge_trim_rules.tmx";
+				public const string Forge_trim_rules_2 = @"Content\Tiled\RuleMaps\forge_trim_rules_2.tmx";
 				public const string Forge_walls_rules = @"Content\Tiled\RuleMaps\forge_walls_rules.tmx";
+				public const string Forge_walls_rules_2 = @"Content\Tiled\RuleMaps\forge_walls_rules_2.tmx";
 				public const string Prison_floor_rules_one_overlap = @"Content\Tiled\RuleMaps\prison_floor_rules_one_overlap.tmx";
 				public const string Prison_walls_rules_one_overlap_3 = @"Content\Tiled\RuleMaps\prison_walls_rules_one_overlap_3.tmx";
 				public const string Stardew_leaves_rules = @"Content\Tiled\RuleMaps\stardew_leaves_rules.tmx";
@@ -1141,6 +1149,7 @@ namespace Nez
 				public static class HubMaps
 				{
 					public const string Hub = @"Content\Tiled\Tilemaps\HubMaps\hub.tmx";
+					public const string Rules = @"Content\Tiled\Tilemaps\HubMaps\rules.txt";
 				}
 
 				public const string Enemy_test_zone = @"Content\Tiled\Tilemaps\enemy_test_zone.tmx";

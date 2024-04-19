@@ -6,16 +6,19 @@ using System.Threading.Tasks;
 
 namespace Threadlock.Models
 {
+    /// <summary>
+    /// represents a possible item drop, provided a config, drop chance, and min/max quantity possible
+    /// </summary>
     public class LootDrop
     {
-        public Type LootType { get; set; }
+        public LootConfig LootConfig { get; set; }
         public float DropChance { get; set; }
         public int MinQuantity { get; set; }
         public int MaxQuantity { get; set; }
 
-        public LootDrop(Type lootType, float dropChance, int minQuantity, int maxQuantity)
+        public LootDrop(LootConfig lootConfig, float dropChance, int minQuantity, int maxQuantity)
         {
-            LootType = lootType;
+            LootConfig = lootConfig;
             DropChance = dropChance;
             MinQuantity = minQuantity;
             MaxQuantity = maxQuantity;

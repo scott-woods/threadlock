@@ -37,13 +37,11 @@ namespace Threadlock.Scenes
             var playerSpawner = AddSceneComponent(new PlayerSpawner());
             var player = playerSpawner.SpawnPlayer();
 
-            var mapBounds = TiledHelper.GetActualBounds(mapEntity);
-            var followCam = Camera.AddComponent(new CustomFollowCamera(player, mapBounds.Location.ToVector2(), (mapBounds.Location + mapBounds.GetSize()).ToVector2()));
+            //var mapBounds = TiledHelper.GetActualBounds(mapEntity);
+            //var followCam = Camera.AddComponent(new CustomFollowCamera(player, mapBounds.Location.ToVector2(), (mapBounds.Location + mapBounds.GetSize()).ToVector2()));
+            var followCam = Camera.AddComponent(new CustomFollowCamera(player));
 
             Game1.AudioManager.PlayMusic(Nez.Content.Audio.Music.The_bay);
-
-            //var enemySpawns = FindComponentsOfType<EnemySpawnPoint>();
-            //enemySpawns.First().SpawnEnemy();
         }
     }
 }

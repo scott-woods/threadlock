@@ -16,7 +16,8 @@ namespace Threadlock.StaticData
             {
                 return new List<LootDrop>()
                 {
-                    new LootDrop(typeof(HealthOrb), .1f, 1, 1)
+                    new LootDrop(LootConfig.HealthOrb, .1f, 1, 1),
+                    new LootDrop(LootConfig.Coin, 1f, 3, 5)
                 };
             }
         }

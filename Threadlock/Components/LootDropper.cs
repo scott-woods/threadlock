@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Threadlock.Entities;
 using Threadlock.Models;
 
 namespace Threadlock.Components
@@ -31,12 +32,9 @@ namespace Threadlock.Components
             var quantity = Nez.Random.Range(lootDrop.MinQuantity, lootDrop.MaxQuantity);
             for (int i = 0; i < quantity; i++)
             {
-                var lootDropInstance = Activator.CreateInstance(lootDrop.LootType) as Entity;
-                Entity.Scene.AddEntity(lootDropInstance);
-
                 var pos = Entity.TryGetComponent<OriginComponent>(out var oc) ? oc.Origin : Entity.Position;
-
-                lootDropInstance.SetPosition(pos);
+                var instance = Entity.Scene.AddEntity(new Droppable(lootDrop.LootConfig));
+                instance.SetPosition(pos);
             }
         }
     }
