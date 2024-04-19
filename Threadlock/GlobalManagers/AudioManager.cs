@@ -17,7 +17,7 @@ namespace Threadlock.GlobalManagers
     {
         const float _defaultMusicVolume = .2f;
         const float _defaultSoundVolume = .28f;
-        const float _volumeReductionFactor = .01f;
+        const float _volumeReductionFactor = .07f;
 
         StreamingVoice _musicVoice;
 
