@@ -1,4 +1,5 @@
 ﻿using Nez.Persistence;
+using Nez.Systems;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,6 +12,9 @@ namespace Threadlock.SaveData
 {
     public class PlayerData
     {
+        [JsonExclude]
+        public Emitter<PlayerDataEvents> Emitter = new Emitter<PlayerDataEvents>();
+
         private static PlayerData _instance;
         public static PlayerData Instance
         {
@@ -25,8 +29,29 @@ namespace Threadlock.SaveData
         public PlayerActionType OffensiveAction1 = PlayerActionType.FromType(typeof(DashAction));
         public PlayerActionType OffensiveAction2 = PlayerActionType.FromType(typeof(Grip));
         public PlayerActionType SupportAction = PlayerActionType.FromType(typeof(Teleport));
-        public int Dollahs = 0;
-        public int Dust = 0;
+
+        [JsonInclude]
+        int _dollahs = 0;
+        public int Dollahs
+        {
+            get => _dollahs;
+            set
+            {
+                _dollahs = value;
+                Emitter.Emit(PlayerDataEvents.DollahsChanged);
+            }
+        }
+        [JsonInclude]
+        int _dust = 0;
+        public int Dust
+        {
+            get => _dust;
+            set
+            {
+                _dust = value;
+                Emitter.Emit(PlayerDataEvents.DustChanged);
+            }
+        }
 
         private PlayerData()
         {
@@ -64,5 +89,11 @@ namespace Threadlock.SaveData
         {
             SaveData();
         }
+    }
+
+    public enum PlayerDataEvents
+    {
+        DollahsChanged,
+        DustChanged
     }
 }

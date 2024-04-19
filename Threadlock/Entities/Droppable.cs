@@ -54,6 +54,8 @@ namespace Threadlock.Entities
         {
             base.OnAddedToScene();
 
+            Scale = _config.Scale;
+
             _animator = AddComponent(new SpriteAnimator());
             _animator.SetRenderLayer(RenderLayers.YSort);
             var texture = Scene.Content.LoadTexture(_config.TexturePath);

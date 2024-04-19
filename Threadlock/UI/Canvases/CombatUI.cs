@@ -9,6 +9,7 @@ using Threadlock.Components;
 using Threadlock.Entities.Characters.Player;
 using Threadlock.Entities.Characters.Player.BasicWeapons;
 using Threadlock.Entities.Characters.Player.PlayerActions;
+using Threadlock.SaveData;
 using Threadlock.StaticData;
 using Threadlock.UI.Elements;
 
@@ -29,6 +30,8 @@ namespace Threadlock.UI.Canvases
         Table _weaponInfoTable;
         List<ProgressBar> _apBars = new List<ProgressBar>();
         List<ActionIcon> _actionIcons = new List<ActionIcon>();
+        Label _coinLabel;
+        Label _dustLabel;
 
         public override void Initialize()
         {
@@ -56,6 +59,21 @@ namespace Threadlock.UI.Canvases
             _apTable = new Table();
             //_apTable.Defaults().SetSpaceRight(Value.PercentWidth(.005f, _baseTable));
             _baseTable.Add(_apTable).Width(Value.PercentWidth(.3f, _baseTable)).Top().Left();
+
+            _baseTable.Row();
+
+            var currencyTable = new Table();
+            _baseTable.Add(currencyTable).Left();
+
+            currencyTable.Add(new Image(_skin.GetDrawable("image_coin")));
+            _coinLabel = new Label("", _skin, "abaddon_18");
+            currencyTable.Add(_coinLabel).SetPadLeft(3f).SetPadTop(5f);
+
+            currencyTable.Row();
+
+            currencyTable.Add(new Image(_skin.GetDrawable("image_dust")));
+            _dustLabel = new Label("", _skin, "abaddon_18");
+            currencyTable.Add(_dustLabel).SetPadLeft(3f).SetPadTop(5f);
 
             _baseTable.Row();
 
@@ -156,6 +174,23 @@ namespace Threadlock.UI.Canvases
 
             Game1.UIManager.Emitter.AddObserver(GlobalManagers.UIEvents.DialogueStarted, OnDialogueStarted);
             Game1.UIManager.Emitter.AddObserver(GlobalManagers.UIEvents.DialogueEnded, OnDialogueEnded);
+
+            PlayerData.Instance.Emitter.AddObserver(PlayerDataEvents.DollahsChanged, OnDollahsChanged);
+            OnDollahsChanged();
+            PlayerData.Instance.Emitter.AddObserver(PlayerDataEvents.DustChanged, OnDustChanged);
+            OnDustChanged();
+        }
+
+        void OnDollahsChanged()
+        {
+            var value = PlayerData.Instance.Dollahs.ToString();
+            _coinLabel.SetText(value == "" ? "0" : value);
+        }
+
+        void OnDustChanged()
+        {
+            var value = PlayerData.Instance.Dust.ToString();
+            _dustLabel.SetText(value == "" ? "0" : value);
         }
 
         void OnDialogueStarted()
@@ -195,6 +230,9 @@ namespace Threadlock.UI.Canvases
 
             Game1.UIManager.Emitter.RemoveObserver(GlobalManagers.UIEvents.DialogueStarted, OnDialogueStarted);
             Game1.UIManager.Emitter.RemoveObserver(GlobalManagers.UIEvents.DialogueEnded, OnDialogueEnded);
+
+            PlayerData.Instance.Emitter.RemoveObserver(PlayerDataEvents.DollahsChanged, OnDollahsChanged);
+            PlayerData.Instance.Emitter.RemoveObserver(PlayerDataEvents.DustChanged, OnDustChanged);
         }
 
         void OnHealthChanged(int oldValue, int newValue)

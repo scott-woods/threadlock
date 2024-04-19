@@ -56,6 +56,7 @@ namespace Nez
 				public const string Decoy_fade = @"Content\Audio\Sounds\decoy_fade.wav";
 				public const string Default_text = @"Content\Audio\Sounds\default_text.wav";
 				public const string Dollah_pickup = @"Content\Audio\Sounds\dollah_pickup.wav";
+				public const string Dust_pickup = @"Content\Audio\Sounds\dust_pickup.wav";
 				public const string Enemy_death_1 = @"Content\Audio\Sounds\enemy_death_1.wav";
 				public const string Enemy_spawn = @"Content\Audio\Sounds\enemy_spawn.wav";
 				public const string FartWithReverb = @"Content\Audio\Sounds\Fart With Reverb.wav";

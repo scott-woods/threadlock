@@ -39,6 +39,7 @@
     <None Remove="Content\Audio\Sounds\22_Slash_04.wav" />
     <None Remove="Content\Audio\Sounds\23_Slash_05.wav" />
     <None Remove="Content\Audio\Sounds\8d82b5_doom_shotgun_firing_sound_effect.mp3" />
+    <None Remove="Content\Audio\Sounds\dust_pickup.wav" />
     <None Remove="Content\Audio\Sounds\Fart With Reverb.wav" />
     <None Remove="Content\Audio\Sounds\Retro Alarmed 06.wav" />
     <None Remove="Content\CompiledEffects\SpriteOutline.fxb" />

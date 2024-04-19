@@ -105,6 +105,16 @@ namespace Threadlock.UI.Skins
                 index--;
             }
 
+            //coin
+            var coinTexture = Game1.Content.LoadTexture(Nez.Content.Textures.Drops.CollectablesSheet);
+            var coinSprite = new Sprite(coinTexture, 0, 0, 16, 16);
+            skin.Add($"image_coin", coinSprite);
+
+            //dust
+            var dustTexture = Game1.Content.LoadTexture(Nez.Content.Textures.Drops.CollectablesSheet);
+            var dustSprite = new Sprite(dustTexture, 176, 32, 16, 16);
+            skin.Add($"image_dust", dustSprite);
+
             //slider
             var sliderTexture = Game1.Content.LoadTexture(Nez.Content.Textures.UI.UISliders.Simple_slider);
             var knobSprite = new Sprite(sliderTexture, new Rectangle(0, 0, 3, 3));
