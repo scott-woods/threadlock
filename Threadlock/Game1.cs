@@ -13,7 +13,7 @@ namespace Threadlock
     {
         public static ResolutionManager ResolutionManager { get; private set; } = new ResolutionManager();
         public static GameStateManager GameStateManager { get; private set; } = new GameStateManager();
-        public static AudioManager AudioManager { get; private set; } = new AudioManager();
+        public static AudioManager AudioManager { get; private set; } = new AudioManager(GameStateManager);
         public static SceneManager SceneManager { get; private set; } = new SceneManager();
         public static UIManager UIManager { get; private set; } = new UIManager();
 

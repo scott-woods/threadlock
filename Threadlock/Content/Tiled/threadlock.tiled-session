@@ -176,16 +176,16 @@
             "scale": 2,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 68.5,
-                "y": 68
+                "x": 68.25,
+                "y": 67
             }
         },
         "RuleMaps/forge_lava_rules_3.tmx": {
             "scale": 2,
-            "selectedLayer": 2,
+            "selectedLayer": 3,
             "viewCenter": {
-                "x": 95.5,
-                "y": 54.5
+                "x": 95.25,
+                "y": 53.5
             }
         },
         "RuleMaps/forge_trim_rules.tmx": {
@@ -687,10 +687,10 @@
                 260
             ],
             "scale": 1.5,
-            "selectedLayer": 8,
+            "selectedLayer": -1,
             "viewCenter": {
-                "x": 161,
-                "y": 168
+                "x": 190.33333333333334,
+                "y": 206.66666666666663
             }
         },
         "Tilemaps/enemy_test_zone.tmx": {

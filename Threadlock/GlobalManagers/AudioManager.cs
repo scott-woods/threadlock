@@ -20,7 +20,6 @@ namespace Threadlock.GlobalManagers
         const float _volumeReductionFactor = .01f;
 
         StreamingVoice _musicVoice;
-        Queue<StreamingVoice> _musicVoices = new Queue<StreamingVoice>();
 
         public AudioDevice AudioDevice { get; }
 
@@ -29,11 +28,13 @@ namespace Threadlock.GlobalManagers
 
         Dictionary<SoundEffect, List<SoundEffectInstance>> _soundInstances = new Dictionary<SoundEffect, List<SoundEffectInstance>>();
 
-        public AudioManager()
+        public AudioManager(GameStateManager gameStateManager)
         {
             AudioDevice = new AudioDevice();
 
             Game1.Emitter.AddObserver(CoreEvents.Exiting, OnGameExiting);
+            gameStateManager.Emitter.AddObserver(GameStateEvents.Paused, () => SetFilterFrequency(.1f));
+            gameStateManager.Emitter.AddObserver(GameStateEvents.Unpaused, () => SetFilterFrequency(1f));
         }
 
         public override void Update()
@@ -113,6 +114,11 @@ namespace Threadlock.GlobalManagers
             _musicVoice.Play();
 
             Game1.StartCoroutine(FadeIn(1.5f));
+        }
+
+        public void SetFilterFrequency(float frequency)
+        {
+            _musicVoice.SetFilterFrequency(frequency);
         }
 
         IEnumerator FadeIn(float time)

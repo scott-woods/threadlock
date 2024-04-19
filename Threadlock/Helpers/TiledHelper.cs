@@ -35,8 +35,7 @@ namespace Threadlock.Helpers
                 {
                     if (layer.Properties != null && layer.Properties.TryGetValue("Passable", out var passable))
                     {
-                        if (passable.ToLower() == "true")
-                            passableWallLayers.Add(layer);
+                        passableWallLayers.Add(layer);
                     }
                     else
                         wallLayers.Add(layer);

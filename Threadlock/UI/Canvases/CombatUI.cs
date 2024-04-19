@@ -43,7 +43,7 @@ namespace Threadlock.UI.Canvases
             _baseTable = Stage.AddElement(new Table());
             _baseTable.SetWidth(Game1.ResolutionManager.UIResolution.X);
             _baseTable.SetHeight(Game1.ResolutionManager.UIResolution.Y);
-            _baseTable.SetFillParent(false).Pad(Value.PercentWidth(.01f));
+            _baseTable.SetFillParent(false).Pad(Value.PercentWidth(.02f));
 
             var topLeftTable = new Table();
             _baseTable.Add(topLeftTable).Top().Left();
