@@ -33,6 +33,8 @@ namespace Threadlock.UI.Canvases
         Label _coinLabel;
         Label _dustLabel;
 
+        ActionManager _actionManager;
+
         public override void Initialize()
         {
             base.Initialize();
@@ -103,53 +105,13 @@ namespace Threadlock.UI.Canvases
                 hc.OnHealthChanged += OnHealthChanged;
             }
 
-            if (Player.Instance.OffensiveAction1 != null)
+            //setup actions
+            if (Player.Instance.TryGetComponent<ActionManager>(out var actionManager))
             {
-                var table = new Table();
-                _iconsTable.Add(table);
-                var icon = new ActionIcon(_skin, PlayerActionUtils.GetIconName(Player.Instance.OffensiveAction1.GetType()), PlayerActionUtils.GetApCost(Player.Instance.OffensiveAction1.GetType()));
-                table.Add(icon);
-                _actionIcons.Add(icon);
+                _actionManager = actionManager;
+                _actionManager.Emitter.AddObserver(ActionManagerEvents.ActionsChanged, OnActionsChanged);
 
-                table.Row();
-
-                var key = new Image(_skin.GetDrawable("image_keys_32"));
-                table.Add(key);
-
-                //var label = new Label("Q", _skin, "abaddon_24");
-                //table.Add(label);
-            }
-            if (Player.Instance.OffensiveAction2 != null)
-            {
-                var table = new Table();
-                _iconsTable.Add(table);
-                var icon = new ActionIcon(_skin, PlayerActionUtils.GetIconName(Player.Instance.OffensiveAction2.GetType()), PlayerActionUtils.GetApCost(Player.Instance.OffensiveAction2.GetType()));
-                table.Add(icon);
-                _actionIcons.Add(icon);
-
-                table.Row();
-
-                var key = new Image(_skin.GetDrawable("image_keys_20"));
-                table.Add(key);
-
-                //var label = new Label("E", _skin, "abaddon_24");
-                //table.Add(label);
-            }
-            if (Player.Instance.SupportAction != null)
-            {
-                var table = new Table();
-                _iconsTable.Add(table);
-                var icon = new ActionIcon(_skin, PlayerActionUtils.GetIconName(Player.Instance.SupportAction.GetType()), PlayerActionUtils.GetApCost(Player.Instance.SupportAction.GetType()));
-                table.Add(icon);
-                _actionIcons.Add(icon);
-
-                table.Row();
-
-                var key = new Image(_skin.GetDrawable("image_keys_21"));
-                table.Add(key);
-
-                //var label = new Label("F", _skin, "abaddon_24");
-                //table.Add(label);
+                OnActionsChanged();
             }
 
             if (Player.Instance.TryGetComponent<ApComponent>(out var ac))
@@ -179,6 +141,25 @@ namespace Threadlock.UI.Canvases
             OnDollahsChanged();
             PlayerData.Instance.Emitter.AddObserver(PlayerDataEvents.DustChanged, OnDustChanged);
             OnDustChanged();
+        }
+
+        void OnActionsChanged()
+        {
+            _iconsTable.Clear();
+
+            foreach (var slot in _actionManager.AllActionSlots)
+            {
+                var type = slot.Action.GetType();
+                var table = new Table();
+                _iconsTable.Add(table);
+                var icon = new ActionIcon(_skin, PlayerActionUtils.GetIconName(type), PlayerActionUtils.GetApCost(type));
+                table.Add(icon);
+
+                table.Row();
+
+                var key = new Image(_skin.GetDrawable(Controls.GetIconString(slot.Button)));
+                table.Add(key);
+            }
         }
 
         void OnDollahsChanged()
@@ -233,6 +214,8 @@ namespace Threadlock.UI.Canvases
 
             PlayerData.Instance.Emitter.RemoveObserver(PlayerDataEvents.DollahsChanged, OnDollahsChanged);
             PlayerData.Instance.Emitter.RemoveObserver(PlayerDataEvents.DustChanged, OnDustChanged);
+
+            _actionManager.Emitter.RemoveObserver(ActionManagerEvents.ActionsChanged, OnActionsChanged);
         }
 
         void OnHealthChanged(int oldValue, int newValue)

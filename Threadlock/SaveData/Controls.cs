@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Input;
 using Nez.Persistence;
 using System.IO;
+using static Nez.VirtualButton;
 
 namespace Threadlock.SaveData
 {
@@ -24,6 +25,13 @@ namespace Threadlock.SaveData
                 return _instance;
             }
         }
+
+        public static readonly Dictionary<Keys, string> KeyIconDictionary = new Dictionary<Keys, string>()
+        {
+            [Keys.Q] = "image_keys_32",
+            [Keys.E] = "image_keys_20",
+            [Keys.F] = "image_keys_21"
+        };
 
         public VirtualButton Confirm = new VirtualButton(
             new VirtualButton.GamePadButton(0, Buttons.A),
@@ -99,6 +107,18 @@ namespace Threadlock.SaveData
             new VirtualJoystick.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Settings.Instance.LeftKey, Settings.Instance.RightKey, Settings.Instance.UpKey, Settings.Instance.DownKey)
             );
 
-        
+        public static string GetIconString(VirtualButton button)
+        {
+            foreach (var node in button.Nodes)
+            {
+                if (node is KeyboardKey keyboardKey)
+                {
+                    if (KeyIconDictionary.TryGetValue(keyboardKey.Key, out var iconString))
+                        return iconString;
+                }
+            }
+
+            return null;
+        }
     }
 }

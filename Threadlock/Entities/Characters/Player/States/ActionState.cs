@@ -19,15 +19,16 @@ namespace Threadlock.Entities.Characters.Player.States
         const float _slowTimeScale = .25f;
         const float _normalTimeScale = 1f;
 
-        //coroutines
         ICoroutine _slowMoCoroutine;
         ICoroutine _normalSpeedCoroutine;
-        ICoroutine _actionCoroutine;
         ICoroutine _prepCoroutine;
         ICoroutine _executionCoroutine;
+        ICoroutine _actionCoroutine;
 
-        //misc
-        KeyValuePair<VirtualButton, PlayerAction> _currentAction;
+        ActionSlot _currentAction;
+        bool _prepFinished = true;
+
+        #region LIFECYCLE
 
         public override void OnInitialized()
         {
@@ -37,60 +38,25 @@ namespace Threadlock.Entities.Characters.Player.States
             Game1.GameStateManager.Emitter.AddObserver(GameStateEvents.Unpaused, OnGameUnpaused);
         }
 
-        public override void Begin()
+        public override void Update(float deltaTime)
         {
-            base.Begin();
+            base.Update(deltaTime);
 
-            //if current action is somehow null, get out of action state
-            if (_actionManager.CurrentAction == null)
+            //if current action isn't null and is in prep phase, check if we should cancel
+            if (_currentAction != null && !_prepFinished)
             {
-                _machine.ChangeState<Idle>();
-                return;
-            }
-
-            //get current action from action manager
-            _currentAction = _actionManager.CurrentAction.Value;
-
-            //cancel normal speed coroutine if necessary
-            _normalSpeedCoroutine?.Stop();
-            _normalSpeedCoroutine = null;
-
-            //start slow mo coroutine
-            _slowMoCoroutine = Game1.StartCoroutine(SlowMoCoroutine());
-
-            //start action coroutine
-            _actionCoroutine = Game1.StartCoroutine(ActionCoroutine());
-        }
-
-        public override void Reason()
-        {
-            base.Reason();
-
-            //if key is released
-            if (_currentAction.Key.IsReleased && _currentAction.Value.State == PlayerActionState.Preparing)
-            {
-                //stop prep
-                _prepCoroutine?.Stop();
-                _prepCoroutine = null;
-
-                //stop execute
-                _executionCoroutine?.Stop();
-                _executionCoroutine = null;
-
-                //stop action
-                _actionCoroutine?.Stop();
-                _actionCoroutine = null;
-
-                //reset action
-                _currentAction.Value.Reset();
-
-                if (_actionManager.CanPerformAction())
+                //check that button is still held
+                if (!_currentAction.Button.IsDown)
                 {
-                    _currentAction = _actionManager.CurrentAction.Value;
-                    _actionCoroutine = Game1.StartCoroutine(ActionCoroutine());
+                    //if another button is held, switch to that action
+                    if (_actionManager.TryAction(out var nextAction))
+                        StartAction(nextAction);
+                    else
+                    {
+                        Reset();
+                        _machine.ChangeState<Idle>();
+                    }
                 }
-                else
-                    _machine.ChangeState<Idle>();
             }
         }
 
@@ -98,49 +64,49 @@ namespace Threadlock.Entities.Characters.Player.States
         {
             base.End();
 
-            //stop slow mo coroutine
-            _slowMoCoroutine?.Stop();
-            _slowMoCoroutine = null;
+            //reset coroutines
+            Reset();
 
             //if not already at normal time scale, return to normal time scale
             if (Time.TimeScale != _normalTimeScale)
                 _normalSpeedCoroutine = Game1.StartCoroutine(NormalSpeedCoroutine());
+        }
 
-            //stop prep
+        #endregion
+
+        public void StartAction(ActionSlot actionSlot)
+        {
+            Reset();
+            _currentAction = actionSlot;
+            _actionCoroutine = Game1.StartCoroutine(StartActionCoroutine(actionSlot));
+        }
+
+        public IEnumerator StartActionCoroutine(ActionSlot actionSlot)
+        {
+            //start slow mo
+            _slowMoCoroutine = Game1.StartCoroutine(SlowMoCoroutine());
+
+            //start preparing action
+            _prepFinished = false;
+            _prepCoroutine = Game1.StartCoroutine(actionSlot.Action.Prepare());
+            yield return _prepCoroutine;
+
+            _prepFinished = true;
+
             _prepCoroutine?.Stop();
             _prepCoroutine = null;
 
-            //stop execute
-            _executionCoroutine?.Stop();
-            _executionCoroutine = null;
-
-            //stop action
-            _actionCoroutine?.Stop();
-            _actionCoroutine = null;
-
-            //reset action
-            _currentAction.Value.Reset();
-        }
-
-        IEnumerator ActionCoroutine()
-        {
-            _prepCoroutine = Game1.StartCoroutine(_currentAction.Value.Prepare());
-            yield return _prepCoroutine;
-            _prepCoroutine = null;
-
-            //after prep finished, stop slow mo if still going
             _slowMoCoroutine?.Stop();
             _slowMoCoroutine = null;
 
             //start returning to normal speed
             _normalSpeedCoroutine = Game1.StartCoroutine(NormalSpeedCoroutine());
 
-            //execute action
-            _executionCoroutine = Game1.StartCoroutine(_currentAction.Value.Execute());
+            _executionCoroutine = Game1.StartCoroutine(actionSlot.Action.Execute());
             yield return _executionCoroutine;
             _executionCoroutine = null;
 
-            //return to idle state
+            //release state
             _machine.ChangeState<Idle>();
         }
 
@@ -178,6 +144,32 @@ namespace Threadlock.Entities.Characters.Player.States
             }
 
             _normalSpeedCoroutine = null;
+        }
+
+        void Reset()
+        {
+            //stop action
+            _actionCoroutine?.Stop();
+            _actionCoroutine = null;
+
+            //stop slow mo coroutine
+            _slowMoCoroutine?.Stop();
+            _slowMoCoroutine = null;
+
+            //stop normal speed coroutine
+            _normalSpeedCoroutine?.Stop();
+            _normalSpeedCoroutine = null;
+
+            //stop prep
+            _prepCoroutine?.Stop();
+            _prepCoroutine = null;
+
+            //stop execute
+            _executionCoroutine?.Stop();
+            _executionCoroutine = null;
+
+            _currentAction?.Action.Reset();
+            _currentAction = null;
         }
 
         void OnGamePaused()

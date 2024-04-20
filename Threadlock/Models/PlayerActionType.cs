@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Threadlock.Entities.Characters.Player.PlayerActions;
 
-namespace Threadlock.SaveData
+namespace Threadlock.Models
 {
     /// <summary>
     /// wrapper class to save actions as Types
@@ -13,9 +14,9 @@ namespace Threadlock.SaveData
     {
         public string TypeName;
 
-        public static PlayerActionType FromType(Type type)
+        public static PlayerActionType FromType<T>() where T : PlayerAction
         {
-            return new PlayerActionType() { TypeName = type.AssemblyQualifiedName };
+            return new PlayerActionType() { TypeName = typeof(T).AssemblyQualifiedName };
         }
 
         public Type ToType()

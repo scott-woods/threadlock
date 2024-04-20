@@ -55,11 +55,6 @@ namespace Threadlock.Entities.Characters.Player
         ApComponent _apComponent;
         ActionManager _actionManager;
 
-        //actions
-        public PlayerAction OffensiveAction1;
-        public PlayerAction OffensiveAction2;
-        public PlayerAction SupportAction;
-
         public Player() : base("Player")
         {
             Instance = this;
@@ -105,24 +100,7 @@ namespace Threadlock.Entities.Characters.Player
             _apComponent = AddComponent(new ApComponent(5));
 
             //actions
-            OffensiveAction1 = AddComponent(Activator.CreateInstance(PlayerData.Instance.OffensiveAction1.ToType()) as PlayerAction);
-            OffensiveAction2 = AddComponent(Activator.CreateInstance(PlayerData.Instance.OffensiveAction2.ToType()) as PlayerAction);
-            SupportAction = AddComponent(Activator.CreateInstance(PlayerData.Instance.SupportAction.ToType()) as PlayerAction);
-            _actionManager = AddComponent(new ActionManager(new Dictionary<VirtualButton, PlayerAction>()
-            {
-                {
-                    Controls.Instance.Action1,
-                    OffensiveAction1
-                },
-                {
-                    Controls.Instance.Action2,
-                    OffensiveAction2
-                },
-                {
-                    Controls.Instance.SupportAction,
-                    SupportAction
-                }
-            }));
+            _actionManager = AddComponent(new ActionManager());
 
             //add animations
             AddAnimations();

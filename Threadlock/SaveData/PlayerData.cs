@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Entities.Characters.Player.PlayerActions;
+using Threadlock.Models;
 
 namespace Threadlock.SaveData
 {
@@ -26,9 +27,9 @@ namespace Threadlock.SaveData
             }
         }
 
-        public PlayerActionType OffensiveAction1 = PlayerActionType.FromType(typeof(DashAction));
-        public PlayerActionType OffensiveAction2 = PlayerActionType.FromType(typeof(Grip));
-        public PlayerActionType SupportAction = PlayerActionType.FromType(typeof(Teleport));
+        public PlayerActionType OffensiveAction1 = PlayerActionType.FromType<DashAction>();
+        public PlayerActionType OffensiveAction2 = PlayerActionType.FromType<Grip>();
+        public PlayerActionType SupportAction = PlayerActionType.FromType<Teleport>();
 
         [JsonInclude]
         int _dollahs = 0;

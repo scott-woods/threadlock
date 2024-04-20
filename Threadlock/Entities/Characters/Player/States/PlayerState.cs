@@ -116,9 +116,11 @@ namespace Threadlock.Entities.Characters.Player.States
 
         public bool TryAction()
         {
-            if (_actionManager.CanPerformAction())
+            if (_actionManager.TryAction(out var actionSlot))
             {
                 _machine.ChangeState<ActionState>();
+                var actionState = _machine.GetState<ActionState>();
+                actionState.StartAction(actionSlot);
                 return true;
             }
 

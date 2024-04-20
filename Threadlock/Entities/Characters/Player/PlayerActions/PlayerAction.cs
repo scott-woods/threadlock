@@ -1,5 +1,7 @@
 ﻿using Nez;
 using Nez.Persistence;
+using Nez.Systems;
+using Nez.Tweens;
 using System;
 using System.Collections;
 using System.Collections.Generic;

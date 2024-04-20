@@ -41,7 +41,6 @@ namespace Threadlock.Components.TiledComponents
             }
         }
         public string Direction;
-        public DungeonRoom DungeonRoom;
         public DungeonRoomEntity DungeonRoomEntity { get => MapEntity as DungeonRoomEntity; }
 
         public RectangleF Bounds
