@@ -22,7 +22,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
         //constants
         const int _range = 48;
         const int _damage = 4;
-        const float _hitboxOffset = 8f;
+        const float _hitboxOffset = 14f;
 
         //other components
         SpriteAnimator _animator;
@@ -31,6 +31,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
         //added components
         PrototypeSpriteRenderer _target;
         BoxHitbox _hitbox;
+        ProjectileMover _mover;
 
         Entity _hitboxEntity;
 
@@ -49,11 +50,6 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
 
             _target = Entity.AddComponent(new PrototypeSpriteRenderer(4, 4));
             _target.SetEnabled(false);
-
-            _hitbox = new BoxHitbox(_damage, 20, 10);
-            Flags.SetFlagExclusive(ref _hitbox.PhysicsLayer, PhysicsLayers.PlayerHitbox);
-            Flags.SetFlagExclusive(ref _hitbox.CollidesWithLayers, PhysicsLayers.EnemyHurtbox);
-            _hitbox.SetEnabled(false);
         }
 
         public override void OnAddedToEntity()
@@ -73,12 +69,8 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
                 _animator.AddAnimation("ChargeDashUp", AnimatedSpriteHelper.GetSpriteArray(sprites, new List<int> { 212 }));
             }
 
-            if (Entity.TryGetComponent<VelocityComponent>(out var velocityComponent))
-                _velocityComponent = velocityComponent;
-
-            _hitboxEntity = Entity.Scene.AddEntity(new Entity("dash-hitbox"));
-            _hitboxEntity.SetParent(Entity);
-            _hitboxEntity.AddComponent(_hitbox);
+            if (Entity.TryGetComponent<VelocityComponent>(out var vc))
+                _velocityComponent = vc;
         }
 
         public override void OnRemovedFromEntity()
@@ -132,38 +124,40 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             Game1.AudioManager.PlaySound(Content.Audio.Sounds._20_Slash_02);
 
             //enable hitbox
-            //_hitboxEntity = Entity.Scene.CreateEntity("dash-hitbox", Entity.Position);
-            //_hitboxEntity.AddComponent(_hitbox);
-            _hitboxEntity.SetLocalPosition(_direction * _hitboxOffset);
+            _hitboxEntity = Entity.Scene.CreateEntity("dash-hitbox", Entity.Position + (_direction * _hitboxOffset));
             _hitboxEntity.SetRotationDegrees(angle);
-            _hitbox.SetEnabled(true);
+            _hitbox = _hitboxEntity.AddComponent(new BoxHitbox(_damage, 20, 10));
+            Flags.SetFlagExclusive(ref _hitbox.PhysicsLayer, PhysicsLayers.PlayerHitbox);
+            Flags.SetFlagExclusive(ref _hitbox.CollidesWithLayers, PhysicsLayers.EnemyHurtbox);
+            _mover = _hitboxEntity.AddComponent(new ProjectileMover());
+
+            var targetPos = Entity.Position + _target.LocalOffset;
 
             //determine total amount of time needed to move to target 
             var secondsPerFrame = 1 / (_animator.CurrentAnimation.FrameRates[0] * _animator.Speed);
             var movementFrames = 1;
             var totalMovementTime = movementFrames * secondsPerFrame;
-            var movementTimeRemaining = movementFrames * secondsPerFrame;
 
-            //move entity
-            //Log.Debug($"ExecuteDash: Waiting for {movementTimeRemaining}");
-            var initialPosition = Entity.Position;
-            var finalPosition = Entity.Position + _target.LocalOffset;
-            while (movementTimeRemaining > 0)
+            var speed = _target.LocalOffset.Length() / totalMovementTime;
+            var movement = _direction * speed * Time.DeltaTime;
+            var dist = Vector2.Distance(Entity.Position, targetPos);
+            var timer = 0f;
+            while (dist > 1 && timer < totalMovementTime)
             {
-                //lerp towards target position using progress towards total movement time
-                movementTimeRemaining -= Time.DeltaTime;
-                var progress = (totalMovementTime - movementTimeRemaining) / totalMovementTime;
-                var lerpPosition = Vector2.Lerp(initialPosition, finalPosition, progress);
-                Entity.Position = lerpPosition;
+                timer += Time.DeltaTime;
+
+                _mover.Move(movement);
+                _velocityComponent.Move(_direction, speed);
+
+                dist = Vector2.Distance(Entity.Position + movement, targetPos);
 
                 yield return null;
             }
-            //Log.Debug($"ExecuteDash: Finished waiting");
 
-            //Log.Debug($"ExecuteDash: Waiting for _isAttacking to be false");
+            _hitboxEntity.Destroy();
+
             while (_animator.IsAnimationActive(animation) && _animator.AnimationState == SpriteAnimator.State.Running)
                 yield return null;
-            //Log.Debug("ExecuteDash finished");
         }
 
         public override void Reset()
@@ -174,9 +168,8 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             _executionCoroutine = null;
 
             _target.SetEnabled(false);
-            _hitbox.SetEnabled(false);
-            //_hitboxEntity?.Destroy();
-            //_hitboxEntity = null;
+            _hitboxEntity?.Destroy();
+            _hitboxEntity = null;
         }
 
         #endregion
@@ -199,7 +192,6 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             if (Entity.TryGetComponent<OriginComponent>(out var oc))
                 basePos = oc.Origin;
 
-            var mapRenderer = EntityHelper.GetCurrentMap(Entity);
             var desiredPos = basePos + (dir * _range);
             var raycast = Physics.Linecast(basePos, desiredPos, 1 << PhysicsLayers.Environment);
             if (raycast.Collider != null)
