@@ -22,20 +22,7 @@ namespace Threadlock.GlobalManagers
         GameState _previousGameState;
         PauseMenu _pauseMenu;
 
-        public override void Update()
-        {
-            base.Update();
-
-            if (Controls.Instance.Pause.IsPressed)
-            {
-                if (GameState == GameState.Paused)
-                    Unpause();
-                else
-                    Pause();
-            }
-        }
-
-        void Pause()
+        public void Pause()
         {
             if (Player.Instance.StateMachine.CurrentState.GetType() == typeof(ActionState))
                 return;
@@ -45,8 +32,8 @@ namespace Threadlock.GlobalManagers
             GameState = GameState.Paused;
 
             //disable other ui
-            foreach (var canvas in Game1.Scene.FindComponentsOfType<UICanvas>())
-                canvas.SetEnabled(false);
+            //foreach (var canvas in Game1.Scene.FindComponentsOfType<UICanvas>())
+            //    canvas.SetEnabled(false);
 
             //show pause menu
             _pauseMenu = Game1.Scene.CreateEntity("pause-menu")
@@ -74,8 +61,8 @@ namespace Threadlock.GlobalManagers
             _pauseMenu = null;
 
             //enable other ui
-            foreach (var canvas in Game1.Scene.FindComponentsOfType<UICanvas>())
-                canvas.SetEnabled(true);
+            //foreach (var canvas in Game1.Scene.FindComponentsOfType<UICanvas>())
+            //    canvas.SetEnabled(true);
 
             Time.TimeScale = 1;
 

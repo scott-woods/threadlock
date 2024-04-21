@@ -30,21 +30,5 @@ namespace Threadlock.Entities.Characters.Player.States
         {
             _context.Run();
         }
-
-        public override void Reason()
-        {
-            base.Reason();
-
-            TryInteract();
-
-            if (TryAction())
-                return;
-            if (TryBasicAttack())
-                return;
-            if (TryDash())
-                return;
-            if (TryIdle())
-                return;
-        }
     }
 }

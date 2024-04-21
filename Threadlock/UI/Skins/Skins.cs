@@ -128,6 +128,26 @@ namespace Threadlock.UI.Skins
                 Background = sliderDrawable
             });
 
+            skin.Add("inventory_button_empty", new ButtonStyle()
+            {
+                Up = skin.GetDrawable("Inventory_01"),
+                Over = skin.GetDrawable("Inventory_02"),
+            });
+
+            for (int i = 0; i <= 335; i++)
+            {
+                var num = i.ToString();
+                while (num.Length < 3)
+                    num = num.Insert(0, "0");
+
+                skin.Add($"inventory_button_{num}", new ButtonStyle()
+                {
+                    Up = skin.GetDrawable($"Style 4 Icon {num}"),
+                    Down = skin.GetDrawable($"Style 3 Icon {num}"),
+                    Over = skin.GetDrawable($"Style 3 Icon {num}")
+                });
+            }
+
             return skin;
         }
     }

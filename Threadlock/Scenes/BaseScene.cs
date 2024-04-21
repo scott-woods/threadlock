@@ -32,6 +32,7 @@ namespace Threadlock.Scenes
             RenderLayers.YSort,
             RenderLayers.Front,
             RenderLayers.AboveFront,
+            RenderLayers.Shadow
         };
 
         ScreenSpaceRenderer _uiRenderer;

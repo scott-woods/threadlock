@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Threadlock.SaveData;
 using Threadlock.StaticData;
 using Threadlock.UI.Elements;
 
@@ -62,6 +63,16 @@ namespace Threadlock.UI.Canvases
             base.OnEnabled();
 
             Game1.AudioManager.PlaySound(Nez.Content.Audio.Sounds._094_Pause_06);
+        }
+
+        public override void Update()
+        {
+            base.Update();
+
+            if (Controls.Instance.Pause.IsPressed)
+            {
+                _unpauseHandler?.Invoke();
+            }
         }
 
         void OnResumeClicked(Button obj)

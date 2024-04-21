@@ -45,6 +45,9 @@ namespace Threadlock.Scenes
             var followCam = Camera.AddComponent(new CustomFollowCamera(player));
 
             Game1.AudioManager.PlayMusic(Nez.Content.Audio.Music.The_bay);
+
+            var actionPick = AddEntity(new ActionPickup());
+            actionPick.SetPosition(player.Position + new Vector2(0, -100));
         }
     }
 }

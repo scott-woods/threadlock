@@ -279,6 +279,7 @@ namespace Nez
 				public const string Hit3 = @"Content\Textures\Effects\hit 3.png";
 				public const string Hit4 = @"Content\Textures\Effects\hit 4.png";
 				public const string Shadow = @"Content\Textures\Effects\shadow.png";
+				public const string Shadow_opaque = @"Content\Textures\Effects\shadow_opaque.png";
 				public const string Spritelight = @"Content\Textures\Effects\sprite-light.png";
 			}
 
@@ -1055,6 +1056,7 @@ namespace Nez
 
 				public const string BorderAll10 = @"Content\Textures\UI\Border All 10.png";
 				public const string Crosshair038 = @"Content\Textures\UI\crosshair038.png";
+				public const string Cursedtylersmall = @"Content\Textures\UI\cursed tyler small.png";
 				public const string PlayerHealthBar = @"Content\Textures\UI\playerHealthBar.png";
 				public const string ProgressBar = @"Content\Textures\UI\progressBar.png";
 				public const string ProgressBarGlow = @"Content\Textures\UI\progressBarGlow.png";

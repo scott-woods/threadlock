@@ -9,6 +9,7 @@ using Nez.Textures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
@@ -32,6 +33,7 @@ namespace Threadlock.Entities.Characters.Player
 
         //state machine
         public StateMachine<Player> StateMachine { get; set; }
+        PlayerState _initialState = new Idle();
 
         public event Action<BasicWeapon> OnWeaponChanged;
 
@@ -106,13 +108,18 @@ namespace Threadlock.Entities.Characters.Player
             AddAnimations();
 
             //init state machine
-            StateMachine = new StateMachine<Player>(this, new Idle());
-            StateMachine.AddState(new Move());
-            StateMachine.AddState(new BasicAttackState());
-            StateMachine.AddState(new ActionState());
-            StateMachine.AddState(new DashState());
-            StateMachine.AddState(new StunnedState());
-            StateMachine.AddState(new CutsceneState());
+            StateMachine = new StateMachine<Player>(this, _initialState);
+            var assembly = Assembly.GetExecutingAssembly();
+            var stateTypes = assembly.GetTypes()
+                .Where(t => t.IsSubclassOf(typeof(PlayerState)) && !t.IsAbstract && t != typeof(Idle));
+            foreach (var type in stateTypes)
+                StateMachine.AddState((PlayerState)Activator.CreateInstance(type));
+            //StateMachine.AddState(new Move());
+            //StateMachine.AddState(new BasicAttackState());
+            //StateMachine.AddState(new ActionState());
+            //StateMachine.AddState(new DashState());
+            //StateMachine.AddState(new StunnedState());
+            //StateMachine.AddState(new CutsceneState());
 
             Game1.SceneManager.Emitter.AddObserver(SceneManagerEvents.SceneChangeStarted, OnSceneChangeStarted);
             Game1.Emitter.AddObserver(CoreEvents.SceneChanged, OnSceneChanged);

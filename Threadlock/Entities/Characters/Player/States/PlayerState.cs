@@ -17,10 +17,28 @@ using Threadlock.StaticData;
 
 namespace Threadlock.Entities.Characters.Player.States
 {
-    public class PlayerState : State<Player>
+    public abstract class PlayerState : State<Player>
     {
         const float _checkRadius = 20f;
         const float _checkCooldown = 1f;
+
+        List<Func<bool>> _exitConditions
+        {
+            get
+            {
+                var result = new List<Func<bool>>();
+
+                switch (this)
+                {
+                    case Idle idle:
+                        return new List<Func<bool>>() { TryOpenOverview, TryInteract, TryAction, TryBasicAttack, TryMove };
+                    case Move move:
+                        return new List<Func<bool>>() { TryOpenOverview, TryInteract, TryAction, TryBasicAttack, TryDash, TryIdle };
+                    default:
+                        return new List<Func<bool>>();
+                }
+            }
+        }
 
         protected StatusComponent _statusComponent;
         protected ApComponent _apComponent;
@@ -69,12 +87,21 @@ namespace Threadlock.Entities.Characters.Player.States
         {
             base.Reason();
 
+            if (Controls.Instance.Pause.IsPressed)
+                Game1.GameStateManager.Pause();
+
             if (_statusComponent != null)
             {
                 if ((int)_statusComponent.CurrentStatusPriority > (int)StatusPriority.Normal && _machine.CurrentState.GetType() != typeof(StunnedState))
                 {
                     _machine.ChangeState<StunnedState>();
                 }
+            }
+
+            foreach (var condition in _exitConditions)
+            {
+                if (condition())
+                    break;
             }
         }
 
@@ -161,6 +188,17 @@ namespace Threadlock.Entities.Characters.Player.States
                         return true;
                     }
                 }
+            }
+
+            return false;
+        }
+
+        public bool TryOpenOverview()
+        {
+            if (Controls.Instance.ShowStats.IsPressed)
+            {
+                _machine.ChangeState<ViewingStatsState>();
+                return true;
             }
 
             return false;
