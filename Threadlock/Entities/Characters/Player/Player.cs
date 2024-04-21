@@ -81,12 +81,17 @@ namespace Threadlock.Entities.Characters.Player
             _collider.CollidesWithLayers = 0;
             Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.Environment);
             Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.ProjectilePassableWall);
+            Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.PromptTrigger);
+            Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.Trigger);
 
             //hurtbox
             var hurtboxCollider = AddComponent(new BoxCollider(9, 16));
             hurtboxCollider.IsTrigger = true;
             Flags.SetFlagExclusive(ref hurtboxCollider.PhysicsLayer, PhysicsLayers.PlayerHurtbox);
-            Flags.SetFlagExclusive(ref hurtboxCollider.CollidesWithLayers, PhysicsLayers.EnemyHitbox);
+            hurtboxCollider.CollidesWithLayers = 0;
+            Flags.SetFlag(ref hurtboxCollider.CollidesWithLayers, PhysicsLayers.PromptTrigger);
+            Flags.SetFlag(ref hurtboxCollider.CollidesWithLayers, PhysicsLayers.EnemyHitbox);
+            //Flags.SetFlagExclusive(ref hurtboxCollider.CollidesWithLayers, PhysicsLayers.EnemyHitbox);
             _hurtbox = AddComponent(new Hurtbox(hurtboxCollider, 2f, Nez.Content.Audio.Sounds._64_Get_hit_03));
 
             _knockbackComponent = AddComponent(new KnockbackComponent(_velocityComponent, 110, .5f));

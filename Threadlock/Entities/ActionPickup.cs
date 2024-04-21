@@ -15,6 +15,7 @@ namespace Threadlock.Entities
     public class ActionPickup : Entity
     {
         SpriteRenderer _renderer;
+        ButtonPrompt _prompt;
 
         Bobber _bobber;
 
@@ -30,6 +31,8 @@ namespace Threadlock.Entities
 
             var shadow = AddComponent(new Shadow(_renderer));
             shadow.SetLocalOffset(new Vector2(0, _renderer.Height * .7f));
+
+            _prompt = AddComponent(new ButtonPrompt(32, _renderer));
 
             _bobber = new Bobber(Position);
         }

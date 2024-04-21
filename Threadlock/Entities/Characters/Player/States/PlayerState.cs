@@ -169,6 +169,33 @@ namespace Threadlock.Entities.Characters.Player.States
         {
             if (!_isCheckOnCooldown && Controls.Instance.Check.IsPressed)
             {
+                //first check for button prompts
+                if (_context.TryGetComponent<Hurtbox>(out var hurtbox))
+                {
+                    var colliders = Physics.BoxcastBroadphaseExcludingSelf(hurtbox.Collider, 1 << PhysicsLayers.PromptTrigger);
+                    foreach (var collider in colliders)
+                    {
+                        if (collider.Entity.TryGetComponent<ButtonPrompt>(out var buttonPrompt))
+                        {
+                            buttonPrompt.Trigger();
+                            return true;
+                        }
+                    }
+                }
+                var playerCollider = _context.GetComponents<Collider>().Where(c => c.PhysicsLayer == PhysicsLayers.PlayerCollider).FirstOrDefault();
+                if (playerCollider != null)
+                {
+                    var colliders = Physics.BoxcastBroadphaseExcludingSelf(playerCollider, 1 << PhysicsLayers.PromptTrigger);
+                    foreach (var collider in colliders)
+                    {
+                        if (collider.Entity.TryGetComponent<ButtonPrompt>(out var buttonPrompt))
+                        {
+                            buttonPrompt.Trigger();
+                            return true;
+                        }
+                    }
+                }
+
                 var basePos = _context.Position;
                 if (_context.TryGetComponent<OriginComponent>(out var oc))
                     basePos = oc.Origin;
