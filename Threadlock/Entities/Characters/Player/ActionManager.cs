@@ -53,16 +53,50 @@ namespace Threadlock.Entities.Characters.Player
 
         #endregion
 
-        public void EquipAction(PlayerActionType actionType, VirtualButton button)
+        public bool EquipAction(PlayerActionType actionType, VirtualButton button)
         {
-            PlayerAction actionInstance = (PlayerAction)Activator.CreateInstance(actionType.ToType(), button);
+            var existingAction = AllActionSlots.FirstOrDefault(s => s.Action?.GetType() == actionType.ToType());
+            if (existingAction != null)
+            {
+                if (existingAction.Button == button)
+                {
+                    Emitter.Emit(ActionManagerEvents.ActionsChanged);
+                    return true;
+                }
+                else
+                {
+                    var swapSlot = ActionDictionary[button];
+                    var swapAction = swapSlot.ReplaceAction(existingAction.Action);
+                    existingAction.ReplaceAction(swapAction);
 
+                    Emitter.Emit(ActionManagerEvents.ActionsChanged);
+                    return true;
+                }
+            }
+
+            PlayerAction actionInstance = existingAction?.Action ?? (PlayerAction)Activator.CreateInstance(actionType.ToType(), button);
+
+            if (ActionDictionary.ContainsKey(button))
+            {
+                if (ActionDictionary[button].Action != null && ActionDictionary[button].Action.State != PlayerActionState.None)
+                    return false;
+
+                ActionDictionary[button].EquipAction(actionInstance);
+                Emitter.Emit(ActionManagerEvents.ActionsChanged);
+                return true;
+            }
+
+            return false;
+        }
+
+        public void UnequipAction(VirtualButton button)
+        {
             if (ActionDictionary.ContainsKey(button))
             {
                 if (ActionDictionary[button].Action != null && ActionDictionary[button].Action.State != PlayerActionState.None)
                     return;
 
-                ActionDictionary[button].EquipAction(actionInstance);
+                ActionDictionary[button].UnequipAction();
                 Emitter.Emit(ActionManagerEvents.ActionsChanged);
             }
         }
@@ -72,11 +106,11 @@ namespace Threadlock.Entities.Characters.Player
         /// </summary>
         /// <param name="actionSlot"></param>
         /// <returns></returns>
-        public bool TryAction(out ActionSlot actionSlot)
+        public bool TryAction(bool pressedOnly, out ActionSlot actionSlot)
         {
             foreach (var pair in ActionDictionary)
             {
-                if (pair.Value.Action != null && pair.Key.IsDown && CanAffordAction(pair.Value.Action))
+                if (pair.Value.Action != null && pressedOnly ? pair.Value.Button.IsPressed : pair.Value.Button.IsDown && CanAffordAction(pair.Value.Action))
                 {
                     actionSlot = pair.Value;
                     return true;
@@ -89,6 +123,27 @@ namespace Threadlock.Entities.Characters.Player
             }
 
             actionSlot = null;
+            return false;
+        }
+
+        /// <summary>
+        /// returns the first empty action slot, or null if full
+        /// </summary>
+        /// <param name="slot"></param>
+        /// <returns></returns>
+        public bool TryGetEmptySlot(out ActionSlot slot)
+        {
+            slot = null;
+
+            foreach (var actionSlot in AllActionSlots)
+            {
+                if (actionSlot.Action == null)
+                {
+                    slot = actionSlot;
+                    return true;
+                }
+            }
+
             return false;
         }
 
@@ -118,9 +173,27 @@ namespace Threadlock.Entities.Characters.Player
 
         public void EquipAction(PlayerAction action)
         {
+            if (Action != null && Action == action)
+                return;
+
             Action?.RemoveComponent(Action);
             Action = action;
             Player.Instance.AddComponent(Action);
+        }
+
+        public PlayerAction ReplaceAction(PlayerAction action)
+        {
+            var prevAction = Action;
+
+            Action = action;
+
+            return prevAction;
+        }
+
+        public void UnequipAction()
+        {
+            Action?.RemoveComponent(Action);
+            Action = null;
         }
     }
 }

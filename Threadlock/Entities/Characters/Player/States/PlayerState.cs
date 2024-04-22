@@ -14,6 +14,7 @@ using Threadlock.Entities.Characters.Player.BasicWeapons;
 using Threadlock.Entities.Characters.Player.PlayerActions;
 using Threadlock.SaveData;
 using Threadlock.StaticData;
+using Threadlock.UI.Canvases;
 
 namespace Threadlock.Entities.Characters.Player.States
 {
@@ -61,6 +62,18 @@ namespace Threadlock.Entities.Characters.Player.States
 
             Game1.UIManager.Emitter.AddObserver(GlobalManagers.UIEvents.DialogueStarted, OnDialogueStarted);
             Game1.UIManager.Emitter.AddObserver(GlobalManagers.UIEvents.DialogueEnded, OnDialogueEnded);
+            Game1.UIManager.Emitter.AddObserver(GlobalManagers.UIEvents.MenuOpened, OnMenuOpened);
+            Game1.UIManager.Emitter.AddObserver(GlobalManagers.UIEvents.MenuClosed, OnMenuClosed);
+        }
+
+        void OnMenuOpened()
+        {
+            _machine.ChangeState<CutsceneState>();
+        }
+
+        void OnMenuClosed()
+        {
+            _machine.ChangeState<Idle>();
         }
 
         void OnDialogueStarted()
@@ -143,7 +156,7 @@ namespace Threadlock.Entities.Characters.Player.States
 
         public bool TryAction()
         {
-            if (_actionManager.TryAction(out var actionSlot))
+            if (_actionManager.TryAction(true, out var actionSlot))
             {
                 _machine.ChangeState<ActionState>();
                 var actionState = _machine.GetState<ActionState>();
@@ -224,7 +237,7 @@ namespace Threadlock.Entities.Characters.Player.States
         {
             if (Controls.Instance.ShowStats.IsPressed)
             {
-                _machine.ChangeState<ViewingStatsState>();
+                Game1.StartCoroutine(Game1.UIManager.ShowMenu(new CharacterOverview()));
                 return true;
             }
 

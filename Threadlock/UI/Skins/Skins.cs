@@ -134,6 +134,12 @@ namespace Threadlock.UI.Skins
                 Over = skin.GetDrawable("Inventory_02"),
             });
 
+            skin.Add("inventory_button_slot", new ButtonStyle()
+            {
+                Up = skin.GetDrawable("Inventory_Slot_01"),
+                Over = skin.GetDrawable("Inventory_Slot_02")
+            });
+
             for (int i = 0; i <= 335; i++)
             {
                 var num = i.ToString();

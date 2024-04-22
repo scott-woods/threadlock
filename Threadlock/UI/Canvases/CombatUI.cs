@@ -149,6 +149,9 @@ namespace Threadlock.UI.Canvases
 
             foreach (var slot in _actionManager.AllActionSlots)
             {
+                if (slot.Action == null)
+                    continue;
+
                 var type = slot.Action.GetType();
                 var table = new Table();
                 _iconsTable.Add(table);

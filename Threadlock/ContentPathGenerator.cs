@@ -83,6 +83,8 @@ namespace Nez
 				public const string Quickshot_reload_1 = @"Content\Audio\Sounds\quickshot_reload_1.wav";
 				public const string RetroAlarmed06 = @"Content\Audio\Sounds\Retro Alarmed 06.wav";
 				public const string Small_lightning = @"Content\Audio\Sounds\small_lightning.wav";
+				public const string Socket_Equip = @"Content\Audio\Sounds\Socket_Equip.wav";
+				public const string Socket_Remove = @"Content\Audio\Sounds\Socket_Remove.wav";
 				public const string Space_ship_3 = @"Content\Audio\Sounds\space_ship_3.wav";
 				public const string Special_chest_sound = @"Content\Audio\Sounds\special_chest_sound.wav";
 				public const string Spitter_fire = @"Content\Audio\Sounds\spitter_fire.wav";

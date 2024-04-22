@@ -1,6 +1,8 @@
-﻿using Nez;
+﻿using Microsoft.Xna.Framework.Graphics;
+using Nez;
 using Nez.Persistence;
 using Nez.Systems;
+using Nez.Textures;
 using Nez.Tweens;
 using System;
 using System.Collections;
@@ -59,6 +61,14 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             State = PlayerActionState.None;
         }
 
+        public Texture2D GetIconTexture()
+        {
+            var iconId = PlayerActionUtils.GetIconName(GetType());
+            var path = @$"Content\Textures\UI\Icons\Style3\Style 3 Icon {iconId}.png";
+            var texture = Entity.Scene.Content.LoadTexture(path);
+            return texture;
+        }
+
         public abstract IEnumerator ExecutionCoroutine();
 
         public abstract IEnumerator PreparationCoroutine();
@@ -68,6 +78,8 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
         /// </summary>
         public virtual void Reset()
         {
+            State = PlayerActionState.None;
+
             _prepareCoroutine?.Stop();
             _prepareCoroutine = null;
 

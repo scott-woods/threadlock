@@ -1,26 +1,30 @@
 ﻿using Microsoft.Xna.Framework;
 using Nez;
+using Nez.Textures;
 using Nez.UI;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
+using Threadlock.Entities;
 using Threadlock.Entities.Characters.Player;
 using Threadlock.Entities.Characters.Player.PlayerActions;
+using Threadlock.Models;
 using Threadlock.SaveData;
 using Threadlock.StaticData;
+using Threadlock.UI.Elements;
+using Stack = Nez.UI.Stack;
 
 namespace Threadlock.UI.Canvases
 {
-    public class CharacterOverview : UICanvas
+    public class CharacterOverview : Menu
     {
         const string _headerFont = "abaddon_24";
         const string _subHeaderFont = "abaddon_18";
         const string _bodyFont = "abaddon_12";
-
-        Action _closeHandler;
 
         Skin _skin;
 
@@ -28,13 +32,14 @@ namespace Threadlock.UI.Canvases
         Table _windowTable;
         Label _hpValueLabel;
         Label _apValueLabel;
-        Label _headValueLabel, _bodyValueLabel, _legsValueLabel, _charmValueLabel;
+        Label _headValueLabel, _bodyValueLabel, _legsValueLabel, _charmValueLabel, _infoValueLabel;
         List<Button> _actionButtons = new List<Button>();
 
-        public CharacterOverview(Action closeHandler)
-        {
-            _closeHandler = closeHandler;
-        }
+        Dictionary<Button, ActionSlot> _actionButtonDictionary = new Dictionary<Button, ActionSlot>();
+
+        CursorAttach<ActionSlot> _cursorAttach;
+
+        #region LIFECYCLE
 
         public override void Initialize()
         {
@@ -52,8 +57,10 @@ namespace Threadlock.UI.Canvases
 
             _windowTable = new Table();
             _windowTable.SetBackground(_skin.GetDrawable("window_blue"));
-            _windowTable.Defaults().Pad(10f);
-            _baseTable.Add(_windowTable).SetMaxWidth(Value.PercentWidth(.5f, _baseTable)).SetMaxHeight(Value.PercentHeight(.8f, _baseTable));
+            _windowTable.Defaults().Pad(5f);
+            _baseTable.Add(_windowTable).SetMaxWidth(Value.PercentWidth(.7f, _baseTable)).SetMaxHeight(Value.PercentHeight(.8f, _baseTable));
+
+            _windowTable.DebugAll();
 
             SetupStatsSection();
 
@@ -70,6 +77,8 @@ namespace Threadlock.UI.Canvases
         {
             base.OnAddedToEntity();
 
+            Game1.AudioManager.PlaySound(Nez.Content.Audio.Sounds.Open_stats_menu);
+
             if (Player.Instance.TryGetComponent<HealthComponent>(out var hc))
             {
                 _hpValueLabel.SetText($"{hc.Health}/{hc.MaxHealth}");
@@ -80,37 +89,124 @@ namespace Threadlock.UI.Canvases
 
             if (Player.Instance.TryGetComponent<ActionManager>(out var actionManager))
             {
+                actionManager.Emitter.AddObserver(ActionManagerEvents.ActionsChanged, OnActionsChanged);
+                OnActionsChanged();
+            }
+        }
+
+        public override void OnRemovedFromEntity()
+        {
+            base.OnRemovedFromEntity();
+
+            Game1.AudioManager.PlaySound(Nez.Content.Audio.Sounds.Close_stats_menu);
+
+            if (Player.Instance.TryGetComponent<ActionManager>(out var actionManager))
+                actionManager.Emitter.RemoveObserver(ActionManagerEvents.ActionsChanged, OnActionsChanged);
+        }
+
+        #endregion
+
+        #region MENU OVERRIDES
+
+        public override IEnumerator OpenMenu()
+        {
+            while (!Controls.Instance.ShowStats.IsPressed || _cursorAttach != null)
+                yield return null;
+        }
+
+        #endregion
+
+        #region OBSERVERS
+
+        void OnActionsChanged()
+        {
+            if (Player.Instance.TryGetComponent<ActionManager>(out var actionManager))
+            {
                 for (int i = 0; i < actionManager.AllActionSlots.Count; i++)
                 {
                     var slot = actionManager.AllActionSlots[i];
-                    if (slot.Action == null)
-                        continue;
-
-                    var id = PlayerActionUtils.GetIconName(slot.Action.GetType());
-
                     var button = _actionButtons[i];
-                    button.SetStyle(_skin.Get<ButtonStyle>($"inventory_button_{id}"));
+                    _actionButtonDictionary[button] = slot;
+
+                    if (slot.Action != null)
+                    {
+                        var id = PlayerActionUtils.GetIconName(slot.Action.GetType());
+                        button.SetStyle(_skin.Get<ButtonStyle>($"inventory_button_{id}"));
+                    }
+                    else
+                        button.SetStyle(_skin.Get<ButtonStyle>("inventory_button_slot"));
+
+                    button.InvalidateHierarchy();
                 }
             }
         }
 
-        public override void Update()
+        void OnButtonFocused(Button button)
         {
-            base.Update();
+            var slot = _actionButtonDictionary[button];
 
-            if (Controls.Instance.ShowStats.IsPressed)
-            {
-                _closeHandler?.Invoke();
+            if (slot.Action == null)
                 return;
+
+            var description = PlayerActionUtils.GetDescription(slot.Action.GetType());
+            _infoValueLabel.SetText(description);
+            _infoValueLabel.Layout();
+        }
+
+        void OnButtonUnfocused(Button button)
+        {
+            _infoValueLabel.SetText("");
+        }
+
+        void OnActionButtonClicked(Button button)
+        {
+            var slot = _actionButtonDictionary[button];
+
+            if (_cursorAttach == null)
+            {
+                if (slot != null && slot.Action != null)
+                {
+                    Game1.AudioManager.PlaySound(Nez.Content.Audio.Sounds.Socket_Remove);
+                    _cursorAttach = Entity.Scene.AddEntity(new CursorAttach<ActionSlot>(new Sprite(slot.Action.GetIconTexture()), slot));
+                    //if (Player.Instance.TryGetComponent<ActionManager>(out var actionManager))
+                    //    actionManager.UnequipAction(slot.Button);
+                    button.SetStyle(_skin.Get<ButtonStyle>($"inventory_button_slot"));
+                    button.InvalidateHierarchy();
+                }
+            }
+            else
+            {
+                if (slot == _cursorAttach.Data || slot.Action == null) //if picked the original slot or an empty slot
+                {
+                    if (Player.Instance.TryGetComponent<ActionManager>(out var actionManager))
+                        actionManager.EquipAction(PlayerActionType.FromType(_cursorAttach.Data.Action.GetType()), slot.Button);
+                }
+                else //picked a slot occupied by another action
+                {
+                    if (Player.Instance.TryGetComponent<ActionManager>(out var actionManager))
+                    {
+                        var prevActionType = PlayerActionType.FromType(slot.Action.GetType());
+                        actionManager.EquipAction(PlayerActionType.FromType(_cursorAttach.Data.Action.GetType()), slot.Button);
+                        actionManager.EquipAction(prevActionType, _cursorAttach.Data.Button);
+                    }
+                }
+
+                Game1.AudioManager.PlaySound(Nez.Content.Audio.Sounds.Socket_Equip);
+
+                _cursorAttach?.Destroy();
+                _cursorAttach = null;
             }
         }
+
+        #endregion
+
+        #region UI Setup
 
         Table SetupStatsSection()
         {
             var statsSection = new Table();
             statsSection.Top().Left();
-            statsSection.DebugAll();
-            _windowTable.Add(statsSection).Grow();
+            _windowTable.Add(statsSection).Top().Left().Grow().SetUniformX();
 
             //header
             var headerLabel = new Label("Stats", _skin, _headerFont);
@@ -193,31 +289,47 @@ namespace Threadlock.UI.Canvases
         {
             var inventorySection = new Table();
 
-            _windowTable.Add(inventorySection).Grow();
+            _windowTable.Add(inventorySection).Grow().SetUniformX();
 
             var actionsTable = new Table();
-            inventorySection.Add(actionsTable);
+            inventorySection.Add(actionsTable).Grow();
 
             var actionHeader = new Label("Actions", _skin, _subHeaderFont);
-            actionsTable.Add(actionHeader).SetColspan(3).Left();
+            actionsTable.Add(actionHeader).SetColspan(1).Left();
 
             actionsTable.Row();
 
+            var equippedActionsTable = new Table();
+            actionsTable.Add(equippedActionsTable).Grow().Left();
+
             for (int i = 0; i < 3; i++)
             {
-                var button = new Button(_skin, "inventory_button_empty");
+                var slot = new Table();
+                var slotDrawable = _skin.GetDrawable("Inventory_01");
+                slot.SetBackground(slotDrawable);
+                var button = new CustomButton(_skin, "inventory_button_slot");
+                button.OnClicked += OnActionButtonClicked;
+                button.OnButtonFocused += OnButtonFocused;
+                button.OnButtonUnfocused += OnButtonUnfocused;
                 //button.SetBackground(new SpriteDrawable(Entity.Scene.Content.LoadTexture(Nez.Content.Textures.UI.Icons.Plus_icon_up)));
-                actionsTable.Add(button);
+                _actionButtonDictionary.Add(button, null);
                 _actionButtons.Add(button);
+
+                equippedActionsTable.Add(slot).Left().Width(slotDrawable.MinWidth).Height(slotDrawable.MinHeight);
+                slot.Add(button);
             }
 
-            inventorySection.Row();
+            //var reserveSlot = new Table();
+            //var reserveSlotDrawable = _skin.GetDrawable("Inventory_01");
+            //reserveSlot.SetBackground(reserveSlotDrawable);
 
-            var modsTable = new Table();
-            inventorySection.Add(modsTable);
+            //inventorySection.Row();
 
-            var modsHeader = new Label("Mods", _skin, _subHeaderFont);
-            modsTable.Add(modsHeader).Expand().Left();
+            //var modsTable = new Table();
+            //inventorySection.Add(modsTable);
+
+            //var modsHeader = new Label("Mods", _skin, _subHeaderFont);
+            //modsTable.Add(modsHeader).Expand().Left();
 
             return inventorySection;
         }
@@ -225,13 +337,23 @@ namespace Threadlock.UI.Canvases
         Table SetupInfoSection()
         {
             var infoSection = new Table();
+            infoSection.DebugAll();
 
             _windowTable.Add(infoSection).Grow();
 
             var headerLabel = new Label("Info", _skin, _headerFont);
-            infoSection.Add(headerLabel).Expand().Top().Left();
+            infoSection.Add(headerLabel).Top().Left();
+
+            infoSection.Row();
+
+            _infoValueLabel = new Label("", _skin, _bodyFont);
+            _infoValueLabel.SetWidth(5f);
+            _infoValueLabel.SetWrap(true);
+            infoSection.Add(_infoValueLabel).Grow().Top().Left();
 
             return infoSection;
         }
+
+        #endregion
     }
 }

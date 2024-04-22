@@ -72,7 +72,7 @@ namespace Threadlock.Components
         /// </summary>
         public void Trigger()
         {
-            Game1.AudioManager.PlaySound(Nez.Content.Audio.Sounds.FartWithReverb);
+            OnClicked?.Invoke();
         }
     }
 }

@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Models;
 using Threadlock.StaticData;
+using Threadlock.UI.Canvases;
 using Threadlock.UI.Elements;
 using Threadlock.UI.Skins;
 
@@ -41,11 +42,33 @@ namespace Threadlock.GlobalManagers
 
             canvas.Entity.Destroy();
         }
+
+        public IEnumerator ShowMenu(Menu menu)
+        {
+            var entity = Game1.Scene.CreateEntity("ui-menu");
+            entity.AddComponent(menu);
+
+            Emitter.Emit(UIEvents.MenuOpened);
+
+            //wait one frame so we don't instantly close the menu
+            yield return null;
+
+            yield return Game1.StartCoroutine(menu.OpenMenu());
+
+            //again wait one frame so menu doesn't instantly open again
+            yield return null;
+
+            Emitter.Emit(UIEvents.MenuClosed);
+
+            entity.Destroy();
+        }
     }
     
     public enum UIEvents
     {
         DialogueStarted,
-        DialogueEnded
+        DialogueEnded,
+        MenuOpened,
+        MenuClosed,
     }
 }

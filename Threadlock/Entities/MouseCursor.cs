@@ -13,6 +13,8 @@ namespace Threadlock.Entities
     {
         SpriteRenderer _spriteRenderer;
 
+        public MouseCursor() : base("mouse-cursor") { }
+
         public override void OnAddedToScene()
         {
             base.OnAddedToScene();

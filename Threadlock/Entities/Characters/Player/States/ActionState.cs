@@ -49,7 +49,7 @@ namespace Threadlock.Entities.Characters.Player.States
                 if (!_currentAction.Button.IsDown)
                 {
                     //if another button is held, switch to that action
-                    if (_actionManager.TryAction(out var nextAction))
+                    if (_actionManager.TryAction(false, out var nextAction))
                         StartAction(nextAction);
                     else
                     {

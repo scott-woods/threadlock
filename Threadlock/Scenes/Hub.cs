@@ -46,8 +46,10 @@ namespace Threadlock.Scenes
 
             Game1.AudioManager.PlayMusic(Nez.Content.Audio.Music.The_bay);
 
-            var actionPick = AddEntity(new ActionPickup());
-            actionPick.SetPosition(player.Position + new Vector2(0, -100));
+            var actionPick = AddEntity(new ActionPickup(PlayerActionType.FromType<ChainLightning>()));
+            actionPick.SetPosition(player.Position + new Vector2(-25, -100));
+            var actionPick2 = AddEntity(new ActionPickup(PlayerActionType.FromType<Grip>()));
+            actionPick2.SetPosition(actionPick.Position + new Vector2(50, 0));
         }
     }
 }

@@ -19,6 +19,11 @@ namespace Threadlock.Models
             return new PlayerActionType() { TypeName = typeof(T).AssemblyQualifiedName };
         }
 
+        public static PlayerActionType FromType(Type type)
+        {
+            return new PlayerActionType() { TypeName = type.AssemblyQualifiedName };
+        }
+
         public Type ToType()
         {
             return Type.GetType(TypeName);

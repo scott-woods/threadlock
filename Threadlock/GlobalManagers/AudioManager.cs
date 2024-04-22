@@ -56,30 +56,30 @@ namespace Threadlock.GlobalManagers
 
             //if an instance of this sound isn't already in the list, add it
             if (!_soundInstances.ContainsKey(sound))
-            {
                 _soundInstances[sound] = new List<SoundEffectInstance>();
-            }
 
             //clean up sound instances that have stopped
             _soundInstances[sound].RemoveAll(instance => instance.State == Microsoft.Xna.Framework.Audio.SoundState.Stopped);
 
             //create instance
             var soundInstance = sound.CreateInstance();
+            _soundInstances[sound].Insert(0, soundInstance);
             int instanceCount = _soundInstances[sound].Count;
 
             //reduce volume relative to how many sound instances there are currently
-            float volume = Math.Max(0, (_defaultSoundVolume * Settings.Instance.SoundVolume) * (1 - (instanceCount * _volumeReductionFactor)));
-            soundInstance.Volume = volume;
+            for (int i = _soundInstances[sound].Count - 1; i >= 0; i--)
+            {
+                var currentInstance = _soundInstances[sound][i];
+                float volume = Math.Max(0, (_defaultSoundVolume * Settings.Instance.SoundVolume) * (1 - (i * _volumeReductionFactor)));
+                currentInstance.Volume = volume;
+            }
 
             //play sound
             soundInstance.Play();
-            _soundInstances[sound].Add(soundInstance);
 
             //yield while playing
             while (soundInstance.State == Microsoft.Xna.Framework.Audio.SoundState.Playing)
-            {
                 yield return null;
-            }
         }
 
         /// <summary>

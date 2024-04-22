@@ -28,7 +28,8 @@ namespace Threadlock.SaveData
         }
 
         public PlayerActionType OffensiveAction1 = PlayerActionType.FromType<DashAction>();
-        public PlayerActionType OffensiveAction2 = PlayerActionType.FromType<Grip>();
+        //public PlayerActionType OffensiveAction2 = PlayerActionType.FromType<Grip>();
+        public PlayerActionType OffensiveAction2 = null;
         public PlayerActionType SupportAction = PlayerActionType.FromType<Teleport>();
 
         [JsonInclude]
