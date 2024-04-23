@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Entities.Characters.Player.PlayerActions;
@@ -27,6 +28,17 @@ namespace Threadlock.Models
         public Type ToType()
         {
             return Type.GetType(TypeName);
+        }
+
+        public static List<PlayerActionType> GetAllActionTypes()
+        {
+            Assembly assembly = Assembly.GetExecutingAssembly();
+
+            Type[] actionTypes = assembly.GetTypes()
+                .Where(t => t.IsSubclassOf(typeof(PlayerAction)) && !t.IsAbstract)
+                .ToArray();
+
+            return actionTypes.Select(t => FromType(t)).ToList();
         }
     }
 }

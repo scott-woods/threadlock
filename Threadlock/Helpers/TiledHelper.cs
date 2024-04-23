@@ -41,7 +41,11 @@ namespace Threadlock.Helpers
                         wallLayers.Add(layer);
                 }
                 if (layer.Name.StartsWith("Front"))
+                {
+                    if (layer.Properties != null && layer.Properties.TryGetValue("Hide", out var hide))
+                        continue;
                     frontLayers.Add(layer);
+                }
                 if (layer.Name.StartsWith("AboveFront"))
                     aboveFrontLayers.Add(layer);
             }

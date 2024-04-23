@@ -13,6 +13,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
+using Threadlock.Components.TiledComponents;
 using Threadlock.Effects;
 using Threadlock.Entities.Characters.Player.BasicWeapons;
 using Threadlock.Entities.Characters.Player.PlayerActions;
@@ -26,6 +27,8 @@ namespace Threadlock.Entities.Characters.Player
 {
     public class Player : Entity
     {
+        const float _checkRadius = 20f;
+
         public static Player Instance { get; private set; }
 
         public float MoveSpeed = 135f;
@@ -82,7 +85,6 @@ namespace Threadlock.Entities.Characters.Player
             Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.Environment);
             Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.ProjectilePassableWall);
             Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.PromptTrigger);
-            Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.Trigger);
 
             //hurtbox
             var hurtboxCollider = AddComponent(new BoxCollider(9, 16));
@@ -336,6 +338,18 @@ namespace Threadlock.Entities.Characters.Player
             _statusComponent.PopStatus(StatusPriority.Death);
             _hurtbox.SetEnabled(true);
             _shadow.SetEnabled(true);
+        }
+
+        public bool TryRaycast(int mask, out RaycastHit raycastHit)
+        {
+            var basePos = _originComponent.Origin;
+
+            var dir = _velocityComponent.LastNonZeroDirection;
+
+            var checkEnd = basePos + (dir * _checkRadius);
+
+            raycastHit = Physics.Linecast(basePos, checkEnd, mask);
+            return raycastHit.Collider != null;
         }
     }
 }

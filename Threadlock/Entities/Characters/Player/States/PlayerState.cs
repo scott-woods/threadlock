@@ -188,9 +188,9 @@ namespace Threadlock.Entities.Characters.Player.States
                     var colliders = Physics.BoxcastBroadphaseExcludingSelf(hurtbox.Collider, 1 << PhysicsLayers.PromptTrigger);
                     foreach (var collider in colliders)
                     {
-                        if (collider.Entity.TryGetComponent<ButtonPrompt>(out var buttonPrompt))
+                        if (collider.Entity.TryGetComponent<Trigger>(out var trigger))
                         {
-                            buttonPrompt.Trigger();
+                            Game1.StartCoroutine(trigger.HandleTriggered());
                             return true;
                         }
                     }
@@ -201,26 +201,15 @@ namespace Threadlock.Entities.Characters.Player.States
                     var colliders = Physics.BoxcastBroadphaseExcludingSelf(playerCollider, 1 << PhysicsLayers.PromptTrigger);
                     foreach (var collider in colliders)
                     {
-                        if (collider.Entity.TryGetComponent<ButtonPrompt>(out var buttonPrompt))
+                        if (collider.Entity.TryGetComponent<Trigger>(out var trigger))
                         {
-                            buttonPrompt.Trigger();
+                            Game1.StartCoroutine(trigger.HandleTriggered());
                             return true;
                         }
                     }
                 }
 
-                var basePos = _context.Position;
-                if (_context.TryGetComponent<OriginComponent>(out var oc))
-                    basePos = oc.Origin;
-
-                var dir = Vector2.Zero;
-                if (_context.TryGetComponent<VelocityComponent>(out var vc))
-                    dir = vc.LastNonZeroDirection;
-
-                var checkEnd = basePos + (dir * _checkRadius);
-
-                var raycast = Physics.Linecast(basePos, checkEnd, 1 << PhysicsLayers.Trigger);
-                if (raycast.Collider != null)
+                if (_context.TryRaycast(1 << PhysicsLayers.PromptTrigger, out var raycast))
                 {
                     if (raycast.Collider.Entity.TryGetComponent<Trigger>(out var trigger))
                     {

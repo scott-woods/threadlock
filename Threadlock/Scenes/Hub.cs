@@ -1,23 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Nez;
-using Nez.DeferredLighting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Threadlock.Components;
-using Threadlock.Components.TiledComponents;
-using Threadlock.Entities;
-using Threadlock.Entities.Characters.Enemies.OrbMage;
-using Threadlock.Entities.Characters.Player;
-using Threadlock.Entities.Characters.Player.PlayerActions;
 using Threadlock.Helpers;
-using Threadlock.Models;
-using Threadlock.SaveData;
 using Threadlock.SceneComponents;
-using Threadlock.StaticData;
 using Threadlock.UI.Canvases;
 
 namespace Threadlock.Scenes
@@ -31,7 +16,8 @@ namespace Threadlock.Scenes
             base.OnStart();
 
             var mapEntity = CreateEntity("map");
-            var map = Content.LoadTiledMap(Nez.Content.Tiled.Tilemaps.HubMaps.Hub);
+            //var map = Content.LoadTiledMap(Nez.Content.Tiled.Tilemaps.HubMaps.Hub);
+            var map = Content.LoadTiledMap(Nez.Content.Tiled.Tilemaps.Forge.Forge_action_store);
             TiledHelper.SetupMap(mapEntity, map);
             TiledHelper.SetupLightingTiles(mapEntity, map);
 
@@ -45,11 +31,6 @@ namespace Threadlock.Scenes
             var followCam = Camera.AddComponent(new CustomFollowCamera(player));
 
             Game1.AudioManager.PlayMusic(Nez.Content.Audio.Music.The_bay);
-
-            var actionPick = AddEntity(new ActionPickup(PlayerActionType.FromType<ChainLightning>()));
-            actionPick.SetPosition(player.Position + new Vector2(-25, -100));
-            var actionPick2 = AddEntity(new ActionPickup(PlayerActionType.FromType<Grip>()));
-            actionPick2.SetPosition(actionPick.Position + new Vector2(50, 0));
         }
     }
 }

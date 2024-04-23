@@ -95,5 +95,23 @@ namespace Threadlock.Helpers
 
             return directionString;
         }
+
+        /// <summary>
+        /// expects a string with two numbers, delineated by a space. returns Vector2.Zero if invalid string
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static Vector2 GetVectorFromString(string str)
+        {
+            var splitString = str.Split(' ');
+            if (splitString.Length != 2)
+                return Vector2.Zero;
+
+            var x = Convert.ToInt32(splitString[0]);
+            var y = Convert.ToInt32(splitString[1]);
+
+
+            return new Vector2(x, y);
+        }
     }
 }

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Threadlock.Entities.Characters.Player;
 using Threadlock.StaticData;
 using Threadlock.UI.Skins;
 
@@ -15,7 +16,7 @@ namespace Threadlock.Components
     /// <summary>
     /// displays an icon in world space when near the entity, indicating it is interactable
     /// </summary>
-    public class ButtonPrompt : Component, ITriggerListener
+    public class ButtonPrompt : Component, ITriggerListener, IUpdatable
     {
         public event Action OnClicked;
         public event Action OnEntered;
@@ -39,6 +40,18 @@ namespace Threadlock.Components
             _offset = new Vector2(0, ((renderable.Height / 2) + (renderable.Height * .2f)) * -1);
         }
 
+        public ButtonPrompt(Collider collider)
+        {
+            _collider = collider;
+            _offset = Vector2.Zero;
+        }
+
+        public ButtonPrompt (Collider collider, Vector2 offset)
+        {
+            _collider = collider;
+            _offset = offset;
+        }
+
         public override void OnAddedToEntity()
         {
             base.OnAddedToEntity();
@@ -51,12 +64,35 @@ namespace Threadlock.Components
             _renderer.SetLocalOffset(_offset);
             _renderer.SetEnabled(false);
 
-            _collider = Entity.AddComponent(new CircleCollider(_radius));
-            _collider.IsTrigger = true;
-            _collider.CollidesWithLayers = 0;
-            Flags.SetFlagExclusive(ref _collider.PhysicsLayer, PhysicsLayers.PromptTrigger);
-            Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.PlayerHurtbox);
-            Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.PlayerCollider);
+            if (_collider == null)
+            {
+                _collider = Entity.AddComponent(new CircleCollider(_radius));
+                _collider.IsTrigger = true;
+                _collider.CollidesWithLayers = 0;
+                Flags.SetFlagExclusive(ref _collider.PhysicsLayer, PhysicsLayers.PromptTrigger);
+                Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.PlayerHurtbox);
+                Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.PlayerCollider);
+            }
+        }
+
+        public void Update()
+        {
+            if (Player.Instance.TryRaycast(_collider.PhysicsLayer, out var raycast))
+            {
+                if (raycast.Collider == _collider)
+                {
+                    _renderer.SetEnabled(true);
+                    OnEntered?.Invoke();
+                }
+            }
+            else if (!Physics.BoxcastBroadphaseExcludingSelf(_collider, _collider.CollidesWithLayers).Any())
+            {
+                if (_renderer.Enabled)
+                {
+                    _renderer.SetEnabled(false);
+                    OnExited?.Invoke();
+                }
+            }
         }
 
         public void OnTriggerEnter(Collider other, Collider local)

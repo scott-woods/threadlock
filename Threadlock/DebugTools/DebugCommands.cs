@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
 using Threadlock.Entities.Characters.Player;
+using Threadlock.SaveData;
 
 #if DEBUG
 namespace Threadlock.DebugTools
@@ -54,6 +55,12 @@ namespace Threadlock.DebugTools
                 if (Player.Instance.TryGetComponent<HealthComponent>(out var hc))
                     hc.Health = Convert.ToInt32(hp);
             }
+        }
+
+        [Command("add-dollahs", "Add dollahs")]
+        static void AddDollahs(string dollahs)
+        {
+            PlayerData.Instance.Dollahs += Convert.ToInt32(dollahs);
         }
     }
 }

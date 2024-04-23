@@ -11,6 +11,30 @@
     ],
     "propertyTypes": [
         {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 27,
+            "members": [
+                {
+                    "name": "Frames",
+                    "type": "string",
+                    "value": ""
+                },
+                {
+                    "name": "TexturePath",
+                    "type": "string",
+                    "value": ""
+                }
+            ],
+            "name": "AnimatedObject",
+            "type": "class",
+            "useAs": [
+                "property",
+                "object",
+                "project"
+            ]
+        },
+        {
             "id": 10,
             "name": "DoorwayDirection",
             "storageType": "string",
@@ -293,6 +317,20 @@
         {
             "color": "#ffa0a0a4",
             "drawFill": true,
+            "id": 26,
+            "members": [
+            ],
+            "name": "ShopItem",
+            "type": "class",
+            "useAs": [
+                "property",
+                "object",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
             "id": 18,
             "members": [
                 {
@@ -340,6 +378,11 @@
                 },
                 {
                     "name": "EventName",
+                    "type": "string",
+                    "value": ""
+                },
+                {
+                    "name": "PromptOffset",
                     "type": "string",
                     "value": ""
                 },
