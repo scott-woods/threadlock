@@ -9,8 +9,8 @@ namespace Threadlock.UI.Elements
 {
     public class CustomButton : Button, IInputListener
     {
-        public event Action<Button> OnButtonFocused;
-        public event Action<Button> OnButtonUnfocused;
+        public event Action<CustomButton> OnButtonFocused;
+        public event Action<CustomButton> OnButtonUnfocused;
 
         public string FocusedSoundPath = Nez.Content.Audio.Sounds._002_Hover_02;
 

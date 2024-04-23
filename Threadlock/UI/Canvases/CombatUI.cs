@@ -77,6 +77,15 @@ namespace Threadlock.UI.Canvases
             _dustLabel = new Label("", _skin, "abaddon_18");
             currencyTable.Add(_dustLabel).SetPadLeft(3f).SetPadTop(5f);
 
+            currencyTable.Row();
+
+            var menuTable = new Table();
+            currencyTable.Add(menuTable).SetPadLeft(3f).SetPadTop(5f);
+            menuTable.Add(new Image(_skin.GetDrawable("image_extra_keys_0")));
+            menuTable.Row();
+            var menuLabel = new Label("Menu", _skin, "abaddon_12");
+            menuTable.Add(menuLabel);
+
             _baseTable.Row();
 
             _bottomTable = new Table();

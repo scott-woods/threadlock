@@ -18,6 +18,8 @@ namespace Threadlock.Components
     public class ButtonPrompt : Component, ITriggerListener
     {
         public event Action OnClicked;
+        public event Action OnEntered;
+        public event Action OnExited;
 
         float _radius;
         Vector2 _offset;
@@ -60,11 +62,13 @@ namespace Threadlock.Components
         public void OnTriggerEnter(Collider other, Collider local)
         {
             _renderer.SetEnabled(true);
+            OnEntered?.Invoke();
         }
 
         public void OnTriggerExit(Collider other, Collider local)
         {
             _renderer.SetEnabled(false);
+            OnExited?.Invoke();
         }
 
         /// <summary>

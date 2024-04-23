@@ -25,6 +25,7 @@ namespace Threadlock.UI.Canvases
         const string _headerFont = "abaddon_24";
         const string _subHeaderFont = "abaddon_18";
         const string _bodyFont = "abaddon_12";
+        const string _defaultTipLabel = "Click to Change Slot";
 
         Skin _skin;
 
@@ -32,10 +33,10 @@ namespace Threadlock.UI.Canvases
         Table _windowTable;
         Label _hpValueLabel;
         Label _apValueLabel;
-        Label _headValueLabel, _bodyValueLabel, _legsValueLabel, _charmValueLabel, _infoValueLabel;
-        List<Button> _actionButtons = new List<Button>();
+        Label _headValueLabel, _bodyValueLabel, _legsValueLabel, _charmValueLabel, _infoValueLabel, _actionTipLabel;
+        List<CustomButton> _actionButtons = new List<CustomButton>();
 
-        Dictionary<Button, ActionSlot> _actionButtonDictionary = new Dictionary<Button, ActionSlot>();
+        Dictionary<CustomButton, ActionSlot> _actionButtonDictionary = new Dictionary<CustomButton, ActionSlot>();
 
         CursorAttach<ActionSlot> _cursorAttach;
 
@@ -59,8 +60,6 @@ namespace Threadlock.UI.Canvases
             _windowTable.SetBackground(_skin.GetDrawable("window_blue"));
             _windowTable.Defaults().Pad(5f);
             _baseTable.Add(_windowTable).SetMaxWidth(Value.PercentWidth(.7f, _baseTable)).SetMaxHeight(Value.PercentHeight(.8f, _baseTable));
-
-            _windowTable.DebugAll();
 
             SetupStatsSection();
 
@@ -131,17 +130,22 @@ namespace Threadlock.UI.Canvases
                     if (slot.Action != null)
                     {
                         var id = PlayerActionUtils.GetIconName(slot.Action.GetType());
+                        button.FocusedSoundPath = Nez.Content.Audio.Sounds._002_Hover_02;
                         button.SetStyle(_skin.Get<ButtonStyle>($"inventory_button_{id}"));
                     }
                     else
+                    {
+                        button.FocusedSoundPath = null;
                         button.SetStyle(_skin.Get<ButtonStyle>("inventory_button_slot"));
+                    }
+                        
 
                     button.InvalidateHierarchy();
                 }
             }
         }
 
-        void OnButtonFocused(Button button)
+        void OnButtonFocused(CustomButton button)
         {
             var slot = _actionButtonDictionary[button];
 
@@ -153,15 +157,16 @@ namespace Threadlock.UI.Canvases
             _infoValueLabel.Layout();
         }
 
-        void OnButtonUnfocused(Button button)
+        void OnButtonUnfocused(CustomButton button)
         {
             _infoValueLabel.SetText("");
         }
 
         void OnActionButtonClicked(Button button)
         {
-            var slot = _actionButtonDictionary[button];
+            var slot = _actionButtonDictionary[button as CustomButton];
 
+            //if cursor attach is null, we're selecting a new action to move
             if (_cursorAttach == null)
             {
                 if (slot != null && slot.Action != null)
@@ -172,6 +177,8 @@ namespace Threadlock.UI.Canvases
                     //    actionManager.UnequipAction(slot.Button);
                     button.SetStyle(_skin.Get<ButtonStyle>($"inventory_button_slot"));
                     button.InvalidateHierarchy();
+
+                    _actionTipLabel.SetText("Replacing...");
                 }
             }
             else
@@ -195,6 +202,8 @@ namespace Threadlock.UI.Canvases
 
                 _cursorAttach?.Destroy();
                 _cursorAttach = null;
+
+                _actionTipLabel.SetText(_defaultTipLabel);
             }
         }
 
@@ -294,8 +303,13 @@ namespace Threadlock.UI.Canvases
             var actionsTable = new Table();
             inventorySection.Add(actionsTable).Grow();
 
-            var actionHeader = new Label("Actions", _skin, _subHeaderFont);
+            var actionHeader = new Label("Actions", _skin, _headerFont);
             actionsTable.Add(actionHeader).SetColspan(1).Left();
+
+            actionsTable.Row();
+
+            _actionTipLabel = new Label(_defaultTipLabel, _skin, _subHeaderFont);
+            actionsTable.Add(_actionTipLabel).SetColspan(1).Left();
 
             actionsTable.Row();
 
@@ -308,6 +322,7 @@ namespace Threadlock.UI.Canvases
                 var slotDrawable = _skin.GetDrawable("Inventory_01");
                 slot.SetBackground(slotDrawable);
                 var button = new CustomButton(_skin, "inventory_button_slot");
+                button.FocusedSoundPath = null;
                 button.OnClicked += OnActionButtonClicked;
                 button.OnButtonFocused += OnButtonFocused;
                 button.OnButtonUnfocused += OnButtonUnfocused;
@@ -337,7 +352,6 @@ namespace Threadlock.UI.Canvases
         Table SetupInfoSection()
         {
             var infoSection = new Table();
-            infoSection.DebugAll();
 
             _windowTable.Add(infoSection).Grow();
 

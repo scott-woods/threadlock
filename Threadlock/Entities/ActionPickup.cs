@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Nez;
 using Nez.Sprites;
+using Nez.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,8 +11,12 @@ using System.Threading.Tasks;
 using Threadlock.Components;
 using Threadlock.Entities.Characters.Player;
 using Threadlock.Entities.Characters.Player.PlayerActions;
+using Threadlock.Helpers;
 using Threadlock.Models;
+using Threadlock.StaticData;
 using Threadlock.UI.Canvases;
+using Threadlock.UI.Elements;
+using Threadlock.UI.Skins;
 using static Nez.Content.Textures.UI;
 
 namespace Threadlock.Entities
@@ -24,6 +29,8 @@ namespace Threadlock.Entities
 
         PlayerActionType _actionType;
         Bobber _bobber;
+
+        InfoModal _modal;
 
         public ActionPickup(PlayerActionType actionType)
         {
@@ -44,8 +51,24 @@ namespace Threadlock.Entities
 
             _prompt = AddComponent(new ButtonPrompt(32, _renderer));
             _prompt.OnClicked += OnClicked;
+            _prompt.OnEntered += OnEntered;
+            _prompt.OnExited += OnExited;
 
             _bobber = new Bobber(Position);
+
+            var modalHeader = PlayerActionUtils.GetName(_actionType.ToType());
+            var modalBody = PlayerActionUtils.GetDescription(_actionType.ToType());
+            var modalAnchor = Position + new Vector2(0, ((_renderer.Height / 2) + (_renderer.Height * .2f) + 10) * -1);
+            _modal = Scene.CreateEntity("modal").AddComponent(new InfoModal(modalAnchor, modalHeader, modalBody));
+            _modal.SetEnabled(false);
+        }
+
+        public override void OnRemovedFromScene()
+        {
+            base.OnRemovedFromScene();
+
+            _modal?.Entity?.Destroy();
+            _modal = null;
         }
 
         public override void Update()
@@ -71,6 +94,16 @@ namespace Threadlock.Entities
                 else
                     Game1.StartCoroutine(Replace());
             }
+        }
+
+        void OnEntered()
+        {
+            _modal.SetEnabled(true);
+        }
+
+        void OnExited()
+        {
+            _modal.SetEnabled(false);
         }
 
         IEnumerator Replace()

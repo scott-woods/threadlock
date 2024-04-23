@@ -110,7 +110,7 @@ namespace Threadlock.Entities.Characters.Player
         {
             foreach (var pair in ActionDictionary)
             {
-                if (pair.Value.Action != null && pressedOnly ? pair.Value.Button.IsPressed : pair.Value.Button.IsDown && CanAffordAction(pair.Value.Action))
+                if (pair.Value.Action != null && (pressedOnly ? pair.Value.Button.IsPressed : pair.Value.Button.IsDown) && CanAffordAction(pair.Value.Action))
                 {
                     actionSlot = pair.Value;
                     return true;

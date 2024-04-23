@@ -95,6 +95,12 @@ namespace Threadlock.UI.Skins
                 skin.Add($"image_keys_{i}", keySprites[i]);
             }
 
+            //extra keys
+            var extraKeysTexture = Game1.Content.LoadTexture(Nez.Content.Textures.UI.KeyboardSymbols.KeyboardExtras);
+            var extraKeysSprites = Sprite.SpritesFromAtlas(extraKeysTexture, 32, 16);
+            for (int i = 0; i < extraKeysSprites.Count; i++)
+                skin.Add($"image_extra_keys_{i}", extraKeysSprites[i]);
+
             //ammo
             var ammoTexture = Game1.Content.LoadTexture(Nez.Content.Textures.UI.UIAmmo.UIAmmo16x16);
             var ammoSprites = Sprite.SpritesFromAtlas(ammoTexture, 16, 16);
