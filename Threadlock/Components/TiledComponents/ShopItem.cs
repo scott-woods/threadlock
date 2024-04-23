@@ -18,8 +18,8 @@ namespace Threadlock.Components.TiledComponents
 {
     public class ShopItem : TiledComponent, IUpdatable
     {
-        const int _minCost = 125;
-        const int _maxCost = 250;
+        const int _minCost = 100;
+        const int _maxCost = 225;
         const int _increment = 5;
 
         public PlayerActionType ActionType;

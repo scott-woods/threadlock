@@ -261,6 +261,31 @@
         {
             "color": "#ffa0a0a4",
             "drawFill": true,
+            "id": 28,
+            "members": [
+                {
+                    "name": "MusicName",
+                    "type": "string",
+                    "value": ""
+                }
+            ],
+            "name": "MusicChanger",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
             "id": 14,
             "members": [
                 {

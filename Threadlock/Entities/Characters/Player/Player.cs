@@ -85,6 +85,7 @@ namespace Threadlock.Entities.Characters.Player
             Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.Environment);
             Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.ProjectilePassableWall);
             Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.PromptTrigger);
+            Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.AreaTrigger);
 
             //hurtbox
             var hurtboxCollider = AddComponent(new BoxCollider(9, 16));

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" class="DungeonMap" orientation="orthogonal" renderorder="right-down" width="32" height="34" tilewidth="16" tileheight="16" infinite="0" nextlayerid="295" nextobjectid="27">
+<map version="1.10" tiledversion="1.10.2" class="DungeonMap" orientation="orthogonal" renderorder="right-down" width="32" height="34" tilewidth="16" tileheight="16" infinite="0" nextlayerid="295" nextobjectid="28">
  <properties>
   <property name="Area" value="Forge"/>
  </properties>
@@ -369,6 +369,7 @@
    <properties>
     <property name="Args" value="Sword"/>
     <property name="EventName" value="ChangeWeapon"/>
+    <property name="PromptOffset" value="16 -16"/>
     <property name="Type" propertytype="TriggerType" value="Interact"/>
    </properties>
   </object>
@@ -376,6 +377,7 @@
    <properties>
     <property name="Args" value="Gun"/>
     <property name="EventName" value="ChangeWeapon"/>
+    <property name="PromptOffset" value="16 -16"/>
     <property name="Type" propertytype="TriggerType" value="Interact"/>
    </properties>
   </object>

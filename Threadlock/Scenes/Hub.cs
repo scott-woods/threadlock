@@ -16,8 +16,8 @@ namespace Threadlock.Scenes
             base.OnStart();
 
             var mapEntity = CreateEntity("map");
-            //var map = Content.LoadTiledMap(Nez.Content.Tiled.Tilemaps.HubMaps.Hub);
-            var map = Content.LoadTiledMap(Nez.Content.Tiled.Tilemaps.Forge.Forge_action_store);
+            var map = Content.LoadTiledMap(Nez.Content.Tiled.Tilemaps.HubMaps.Hub);
+            //var map = Content.LoadTiledMap(Nez.Content.Tiled.Tilemaps.Forge.Forge_action_store);
             TiledHelper.SetupMap(mapEntity, map);
             TiledHelper.SetupLightingTiles(mapEntity, map);
 
@@ -30,7 +30,7 @@ namespace Threadlock.Scenes
             //var followCam = Camera.AddComponent(new CustomFollowCamera(player, mapBounds.Location.ToVector2(), (mapBounds.Location + mapBounds.GetSize()).ToVector2()));
             var followCam = Camera.AddComponent(new CustomFollowCamera(player));
 
-            Game1.AudioManager.PlayMusic(Nez.Content.Audio.Music.The_bay);
+            Game1.AudioManager.PlayMusic(Nez.Content.Audio.Music.The_bay, true, 0, 1);
         }
     }
 }

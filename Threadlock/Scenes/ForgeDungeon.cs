@@ -58,7 +58,8 @@ namespace Threadlock.Scenes
 
         void OnFadeInStarted()
         {
-            Game1.AudioManager.PlayMusic(Nez.Content.Audio.Music.Meltingidols);
+            Game1.AudioManager.PlayMusic(Nez.Content.Audio.Music.Meltingidols, true, 1.5f, 1f, false);
+            Game1.AudioManager.PlayMusic(Nez.Content.Audio.Music.Shweet_sales, true, 0, 0f, false);
             CreateEntity("ui").AddComponent(new CombatUI());
         }
     }

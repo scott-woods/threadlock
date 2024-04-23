@@ -28,7 +28,7 @@ namespace Threadlock.GlobalManagers
             transition.OnScreenObscured += OnScreenObscured;
             transition.FadeInStarted += OnFadeInStarted;
 
-            Game1.StartCoroutine(Game1.AudioManager.FadeoutMusic(1.5f));
+            Game1.AudioManager.StopMusic();
             Game1.StartSceneTransition(transition);
 
             Emitter.Emit(SceneManagerEvents.SceneChangeStarted);

@@ -19,12 +19,15 @@ namespace Threadlock.GlobalManagers
         const float _defaultSoundVolume = .28f;
         const float _volumeReductionFactor = .07f;
 
-        StreamingVoice _musicVoice;
+        Dictionary<string, StreamingVoice> _musicDictionary = new Dictionary<string, StreamingVoice>();
+        StreamingVoice _activeVoice;
 
         public AudioDevice AudioDevice { get; }
 
         public string CurrentSongName;
         public Song CurrentSong;
+
+        ICoroutine _fadeInCoroutine, _fadeOutCoroutine;
 
         Dictionary<SoundEffect, List<SoundEffectInstance>> _soundInstances = new Dictionary<SoundEffect, List<SoundEffectInstance>>();
 
@@ -83,50 +86,86 @@ namespace Threadlock.GlobalManagers
         }
 
         /// <summary>
-        /// play music via song model
-        /// </summary>
-        /// <param name="songModel"></param>
-        /// <param name="looping"></param>
-        //public unsafe void PlayMusic(SongModel songModel, bool looping = true)
-        //{
-        //    PlayMusic(songModel.Path, looping);
-        //}
-
-        /// <summary>
         /// play music by file path
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="looping"></param>
-        public unsafe void PlayMusic(string filePath, bool looping = true)
+        public unsafe void PlayMusic(string filePath, bool looping = true, float timeToFadeIn = 0f, float volume = 1f, bool replace = true)
         {
             //StopMusic();
 
             var audioDataOgg = new AudioDataOgg(AudioDevice, filePath);
 
-            _musicVoice = new StreamingVoice(AudioDevice, audioDataOgg.Format);
+            if (replace && _musicDictionary.Any())
+                StopMusic();
 
-            _musicVoice.Load(audioDataOgg);
+            var voice = new StreamingVoice(AudioDevice, audioDataOgg.Format);
+            voice.Loop = looping;
+            _musicDictionary.Add(filePath, voice);
 
-            _musicVoice.SetVolume(0);
+            voice.Load(audioDataOgg);
 
-            _musicVoice.Loop = looping;
+            if (volume > 0f)
+                _activeVoice = voice;
 
-            _musicVoice.Play();
+            voice.Play();
 
-            Game1.StartCoroutine(FadeIn(1.5f));
+            if (timeToFadeIn > 0f)
+            {
+                _fadeInCoroutine?.Stop();
+                _fadeInCoroutine = Game1.StartCoroutine(FadeIn(voice, timeToFadeIn));
+            }
+            else
+                voice.SetVolume(_defaultMusicVolume * Settings.Instance.MusicVolume * volume);
         }
 
-        public void SetFilterFrequency(float frequency)
+        /// <summary>
+        /// requires there to be an active voice different from the one passed in. slowly replaces the main voice with a new one
+        /// </summary>
+        /// <param name="musicName"></param>
+        /// <param name="fadeInTime"></param>
+        /// <param name="fadeOutTime"></param>
+        public unsafe string FadeTo(string musicName, float fadeInTime, float fadeOutTime)
         {
-            _musicVoice.SetFilterFrequency(frequency);
+            if (_activeVoice == null)
+                return null;
+            if (string.IsNullOrWhiteSpace(musicName))
+                return null;
+
+            if (_musicDictionary.TryGetValue(musicName, out var voice))
+            {
+                if (voice == _activeVoice)
+                    return null;
+
+                _fadeInCoroutine?.Stop();
+                _fadeOutCoroutine?.Stop();
+                _fadeInCoroutine = Game1.StartCoroutine(FadeIn(voice, fadeInTime));
+                _fadeOutCoroutine = Game1.StartCoroutine(FadeOut(_activeVoice, fadeOutTime));
+
+                var activeVoiceName = _musicDictionary.Keys.FirstOrDefault(s => _musicDictionary[s] == _activeVoice);
+
+                _activeVoice = voice;
+
+                return activeVoiceName;
+            }
+
+            return null;
         }
 
-        IEnumerator FadeIn(float time)
+        public void SetFilterFrequency(float frequency, string musicName = null)
         {
-            if (_musicVoice == null)
+            var targetVoice = _musicDictionary.Values.First();
+            if (!string.IsNullOrWhiteSpace(musicName) && _musicDictionary.TryGetValue(musicName, out var voice))
+                targetVoice = voice;
+            targetVoice.SetFilterFrequency(frequency);
+        }
+
+        IEnumerator FadeIn(StreamingVoice voice, float time)
+        {
+            if (voice == null)
                 yield break;
 
-            var voice = _musicVoice;
+            voice.SetVolume(0);
 
             var timer = time;
             var initialVolume = 0;
@@ -140,32 +179,14 @@ namespace Threadlock.GlobalManagers
 
                 yield return null;
             }
+
+            _fadeInCoroutine = null;
         }
 
-        public void PauseMusic()
+        IEnumerator FadeOut(StreamingVoice voice, float time)
         {
-            _musicVoice?.Pause();
-        }
-
-        public void ResumeMusic()
-        {
-            _musicVoice?.Play();
-        }
-
-        public void StopMusic()
-        {
-            _musicVoice?.Unload();
-            //FAudio.FAudioSourceVoice_Stop(_musicVoiceHandle, 0, FAudio.FAUDIO_COMMIT_NOW);
-            //FAudio.FAudioSourceVoice_FlushSourceBuffers(_musicVoiceHandle);
-            //MediaPlayer.Stop();
-        }
-
-        public IEnumerator FadeoutMusic(float time)
-        {
-            if (_musicVoice == null)
+            if (voice == null)
                 yield break;
-
-            var voice = _musicVoice;
 
             var timer = time;
             var initialVolume = voice.Volume;
@@ -180,12 +201,29 @@ namespace Threadlock.GlobalManagers
                 yield return null;
             }
 
+            _fadeOutCoroutine = null;
+        }
+
+        public void StopMusic(string musicName = null, float fadeTime = 0f)
+        {
+            if (!_musicDictionary.Any())
+                return;
+
+            var voice = _musicDictionary.Values.Last();
+            if (!string.IsNullOrWhiteSpace(musicName))
+            {
+                voice = _musicDictionary[musicName];
+                _musicDictionary.Remove(musicName);
+            }
+            else
+                _musicDictionary.Remove(_musicDictionary.Last().Key);
+
             voice.Unload();
         }
 
         public void UpdateMusicVolume()
         {
-            _musicVoice?.SetVolume(_defaultMusicVolume * Settings.Instance.MusicVolume);
+            _activeVoice?.SetVolume(_defaultMusicVolume * Settings.Instance.MusicVolume);
         }
 
         void OnGameExiting()

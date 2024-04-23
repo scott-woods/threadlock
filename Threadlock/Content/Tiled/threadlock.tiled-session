@@ -489,11 +489,14 @@
             }
         },
         "Tilemaps/Forge/forge_action_store.tmx": {
-            "scale": 2,
-            "selectedLayer": 8,
+            "expandedObjectLayers": [
+                58
+            ],
+            "scale": 1,
+            "selectedLayer": 9,
             "viewCenter": {
-                "x": 303.25,
-                "y": 151.5
+                "x": 303.5,
+                "y": 431
             }
         },
         "Tilemaps/Forge/forge_boss.tmx": {
@@ -530,10 +533,10 @@
         },
         "Tilemaps/Forge/forge_hub_1.tmx": {
             "scale": 0.8223437499999999,
-            "selectedLayer": 4,
+            "selectedLayer": 8,
             "viewCenter": {
-                "x": 296.71290138704165,
-                "y": 288.2006460193806
+                "x": 437.1651149534486,
+                "y": 269.96009880296407
             }
         },
         "Tilemaps/Forge/forge_normal_1.tmx": {
@@ -658,10 +661,10 @@
                 9
             ],
             "scale": 1,
-            "selectedLayer": 5,
+            "selectedLayer": 8,
             "viewCenter": {
-                "x": 163,
-                "y": 211
+                "x": 167.5,
+                "y": 215
             }
         },
         "Tilemaps/Forge/forge_test.tmx": {
@@ -684,11 +687,11 @@
             "expandedObjectLayers": [
                 260
             ],
-            "scale": 1,
-            "selectedLayer": 5,
+            "scale": 3,
+            "selectedLayer": 9,
             "viewCenter": {
-                "x": 278.5,
-                "y": 145
+                "x": 199.5,
+                "y": 175
             }
         },
         "Tilemaps/enemy_test_zone.tmx": {
@@ -775,6 +778,7 @@
     "project": "threadlock.tiled-project",
     "property.type": "string",
     "recentFiles": [
+        "Tilesets/tech_shop.tsx",
         "Tilemaps/FairyForest/forest_test_2.tmx",
         "Tilesets/fairy_forest_tileset.tsx",
         "Tilesets/forge_tileset.tsx",
@@ -785,8 +789,7 @@
         "RuleMaps/forge_floor_rules_3.tmx",
         "RuleMaps/forge_floor_rules_2.tmx",
         "Tilemaps/Forge/forge_normal_1.tmx",
-        "Tilemaps/HubMaps/hub.tmx",
-        "RuleMaps/forge_walls_rules.tmx"
+        "Tilemaps/HubMaps/hub.tmx"
     ],
     "resizeMap.removeObjects": false,
     "tileset.lastUsedFilter": "Tiled tileset files (*.tsx *.xml)",
