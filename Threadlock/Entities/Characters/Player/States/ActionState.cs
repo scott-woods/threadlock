@@ -168,6 +168,7 @@ namespace Threadlock.Entities.Characters.Player.States
             _executionCoroutine?.Stop();
             _executionCoroutine = null;
 
+            //reset/abort action
             _currentAction?.Action.Reset();
             _currentAction = null;
         }

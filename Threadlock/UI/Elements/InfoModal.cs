@@ -51,8 +51,6 @@ namespace Threadlock.UI.Elements
             _body = new Label(_bodyText, _skin, "abaddon_18");
             _table.Add(_body).Grow().Left();
 
-            _table.DebugAll();
-
             _table.Pack();
         }
 

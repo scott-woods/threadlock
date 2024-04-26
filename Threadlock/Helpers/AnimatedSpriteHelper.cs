@@ -68,6 +68,11 @@ namespace Threadlock.Helpers
             return newSpriteList.ToArray();
         }
 
+        /// <summary>
+        /// get the length of the currently playing animation on this animator, in seconds
+        /// </summary>
+        /// <param name="animator"></param>
+        /// <returns></returns>
         public static float GetAnimationDuration(SpriteAnimator animator)
         {
             if (!string.IsNullOrWhiteSpace(animator.CurrentAnimationName))
@@ -75,6 +80,12 @@ namespace Threadlock.Helpers
             return 0f;
         }
 
+        /// <summary>
+        /// get the length of the animation with a specified name on the animator, in seconds
+        /// </summary>
+        /// <param name="animator"></param>
+        /// <param name="animationName"></param>
+        /// <returns></returns>
         public static float GetAnimationDuration(SpriteAnimator animator, string animationName)
         {
             if (!animator.Animations.ContainsKey(animationName))

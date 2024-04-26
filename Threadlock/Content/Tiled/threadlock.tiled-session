@@ -496,7 +496,7 @@
             "selectedLayer": 9,
             "viewCenter": {
                 "x": 303.5,
-                "y": 431
+                "y": 430
             }
         },
         "Tilemaps/Forge/forge_boss.tmx": {
@@ -664,7 +664,7 @@
             "selectedLayer": 8,
             "viewCenter": {
                 "x": 167.5,
-                "y": 215
+                "y": 212
             }
         },
         "Tilemaps/Forge/forge_test.tmx": {

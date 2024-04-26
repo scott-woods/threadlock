@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Nez;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +12,7 @@ namespace Threadlock.Entities.Characters.Player.States
     public class DashState : PlayerState
     {
         Dash _dash;
+        ICoroutine _dashCoroutine, _localCoroutine;
 
         public override void OnInitialized()
         {
@@ -22,30 +25,32 @@ namespace Threadlock.Entities.Characters.Player.States
         {
             base.Begin();
 
-            //disable hurtbox
-            //_context.Hurtbox.SetEnabled(false);
-
-            _dash.ExecuteDash(OnDashCompleted);
-        }
-
-        public override void Update(float deltaTime)
-        {
-            //throw new NotImplementedException();
+            _localCoroutine = Game1.StartCoroutine(StartDashCoroutine());
         }
 
         public override void End()
         {
             base.End();
 
-            //reenable hurtbox
-            //_context.Hurtbox.SetEnabled(true);
+            _localCoroutine?.Stop();
+            _localCoroutine = null;
+            _dashCoroutine?.Stop();
+            _dashCoroutine = null;
 
             _dash.Abort();
         }
 
-        void OnDashCompleted()
+        IEnumerator StartDashCoroutine()
         {
-            _machine.ChangeState<Idle>();
+            _dashCoroutine = Game1.StartCoroutine(_dash.StartDash());
+            yield return _dashCoroutine;
+            _dashCoroutine = null;
+            _localCoroutine = null;
+
+            if (TryMove())
+                yield break;
+            if (TryIdle())
+                yield break;
         }
     }
 }

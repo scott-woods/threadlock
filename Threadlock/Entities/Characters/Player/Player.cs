@@ -1,22 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Nez;
 using Nez.AI.FSM;
 using Nez.DeferredLighting;
-using Nez.Particles;
 using Nez.Sprites;
 using Nez.Textures;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Threadlock.Components;
-using Threadlock.Components.TiledComponents;
-using Threadlock.Effects;
 using Threadlock.Entities.Characters.Player.BasicWeapons;
-using Threadlock.Entities.Characters.Player.PlayerActions;
 using Threadlock.Entities.Characters.Player.States;
 using Threadlock.GlobalManagers;
 using Threadlock.Helpers;
@@ -336,7 +328,7 @@ namespace Threadlock.Entities.Characters.Player
         {
             _healthComponent.Health = _healthComponent.MaxHealth;
             _apComponent.ActionPoints = 0;
-            _statusComponent.PopStatus(StatusPriority.Death);
+            _statusComponent.Reset();
             _hurtbox.SetEnabled(true);
             _shadow.SetEnabled(true);
         }

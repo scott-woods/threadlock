@@ -126,7 +126,7 @@ namespace Threadlock.Scenes
             _uiRenderer.OnSceneBackBufferSizeChanged(newWidth, newHeight);
             _cursorRenderer.OnSceneBackBufferSizeChanged(newWidth, newHeight);
             //_cursorRenderer.RenderTexture.Resize(Screen.Width, Screen.Height);
-            //_deferredLightingRenderer.OnSceneBackBufferSizeChanged(newWidth, newHeight);
+            _deferredLightingRenderer.OnSceneBackBufferSizeChanged(newWidth, newHeight);
         }
 
         public void HandleFinalRender(RenderTarget2D finalRenderTarget, Color letterboxColor, RenderTarget2D source,

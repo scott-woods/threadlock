@@ -59,11 +59,45 @@ namespace Threadlock.Entities.Characters.Player.States
 
             if (_context.TryGetComponent<ActionManager>(out var actionManager))
                 _actionManager = actionManager;
+        }
+
+        public override void Begin()
+        {
+            base.Begin();
 
             Game1.UIManager.Emitter.AddObserver(GlobalManagers.UIEvents.DialogueStarted, OnDialogueStarted);
             Game1.UIManager.Emitter.AddObserver(GlobalManagers.UIEvents.DialogueEnded, OnDialogueEnded);
             Game1.UIManager.Emitter.AddObserver(GlobalManagers.UIEvents.MenuOpened, OnMenuOpened);
             Game1.UIManager.Emitter.AddObserver(GlobalManagers.UIEvents.MenuClosed, OnMenuClosed);
+
+            _statusComponent.Emitter.AddObserver(StatusEvents.Changed, OnStatusChanged);
+        }
+
+        public override void End()
+        {
+            base.End();
+
+            Game1.UIManager.Emitter.RemoveObserver(GlobalManagers.UIEvents.DialogueStarted, OnDialogueStarted);
+            Game1.UIManager.Emitter.RemoveObserver(GlobalManagers.UIEvents.DialogueEnded, OnDialogueEnded);
+            Game1.UIManager.Emitter.RemoveObserver(GlobalManagers.UIEvents.MenuOpened, OnMenuOpened);
+            Game1.UIManager.Emitter.RemoveObserver(GlobalManagers.UIEvents.MenuClosed, OnMenuClosed);
+
+            _statusComponent.Emitter.RemoveObserver(StatusEvents.Changed, OnStatusChanged);
+        }
+
+        void OnStatusChanged(StatusPriority status)
+        {
+            if (status == StatusPriority.Normal)
+            {
+                if (TryMove())
+                    return;
+                if (TryIdle())
+                    return;
+            }
+            if (status == StatusPriority.Stunned)
+                _machine.ChangeState<StunnedState>();
+            else if (status == StatusPriority.Death)
+                _machine.ChangeState<DyingState>();
         }
 
         void OnMenuOpened()
@@ -102,14 +136,6 @@ namespace Threadlock.Entities.Characters.Player.States
 
             if (Controls.Instance.Pause.IsPressed)
                 Game1.GameStateManager.Pause();
-
-            if (_statusComponent != null)
-            {
-                if ((int)_statusComponent.CurrentStatusPriority > (int)StatusPriority.Normal && _machine.CurrentState.GetType() != typeof(StunnedState))
-                {
-                    _machine.ChangeState<StunnedState>();
-                }
-            }
 
             foreach (var condition in _exitConditions)
             {
@@ -188,7 +214,12 @@ namespace Threadlock.Entities.Characters.Player.States
                     var colliders = Physics.BoxcastBroadphaseExcludingSelf(hurtbox.Collider, 1 << PhysicsLayers.PromptTrigger);
                     foreach (var collider in colliders)
                     {
-                        if (collider.Entity.TryGetComponent<Trigger>(out var trigger))
+                        if (collider.Entity.TryGetComponent<ButtonPrompt>(out var prompt))
+                        {
+                            prompt.Trigger();
+                            return true;
+                        }
+                        else if (collider.Entity.TryGetComponent<Trigger>(out var trigger))
                         {
                             Game1.StartCoroutine(trigger.HandleTriggered());
                             return true;
@@ -201,7 +232,12 @@ namespace Threadlock.Entities.Characters.Player.States
                     var colliders = Physics.BoxcastBroadphaseExcludingSelf(playerCollider, 1 << PhysicsLayers.PromptTrigger);
                     foreach (var collider in colliders)
                     {
-                        if (collider.Entity.TryGetComponent<Trigger>(out var trigger))
+                        if (collider.Entity.TryGetComponent<ButtonPrompt>(out var prompt))
+                        {
+                            prompt.Trigger();
+                            return true;
+                        }
+                        else if (collider.Entity.TryGetComponent<Trigger>(out var trigger))
                         {
                             Game1.StartCoroutine(trigger.HandleTriggered());
                             return true;
@@ -211,7 +247,12 @@ namespace Threadlock.Entities.Characters.Player.States
 
                 if (_context.TryRaycast(1 << PhysicsLayers.PromptTrigger, out var raycast))
                 {
-                    if (raycast.Collider.Entity.TryGetComponent<Trigger>(out var trigger))
+                    if (raycast.Collider.Entity.TryGetComponent<ButtonPrompt>(out var prompt))
+                    {
+                        prompt.Trigger();
+                        return true;
+                    }
+                    else if (raycast.Collider.Entity.TryGetComponent<Trigger>(out var trigger))
                     {
                         Game1.StartCoroutine(trigger.HandleTriggered());
                         return true;

@@ -86,6 +86,7 @@ namespace Threadlock.Components.TiledComponents
 
                 //interact triggers get a button prompt
                 _buttonPrompt = Entity.AddComponent(new ButtonPrompt(Collider, PromptOffset));
+                _buttonPrompt.OnClicked += () => Game1.StartCoroutine(HandleTriggered());
             }
         }
 
@@ -128,7 +129,10 @@ namespace Threadlock.Components.TiledComponents
         public void OnTriggerEnter(Collider other, Collider local)
         {
             if (TriggerType == TriggerType.Area)
-                Game1.StartCoroutine(HandleTriggered());
+            {
+                if (Enabled)
+                    Game1.StartCoroutine(HandleTriggered());
+            }
         }
 
         public void OnTriggerExit(Collider other, Collider local)

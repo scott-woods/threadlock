@@ -30,7 +30,8 @@ namespace Threadlock.Entities
         {
             base.Update();
 
-            Position = Input.RawMousePosition.ToVector2();
+            Position = Input.MousePosition;
+            //Position = Input.RawMousePosition.ToVector2();
         }
     }
 }

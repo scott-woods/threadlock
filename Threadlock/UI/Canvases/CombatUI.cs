@@ -155,6 +155,7 @@ namespace Threadlock.UI.Canvases
         void OnActionsChanged()
         {
             _iconsTable.Clear();
+            _actionIcons.Clear();
 
             foreach (var slot in _actionManager.AllActionSlots)
             {
@@ -165,6 +166,7 @@ namespace Threadlock.UI.Canvases
                 var table = new Table();
                 _iconsTable.Add(table);
                 var icon = new ActionIcon(_skin, PlayerActionUtils.GetIconName(type), PlayerActionUtils.GetApCost(type));
+                _actionIcons.Add(icon);
                 table.Add(icon);
 
                 table.Row();

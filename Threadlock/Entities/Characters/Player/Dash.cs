@@ -3,36 +3,28 @@ using Nez;
 using Nez.Sprites;
 using Nez.Tweens;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections;
 using Threadlock.Components;
 using Threadlock.Entities.Characters.Player.BasicWeapons;
+using Threadlock.Helpers;
 
 namespace Threadlock.Entities.Characters.Player
 {
-    public class Dash : Component, IUpdatable
+    public class Dash : Component
     {
         const float _initialDashSpeed = 425f;
         const float _shortDashCooldown = .025f;
-        const float _dashCooldown = .65f;
-        const float _successionLifespan = .65f;
+        const float _immunityBeginProgress = .2f;
+        const float _immunityEndProgress = .8f;
 
         public bool IsOnCooldown = false;
 
-        Action _dashCompleteCallback;
         VelocityComponent _velocityComponent;
         SpriteAnimator _spriteAnimator;
         SpriteTrail _spriteTrail;
+        Hurtbox _hurtbox;
 
         int _maxSuccession;
-        bool _isDashing = false;
-        float _dashTimer = 0f;
-        int _successionCount = 0;
-
-        float _elapsedTime = 0f;
 
         public Dash(int maxSuccession)
         {
@@ -46,17 +38,13 @@ namespace Threadlock.Entities.Characters.Player
             _velocityComponent = Entity.GetComponent<VelocityComponent>();
             _spriteAnimator = Entity.GetComponent<SpriteAnimator>();
             _spriteTrail = Entity.GetComponent<SpriteTrail>();
+            if (Entity.TryGetComponent<Hurtbox>(out var hurtbox))
+                _hurtbox = hurtbox;
         }
 
-        public void ExecuteDash(Action dashCompleteCallback)
+        public IEnumerator StartDash()
         {
-            _dashCompleteCallback = dashCompleteCallback;
-
-            _isDashing = true;
-            _successionCount += 1;
-            Core.Schedule(_successionLifespan, timer => _successionCount -= 1);
-
-            //configure trail
+            //sprite trail
             _spriteTrail.FadeDelay = 0;
             _spriteTrail.FadeDuration = .2f;
             _spriteTrail.MinDistanceBetweenInstances = 20f;
@@ -65,77 +53,61 @@ namespace Threadlock.Entities.Characters.Player
 
             //play sound
             Game1.AudioManager.PlaySound(Content.Audio.Sounds.Player_dash);
-
-            //animation
-            var animation = "Roll";
-            if (_velocityComponent.Direction.X != 0)
-            {
-                animation = "Roll";
-            }
-            else if (_velocityComponent.Direction.Y != 0)
-            {
-                animation = _velocityComponent.Direction.Y >= 0 ? "RollDown" : "RollUp";
-            }
-
+            var animationName = $"Roll{DirectionHelper.GetDirectionStringByVector(_velocityComponent.Direction)}";
             if (!Entity.TryGetComponent<Sword>(out var swordAttack))
-                animation += "NoSword";
+                animationName += "NoSword";
 
-            _elapsedTime = 0;
-
+            //start animation
             _spriteAnimator.Color = Color.White * .8f;
-            _spriteAnimator.Play(animation, SpriteAnimator.LoopMode.Once);
-            _spriteAnimator.OnAnimationCompletedEvent += OnAnimationFinished;
-        }
+            _spriteAnimator.Play(animationName, SpriteAnimator.LoopMode.Once);
 
-        public void Update()
-        {
-            if (_isDashing)
+            //move and handle hurtbox while animation is playing
+            var animDuration = AnimatedSpriteHelper.GetAnimationDuration(_spriteAnimator);
+            var timer = 0f;
+            while (_spriteAnimator.CurrentAnimationName == animationName && _spriteAnimator.AnimationState != SpriteAnimator.State.Completed)
             {
-                //increment time
-                _elapsedTime += Time.DeltaTime;
+                //handle timer
+                timer += Time.DeltaTime;
+                var progress = timer / animDuration;
 
-                //get animation duration
-                //var animationDuration = _animator.CurrentAnimation.Sprites.Count() / _animator.CurrentAnimation.FrameRate;
-                var animationDuration = 8 / _spriteAnimator.CurrentAnimation.FrameRates[0];
+                //handle hurtbox
+                if (progress >= _immunityBeginProgress && progress <= _immunityEndProgress)
+                    _hurtbox?.SetEnabled(false);
+                else
+                    _hurtbox?.SetEnabled(true);
 
-                //if elapsed time is less than duration, we are still attacking
-                if (_elapsedTime < animationDuration)
-                {
-                    //get lerp factor
-                    float lerpFactor = _elapsedTime / animationDuration;
+                //get current speed
+                var currentSpeed = Lerps.Lerp(_initialDashSpeed, 0, progress);
+                if (timer >= animDuration)
+                    currentSpeed = 0;
 
-                    //determine move speed based on which combo we are on
-                    var initialSpeed = _initialDashSpeed;
+                //move
+                _velocityComponent.Move(_velocityComponent.Direction, currentSpeed);
 
-                    float currentSpeed = Lerps.Lerp(initialSpeed, 0, lerpFactor);
-                    _velocityComponent.Move(_velocityComponent.Direction, currentSpeed);
-                }
+                //wait until next frame
+                yield return null;
             }
+
+            //should already be enabled, but make sure hurtbox is enabled
+            _hurtbox?.SetEnabled(true);
+
+            //reset animator and sprite trail
+            _spriteAnimator.Color = Color.White;
+            _spriteTrail.DisableSpriteTrail();
+
+            //start cooldown
+            IsOnCooldown = true;
+            Game1.Schedule(_shortDashCooldown, timer => IsOnCooldown = false);
         }
 
         public void Abort()
         {
+            //hurtbox
+            _hurtbox?.SetEnabled(true);
+
+            //animator and sprite trail
             _spriteAnimator.Color = Color.White;
             _spriteTrail.DisableSpriteTrail();
-            _isDashing = false;
-            _spriteAnimator.OnAnimationCompletedEvent -= OnAnimationFinished;
-            _spriteAnimator.Stop();
-        }
-
-        void OnAnimationFinished(string animationName)
-        {
-            _spriteAnimator.OnAnimationCompletedEvent -= OnAnimationFinished;
-
-            var cooldown = _successionCount >= _maxSuccession ? _dashCooldown : _shortDashCooldown;
-
-            IsOnCooldown = true;
-            Core.Schedule(cooldown, timer => IsOnCooldown = false);
-
-            _spriteAnimator.Color = Color.White;
-            _spriteTrail.DisableSpriteTrail();
-            _isDashing = false;
-            _elapsedTime = 0;
-            _dashCompleteCallback?.Invoke();
         }
     }
 }
