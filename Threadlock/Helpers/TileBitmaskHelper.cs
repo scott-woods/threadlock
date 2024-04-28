@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using static Threadlock.SceneComponents.Dungenerator.CorridorPainter;
 using Threadlock.Models;
 using Microsoft.Xna.Framework;
+using Threadlock.StaticData;
 
 namespace Threadlock.Helpers
 {
@@ -30,6 +31,26 @@ namespace Threadlock.Helpers
             [Corners.BottomLeft] = DirectionHelper.DownLeft,
             [Corners.BottomRight] = DirectionHelper.DownRight,
         };
+
+        public static int GetMask(Type enumType, TmxWangTile tile)
+        {
+            int mask = 0;
+            var shift = GetRequiredBitShift(enumType);
+
+            foreach (var pair in tile.CornerTerrains)
+            {
+                if (Enum.TryParse<Corners>(pair.Key, out Corners corner))
+                {
+                    var bitPos = (int)corner * shift;
+
+                    //parse string to enum
+                    if (Enum.TryParse(enumType, pair.Value, out var tileType))
+                        mask |= (Convert.ToInt32(tileType) << bitPos);
+                }
+            }
+
+            return mask;
+        }
 
         /// <summary>
         /// Get bitmask of the terrain in a given tile
@@ -127,6 +148,13 @@ namespace Threadlock.Helpers
         public static int GetRequiredBitShift<TEnum>() where TEnum : struct, Enum
         {
             int maxEnumValue = Convert.ToInt32(Enum.GetValues(typeof(TEnum)).Cast<TEnum>().Max());
+            int bitsNeeded = (int)Math.Ceiling(Math.Log2(maxEnumValue + 1));
+            return bitsNeeded;
+        }
+
+        public static int GetRequiredBitShift(Type enumType)
+        {
+            int maxEnumValue = Convert.ToInt32(Enum.GetValues(enumType).Length);
             int bitsNeeded = (int)Math.Ceiling(Math.Log2(maxEnumValue + 1));
             return bitsNeeded;
         }

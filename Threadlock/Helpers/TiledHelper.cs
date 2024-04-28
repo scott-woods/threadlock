@@ -5,13 +5,16 @@ using Nez.Tiled;
 using Nez.UI;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Threadlock.Components;
 using Threadlock.Components.TiledComponents;
 using Threadlock.Models;
 using Threadlock.StaticData;
+using Threadlock.UI.Canvases;
 using static Nez.Content.Textures.UI;
 using static Threadlock.SceneComponents.Dungenerator.CorridorPainter;
 
@@ -328,6 +331,19 @@ namespace Threadlock.Helpers
             var rect = new Rectangle(minX, minY, maxX - minX, maxY - minY);
             rect.Location += mapEntity.Position.ToPoint();
             return rect;
+        }
+        
+        public static TmxTilesetExt GetTileset(string path)
+        {
+            var stream = TitleContainer.OpenStream(path);
+
+            var xDocTileset = XDocument.Load(stream);
+
+            string tsxDir = Path.GetDirectoryName(Nez.Content.Tiled.Tilesets.Fairy_forest_tileset);
+            var tileset = new TmxTileset().LoadTmxTileset(null, xDocTileset.Element("tileset"), 0, tsxDir);
+            tileset.TmxDirectory = tsxDir;
+
+            return TmxTilesetExt.CreateFromTileset(tileset);
         }
     }
 }

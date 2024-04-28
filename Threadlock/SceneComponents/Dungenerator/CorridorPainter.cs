@@ -70,15 +70,6 @@ namespace Threadlock.SceneComponents.Dungenerator
         }
 
         [Flags]
-        public enum ForestTileType
-        {
-            None = 0,
-            DarkGrass = 1,
-            Dirt = 2,
-            LightGrass = 3
-        }
-
-        [Flags]
         public enum WallTileType
         {
             None = 0,
@@ -95,17 +86,7 @@ namespace Threadlock.SceneComponents.Dungenerator
         static TileDirection BottomEdgeRequiredDirs { get => TileDirection.Left | TileDirection.Right; }
         static TileDirection RightEdgeRequiredDirs { get => TileDirection.Top | TileDirection.Bottom | TileDirection.Left; }
 
-        public static int SetTileType(int mask, ForestTileType tileType, TileDirection2 direction)
-        {
-            int typeBits = (int)tileType;
-            int shift = (int)direction * 2; //each position has 2 bits, at least for forest tile type
-            int maskClear = ~(3 << shift);
-            mask &= maskClear;
-            mask |= (typeBits << shift);
-            return mask;
-        }
-
-        public static int CreateTileMask(Dictionary<Corners, ForestTileType> tileSections)
+        public static int CreateTileMask<TEnum>(Dictionary<Corners, TEnum> tileSections) where TEnum : struct, Enum
         {
             int mask = 0;
 
@@ -115,7 +96,7 @@ namespace Threadlock.SceneComponents.Dungenerator
 
                 if (tileSections.TryGetValue(corner, out var tileType))
                 {
-                    mask |= ((int)tileType << bitPos);
+                    mask |= (Convert.ToInt32(tileType) << bitPos);
                 }
             }
 

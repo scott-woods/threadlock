@@ -1062,6 +1062,7 @@ namespace Nez
 			{
 				public const string Collision_rules = @"Content\Tiled\RuleMaps\collision_rules.tmx";
 				public const string Fairy_forest_cliff_rules = @"Content\Tiled\RuleMaps\fairy_forest_cliff_rules.tmx";
+				public const string Forest_walls_rules = @"Content\Tiled\RuleMaps\forest_walls_rules.tmx";
 				public const string Forge_clutter_rules = @"Content\Tiled\RuleMaps\forge_clutter_rules.tmx";
 				public const string Forge_floor_rules = @"Content\Tiled\RuleMaps\forge_floor_rules.tmx";
 				public const string Forge_floor_rules_2 = @"Content\Tiled\RuleMaps\forge_floor_rules_2.tmx";
@@ -1087,6 +1088,7 @@ namespace Nez
 					public const string Forest_hallway_test = @"Content\Tiled\Tilemaps\FairyForest\forest_hallway_test.tmx";
 					public const string Forest_test_1 = @"Content\Tiled\Tilemaps\FairyForest\forest_test_1.tmx";
 					public const string Forest_test_2 = @"Content\Tiled\Tilemaps\FairyForest\forest_test_2.tmx";
+					public const string Forest_test_3 = @"Content\Tiled\Tilemaps\FairyForest\forest_test_3.tmx";
 					public const string Rules = @"Content\Tiled\Tilemaps\FairyForest\rules.txt";
 				}
 
