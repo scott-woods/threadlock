@@ -44,7 +44,7 @@ namespace Threadlock.Entities.Characters
 
             _mover = AddComponent(new Mover());
 
-            _velocityComponent = AddComponent(new VelocityComponent(_mover));
+            _velocityComponent = AddComponent(new VelocityComponent());
 
             _flipper = AddComponent(new SpriteFlipper());
 

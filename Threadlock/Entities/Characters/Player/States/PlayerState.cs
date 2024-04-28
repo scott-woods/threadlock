@@ -20,7 +20,6 @@ namespace Threadlock.Entities.Characters.Player.States
 {
     public abstract class PlayerState : State<Player>
     {
-        const float _checkRadius = 20f;
         const float _checkCooldown = 1f;
 
         List<Func<bool>> _exitConditions

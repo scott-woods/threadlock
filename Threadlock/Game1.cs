@@ -41,10 +41,10 @@ namespace Threadlock
             ExitOnEscapeKeypress = false;
 
             //time step and refresh rate
-            //IsFixedTimeStep = true;
-            //SDL.SDL_GetCurrentDisplayMode(SDL.SDL_GetWindowDisplayIndex(Game1.Instance.Window.Handle), out var mode);
-            //var refreshRate = mode.refresh_rate == 0 ? 60 : mode.refresh_rate;
-            //TargetElapsedTime = System.TimeSpan.FromSeconds((double)1 / refreshRate);
+            IsFixedTimeStep = true;
+            SDL.SDL_GetCurrentDisplayMode(SDL.SDL_GetWindowDisplayIndex(Game1.Instance.Window.Handle), out var mode);
+            var refreshRate = mode.refresh_rate == 0 ? 60 : mode.refresh_rate;
+            TargetElapsedTime = System.TimeSpan.FromSeconds((double)1 / refreshRate);
 
             //graphics settings
             Graphics.Instance.Batcher.ShouldRoundDestinations = false;

@@ -83,7 +83,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             yield return Coroutine.WaitForSeconds(_delay);
 
             //chain
-            var allEnemies = Scene.EntitiesOfType<BaseEnemy>();
+            var allEnemies = Scene.EntitiesOfType<Enemy>();
             if (allEnemies.Count > 0)
             {
                 var unhitEnemies = allEnemies.Where(e => !_hitEntities.Contains(e)).ToList();

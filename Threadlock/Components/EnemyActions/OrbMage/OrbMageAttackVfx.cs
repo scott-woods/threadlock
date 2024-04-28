@@ -13,7 +13,7 @@ using Threadlock.StaticData;
 using Microsoft.Xna.Framework;
 using System.Collections;
 
-namespace Threadlock.Entities.Characters.Enemies.OrbMage
+namespace Threadlock.Components.EnemyActions.OrbMage
 {
     public class OrbMageAttackVfx : Entity
     {
@@ -31,13 +31,13 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
             base.OnAddedToScene();
 
             _hitbox = AddComponent(new BoxHitbox(_damage, new Rectangle(-3, -4, 7, 18)));
-            Flags.SetFlagExclusive(ref _hitbox.PhysicsLayer, (int)PhysicsLayers.EnemyHitbox);
-            Flags.SetFlagExclusive(ref _hitbox.CollidesWithLayers, (int)PhysicsLayers.PlayerHurtbox);
+            Flags.SetFlagExclusive(ref _hitbox.PhysicsLayer, PhysicsLayers.EnemyHitbox);
+            Flags.SetFlagExclusive(ref _hitbox.CollidesWithLayers, PhysicsLayers.PlayerHurtbox);
             _hitbox.SetEnabled(false);
 
             _animator = AddComponent(new SpriteAnimator());
             _animator.SetLocalOffset(new Vector2(5, 0));
-            var texture = Scene.Content.LoadTexture(Nez.Content.Textures.Characters.OrbMage.Attackvfx);
+            var texture = Scene.Content.LoadTexture(Content.Textures.Characters.OrbMage.Attackvfx);
             var sprites = Sprite.SpritesFromAtlas(texture, 119, 34);
             _animator.AddAnimation("Telegraph", AnimatedSpriteHelper.GetSpriteArray(sprites, new List<int> { 5, 4, 3 }, true));
             _animator.AddAnimation("Attack", AnimatedSpriteHelper.GetSpriteArray(sprites, new List<int> { 0, 1, 2, 3, 4, 5 }, true));
@@ -54,14 +54,14 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
             var animationWaiter = new AnimationWaiter(_animator);
 
             //telegraph
-            Game1.AudioManager.PlaySound(Nez.Content.Audio.Sounds.Orb_mage_telegraph);
+            Game1.AudioManager.PlaySound(Content.Audio.Sounds.Orb_mage_telegraph);
             yield return animationWaiter.WaitForAnimation("Telegraph");
 
             //delay
             yield return Coroutine.WaitForSeconds(_delay);
 
             //strike animation
-            Game1.StartCoroutine(animationWaiter.WaitForAnimation("Attack"));
+            Core.StartCoroutine(animationWaiter.WaitForAnimation("Attack"));
             bool hasPlayedSound = false;
             while (_animator.IsAnimationActive("Attack") && _animator.AnimationState == SpriteAnimator.State.Running)
             {
@@ -71,7 +71,7 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
                     if (!hasPlayedSound)
                     {
                         hasPlayedSound = true;
-                        Game1.AudioManager.PlaySound(Nez.Content.Audio.Sounds.Orb_mage_attack);
+                        Game1.AudioManager.PlaySound(Content.Audio.Sounds.Orb_mage_attack);
                     }
                     _hitbox.SetEnabled(true);
                 }

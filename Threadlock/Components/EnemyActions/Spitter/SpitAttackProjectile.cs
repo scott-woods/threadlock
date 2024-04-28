@@ -11,7 +11,7 @@ using Threadlock.Components.Hitboxes;
 using Threadlock.Helpers;
 using Threadlock.StaticData;
 
-namespace Threadlock.Entities.Characters.Enemies.Spitter
+namespace Threadlock.Components.EnemyActions.Spitter
 {
     public class SpitAttackProjectile : Entity
     {
@@ -48,10 +48,10 @@ namespace Threadlock.Entities.Characters.Enemies.Spitter
             _mover = AddComponent(new ProjectileMover());
 
             _hitbox = AddComponent(new CircleHitbox(_damage, _radius));
-            Flags.SetFlagExclusive(ref _hitbox.PhysicsLayer, (int)PhysicsLayers.EnemyHitbox);
+            Flags.SetFlagExclusive(ref _hitbox.PhysicsLayer, PhysicsLayers.EnemyHitbox);
             _hitbox.CollidesWithLayers = 0;
-            Flags.SetFlag(ref _hitbox.CollidesWithLayers, (int)PhysicsLayers.PlayerHurtbox);
-            Flags.SetFlag(ref _hitbox.CollidesWithLayers, (int)PhysicsLayers.Environment);
+            Flags.SetFlag(ref _hitbox.CollidesWithLayers, PhysicsLayers.PlayerHurtbox);
+            Flags.SetFlag(ref _hitbox.CollidesWithLayers, PhysicsLayers.Environment);
             _hitbox.PushForce = 1f;
 
             _trail = AddComponent(new SpriteTrail(_animator));
@@ -82,7 +82,7 @@ namespace Threadlock.Entities.Characters.Enemies.Spitter
             _timeSinceLaunched += Time.DeltaTime;
 
             //try to move. if hitting something, or reached max time, burst
-            if (_mover.Move(_direction * _speed * Time.DeltaTime) ||_timeSinceLaunched >= _maxTime)
+            if (_mover.Move(_direction * _speed * Time.DeltaTime) || _timeSinceLaunched >= _maxTime)
             {
                 Burst();
                 return;

@@ -63,7 +63,7 @@ namespace Threadlock.Entities.Characters.Player
             _animator = AddComponent(new SpriteAnimator());
             _animator.SetLocalOffset(DefaultSpriteOffset);
             _animator.SetRenderLayer(RenderLayers.YSort);
-            _velocityComponent = AddComponent(new VelocityComponent(_mover));
+            _velocityComponent = AddComponent(new VelocityComponent());
             _spriteFlipper = AddComponent(new SpriteFlipper());
             _basicWeapon = AddComponent(new Sword());
             _dash = AddComponent(new Dash(1));

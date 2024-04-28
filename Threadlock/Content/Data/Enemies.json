@@ -1,0 +1,223 @@
+[
+  {
+    "Name": "ChainBot",
+    "MaxHealth": 10,
+    "BaseSpeed": 100,
+    "hurtboxSize": "8 18",
+    "colliderSize": "10 5",
+    "colliderOffset": "-1 7",
+    "animatorOffset": "",
+    "SpriteSheets": [
+      {
+        "FileName": "chain_bot_sprites",
+        "CellWidth": 126,
+        "CellHeight": 39,
+        "Animations": [
+          {
+            "Name": "Idle",
+            "Row": 0,
+            "Frames": 4
+          },
+          {
+            "Name": "Run",
+            "Row": 1,
+            "Frames": 8
+          },
+          {
+            "Name": "TransitionToCharge",
+            "Row": 2,
+            "Frames": 2
+          },
+          {
+            "Name": "Charge",
+            "Row": 3,
+            "Frames": 4
+          },
+          {
+            "Name": "Attack",
+            "Row": 4,
+            "Frames": 8
+          },
+          {
+            "Name": "Hit",
+            "Row": 5,
+            "Frames": 2
+          },
+          {
+            "Name": "Die",
+            "Row": 6,
+            "Frames": 5
+          }
+        ]
+      }
+    ],
+    "BehaviorConfig": {
+      "BehaviorTreeName": "Basic",
+      "ActionCooldown": 2,
+      "RunsWhenPursued": false,
+      "PursuitTime": 0
+    }
+  },
+  {
+    "Name": "Ghoul",
+    "MaxHealth": 7,
+    "BaseSpeed": 120,
+    "hurtboxSize": "10 17",
+    "colliderSize": "9 6",
+    "colliderOffset": "0 9",
+    "animatorOffset": "",
+    "SpriteSheets": [
+      {
+        "FileName": "ghoul_sprites",
+        "CellWidth": 62,
+        "CellHeight": 33,
+        "Animations": [
+          {
+            "Name": "Idle",
+            "Row": 0,
+            "Frames": 4
+          },
+          {
+            "Name": "Run",
+            "Row": 1,
+            "Frames": 9
+          },
+          {
+            "Name": "Attack",
+            "Row": 2,
+            "Frames": 7
+          },
+          {
+            "Name": "Hit",
+            "Row": 3,
+            "Frames": 2
+          },
+          {
+            "Name": "Die",
+            "Row": 4,
+            "Frames": 8
+          },
+          {
+            "Name": "Spawn",
+            "Row": 5,
+            "Frames": 11
+          }
+        ]
+      }
+    ],
+    "BehaviorConfig": {
+      "BehaviorTreeName": "Basic",
+      "ActionCooldown": 0.5,
+      "RunsWhenPursued": false,
+      "PursuitTime": 0
+    }
+  },
+  {
+    "Name": "Spitter",
+    "MaxHealth": 8,
+    "BaseSpeed": 75,
+    "hurtboxSize": "11 20",
+    "colliderSize": "6 6",
+    "colliderOffset": "-4 8",
+    "animatorOffset": "",
+    "SpriteSheets": [
+      {
+        "FileName": "spitter_sheet",
+        "CellWidth": 77,
+        "CellHeight": 39,
+        "Animations": [
+          {
+            "Name": "Idle",
+            "Row": 0,
+            "Frames": 6
+          },
+          {
+            "Name": "Run",
+            "Row": 1,
+            "Frames": 7
+          },
+          {
+            "Name": "Attack",
+            "Row": 2,
+            "Frames": 8
+          },
+          {
+            "Name": "Hit",
+            "Row": 3,
+            "Frames": 3
+          },
+          {
+            "Name": "Die",
+            "Row": 4,
+            "Frames": 9
+          }
+        ]
+      }
+    ],
+    "BehaviorConfig": {
+      "BehaviorTreeName": "Basic",
+      "ActionCooldown": 1.5,
+      "RunsWhenPursued": true,
+      "PursuitTime": 2
+    }
+  },
+  {
+    "Name": "OrbMage",
+    "MaxHealth": 8,
+    "BaseSpeed": 45,
+    "hurtboxSize": "6 18",
+    "colliderSize": "10 7",
+    "colliderOffset": "-5 5",
+    "animatorOffset": "38 -5",
+    "SpriteSheets": [
+      {
+        "FileName": "orb_mage_sprites",
+        "CellWidth": 119,
+        "CellHeight": 34,
+        "Animations": [
+          {
+            "Name": "Idle",
+            "Row": 0,
+            "Frames": 3
+          },
+          {
+            "Name": "Run",
+            "Row": 1,
+            "Frames": 8
+          },
+          {
+            "Name": "Heal",
+            "Row": 2,
+            "Frames": 14
+          },
+          {
+            "Name": "Attack",
+            "Row": 3,
+            "Frames": 13
+          },
+          {
+            "Name": "SweepAttack",
+            "Row": 5,
+            "Frames": 16
+          },
+          {
+            "Name": "Hit",
+            "Row": 6,
+            "Frames": 3
+          },
+          {
+            "Name": "Die",
+            "Row": 7,
+            "Frames": 7
+          }
+        ]
+      }
+    ],
+    "BehaviorConfig": {
+      "BehaviorTreeName": "Basic",
+      "ActionCooldown": 1.5,
+      "RunsWhenPursued": false,
+      "PursuitTime": 0
+    }
+  }
+]

@@ -10,14 +10,17 @@ using Threadlock.Components;
 using Nez.Sprites;
 using Microsoft.Xna.Framework;
 using Threadlock.Helpers;
+using Threadlock.Entities.Characters.Enemies;
 
-namespace Threadlock.Entities.Characters.Enemies.OrbMage
+namespace Threadlock.Components.EnemyActions.OrbMage
 {
-    public class OrbMageAttack : EnemyAction<OrbMage>
+    public class OrbMageAttack : EnemyAction
     {
         //constants
         const int _showVfxFrame = 6;
         const float _predictionOffset = 64;
+        const float _attackRange = 128f;
+        const float _sweepAttackRange = 64f;
 
         //entities
         OrbMageAttackVfx _attackVfx;
@@ -28,9 +31,7 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
         //misc
         AnimationWaiter _animationWaiter;
 
-        public OrbMageAttack(OrbMage enemy) : base(enemy)
-        {
-        }
+        #region LIFECYCLE
 
         public override void OnAddedToEntity()
         {
@@ -43,6 +44,19 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
             }
         }
 
+        #endregion
+
+        #region Enemy action implementation
+
+        public override float CooldownTime => 0f;
+        public override int Priority => 1;
+
+        public override bool CanExecute()
+        {
+            var dist = EntityHelper.DistanceToEntity(Enemy, Enemy.TargetEntity);
+            return dist <= _attackRange && dist > _sweepAttackRange;
+        }
+
         protected override IEnumerator ExecutionCoroutine()
         {
             //create vfx entity
@@ -50,21 +64,21 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
 
             //play animation
             if (_animationWaiter != null)
-                Game1.StartCoroutine(_animationWaiter.WaitForAnimation("Attack"));
+                Core.StartCoroutine(_animationWaiter.WaitForAnimation("Attack"));
 
             //wait for vfx frame
             while (_animator.IsAnimationActive("Attack") && _animator.CurrentFrame < _showVfxFrame)
                 yield return null;
 
             //target player
-            var targetPos = _enemy.TargetEntity.Position;
-            if (_enemy.TargetEntity.TryGetComponent<OriginComponent>(out var origin))
+            var targetPos = Enemy.TargetEntity.Position;
+            if (Enemy.TargetEntity.TryGetComponent<OriginComponent>(out var origin))
                 targetPos = origin.Origin;
             targetPos += new Vector2(0, -17);
 
-            if (_enemy.TargetEntity.TryGetComponent<VelocityComponent>(out var vc))
+            if (Enemy.TargetEntity.TryGetComponent<VelocityComponent>(out var vc))
             {
-                targetPos += (vc.Direction * Nez.Random.Range(0, _predictionOffset));
+                targetPos += vc.Direction * Nez.Random.Range(0, _predictionOffset);
             }
 
             _attackVfx.SetPosition(targetPos);
@@ -77,5 +91,7 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
         {
             _animationWaiter?.Cancel();
         }
+
+        #endregion
     }
 }

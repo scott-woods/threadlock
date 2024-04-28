@@ -126,13 +126,16 @@
     <property name="Type" propertytype="TriggerType" value="Interact"/>
    </properties>
   </object>
-  <object id="2" type="PlayerSpawnPoint" x="176" y="128">
+  <object id="2" type="PlayerSpawnPoint" x="176" y="112">
    <properties>
     <property name="Id" value="0"/>
    </properties>
    <point/>
   </object>
   <object id="3" type="EnemySpawnPoint" x="176" y="192">
+   <properties>
+    <property name="EnemyType" value="OrbMage"/>
+   </properties>
    <point/>
   </object>
  </objectgroup>

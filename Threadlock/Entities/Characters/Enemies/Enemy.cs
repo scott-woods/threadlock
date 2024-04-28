@@ -1,26 +1,37 @@
 ﻿using Microsoft.Xna.Framework;
 using Nez;
 using Nez.AI.BehaviorTrees;
+using Nez.AI.GOAP;
 using Nez.Sprites;
+using Nez.Textures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 using Threadlock.Components;
+using Threadlock.Components.EnemyActions;
 using Threadlock.DebugTools;
-using Threadlock.Entities.Characters.Enemies.ChainBot;
-using Threadlock.Entities.Characters.Player.States;
 using Threadlock.Helpers;
+using Threadlock.Models;
 using Threadlock.StaticData;
 using TaskStatus = Nez.AI.BehaviorTrees.TaskStatus;
 
 namespace Threadlock.Entities.Characters.Enemies
 {
-    public abstract class Enemy<T> : BaseEnemy where T : Enemy<T>
+    public class Enemy : Entity
     {
-        Entity _targetEntity;
-        public virtual Entity TargetEntity {
+        public float BaseSpeed { get; }
+        public BehaviorConfig BehaviorConfig;
+        public bool IsOnCooldown = false;
+        public bool WantsLineOfSight;
+        public float MinDistance;
+        public float MaxDistance;
+        public bool IsPursued;
+
+        ITimer _pursuitTimer;
+
+        public virtual Entity TargetEntity
+        {
             get
             {
                 //get all entities with the enemy target tag
@@ -53,31 +64,91 @@ namespace Threadlock.Entities.Characters.Enemies
             }
         }
 
-        BehaviorTree<T> _tree;
-        BehaviorTree<T> _subTree;
+        BehaviorTree<Enemy> _tree;
+        EnemyAction _activeAction;
+        EnemyAction _queuedAction;
 
-        EnemyAction<T> _activeAction;
+        public Enemy(EnemyConfig config) : base(config.Name)
+        {
+            BehaviorConfig = config.BehaviorConfig;
+            BaseSpeed = config.BaseSpeed;
 
-        //components
-        StatusComponent _statusComponent;
+            //status
+            var statusComponent = AddComponent(new StatusComponent(StatusPriority.Normal));
+            statusComponent.Emitter.AddObserver(StatusEvents.Changed, OnStatusChanged);
 
-        #region LIFECYCLE
+            //RENDERERS
+            var animator = AddComponent(new SpriteAnimator());
+            animator.SetLocalOffset(config.AnimatorOffset);
+            animator.SetRenderLayer(RenderLayers.YSort);
+            foreach (var spriteSheet in config.SpriteSheets)
+            {
+                var texture = Game1.Scene.Content.LoadTexture(@$"Content\Textures\Characters\{config.Name}\{spriteSheet.FileName}.png");
+                var sprites = Sprite.SpritesFromAtlas(texture, spriteSheet.CellWidth, spriteSheet.CellHeight);
+                var totalColumns = texture.Width / spriteSheet.CellWidth;
+                foreach (var anim in spriteSheet.Animations)
+                    animator.AddAnimation(anim.Name, AnimatedSpriteHelper.GetSpriteArrayByRow(sprites, anim.Row, anim.Frames, totalColumns));
+            }
+
+            AddComponent(new Shadow(animator));
+
+            AddComponent(new SelectionComponent(animator, 10));
+
+            AddComponent(new SpriteFlipper());
+
+
+            //PHYSICS
+            var mover = AddComponent(new Mover());
+
+            var velocityComponent = AddComponent(new VelocityComponent());
+
+            var collider = AddComponent(new BoxCollider(config.ColliderOffset.X, config.ColliderOffset.Y, config.ColliderSize.X, config.ColliderSize.Y));
+            Flags.SetFlagExclusive(ref collider.PhysicsLayer, PhysicsLayers.EnemyCollider);
+            collider.CollidesWithLayers = 0;
+            Flags.SetFlag(ref collider.CollidesWithLayers, PhysicsLayers.Environment);
+            Flags.SetFlag(ref collider.CollidesWithLayers, PhysicsLayers.EnemyCollider);
+            Flags.SetFlag(ref collider.CollidesWithLayers, PhysicsLayers.ProjectilePassableWall);
+
+            var hurtboxCollider = AddComponent(new BoxCollider(config.HurtboxSize.X, config.HurtboxSize.Y));
+            hurtboxCollider.IsTrigger = true;
+            Flags.SetFlagExclusive(ref hurtboxCollider.PhysicsLayer, PhysicsLayers.EnemyHurtbox);
+            Flags.SetFlagExclusive(ref hurtboxCollider.CollidesWithLayers, PhysicsLayers.PlayerHitbox);
+            var hurtbox = AddComponent(new Hurtbox(hurtboxCollider, 0f, Nez.Content.Audio.Sounds.Chain_bot_damaged));
+
+            AddComponent(new KnockbackComponent(velocityComponent, 150, .5f));
+
+
+            //OTHER
+            AddComponent(new HealthComponent(config.MaxHealth, config.MaxHealth));
+
+            AddComponent(new DeathComponent("Die", Nez.Content.Audio.Sounds.Enemy_death_1));
+
+            AddComponent(new Pathfinder(collider));
+
+            AddComponent(new OriginComponent(collider));
+
+            AddComponent(new LootDropper(LootTables.BasicEnemy));
+
+
+            //ACTIONS
+            var assembly = Assembly.GetExecutingAssembly();
+            var actionTypes = assembly.GetTypes()
+                .Where(t => t.IsSubclassOf(typeof(EnemyAction)) && !t.IsAbstract && t.Namespace == $"Threadlock.Components.EnemyActions.{config.Name}");
+            foreach (var actionType in actionTypes)
+                AddComponent(Activator.CreateInstance(actionType) as EnemyAction);
+
+
+            //BEHAVIOR
+            _tree = BehaviorTrees.CreateBehaviorTree(this, config.BehaviorConfig.BehaviorTreeName);
+
+            hurtbox.Emitter.AddObserver(HurtboxEventTypes.Hit, OnHurtboxHit);
+        }
 
         public override void OnAddedToScene()
         {
             base.OnAddedToScene();
 
-            //add components
-            _statusComponent = AddComponent(new StatusComponent(StatusPriority.Normal));
-
-            //additional setup
-            Setup();
-
-            //create sub tree
-            _subTree = CreateSubTree();
-
-            //create tree
-            _tree = CreateBehaviorTree();
+            StartActionCooldown();
         }
 
         public override void Update()
@@ -87,103 +158,173 @@ namespace Threadlock.Entities.Characters.Enemies
             _tree.Tick();
         }
 
-        #endregion
-
-        #region VIRTUAL METHODS
-
-        public virtual bool ShouldAbort()
+        void StartActionCooldown()
         {
-            return _statusComponent.CurrentStatusPriority != StatusPriority.Normal;
+            //handle cooldown
+            IsOnCooldown = true;
+            Game1.Schedule(BehaviorConfig.ActionCooldown, timer => IsOnCooldown = false);
         }
 
-        public virtual bool ShouldRunSubTree()
-        {
-            //var gameStateManager = Game1.GameStateManager;
-            //if (gameStateManager.GameState != GameState.Combat) return false;
-            //if (c.StatusComponent.CurrentStatus.Type != Status.StatusType.Normal) return false;
-            //return true;
+        #region OBSERVERS
 
+        void OnStatusChanged(StatusPriority status)
+        {
+            if (status != StatusPriority.Normal)
+            {
+                _activeAction?.Abort();
+                _activeAction = null;
+            }
+        }
+
+        void OnHurtboxHit(HurtboxHit hit)
+        {
+            if (BehaviorConfig.RunsWhenPursued)
+            {
+                _pursuitTimer?.Stop();
+                _pursuitTimer = null;
+
+                IsPursued = true;
+                _pursuitTimer = Game1.Schedule(BehaviorConfig.PursuitTime, timer =>
+                {
+                    IsPursued = false;
+                    _pursuitTimer = null;
+                });
+            }
+        }
+
+        #endregion
+
+        #region CHECKS
+
+        public StatusPriority CheckStatus()
+        {
+            if (TryGetComponent<StatusComponent>(out var status))
+                return status.CurrentStatusPriority;
+            else return StatusPriority.Normal;
+        }
+
+        public bool TryQueueAction()
+        {
+            if (IsOnCooldown)
+                return false;
+
+            var actions = GetComponents<EnemyAction>();
+            var groups = actions.OrderBy(a => a.Priority).GroupBy(a => a.Priority).Select(g => g.ToList());
+            foreach (var group in groups)
+            {
+                foreach (var action in group)
+                {
+                    List<EnemyAction> validActions = new List<EnemyAction>();
+                    if (action.IsOnCooldown)
+                        continue;
+                    if (action.CanExecute())
+                        validActions.Add(action);
+
+                    if (validActions.Any())
+                    {
+                        _queuedAction = validActions.RandomItem();
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        public bool CanExecuteAction(EnemyAction action)
+        {
+            if (IsOnCooldown)
+                return false;
+
+            if (_activeAction != null)
+                return false;
+
+            if (action.IsOnCooldown)
+                return false;
+
+            return action.CanExecute();
+        }
+
+        public bool ShouldRunSubTree()
+        {
             if (!DebugSettings.EnemyAIEnabled)
                 return false;
 
-            if (_statusComponent.CurrentStatusPriority != StatusPriority.Normal) return false;
+            if (TryGetComponent<StatusComponent>(out var status))
+            {
+                if (status.CurrentStatusPriority != StatusPriority.Normal)
+                    return false;
+            }
+
             return true;
         }
 
-        public virtual BehaviorTree<T> CreateBehaviorTree()
+        public bool IsTooClose()
         {
-            var tree = BehaviorTreeBuilder<T>.Begin(this as T)
-                .Selector()
-                    .Sequence(AbortTypes.LowerPriority)
-                        .Conditional(c => c.ShouldAbort())
-                        .Action(c => c.AbortActions())
-                    .EndComposite()
-                    .Sequence(AbortTypes.LowerPriority)
-                        .Conditional(c => c.ShouldRunSubTree())
-                        .SubTree(_subTree)
-                    .EndComposite()
-                    .Sequence(AbortTypes.LowerPriority)
-                        .Action(c => c.Idle())
-                    .EndComposite()
-                    //.ConditionalDecorator(c => c.ShouldAbort(), true)
-                    //    .Action(c => c.AbortActions())
-                    ////.ConditionalDecorator(c =>
-                    ////{
-                    ////    var gameStateManager = Game1.GameStateManager;
-                    ////    return gameStateManager.GameState != GameState.Combat;
-                    ////}, true)
-                    ////    .Sequence()
-                    ////        .Action(c => c.AbortActions())
-                    ////        .Action(c => c.Idle())
-                    ////    .EndComposite()
-                    //.ConditionalDecorator(c => c.ShouldRunSubTree(), true)
-                    //    .SubTree(_subTree)
-
-                .EndComposite()
-                .Build();
-
-            tree.UpdatePeriod = 0;
-
-            return tree;
+            return false;
         }
 
-        //public virtual Entity GetTarget()
-        //{
-        //    return Player.Player.Instance;
-        //}
-
-        #endregion
-
-        #region ABSTRACT METHODS
-
-        public abstract BehaviorTree<T> CreateSubTree();
-
-        public abstract void Setup();
+        public bool IsTooFar()
+        {
+            return true;
+        }
 
         #endregion
 
         #region TASKS
 
-        public virtual TaskStatus AbortActions()
+        public TaskStatus ExecuteQueuedAction()
         {
-            _activeAction?.Abort();
-            _activeAction = null;
+            if (_queuedAction == null)
+                return TaskStatus.Failure;
 
-            return TaskStatus.Success;
-        }
-
-        public virtual TaskStatus ExecuteAction(EnemyAction<T> action)
-        {
-            _activeAction = action;
-
-            var status = action.Execute();
-
-            if (status == TaskStatus.Success || status == TaskStatus.Failure)
+            if (_activeAction == null)
             {
-                _activeAction = null;
+                _activeAction = _queuedAction;
+                Game1.StartCoroutine(_activeAction.BeginExecution());
             }
 
-            return status;
+            //return running as long as action is active
+            if (_activeAction.IsActive)
+                return TaskStatus.Running;
+            else
+            {
+                //set active and queued action to null
+                _activeAction = null;
+                _queuedAction = null;
+
+                StartActionCooldown();
+
+                //return task success
+                return TaskStatus.Success;
+            }
+        }
+
+        public TaskStatus ExecuteAction(EnemyAction action)
+        {
+            //if active action isn't set to this one, it's the first time calling this. set as active and start coroutine
+            if (_activeAction != action)
+            {
+                _activeAction = action;
+
+                Game1.StartCoroutine(action.BeginExecution());
+            }
+
+            //return running as long as action is active
+            if (action.IsActive)
+                return TaskStatus.Running;
+            else
+            {
+                //set active action to null
+                _activeAction = null;
+
+                //handle cooldown
+                IsOnCooldown = true;
+                Game1.Schedule(BehaviorConfig.ActionCooldown, timer => IsOnCooldown = false);
+
+                //return task success
+                return TaskStatus.Success;
+            }
         }
 
         /// <summary>
@@ -269,6 +410,37 @@ namespace Threadlock.Entities.Characters.Enemies
             return TaskStatus.Running;
         }
 
+        public TaskStatus MoveAway(Entity target, float speed)
+        {
+            if (target.TryGetComponent<OriginComponent>(out var originComponent))
+                return MoveAway(originComponent.Origin, speed);
+            else return MoveAway(target.Position, speed);
+        }
+
+        public TaskStatus MoveAway(Vector2 target, float speed)
+        {
+            //handle animation
+            if (TryGetComponent<SpriteAnimator>(out var animator))
+            {
+                if (animator.Animations.ContainsKey("Run") && !animator.IsAnimationActive("Run"))
+                {
+                    animator.Play("Run");
+                }
+            }
+
+            var enemyPos = Position;
+            if (TryGetComponent<OriginComponent>(out var enemyOrigin))
+                enemyPos = enemyOrigin.Origin;
+
+            var dir = enemyPos - target;
+            dir.Normalize();
+
+            if (TryGetComponent<VelocityComponent>(out var velocityComponent))
+                velocityComponent.Move(dir, speed);
+
+            return TaskStatus.Running;
+        }
+
         public virtual TaskStatus MoveAway(Entity target, float speed, float desiredDistance)
         {
             if (target.TryGetComponent<OriginComponent>(out var originComponent))
@@ -325,7 +497,7 @@ namespace Threadlock.Entities.Characters.Enemies
                 }
             }
 
-            return TaskStatus.Running;
+            return TaskStatus.Success;
         }
 
         #endregion

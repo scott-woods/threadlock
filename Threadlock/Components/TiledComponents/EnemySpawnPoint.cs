@@ -6,12 +6,14 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Entities.Characters.Enemies;
+using Threadlock.Models;
+using Threadlock.StaticData;
 
 namespace Threadlock.Components.TiledComponents
 {
     public class EnemySpawnPoint : TiledComponent
     {
-        Type? _enemyType;
+        EnemyConfig _config;
 
         public override void Initialize()
         {
@@ -19,31 +21,24 @@ namespace Threadlock.Components.TiledComponents
 
             if (TmxObject.Properties != null && TmxObject.Properties.TryGetValue("EnemyType", out var enemyTypeString))
             {
-                Type enemyType = Type.GetType($"Threadlock.Entities.Characters.Enemies.{enemyTypeString}.{enemyTypeString}");
-                if (enemyType != null)
-                {
-                    _enemyType = enemyType;
-                }
+                if (Enemies.EnemyConfigDictionary.TryGetValue(enemyTypeString, out var enemyConfig))
+                    _config = enemyConfig;
             }
         }
 
-        public BaseEnemy SpawnEnemy(Type type)
+        public Enemy SpawnEnemy(EnemyConfig config)
         {
-            var enemy = Entity.Scene.AddEntity((BaseEnemy)Activator.CreateInstance(type));
+            var enemy = Entity.Scene.AddEntity(new Enemy(config));
             enemy.SetPosition(Entity.Position);
-
             return enemy;
         }
 
-        public BaseEnemy SpawnEnemy()
+        public Enemy SpawnEnemy()
         {
-            if (_enemyType == null)
+            if (_config == null)
                 return null;
 
-            var enemy = Entity.Scene.AddEntity((BaseEnemy)Activator.CreateInstance(_enemyType));
-            enemy.SetPosition(Entity.Position);
-
-            return enemy;
+            return SpawnEnemy(_config);
         }
     }
 }

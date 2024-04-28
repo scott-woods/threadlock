@@ -544,10 +544,10 @@
                 35
             ],
             "scale": 2,
-            "selectedLayer": 4,
+            "selectedLayer": 8,
             "viewCenter": {
-                "x": 172.25,
-                "y": 388
+                "x": 373,
+                "y": 343
             }
         },
         "Tilemaps/Forge/forge_normal_2.tmx": {

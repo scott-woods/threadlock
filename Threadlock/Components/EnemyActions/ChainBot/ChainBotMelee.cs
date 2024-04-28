@@ -9,12 +9,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
 using Threadlock.Components.Hitboxes;
+using Threadlock.Entities.Characters.Enemies;
 using Threadlock.Helpers;
 using Threadlock.StaticData;
 
-namespace Threadlock.Entities.Characters.Enemies.ChainBot
+namespace Threadlock.Components.EnemyActions.ChainBot
 {
-    public class ChainBotMelee : EnemyAction<ChainBot>, IUpdatable
+    public class ChainBotMelee : EnemyAction, IUpdatable
     {
         //consts
         const int _damage = 2;
@@ -32,9 +33,7 @@ namespace Threadlock.Entities.Characters.Enemies.ChainBot
         //coroutines
         ICoroutine _waitForCharge, _attack;
 
-        public ChainBotMelee(ChainBot enemy) : base(enemy)
-        {
-        }
+        #region LIFECYCLE
 
         public override void Initialize()
         {
@@ -53,7 +52,7 @@ namespace Threadlock.Entities.Characters.Enemies.ChainBot
 
         public void Update()
         {
-            if (_animator.CurrentAnimationName == "AttackRight" && _animator.AnimationState == SpriteAnimator.State.Running)
+            if (_animator.CurrentAnimationName == "Attack" && _animator.AnimationState == SpriteAnimator.State.Running)
             {
                 if (_hitboxActiveFrames.Contains(_animator.CurrentFrame))
                 {
@@ -74,17 +73,34 @@ namespace Threadlock.Entities.Characters.Enemies.ChainBot
             }
         }
 
+        #endregion
+
+        #region EnemyAction implementation
+
+        public override float CooldownTime => 0;
+        public override int Priority => 0;
+
+        public override bool CanExecute()
+        {
+            var targetPos = Enemy.TargetEntity.Position;
+            var xDist = Math.Abs(Enemy.Position.X - targetPos.X);
+            var yDist = Math.Abs(Enemy.Position.Y - targetPos.Y);
+            if (xDist <= 32 && yDist <= 8)
+                return true;
+            return false;
+        }
+
         protected override IEnumerator ExecutionCoroutine()
         {
             var animationWaiter = new AnimationWaiter(_animator);
 
             //transition to charge
-            _waitForCharge = Game1.StartCoroutine(animationWaiter.WaitForAnimation("TransitionRight"));
+            _waitForCharge = Core.StartCoroutine(animationWaiter.WaitForAnimation("TransitionToCharge"));
             yield return _waitForCharge;
             _waitForCharge = null;
 
             //charge
-            _animator.Play("ChargeRight");
+            _animator.Play("Charge");
             yield return Coroutine.WaitForSeconds(.2f);
 
             //attack
@@ -95,7 +111,7 @@ namespace Threadlock.Entities.Characters.Enemies.ChainBot
                     hitboxOffset.X *= -1;
             }
             _hitbox.SetLocalOffset(hitboxOffset);
-            _attack = Game1.StartCoroutine(animationWaiter.WaitForAnimation("AttackRight"));
+            _attack = Core.StartCoroutine(animationWaiter.WaitForAnimation("Attack"));
             yield return _attack;
             _attack = null;
         }
@@ -129,5 +145,7 @@ namespace Threadlock.Entities.Characters.Enemies.ChainBot
             //disable hitbox
             _hitbox.SetEnabled(false);
         }
+
+        #endregion
     }
 }

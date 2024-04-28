@@ -12,7 +12,7 @@ using Threadlock.Components.Hitboxes;
 using Threadlock.Helpers;
 using Threadlock.StaticData;
 
-namespace Threadlock.Entities.Characters.Enemies.OrbMage
+namespace Threadlock.Components.EnemyActions.OrbMage
 {
     public class OrbMageSweepAttackVfx : Entity
     {
@@ -40,7 +40,7 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
             base.OnAddedToScene();
 
             _animator = AddComponent(new SpriteAnimator());
-            var texture = Scene.Content.LoadTexture(Nez.Content.Textures.Characters.OrbMage.VFXforSweep);
+            var texture = Scene.Content.LoadTexture(Content.Textures.Characters.OrbMage.VFXforSweep);
             var sprites = Sprite.SpritesFromAtlas(texture, 87, 34);
             _animator.AddAnimation("Attack", sprites.ToArray());
             _animator.SetEnabled(false);
@@ -60,16 +60,16 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
             if (_directionToPlayer.X < 0)
                 _animator.FlipY = true;
 
-            Position += (_offset * _directionToPlayer);
+            Position += _offset * _directionToPlayer;
             Rotation = (float)Math.Atan2(_directionToPlayer.Y, _directionToPlayer.X);
 
-            Game1.StartCoroutine(_animationWaiter.WaitForAnimation("Attack"));
+            Core.StartCoroutine(_animationWaiter.WaitForAnimation("Attack"));
 
             while (_animator.CurrentFrame < _hitboxActiveFrame)
                 yield return null;
 
             _hitbox.SetEnabled(true);
-            Game1.AudioManager.PlaySound(Nez.Content.Audio.Sounds.Orb_mage_attack);
+            Game1.AudioManager.PlaySound(Content.Audio.Sounds.Orb_mage_attack);
 
             while (_animator.CurrentFrame == _hitboxActiveFrame)
                 yield return null;

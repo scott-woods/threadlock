@@ -1,30 +1,22 @@
 ﻿using Microsoft.Xna.Framework;
 using Nez;
 using Nez.Sprites;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Threadlock.Components;
+using Threadlock.Entities.Characters.Enemies;
 using Threadlock.Helpers;
 
-namespace Threadlock.Entities.Characters.Enemies.Spitter
+namespace Threadlock.Components.EnemyActions.Spitter
 {
-    public class SpitAttack : EnemyAction<Spitter>
+    public class SpitAttack : EnemyAction
     {
         //consts
         const int _fireFrame = 3;
+        const float _attackRange = 128f;
 
         //components
         SpriteAnimator _animator;
 
         AnimationWaiter _animationWaiter;
-
-        public SpitAttack(Spitter enemy) : base(enemy)
-        {
-        }
 
         #region LIFECYCLE
 
@@ -32,7 +24,7 @@ namespace Threadlock.Entities.Characters.Enemies.Spitter
         {
             base.OnAddedToEntity();
 
-            if (_enemy.TryGetComponent<SpriteAnimator>(out var animator))
+            if (Enemy.TryGetComponent<SpriteAnimator>(out var animator))
             {
                 _animator = animator;
                 _animationWaiter = new AnimationWaiter(_animator);
@@ -41,19 +33,35 @@ namespace Threadlock.Entities.Characters.Enemies.Spitter
 
         #endregion
 
-        #region ENEMY ACTION OVERRIDES
+        #region Enemy action implementation
+
+        public override float CooldownTime => 0f;
+        public override int Priority => 0;
+
+        public override bool CanExecute()
+        {
+            if (EntityHelper.DistanceToEntity(Enemy, Enemy.TargetEntity) > _attackRange)
+                return false;
+
+            if (!EntityHelper.HasLineOfSight(Enemy, Enemy.TargetEntity))
+                return false;
+
+            return true;
+        }
 
         protected override IEnumerator ExecutionCoroutine()
         {
-            Game1.StartCoroutine(_animationWaiter.WaitForAnimation("Attack"));
+            Core.StartCoroutine(_animationWaiter.WaitForAnimation("Attack"));
 
             while (_animator.IsAnimationActive("Attack") && _animator.AnimationState == SpriteAnimator.State.Running)
             {
+                var dir = EntityHelper.DirectionToEntity(Enemy, Enemy.TargetEntity);
+                if (Enemy.TryGetComponent<VelocityComponent>(out var vc))
+                    vc.LastNonZeroDirection = dir;
+
                 if (_animator.CurrentFrame == _fireFrame)
                 {
-                    Game1.AudioManager.PlaySound(Nez.Content.Audio.Sounds.Spitter_fire);
-
-                    var dir = EntityHelper.DirectionToEntity(_enemy, _enemy.TargetEntity);
+                    Game1.AudioManager.PlaySound(Content.Audio.Sounds.Spitter_fire);
 
                     CreateProjectile(dir);
 
@@ -85,7 +93,7 @@ namespace Threadlock.Entities.Characters.Enemies.Spitter
         void CreateProjectile(Vector2 dir)
         {
             var projectile = Entity.Scene.AddEntity(new SpitAttackProjectile(dir));
-            projectile.SetPosition(_enemy.Position);
+            projectile.SetPosition(Enemy.Position);
         }
     }
 }

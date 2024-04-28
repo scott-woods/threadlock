@@ -11,7 +11,7 @@ namespace Threadlock.Managers
 {
     public class EncounterManager
     {
-        List<BaseEnemy> _enemies = new List<BaseEnemy>();
+        List<Enemy> _enemies = new List<Enemy>();
         Action _onEncounterComplete;
 
         public EncounterManager(Action onEncounterComplete)
@@ -19,7 +19,7 @@ namespace Threadlock.Managers
             _onEncounterComplete = onEncounterComplete;
         }
 
-        public void AddEnemy(BaseEnemy enemy)
+        public void AddEnemy(Enemy enemy)
         {
             if (enemy.TryGetComponent<DeathComponent>(out var dc))
             {
@@ -33,7 +33,7 @@ namespace Threadlock.Managers
             if (enemyEntity.TryGetComponent<DeathComponent>(out var dc))
                 dc.Emitter.RemoveObserver(DeathEventTypes.Started, OnEnemyDeath);
 
-            _enemies.Remove(enemyEntity as BaseEnemy);
+            _enemies.Remove(enemyEntity as Enemy);
 
             if (_enemies.Count == 0)
                 _onEncounterComplete?.Invoke();

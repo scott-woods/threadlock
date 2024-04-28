@@ -10,6 +10,7 @@ using Threadlock.Entities.Characters.Player;
 using Threadlock.Entities.Characters.Player.BasicWeapons;
 using Threadlock.Helpers;
 using Threadlock.Managers;
+using Threadlock.Models;
 
 namespace Threadlock.StaticData
 {
@@ -84,7 +85,7 @@ namespace Threadlock.StaticData
                 {
                     if (renderer.TiledMap.Properties.TryGetValue("Area", out var areaString))
                     {
-                        if (Areas.TryGetArea(areaString, out var area))
+                        if (Areas.AreaDictionary.TryGetValue(areaString, out var area))
                         {
                             var encounterManager = new EncounterManager(() =>
                             {
@@ -93,35 +94,29 @@ namespace Threadlock.StaticData
                             });
 
                             int i = 0;
-                            var typesPicked = new List<Type>();
+                            Dictionary<EnemyConfig, int> pickedConfigs = new Dictionary<EnemyConfig, int>();
+                            var possibleConfigs = new List<EnemyConfig>();
+                            foreach (var enemyName in area.EnemyTypes)
+                            {
+                                if (Enemies.EnemyConfigDictionary.TryGetValue(enemyName, out var enemyConfig))
+                                    possibleConfigs.Add(enemyConfig);
+                            }
                             while (i < enemySpawns.Count)
                             {
                                 var spawn = enemySpawns[i];
 
                                 Game1.AudioManager.PlaySound(Nez.Content.Audio.Sounds.Enemy_spawn);
 
-                                Type enemyType;
-
-                                //get enemy types that have been picked less than 3 times
-                                var possibleTypes = area.EnemyTypes.Where(t =>
-                                {
-                                    if (typesPicked.Contains(t))
-                                        return typesPicked.Count(p => p == t) < 3;
-                                    return true;
-                                }).ToList();
-
-                                //if any possible types, get a random from that list
-                                if (possibleTypes.Any())
-                                    enemyType = possibleTypes.RandomItem();
-                                else //if all types are already at max, just pick another random one
-                                    enemyType = area.EnemyTypes.RandomItem();
+                                EnemyConfig enemyConfig = possibleConfigs.RandomItem();
 
                                 //add this type to typesPicked list
-                                typesPicked.Add(enemyType);
+                                if (!pickedConfigs.ContainsKey(enemyConfig))
+                                    pickedConfigs.Add(enemyConfig, 0);
+                                pickedConfigs[enemyConfig]++;
 
                                 //spawn enemy
                                 //spawn.SpawnEnemy(typeof(ChainBot));
-                                var enemy = spawn.SpawnEnemy(enemyType);
+                                var enemy = spawn.SpawnEnemy(enemyConfig);
                                 yield return null;
                                 encounterManager.AddEnemy(enemy);
 
@@ -169,15 +164,9 @@ namespace Threadlock.StaticData
             if (!VerifyArgs(trigger.Args, 1))
                 yield break;
 
-            var enemyName = trigger.Args[0];
-            var enemyType = Type.GetType($"Threadlock.Entities.Characters.Enemies.{enemyName}.{enemyName}")
-                ?? Type.GetType($"Threadlock.Entities.Characters.Enemies.{enemyName}");
-            if (enemyType == null)
-                yield break;
-
             var spawns = trigger.FindComponentsOnMap<EnemySpawnPoint>();
             if (spawns != null && spawns.Count > 0)
-                spawns.First().SpawnEnemy(enemyType);
+                spawns.First().SpawnEnemy();
         }
 
         public static IEnumerator ChangeWeapon(Trigger trigger)

@@ -1,0 +1,6 @@
+[
+  {
+    "Name": "Forge",
+    "EnemyTypes": ["ChainBot", "Ghoul", "OrbMage", "Spitter"]
+  }
+]

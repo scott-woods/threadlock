@@ -6,16 +6,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Threadlock.Components;
+using Threadlock.Entities.Characters.Enemies;
 using Threadlock.Helpers;
 
-namespace Threadlock.Entities.Characters.Enemies.OrbMage
+namespace Threadlock.Components.EnemyActions.OrbMage
 {
-    public class OrbMageSweepAttack : EnemyAction<OrbMage>
+    public class OrbMageSweepAttack : EnemyAction
     {
         //consts
         const int _pickDirectionFrame = 4;
         const int _startFrame = 8;
+        const float _sweepAttackRange = 64f;
 
         //components
         SpriteAnimator _animator;
@@ -24,26 +25,38 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
 
         AnimationWaiter _animationWaiter;
 
-        public OrbMageSweepAttack(OrbMage enemy) : base(enemy) { }
+        #region LIFECYCLE
 
         public override void OnAddedToEntity()
         {
             base.OnAddedToEntity();
 
-            if (_enemy.TryGetComponent<SpriteAnimator>(out var animator))
+            if (Enemy.TryGetComponent<SpriteAnimator>(out var animator))
                 _animator = animator;
 
             _animationWaiter = new AnimationWaiter(_animator);
         }
 
+        #endregion
+
+        #region Enemy action implementation
+
+        public override float CooldownTime => 0f;
+        public override int Priority => 0;
+
+        public override bool CanExecute()
+        {
+            return EntityHelper.DistanceToEntity(Enemy, Enemy.TargetEntity) <= _sweepAttackRange;
+        }
+
         protected override IEnumerator ExecutionCoroutine()
         {
-            Game1.StartCoroutine(_animationWaiter.WaitForAnimation("SweepAttack"));
+            Core.StartCoroutine(_animationWaiter.WaitForAnimation("SweepAttack"));
 
             while (_animator.CurrentFrame < _pickDirectionFrame)
                 yield return null;
 
-            var dir = EntityHelper.DirectionToEntity(_enemy, _enemy.TargetEntity);
+            var dir = EntityHelper.DirectionToEntity(Enemy, Enemy.TargetEntity);
 
             _attackVfx = Entity.Scene.AddEntity(new OrbMageSweepAttackVfx(dir));
 
@@ -61,5 +74,7 @@ namespace Threadlock.Entities.Characters.Enemies.OrbMage
             _attackVfx?.Destroy();
             _attackVfx = null;
         }
+
+        #endregion
     }
 }

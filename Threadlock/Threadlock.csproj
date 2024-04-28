@@ -46,11 +46,13 @@
     <None Remove="Content\Audio\Sounds\Socket_Equip.wav" />
     <None Remove="Content\Audio\Sounds\Socket_Remove.wav" />
     <None Remove="Content\CompiledEffects\SpriteOutline.fxb" />
+    <None Remove="Content\Data\Areas.json" />
     <None Remove="Content\Data\DungeonFlows2.json" />
     <None Remove="Content\Data\DungeonFlows3.json" />
     <None Remove="Content\Data\DungeonFlows4.json" />
     <None Remove="Content\Data\DungeonFlows5.json" />
     <None Remove="Content\Data\DungeonFlows6.json" />
+    <None Remove="Content\Data\Enemies.json" />
     <None Remove="Content\Data\FairyForestTiles.json" />
     <None Remove="Content\Data\FairyForestTiles2.json" />
     <None Remove="Content\Data\SimpleLoop.json" />

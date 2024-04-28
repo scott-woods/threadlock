@@ -104,12 +104,14 @@ namespace Nez
 
 		public static class Data
 		{
+			public const string Areas = @"Content\Data\Areas.json";
 			public const string DungeonFlows = @"Content\Data\DungeonFlows.json";
 			public const string DungeonFlows2 = @"Content\Data\DungeonFlows2.json";
 			public const string DungeonFlows3 = @"Content\Data\DungeonFlows3.json";
 			public const string DungeonFlows4 = @"Content\Data\DungeonFlows4.json";
 			public const string DungeonFlows5 = @"Content\Data\DungeonFlows5.json";
 			public const string DungeonFlows6 = @"Content\Data\DungeonFlows6.json";
+			public const string Enemies = @"Content\Data\Enemies.json";
 			public const string FairyForestTiles = @"Content\Data\FairyForestTiles.json";
 			public const string FairyForestTiles2 = @"Content\Data\FairyForestTiles2.json";
 			public const string SimpleLoop = @"Content\Data\SimpleLoop.json";
@@ -199,13 +201,7 @@ namespace Nez
 			{
 				public static class ChainBot
 				{
-					public const string Attack = @"Content\Textures\Characters\ChainBot\attack.png";
-					public const string Charge = @"Content\Textures\Characters\ChainBot\charge.png";
-					public const string Death = @"Content\Textures\Characters\ChainBot\death.png";
-					public const string Hit = @"Content\Textures\Characters\ChainBot\hit.png";
-					public const string Idle = @"Content\Textures\Characters\ChainBot\idle.png";
-					public const string Run = @"Content\Textures\Characters\ChainBot\run.png";
-					public const string Transitiontocharge = @"Content\Textures\Characters\ChainBot\transition to charge.png";
+					public const string Chain_bot_sprites = @"Content\Textures\Characters\ChainBot\chain_bot_sprites.png";
 				}
 
 				public static class Ghoul
@@ -215,15 +211,8 @@ namespace Nez
 
 				public static class OrbMage
 				{
-					public const string Attack = @"Content\Textures\Characters\OrbMage\attack .png";
 					public const string Attackvfx = @"Content\Textures\Characters\OrbMage\attack vfx .png";
-					public const string Death = @"Content\Textures\Characters\OrbMage\death.png";
-					public const string HealwithVFX = @"Content\Textures\Characters\OrbMage\heal with VFX.png";
-					public const string Hit = @"Content\Textures\Characters\OrbMage\hit.png";
-					public const string Idle = @"Content\Textures\Characters\OrbMage\idle.png";
-					public const string Move = @"Content\Textures\Characters\OrbMage\move.png";
-					public const string SweepAttackwithVFX = @"Content\Textures\Characters\OrbMage\Sweep Attack with VFX.png";
-					public const string Sweepattack = @"Content\Textures\Characters\OrbMage\sweep attack.png";
+					public const string Orb_mage_sprites = @"Content\Textures\Characters\OrbMage\orb_mage_sprites.png";
 					public const string VFXforSweep = @"Content\Textures\Characters\OrbMage\VFX for Sweep.png";
 				}
 
