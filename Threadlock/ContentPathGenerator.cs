@@ -199,6 +199,12 @@ namespace Nez
 		{
 			public static class Characters
 			{
+				public static class Assassin
+				{
+					public const string Assassinvfx = @"Content\Textures\Characters\Assassin\assassin vfx.png";
+					public const string Assassin_all = @"Content\Textures\Characters\Assassin\assassin_all.png";
+				}
+
 				public static class ChainBot
 				{
 					public const string Chain_bot_sprites = @"Content\Textures\Characters\ChainBot\chain_bot_sprites.png";

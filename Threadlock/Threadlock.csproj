@@ -60,6 +60,8 @@
     <None Remove="Content\Data\TestDialogue.json" />
     <None Remove="Content\Effects\JitterDestroyer.fx" />
     <None Remove="content\effects\OutlineShader.fx" />
+    <None Remove="Content\Textures\Characters\Assassin\assassin vfx.png" />
+    <None Remove="Content\Textures\Characters\Assassin\assassin_all.png" />
     <None Remove="Content\Textures\Characters\ChainBot\attack.png" />
     <None Remove="Content\Textures\Characters\ChainBot\charge.png" />
     <None Remove="Content\Textures\Characters\ChainBot\death.png" />

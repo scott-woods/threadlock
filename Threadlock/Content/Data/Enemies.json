@@ -219,5 +219,84 @@
       "RunsWhenPursued": false,
       "PursuitTime": 0
     }
+  },
+  {
+    "Name": "Assassin",
+    "MaxHealth": 11,
+    "BaseSpeed": 105,
+    "hurtboxSize": "13 18",
+    "colliderSize": "9 4",
+    "colliderOffset": "-4 3",
+    "animatorOffset": "30 -2",
+    "SpriteSheets": [
+      {
+        "FileName": "assassin_all",
+        "CellWidth": 91,
+        "CellHeight": 19,
+        "Animations": [
+          {
+            "Name": "Idle",
+            "Row": 0,
+            "Frames": 9
+          },
+          {
+            "Name": "Run",
+            "Row": 1,
+            "Frames": 8
+          },
+          {
+            "Name": "Jump",
+            "Row": 2,
+            "Frames": 4
+          },
+          {
+            "Name": "Fall",
+            "Row": 3,
+            "Frames": 4
+          },
+          {
+            "Name": "Land",
+            "Row": 4,
+            "Frames": 4
+          },
+          {
+            "Name": "Attack_1",
+            "Row": 5,
+            "Frames": 4
+          },
+          {
+            "Name": "Attack_2",
+            "Row": 6,
+            "Frames": 5
+          },
+          {
+            "Name": "SliceAttack",
+            "Row": 7,
+            "Frames": 10
+          },
+          {
+            "Name": "CrossSlice",
+            "Row": 8,
+            "Frames": 5
+          },
+          {
+            "Name": "Hit",
+            "Row": 9,
+            "Frames": 2
+          },
+          {
+            "Name": "Die",
+            "Row": 10,
+            "Frames": 8
+          }
+        ]
+      }
+    ],
+    "BehaviorConfig": {
+      "BehaviorTreeName": "Basic",
+      "ActionCooldown": 1.5,
+      "RunsWhenPursued": false,
+      "PursuitTime": 0
+    }
   }
 ]

@@ -282,10 +282,10 @@
                 85
             ],
             "scale": 1,
-            "selectedLayer": 3,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 206,
-                "y": 144
+                "x": 245,
+                "y": 183
             }
         },
         "Tilemaps/Forge/Doorways/forge_bottom.tmx": {
