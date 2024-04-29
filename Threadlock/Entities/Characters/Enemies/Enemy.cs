@@ -148,7 +148,16 @@ namespace Threadlock.Entities.Characters.Enemies
         {
             base.OnAddedToScene();
 
+            Game1.SceneManager.Emitter.AddObserver(GlobalManagers.SceneManagerEvents.SceneChangeStarted, OnSceneChange);
+
             StartActionCooldown();
+        }
+
+        public override void OnRemovedFromScene()
+        {
+            base.OnRemovedFromScene();
+
+            Game1.SceneManager.Emitter.RemoveObserver(GlobalManagers.SceneManagerEvents.SceneChangeStarted, OnSceneChange);
         }
 
         public override void Update()
@@ -166,6 +175,12 @@ namespace Threadlock.Entities.Characters.Enemies
         }
 
         #region OBSERVERS
+
+        void OnSceneChange()
+        {
+            _activeAction?.Abort();
+            _activeAction = null;
+        }
 
         void OnStatusChanged(StatusPriority status)
         {
@@ -275,12 +290,13 @@ namespace Threadlock.Entities.Characters.Enemies
 
         public TaskStatus ExecuteQueuedAction()
         {
-            if (_queuedAction == null)
+            if (_activeAction == null && _queuedAction == null)
                 return TaskStatus.Failure;
 
             if (_activeAction == null)
             {
                 _activeAction = _queuedAction;
+                _queuedAction = null;
                 Game1.StartCoroutine(_activeAction.BeginExecution());
             }
 

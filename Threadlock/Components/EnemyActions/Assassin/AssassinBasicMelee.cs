@@ -28,6 +28,7 @@ namespace Threadlock.Components.EnemyActions.Assassin
         const float _attack1MoveSpeed = 450f;
         const float _attack2MoveSpeed = 520f;
         const float _secondAttackDelay = .2f;
+        const string _attackSound = Nez.Content.Audio.Sounds._19_Slash_01;
 
         //components
         CircleHitbox _hitbox;
@@ -67,6 +68,7 @@ namespace Threadlock.Components.EnemyActions.Assassin
                 yield return null;
 
             animator.Play(_attack1Name, SpriteAnimator.LoopMode.Once);
+            Game1.AudioManager.PlaySound(_attackSound);
             var animDuration = AnimatedSpriteHelper.GetAnimationDuration(animator);
             var timer = 0f;
             while (animator.CurrentAnimationName == _attack1Name && animator.AnimationState != SpriteAnimator.State.Completed)
@@ -98,6 +100,7 @@ namespace Threadlock.Components.EnemyActions.Assassin
             _hitbox.Entity.SetPosition(Entity.Position + (dir * _hitboxOffset));
 
             animator.Play(_attack2Name, SpriteAnimator.LoopMode.Once);
+            Game1.AudioManager.PlaySound(_attackSound);
             animDuration = AnimatedSpriteHelper.GetAnimationDuration(animator);
             timer = 0f;
 

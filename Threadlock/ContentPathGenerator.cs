@@ -28,7 +28,9 @@ namespace Nez
 				public const string _100_Unpause_06 = @"Content\Audio\Sounds\100_Unpause_06.wav";
 				public const string _14_Impact_flesh_01 = @"Content\Audio\Sounds\14_Impact_flesh_01.wav";
 				public const string _18_Impact_flesh_05 = @"Content\Audio\Sounds\18_Impact_flesh_05.wav";
+				public const string _19_Slash_01 = @"Content\Audio\Sounds\19_Slash_01.wav";
 				public const string _20_Slash_02 = @"Content\Audio\Sounds\20_Slash_02.wav";
+				public const string _21_Slash_03 = @"Content\Audio\Sounds\21_Slash_03.wav";
 				public const string _22_Slash_04 = @"Content\Audio\Sounds\22_Slash_04.wav";
 				public const string _23_Slash_05 = @"Content\Audio\Sounds\23_Slash_05.wav";
 				public const string _26_Pierce_03 = @"Content\Audio\Sounds\26_Pierce_03.wav";

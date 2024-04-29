@@ -37,6 +37,8 @@
     <None Remove="Content\Audio\Music\melting idols.ogg" />
     <None Remove="Content\Audio\Music\shweet_sales.ogg" />
     <None Remove="Content\Audio\Music\the_bay.ogg" />
+    <None Remove="Content\Audio\Sounds\19_Slash_01.wav" />
+    <None Remove="Content\Audio\Sounds\21_Slash_03.wav" />
     <None Remove="Content\Audio\Sounds\22_Slash_04.wav" />
     <None Remove="Content\Audio\Sounds\23_Slash_05.wav" />
     <None Remove="Content\Audio\Sounds\8d82b5_doom_shotgun_firing_sound_effect.mp3" />
