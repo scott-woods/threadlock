@@ -31,18 +31,6 @@ namespace Threadlock.SceneComponents.Dungenerator
             BottomRight = 1 << 7,
         }
 
-        public enum TileDirection2
-        {
-            Top,
-            Bottom,
-            Left,
-            Right,
-            TopLeft,
-            TopRight,
-            BottomLeft,
-            BottomRight
-        }
-
         public enum Corners
         {
             TopLeft,

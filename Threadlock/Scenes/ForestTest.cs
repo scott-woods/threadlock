@@ -3,11 +3,7 @@ using Nez;
 using Nez.Tiled;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 using Threadlock.Components;
 using Threadlock.Components.TiledComponents;
 using Threadlock.Helpers;
@@ -60,7 +56,7 @@ namespace Threadlock.Scenes
         {
             base.Initialize();
 
-            var map = Content.LoadTiledMap(Nez.Content.Tiled.Tilemaps.FairyForest.Forest_test_3);
+            var map = Content.LoadTiledMap(Nez.Content.Tiled.Tilemaps.FairyForest.Forest_test_2);
             var mapEntity = CreateEntity("map");
             TiledHelper.SetupMap(mapEntity, map);
 
