@@ -38,6 +38,29 @@ namespace Threadlock.Models
                 var terrainSetExt = new TerrainSetExt() { EnumType = enumType, TileDictionary = tileDictionary };
                 TerrainSets.Add(terrainSetExt);
             }
+
+            //read tiles
+            foreach (var tile in tileset.Tiles)
+            {
+                if (tile.Value.Type == "ExtraTile")
+                {
+                    if (tile.Value.Properties != null)
+                    {
+                        if (tile.Value.Properties.TryGetValue("ParentTileIds", out var parentIds)
+                            && tile.Value.Properties.TryGetValue("Layer", out var layerName)
+                            && tile.Value.Properties.TryGetValue("Offset", out var offset))
+                        {
+                            var splitParentIds = parentIds.Split(' ').Select(i => Convert.ToInt32(i)).ToList();
+                            foreach (var parentId in splitParentIds)
+                            {
+                                if (!ExtraTileDict.ContainsKey(parentId))
+                                    ExtraTileDict.Add(parentId, new List<ExtraTile>());
+                                ExtraTileDict[parentId].Add(new ExtraTile(tile.Key, layerName, offset));
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         public int FindMatchingTile(int mask, Type enumType)
