@@ -980,5 +980,36 @@
    <wangtile tileid="315" wangid="0,0,0,1,0,1,0,0"/>
    <wangtile tileid="316" wangid="0,1,0,1,0,1,0,0"/>
   </wangset>
+  <wangset name="WallTileType" type="corner" tile="-1">
+   <wangcolor name="Floor" color="#ff0000" tile="-1" probability="1"/>
+   <wangcolor name="Wall" color="#00ff00" tile="-1" probability="1"/>
+   <wangtile tileid="260" wangid="0,2,0,1,0,2,0,2"/>
+   <wangtile tileid="261" wangid="0,0,0,1,0,2,0,0"/>
+   <wangtile tileid="262" wangid="0,2,0,1,0,1,0,2"/>
+   <wangtile tileid="263" wangid="0,2,0,1,0,1,0,2"/>
+   <wangtile tileid="264" wangid="0,0,0,2,0,1,0,0"/>
+   <wangtile tileid="265" wangid="0,2,0,2,0,1,0,2"/>
+   <wangtile tileid="266" wangid="0,2,0,2,0,2,0,2"/>
+   <wangtile tileid="267" wangid="0,1,0,1,0,2,0,1"/>
+   <wangtile tileid="273" wangid="0,2,0,1,0,0,0,0"/>
+   <wangtile tileid="278" wangid="0,0,0,0,0,1,0,2"/>
+   <wangtile tileid="279" wangid="0,2,0,2,0,2,0,2"/>
+   <wangtile tileid="280" wangid="0,1,0,1,0,1,0,2"/>
+   <wangtile tileid="286" wangid="0,1,0,1,0,2,0,2"/>
+   <wangtile tileid="291" wangid="0,2,0,2,0,1,0,1"/>
+   <wangtile tileid="292" wangid="0,2,0,2,0,2,0,2"/>
+   <wangtile tileid="293" wangid="0,2,0,1,0,1,0,1"/>
+   <wangtile tileid="299" wangid="0,1,0,1,0,2,0,2"/>
+   <wangtile tileid="304" wangid="0,2,0,2,0,1,0,1"/>
+   <wangtile tileid="306" wangid="0,1,0,2,0,1,0,1"/>
+   <wangtile tileid="312" wangid="0,1,0,2,0,0,0,0"/>
+   <wangtile tileid="317" wangid="0,0,0,0,0,2,0,1"/>
+   <wangtile tileid="325" wangid="0,1,0,2,0,2,0,2"/>
+   <wangtile tileid="326" wangid="0,1,0,0,0,0,0,2"/>
+   <wangtile tileid="327" wangid="0,1,0,2,0,2,0,1"/>
+   <wangtile tileid="328" wangid="0,1,0,2,0,2,0,1"/>
+   <wangtile tileid="329" wangid="0,2,0,0,0,0,0,1"/>
+   <wangtile tileid="330" wangid="0,2,0,2,0,2,0,1"/>
+  </wangset>
  </wangsets>
 </tileset>

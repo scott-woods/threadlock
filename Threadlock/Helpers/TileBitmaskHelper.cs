@@ -34,20 +34,34 @@ namespace Threadlock.Helpers
 
         public static int GetMask(Type enumType, TmxWangTile tile)
         {
+            if (!enumType.IsEnum)
+                return 0;
+
             int mask = 0;
             var shift = GetRequiredBitShift(enumType);
 
-            foreach (var pair in tile.CornerTerrains)
+            var cornerValues = tile.WangId.Where((item, index) => index % 2 != 0).Select(i => Convert.ToInt32(i)).ToList();
+            for (int i = 0; i < cornerValues.Count; i++)
             {
-                if (Enum.TryParse<Corners>(pair.Key, out Corners corner))
-                {
-                    var bitPos = (int)corner * shift;
+                var value = cornerValues[i];
+                var corner = (Corners)i;
 
-                    //parse string to enum
-                    if (Enum.TryParse(enumType, pair.Value, out var tileType))
-                        mask |= (Convert.ToInt32(tileType) << bitPos);
-                }
+                var bitPos = (int)corner * shift;
+
+                mask |= (value << bitPos);
             }
+
+            //foreach (var pair in tile.CornerTerrains)
+            //{
+            //    if (Enum.TryParse<Corners>(pair.Key, out Corners corner))
+            //    {
+            //        var bitPos = (int)corner * shift;
+
+            //        //parse string to enum
+            //        if (Enum.TryParse(enumType, pair.Value, out var tileType))
+            //            mask |= (Convert.ToInt32(tileType) << bitPos);
+            //    }
+            //}
 
             return mask;
         }
@@ -154,7 +168,10 @@ namespace Threadlock.Helpers
 
         public static int GetRequiredBitShift(Type enumType)
         {
-            int maxEnumValue = Convert.ToInt32(Enum.GetValues(enumType).Length);
+            if (!enumType.IsEnum)
+                return 0;
+
+            int maxEnumValue = Convert.ToInt32(Enum.GetValues(enumType).Cast<int>().Max());
             int bitsNeeded = (int)Math.Ceiling(Math.Log2(maxEnumValue + 1));
             return bitsNeeded;
         }

@@ -83,14 +83,14 @@ namespace Threadlock.Scenes
 
             var currentPos = doorwayPoint.Entity.Position;
             var pathPoints = new List<Vector2>() { currentPos };
-            for (int i = 0; i < Nez.Random.Range(7, 9); i++)
+            for (int i = 0; i < Nez.Random.Range(10, 10); i++)
             {
-                currentPos += new Vector2(-16, 0);
+                currentPos += new Vector2(16, 0);
                 pathPoints.Add(currentPos);
             }
-            for (int i = 0; i < Nez.Random.Range(3, 6); i++)
+            for (int i = 0; i < Nez.Random.Range(9, 9); i++)
             {
-                currentPos += new Vector2(0, 16);
+                currentPos += new Vector2(0, -16);
                 pathPoints.Add(currentPos);
             }
 
@@ -179,207 +179,355 @@ namespace Threadlock.Scenes
             }
 
             //filter tiles
-            var backTileInfo = backTiles.Distinct().Select(t => new TileInfo<TEnum>(t)).ToList();
+            backTiles = backTiles.DistinctBy(t => t.Position).ToList();
             wallTiles = wallTiles.Distinct().ToList();
             aboveFrontTiles = aboveFrontTiles.Distinct().ToList();
 
             //open tileset
             var tileset = TiledHelper.GetTileset(Nez.Content.Tiled.Tilesets.Fairy_forest_tileset);
-            Dictionary<int, List<int>> tileDict = new Dictionary<int, List<int>>();
-            Dictionary<int, List<int>> wallTileDict = new Dictionary<int, List<int>>();
-            Dictionary<int, List<ExtraTile>> extraTileDict = new Dictionary<int, List<ExtraTile>>();
+            var backTerrainSet = tileset.TerrainSets.FirstOrDefault(t => t.EnumType == typeof(TEnum));
+            var wallTerrainSet = tileset.TerrainSets.FirstOrDefault(t => t.EnumType == typeof(WallTileType));
 
-            List<Vector2> wallPositions = new List<Vector2>();
+            //convert back tiles to list of TileInfo
+            var backTileInfo = new List<TileInfo<TEnum>>();
+            foreach (var tile in backTiles)
+            {
+                //find mask for this tile if it exists in the tileset terrain dictionary
+                if (backTerrainSet.TileDictionary.TryGetValue(tile.Gid - tile.Tileset.FirstGid, out var mask))
+                {
+                    var pos = new Vector2(tile.X * tile.Tileset.TileWidth, tile.Y * tile.Tileset.TileHeight);
+                    var tileInfo = new TileInfo<TEnum>(pos, tile.Gid - tile.Tileset.FirstGid, mask);
+                    backTileInfo.Add(tileInfo);
+                }
+            }
+
+            //get combined list of path tiles and pre existing Back tiles
             var joinedTiles = path.Concat(backTileInfo).ToList();
-            Dictionary<Vector2, SingleTile> backTileDict = new Dictionary<Vector2, SingleTile>();
-            path = path.OrderByDescending(t => t.Priority).ToList();
+
+            //order path by priority
+            path = path.OrderBy(t => t.Priority).ToList();
+
+            //init list to keep track of where we'll need walls
+            var wallPositions = new List<Vector2>();
+
             for (int i = 0; i < path.Count; i++)
             {
                 var pathTile = path[i];
 
-                var posMask = 0;
-                if (pathTile.Priority == 1)
-                {
-                    posMask = CreateTileMask(new Dictionary<Corners, ForestFloor>()
-                    {
-                        [Corners.TopLeft] = ForestFloor.Dirt,
-                        [Corners.TopRight] = ForestFloor.Dirt,
-                        [Corners.BottomLeft] = ForestFloor.Dirt,
-                        [Corners.BottomRight] = ForestFloor.Dirt,
-                    });
-                }
-                else
-                    posMask = TileBitmaskHelper.GetPositionalMask(pathTile, joinedTiles);
+                //get the mask of the surrounding terrain
+                pathTile.PositionalMask = TileBitmaskHelper.GetPositionalMask(pathTile, joinedTiles);
 
-                pathTile.PositionalMask = posMask;
-
-                //get the appropriate floor tile based on the mask, considering none as matching the primary terrain
-                var tileId = FindMatchingTile(pathTile.MaskIgnoringNone, tileset.TerrainDictionaries[typeof(ForestFloor)]);
-                if (tileId == -1)
+                //try to find a tile that matches the mask
+                var tileId = tileset.FindMatchingTile(pathTile.CombinedMask, typeof(TEnum));
+                if (tileId < 0)
                     continue;
 
-                pathTile.TerrainMask = pathTile.MaskIgnoringNone;
+                //update tile id and terrain mask
                 pathTile.TileId = tileId;
+                pathTile.TerrainMask = pathTile.CombinedMask;
 
-                foreach (Corners corner in Enum.GetValues(typeof(Corners)))
+                //determine where we need walls
+                foreach (var direction in DirectionHelper.PrincipleDirections)
                 {
-                    //figure out where we need walls
-                    var positionalTerrainType = TileBitmaskHelper.GetTerrainInCorner<TEnum>(pathTile.PositionalMask, corner);
-                    if (Convert.ToInt32(positionalTerrainType) == 0)
+                    var targetPos = pathTile.Position + (direction * 16);
+                    if (targetPos == new Vector2(416, 320))
+                        Debug.Log("yo");
+
+                    if (!path.Any(t => t.Position == targetPos))
                     {
-                        var wallPos = pathTile.Position + (TileBitmaskHelper.CornerDirectionDict[corner] * 16);
-                        if (!wallPositions.Contains(wallPos))
-                            wallPositions.Add(wallPos);
+                        if (!wallPositions.Contains(targetPos))
+                        {
+                            wallPositions.Add(targetPos);
+                        } 
                     }
 
+                    
+                }
+
+                //loop through corners
+                foreach (Corners corner in Enum.GetValues(typeof(Corners)))
+                {
                     //update neighbors
                     var terrainType = TileBitmaskHelper.GetTerrainInCorner<TEnum>(pathTile.TerrainMask, corner);
                     var dirsToHandle = _matchingCornersDict[corner];
-                    foreach (var pair in dirsToHandle)
+                    foreach (var kvp in dirsToHandle)
                     {
-                        var dir = pair.Item1;
-                        var neighborCorner = pair.Item2;
+                        var dir = kvp.Item1;
+                        var matchingCorner = kvp.Item2;
+                        
                         var neighborPos = pathTile.Position + (dir * 16);
                         var neighbor = path.FirstOrDefault(p => p.Position == neighborPos);
                         if (neighbor != null && neighbor.Priority <= pathTile.Priority)
                         {
-                            neighbor.SetTerrainMaskValue(terrainType, neighborCorner);
+                            neighbor.SetTerrainMaskValue(terrainType, matchingCorner);
 
-                            //var neighborTileId = FindMatchingTile(neighbor.MaskIgnoringNone, tileDict);
-                            //if (tileId == -1)
-                            //    continue;
-
-                            //neighbor.Mask = neighbor.MaskIgnoringNone;
-                            //neighbor.TileId = neighborTileId;
+                            var neighborTileId = tileset.FindMatchingTile(neighbor.TerrainMask, typeof(TEnum));
+                            if (neighborTileId >= 0)
+                            {
+                                neighbor.TileId = neighborTileId;
+                            }
                         }
                     }
                 }
             }
 
-            Dictionary<Vector2, SingleTile> aboveFrontDict = new Dictionary<Vector2, SingleTile>();
+            //List<Vector2> wallPositions = new List<Vector2>();
+            //var joinedTiles = path.Concat(backTileInfo).ToList();
+            //Dictionary<Vector2, SingleTile> backTileDict = new Dictionary<Vector2, SingleTile>();
+            //path = path.OrderByDescending(t => t.Priority).ToList();
+            //for (int i = 0; i < path.Count; i++)
+            //{
+            //    var pathTile = path[i];
 
-            //handle walls
-            var wallDict = new Dictionary<Vector2, SingleTile>();
+            //    var posMask = 0;
+            //    if (pathTile.Priority == 1)
+            //    {
+            //        posMask = CreateTileMask(new Dictionary<Corners, ForestFloor>()
+            //        {
+            //            [Corners.TopLeft] = ForestFloor.Dirt,
+            //            [Corners.TopRight] = ForestFloor.Dirt,
+            //            [Corners.BottomLeft] = ForestFloor.Dirt,
+            //            [Corners.BottomRight] = ForestFloor.Dirt,
+            //        });
+            //    }
+            //    else
+            //        posMask = TileBitmaskHelper.GetPositionalMask(pathTile, joinedTiles);
+
+            //    pathTile.PositionalMask = posMask;
+
+            //    //get the appropriate floor tile based on the mask, considering none as matching the primary terrain
+            //    var tileId = FindMatchingTile(pathTile.CombinedMask, tileset.TerrainDictionaries[typeof(ForestFloor)]);
+            //    if (tileId == -1)
+            //        continue;
+
+            //    pathTile.TerrainMask = pathTile.CombinedMask;
+            //    pathTile.TileId = tileId;
+
+            //    foreach (Corners corner in Enum.GetValues(typeof(Corners)))
+            //    {
+            //        //figure out where we need walls
+            //        var positionalTerrainType = TileBitmaskHelper.GetTerrainInCorner<TEnum>(pathTile.PositionalMask, corner);
+            //        if (Convert.ToInt32(positionalTerrainType) == 0)
+            //        {
+            //            var wallPos = pathTile.Position + (TileBitmaskHelper.CornerDirectionDict[corner] * 16);
+            //            if (!wallPositions.Contains(wallPos))
+            //                wallPositions.Add(wallPos);
+            //        }
+
+            //        //update neighbors
+            //        var terrainType = TileBitmaskHelper.GetTerrainInCorner<TEnum>(pathTile.TerrainMask, corner);
+            //        var dirsToHandle = _matchingCornersDict[corner];
+            //        foreach (var pair in dirsToHandle)
+            //        {
+            //            var dir = pair.Item1;
+            //            var neighborCorner = pair.Item2;
+            //            var neighborPos = pathTile.Position + (dir * 16);
+            //            var neighbor = path.FirstOrDefault(p => p.Position == neighborPos);
+            //            if (neighbor != null && neighbor.Priority <= pathTile.Priority)
+            //            {
+            //                neighbor.SetTerrainMaskValue(terrainType, neighborCorner);
+
+            //                //var neighborTileId = FindMatchingTile(neighbor.MaskIgnoringNone, tileDict);
+            //                //if (tileId == -1)
+            //                //    continue;
+
+            //                //neighbor.Mask = neighbor.MaskIgnoringNone;
+            //                //neighbor.TileId = neighborTileId;
+            //            }
+            //        }
+            //    }
+            //}
+
+            //convert wall tiles to list of TileInfo
+            var wallTileInfo = new List<TileInfo<WallTileType>>();
+            foreach (var tile in wallTiles)
+            {
+                //find mask for this tile if it exists in the tileset terrain dictionary
+                if (wallTerrainSet.TileDictionary.TryGetValue(tile.Gid, out var mask))
+                {
+                    var pos = new Vector2(tile.X * tile.Tileset.TileWidth, tile.Y * tile.Tileset.TileHeight);
+                    var tileInfo = new TileInfo<WallTileType>(pos, tile.Gid, mask);
+                    wallTileInfo.Add(tileInfo);
+                }
+            }
+
+            //create list of tile info out of new wall positions
+            List<TileInfo<WallTileType>> newWallsInfo = new List<TileInfo<WallTileType>>();
             foreach (var wallPos in wallPositions)
             {
-                var wallMask = 0;
+                var tileInfo = new TileInfo<WallTileType>(wallPos, WallTileType.Wall, 0);
+
+                //get positional mask for this wall tile
+                var posMask = 0;
                 foreach (Corners corner in Enum.GetValues(typeof(Corners)))
                 {
                     var dir = TileBitmaskHelper.CornerDirectionDict[corner];
                     var pos = wallPos + (dir * 16);
+
                     WallTileType wallTileType = WallTileType.None;
                     if (joinedTiles.Any(t => t.Position == pos))
                         wallTileType = WallTileType.Floor;
-                    else if (wallPositions.Contains(pos) || wallTiles.Any(t => new Vector2(t.X * t.Tileset.TileWidth, t.Y * t.Tileset.TileHeight) == wallPos))
+                    else if (wallPositions.Contains(pos) || wallTileInfo.Any(t => t.Position == pos))
                         wallTileType = WallTileType.Wall;
 
-                    wallMask |= ((int)wallTileType << (int)corner * 2);
+                    posMask |= ((int)wallTileType << (int)corner * 2);
                 }
 
-                var tileId = FindMatchingTile(wallMask, wallTileDict);
-                if (tileId < 0)
+                //update positional mask value
+                tileInfo.PositionalMask = posMask;
+
+                //find matching tile id
+                var wallTileId = tileset.FindMatchingTile(posMask, typeof(WallTileType));
+                if (wallTileId < 0)
                 {
-                    wallMask = 0;
-                    foreach (Corners corner in Enum.GetValues(typeof(Corners)))
-                    {
-                        var dir = TileBitmaskHelper.CornerDirectionDict[corner];
-                        var pos = wallPos + (dir * 16);
-                        WallTileType wallTileType = WallTileType.None;
-                        if (joinedTiles.Any(t => t.Position == pos))
-                            wallTileType = WallTileType.Floor;
-
-                        wallMask |= ((int)wallTileType << (int)corner * 2);
-                    }
-
-                    tileId = FindMatchingTile(wallMask, wallTileDict);
-                    if (tileId < 0)
+                    wallTileId = tileset.FindMatchingTile(tileInfo.CombinedMask, typeof(WallTileType));
+                    if (wallTileId < 0)
                         continue;
                 }
 
-                var existingWallTile = wallTiles.FirstOrDefault(t => new Vector2(t.X * t.Tileset.TileWidth, t.Y * t.Tileset.TileHeight) == wallPos);
-                if (existingWallTile != null)
-                    existingWallTile.Gid = tileId + existingWallTile.Tileset.FirstGid;
-                else
-                {
-                    var singleTile = new SingleTile(tileId, true);
-                    wallDict.Add(wallPos, singleTile);
-                }
+                //set tile id
+                tileInfo.TileId = wallTileId;
 
-                if (extraTileDict.TryGetValue(tileId, out var extraTiles))
-                {
-                    var groupedTiles = extraTiles
-                        .GroupBy(t => t.Offset)
-                        .Select(g =>
-                        {
-                            int index = Nez.Random.NextInt(g.Count());
-                            return g.ElementAt(index);
-                        });
-                    foreach (var extraTile in groupedTiles)
-                    {
-                        var pos = wallPos + (extraTile.Offset * 16);
-                        switch (extraTile.RenderLayer)
-                        {
-                            case RenderLayers.Back:
-                                if (!backTileDict.ContainsKey(pos))
-                                    backTileDict.Add(pos, new SingleTile(extraTile.TileId));
-                                break;
-                            case RenderLayers.Walls:
-                                if (!wallDict.ContainsKey(pos))
-                                    wallDict.Add(pos, new SingleTile(extraTile.TileId));
-                                break;
-                            case RenderLayers.AboveFront:
-                                if (!aboveFrontDict.ContainsKey(pos))
-                                    aboveFrontDict.Add(pos, new SingleTile(extraTile.TileId));
-                                break;
-                        }
-                    }
-                }
+                newWallsInfo.Add(tileInfo);
             }
 
-            //convert to single tiles
+            //Dictionary<Vector2, SingleTile> aboveFrontDict = new Dictionary<Vector2, SingleTile>();
+
+            //handle walls
+            //var wallDict = new Dictionary<Vector2, SingleTile>();
+            //foreach (var wallPos in wallPositions)
+            //{
+            //    var wallMask = 0;
+            //    foreach (Corners corner in Enum.GetValues(typeof(Corners)))
+            //    {
+            //        var dir = TileBitmaskHelper.CornerDirectionDict[corner];
+            //        var pos = wallPos + (dir * 16);
+            //        WallTileType wallTileType = WallTileType.None;
+            //        if (joinedTiles.Any(t => t.Position == pos))
+            //            wallTileType = WallTileType.Floor;
+            //        else if (wallPositions.Contains(pos) || wallTiles.Any(t => new Vector2(t.X * t.Tileset.TileWidth, t.Y * t.Tileset.TileHeight) == wallPos))
+            //            wallTileType = WallTileType.Wall;
+
+            //        wallMask |= ((int)wallTileType << (int)corner * 2);
+            //    }
+
+            //    var tileId = FindMatchingTile(wallMask, wallTileDict);
+            //    if (tileId < 0)
+            //    {
+            //        wallMask = 0;
+            //        foreach (Corners corner in Enum.GetValues(typeof(Corners)))
+            //        {
+            //            var dir = TileBitmaskHelper.CornerDirectionDict[corner];
+            //            var pos = wallPos + (dir * 16);
+            //            WallTileType wallTileType = WallTileType.None;
+            //            if (joinedTiles.Any(t => t.Position == pos))
+            //                wallTileType = WallTileType.Floor;
+
+            //            wallMask |= ((int)wallTileType << (int)corner * 2);
+            //        }
+
+            //        tileId = FindMatchingTile(wallMask, wallTileDict);
+            //        if (tileId < 0)
+            //            continue;
+            //    }
+
+            //    var existingWallTile = wallTiles.FirstOrDefault(t => new Vector2(t.X * t.Tileset.TileWidth, t.Y * t.Tileset.TileHeight) == wallPos);
+            //    if (existingWallTile != null)
+            //        existingWallTile.Gid = tileId + existingWallTile.Tileset.FirstGid;
+            //    else
+            //    {
+            //        var singleTile = new SingleTile(tileId, true);
+            //        wallDict.Add(wallPos, singleTile);
+            //    }
+
+            //    if (extraTileDict.TryGetValue(tileId, out var extraTiles))
+            //    {
+            //        var groupedTiles = extraTiles
+            //            .GroupBy(t => t.Offset)
+            //            .Select(g =>
+            //            {
+            //                int index = Nez.Random.NextInt(g.Count());
+            //                return g.ElementAt(index);
+            //            });
+            //        foreach (var extraTile in groupedTiles)
+            //        {
+            //            var pos = wallPos + (extraTile.Offset * 16);
+            //            switch (extraTile.RenderLayer)
+            //            {
+            //                case RenderLayers.Back:
+            //                    if (!backTileDict.ContainsKey(pos))
+            //                        backTileDict.Add(pos, new SingleTile(extraTile.TileId));
+            //                    break;
+            //                case RenderLayers.Walls:
+            //                    if (!wallDict.ContainsKey(pos))
+            //                        wallDict.Add(pos, new SingleTile(extraTile.TileId));
+            //                    break;
+            //                case RenderLayers.AboveFront:
+            //                    if (!aboveFrontDict.ContainsKey(pos))
+            //                        aboveFrontDict.Add(pos, new SingleTile(extraTile.TileId));
+            //                    break;
+            //            }
+            //        }
+            //    }
+            //}
+
+            //convert back tiles to single tiles
+            var backTileDict = new Dictionary<Vector2, SingleTile>();
             foreach (var pathTile in path)
             {
                 if (pathTile.TileId != null && pathTile.TileId >= 0)
                 {
                     var singleTile = new SingleTile(pathTile.TileId.Value, false);
                     backTileDict.Add(pathTile.Position, singleTile);
+                    CreateEntity("", pathTile.Position).AddComponent(new PrototypeSpriteRenderer(2, 2));
                 }
             }
 
-            foreach (var kvp in backTileDict)
+            //convert wall tiles to single tiles
+            var wallTileDict = new Dictionary<Vector2, SingleTile>();
+            foreach (var wallTile in newWallsInfo)
             {
-                var singleTile = kvp.Value;
-                if (extraTileDict.TryGetValue(singleTile.TileId, out var extraTiles))
+                if (wallTile.TileId != null && wallTile.TileId >= 0)
                 {
-                    foreach (var extraTile in extraTiles)
-                    {
-                        var pos = kvp.Key + (extraTile.Offset * 16);
-                        switch (extraTile.RenderLayer)
-                        {
-                            case RenderLayers.Back:
-                                if (!backTileDict.ContainsKey(pos))
-                                    backTileDict.Add(pos, new SingleTile(extraTile.TileId));
-                                break;
-                            case RenderLayers.Walls:
-                                if (!wallDict.ContainsKey(pos))
-                                    wallDict.Add(pos, new SingleTile(extraTile.TileId));
-                                break;
-                            case RenderLayers.AboveFront:
-                                if (!aboveFrontDict.ContainsKey(pos))
-                                    aboveFrontDict.Add(pos, new SingleTile(extraTile.TileId));
-                                break;
-                        }
-                    }
+                    var singleTile = new SingleTile(wallTile.TileId.Value, true);
+                    wallTileDict.Add(wallTile.Position, singleTile);
                 }
             }
+
+            //foreach (var kvp in backTileDict)
+            //{
+            //    var singleTile = kvp.Value;
+            //    if (extraTileDict.TryGetValue(singleTile.TileId, out var extraTiles))
+            //    {
+            //        foreach (var extraTile in extraTiles)
+            //        {
+            //            var pos = kvp.Key + (extraTile.Offset * 16);
+            //            switch (extraTile.RenderLayer)
+            //            {
+            //                case RenderLayers.Back:
+            //                    if (!backTileDict.ContainsKey(pos))
+            //                        backTileDict.Add(pos, new SingleTile(extraTile.TileId));
+            //                    break;
+            //                case RenderLayers.Walls:
+            //                    if (!wallDict.ContainsKey(pos))
+            //                        wallDict.Add(pos, new SingleTile(extraTile.TileId));
+            //                    break;
+            //                case RenderLayers.AboveFront:
+            //                    if (!aboveFrontDict.ContainsKey(pos))
+            //                        aboveFrontDict.Add(pos, new SingleTile(extraTile.TileId));
+            //                    break;
+            //            }
+            //        }
+            //    }
+            //}
 
             //make corridor renderers
             var corridorRenderer = CreateEntity("").AddComponent(new CorridorRenderer(tileset.Tileset, backTileDict));
             corridorRenderer.SetRenderLayer(RenderLayers.Back);
-            var wallRenderer = CreateEntity("").AddComponent(new CorridorRenderer(tileset.Tileset, wallDict, true));
+            var wallRenderer = CreateEntity("").AddComponent(new CorridorRenderer(tileset.Tileset, wallTileDict, true));
             wallRenderer.SetRenderLayer(RenderLayers.AboveFront); //for the forest, walls should be AboveFront
-            var aboveFrontRenderer = CreateEntity("").AddComponent(new CorridorRenderer(tileset.Tileset, aboveFrontDict));
-            aboveFrontRenderer.SetRenderLayer(RenderLayers.AboveFront);
+            //var aboveFrontRenderer = CreateEntity("").AddComponent(new CorridorRenderer(tileset.Tileset, aboveFrontDict));
+            //aboveFrontRenderer.SetRenderLayer(RenderLayers.AboveFront);
         }
 
         int FindMatchingTile(int posMask, Dictionary<int, List<int>> tileDict)

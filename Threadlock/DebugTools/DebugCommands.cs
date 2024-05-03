@@ -1,5 +1,6 @@
 ﻿using Nez;
 using Nez.Console;
+using Nez.ImGuiTools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,6 +62,24 @@ namespace Threadlock.DebugTools
         static void AddDollahs(string dollahs)
         {
             PlayerData.Instance.Dollahs += Convert.ToInt32(dollahs);
+        }
+
+        [Command("toggle-imgui", "Toggles the Dear ImGui renderer")]
+        public static void ToggleImGui()
+        {
+            // install the service if it isnt already there
+            var service = Core.GetGlobalManager<ImGuiManager>();
+            if (service == null)
+            {
+                service = new ImGuiManager();
+                Core.RegisterGlobalManager(service);
+            }
+            else
+            {
+                service.SetEnabled(!service.Enabled);
+            }
+
+            Game1.Instance.IsMouseVisible = !Game1.Instance.IsMouseVisible;
         }
     }
 }

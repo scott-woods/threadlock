@@ -134,8 +134,8 @@
             "scale": 2,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 83.75,
-                "y": 122
+                "x": 120.75,
+                "y": 121.5
             }
         },
         "RuleMaps/forge_clutter_rules.tmx": {
@@ -241,8 +241,8 @@
             "scale": 1,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 256,
-                "y": 256
+                "x": 211.5,
+                "y": 154
             }
         },
         "Tilemaps/FairyForest/forest_hallway_test.tmx": {
@@ -269,11 +269,11 @@
             "expandedObjectLayers": [
                 17
             ],
-            "scale": 1.5,
+            "scale": 2,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 237,
-                "y": 235.33333333333331
+                "x": 357.75,
+                "y": 282
             }
         },
         "Tilemaps/FairyForest/forest_test_3.tmx": {
@@ -283,8 +283,8 @@
             "scale": 1,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 244.5,
-                "y": 182
+                "x": 318.5,
+                "y": 172
             }
         },
         "Tilemaps/Forge/Doorways/forge_bottom.tmx": {
@@ -728,8 +728,8 @@
             "scale": 1,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 492.5,
-                "y": 275
+                "x": 565.5,
+                "y": 274
             }
         },
         "Tilemaps/test.tmx": {

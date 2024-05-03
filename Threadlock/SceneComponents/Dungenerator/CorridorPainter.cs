@@ -33,10 +33,10 @@ namespace Threadlock.SceneComponents.Dungenerator
 
         public enum Corners
         {
-            TopLeft,
             TopRight,
+            BottomRight,
             BottomLeft,
-            BottomRight
+            TopLeft
         }
 
         public enum TileOrientation
@@ -55,14 +55,6 @@ namespace Threadlock.SceneComponents.Dungenerator
             TopRightInverse,
             BottomLeftInverse,
             BottomRightInverse
-        }
-
-        [Flags]
-        public enum WallTileType
-        {
-            None = 0,
-            Floor = 1,
-            Wall = 2
         }
 
         static TileDirection TopLeftRequiredDirs { get => TileDirection.Bottom | TileDirection.Right; }

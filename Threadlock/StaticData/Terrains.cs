@@ -12,5 +12,13 @@ namespace Threadlock.StaticData
             Dirt = 2,
             DarkGrass = 3
         }
+
+        [Flags]
+        public enum WallTileType
+        {
+            None = 0,
+            Floor = 1,
+            Wall = 2
+        }
     }
 }

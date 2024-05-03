@@ -21,7 +21,7 @@ namespace Threadlock.Models
         /// </summary>
         public int PositionalMask { get; set; }
         public int Priority { get; set; }
-        public int MaskIgnoringNone
+        public int CombinedMask
         {
             get
             {
@@ -66,11 +66,22 @@ namespace Threadlock.Models
             TerrainMask = GetMask<TEnum>(layerTile.TilesetTile);
         }
 
+        public TileInfo(Vector2 position, int tileId, int mask)
+        {
+            Position = position;
+            TileId = tileId;
+            TerrainMask = mask;
+        }
+
         public void SetTerrainMaskValue(TEnum terrainType, Corners corner)
         {
-            TerrainMask &= ~(_shiftMask << ((int)corner * _shift));
+            var terrain = GetTerrainInCorner<TEnum>(TerrainMask, corner);
+            if (Convert.ToInt32(terrain) != Convert.ToInt32(terrainType))
+            {
+                TerrainMask &= ~(_shiftMask << ((int)corner * _shift));
 
-            TerrainMask |= (Convert.ToInt32(terrainType) << ((int)corner * _shift));
+                TerrainMask |= (Convert.ToInt32(terrainType) << ((int)corner * _shift));
+            }
         }
     }
 }
