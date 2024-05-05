@@ -64,7 +64,7 @@ namespace Threadlock
             //IMGUI
 
 
-            Scene = new ForestTest();
+            Scene = new Hub();
         }
     }
 }
