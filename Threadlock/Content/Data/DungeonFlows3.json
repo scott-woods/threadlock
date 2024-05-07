@@ -2,7 +2,7 @@
   "Nodes": [
     {
       "Id": 1,
-      "Type": "start",
+      "Type": "normal",
       "Children": [
         {
           "ChildNodeId": 2,
@@ -36,7 +36,7 @@
     },
     {
       "Id": 4,
-      "Type": "hub",
+      "Type": "normal",
       "Children": [
         {
           "ChildNodeId": 5,

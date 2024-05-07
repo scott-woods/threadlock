@@ -15,6 +15,7 @@ namespace Nez
 		{
 			public static class Music
 			{
+				public const string Forest1 = @"Content\Audio\Music\forest 1.ogg";
 				public const string Meltingidols = @"Content\Audio\Music\melting idols.ogg";
 				public const string Shweet_sales = @"Content\Audio\Music\shweet_sales.ogg";
 				public const string The_bay = @"Content\Audio\Music\the_bay.ogg";
@@ -1093,10 +1094,7 @@ namespace Nez
 			{
 				public static class FairyForest
 				{
-					public const string Forest_hallway_test = @"Content\Tiled\Tilemaps\FairyForest\forest_hallway_test.tmx";
-					public const string Forest_test_1 = @"Content\Tiled\Tilemaps\FairyForest\forest_test_1.tmx";
 					public const string Forest_test_2 = @"Content\Tiled\Tilemaps\FairyForest\forest_test_2.tmx";
-					public const string Forest_test_3 = @"Content\Tiled\Tilemaps\FairyForest\forest_test_3.tmx";
 					public const string Rules = @"Content\Tiled\Tilemaps\FairyForest\rules.txt";
 				}
 

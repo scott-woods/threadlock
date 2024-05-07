@@ -84,12 +84,12 @@ namespace Threadlock.Transitions
 
             yield return null;
 
-            if (Game1.Scene is ForgeDungeon forgeDungeon)
+            if (Game1.Scene is BasicDungeon basicDungeon)
             {
                 bool isDungeonGenFinished = false;
                 Task.Run(() =>
                 {
-                    forgeDungeon.GenerateDungeon();
+                    basicDungeon.GenerateDungeon();
 
                     Core.Schedule(0, false, null, timer =>
                     {
@@ -101,7 +101,7 @@ namespace Threadlock.Transitions
                     yield return null;
 
                 //now that we're back on the same thread, finalize dungeon
-                forgeDungeon.FinalizeDungeon();
+                basicDungeon.FinalizeDungeon();
             }
 
             yield return Coroutine.WaitForSeconds(DelayBeforeFadeInDuration);

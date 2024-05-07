@@ -13,6 +13,7 @@ using Threadlock.StaticData;
 using Threadlock.UI.Canvases;
 using static Threadlock.SceneComponents.Dungenerator.CorridorPainter;
 using static Threadlock.StaticData.Terrains;
+using DoorwayPoint = Threadlock.Components.TiledComponents.DoorwayPoint;
 
 namespace Threadlock.Scenes
 {

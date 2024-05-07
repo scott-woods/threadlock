@@ -360,7 +360,7 @@
   </object>
   <object id="23" type="Trigger" x="160" y="48" width="48" height="16">
    <properties>
-    <property name="Args" value="ForgeDungeon 0 true"/>
+    <property name="Args" value="BasicDungeon 0 true"/>
     <property name="EventName" value="ExitArea"/>
     <property name="Type" propertytype="TriggerType" value="Area"/>
    </properties>

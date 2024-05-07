@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="16" tileheight="16" infinite="0" nextlayerid="18" nextobjectid="14">
+<map version="1.10" tiledversion="1.10.2" class="DungeonMap" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="16" tileheight="16" infinite="0" nextlayerid="18" nextobjectid="17">
+ <properties>
+  <property name="Area" propertytype="DungeonArea" value="FairyForest"/>
+  <property name="RoomType" propertytype="RoomType" value="normal"/>
+ </properties>
  <tileset firstgid="1" source="../../Tilesets/fairy_forest_tileset.tsx"/>
  <tileset firstgid="339" source="../../Tilesets/dungeon_prison.tsx"/>
  <tileset firstgid="964" source="../../Tilesets/fairy_forest_trees.tsx"/>
@@ -152,7 +156,7 @@
   <object id="2" type="PlayerSpawnPoint" x="240" y="240">
    <point/>
   </object>
-  <object id="3" type="DoorwayPoint" x="352" y="272">
+  <object id="3" type="DoorwayPoint" x="384" y="272">
    <properties>
     <property name="Direction" propertytype="DoorwayPointDirection" value="Right"/>
    </properties>
@@ -197,6 +201,24 @@
    <properties>
     <property name="Intensity" value="1"/>
     <property name="Radius" value="200"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="14" type="DoorwayPoint" x="32" y="272">
+   <properties>
+    <property name="Direction" propertytype="DoorwayPointDirection" value="Left"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="15" type="DoorwayPoint" x="304" y="416">
+   <properties>
+    <property name="Direction" propertytype="DoorwayPointDirection" value="Down"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="16" type="DoorwayPoint" x="288" y="64">
+   <properties>
+    <property name="Direction" propertytype="DoorwayPointDirection" value="Up"/>
    </properties>
    <point/>
   </object>
