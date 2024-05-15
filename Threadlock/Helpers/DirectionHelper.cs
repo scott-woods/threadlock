@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Threadlock.SceneComponents.Dungenerator.CorridorPainter;
 
 namespace Threadlock.Helpers
 {
@@ -61,6 +62,34 @@ namespace Threadlock.Helpers
                     new Vector2(1, 1),
                     new Vector2(-1, 1),
                     new Vector2(-1, -1)
+                };
+            }
+        }
+
+        public static Dictionary<string, Vector2> StringDirectionDictionary
+        {
+            get
+            {
+                return new Dictionary<string, Vector2>()
+                {
+                    {"Up", new Vector2(0, -1) },
+                    {"Down", new Vector2(0, 1) },
+                    {"Left", new Vector2(-1, 0) },
+                    {"Right", new Vector2(1, 0) }
+                };
+            }
+        }
+
+        public static Dictionary<Corners, Vector2> CornerDictionary
+        {
+            get
+            {
+                return new Dictionary<Corners, Vector2>()
+                {
+                    { Corners.TopRight, new Vector2(1, -1) },
+                    { Corners.BottomRight, new Vector2(1, 1) },
+                    { Corners.BottomLeft, new Vector2(-1, 1) },
+                    { Corners.TopLeft, new Vector2(-1, -1) }
                 };
             }
         }

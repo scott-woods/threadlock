@@ -55,17 +55,6 @@ namespace Threadlock.Models
             Priority = priority;
         }
 
-        /// <summary>
-        /// constructor for an existing tile
-        /// </summary>
-        /// <param name="layerTile"></param>
-        public TileInfo(TmxLayerTile layerTile)
-        {
-            Position = new Vector2(layerTile.X * layerTile.Tileset.TileWidth, layerTile.Y * layerTile.Tileset.TileHeight);
-            TileId = layerTile.Gid;
-            TerrainMask = GetMask<TEnum>(layerTile.TilesetTile);
-        }
-
         public TileInfo(Vector2 position, int tileId, int mask)
         {
             Position = position;
@@ -75,7 +64,7 @@ namespace Threadlock.Models
 
         public void SetTerrainMaskValue(TEnum terrainType, Corners corner)
         {
-            var terrain = GetTerrainInCorner<TEnum>(TerrainMask, corner);
+            var terrain = GetMaskInCorner<TEnum>(TerrainMask, corner);
             if (Convert.ToInt32(terrain) != Convert.ToInt32(terrainType))
             {
                 TerrainMask &= ~(_shiftMask << ((int)corner * _shift));

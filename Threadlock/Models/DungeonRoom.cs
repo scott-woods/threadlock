@@ -84,7 +84,7 @@ namespace Threadlock.Models
                     var pos = new Vector2(doorwayTmxObj.X, doorwayTmxObj.Y);
                     var dir = Vector2.Zero;
                     if (doorwayTmxObj.Properties != null && doorwayTmxObj.Properties.TryGetValue("Direction", out var dirString))
-                        dir = DirectionHelper.GetVectorFromString(dirString);
+                        DirectionHelper.StringDirectionDictionary.TryGetValue(dirString, out dir);
                     var doorwayPoint = new DoorwayPoint(this, dir, pos);
                     Doorways.Add(doorwayPoint);
                 }

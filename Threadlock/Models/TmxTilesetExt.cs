@@ -3,6 +3,7 @@ using Nez.Tiled;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Threadlock.Helpers;
 
 namespace Threadlock.Models
@@ -10,33 +11,47 @@ namespace Threadlock.Models
     public class TmxTilesetExt
     {
         public TmxTileset Tileset;
-        public Dictionary<Type, Dictionary<int, List<int>>> TerrainDictionaries = new Dictionary<Type, Dictionary<int, List<int>>>();
         public Dictionary<int, List<ExtraTile>> ExtraTileDict = new Dictionary<int, List<ExtraTile>>();
-        public List<TerrainSetExt> TerrainSets = new List<TerrainSetExt>();
+        public Dictionary<Type, TerrainSetExt> TerrainDictionary = new Dictionary<Type, TerrainSetExt>();
 
         public TmxTilesetExt(TmxTileset tileset)
         {
             Tileset = tileset;
 
             //read terrain sets
-            foreach (var terrainSet in tileset.TerrainSets)
+            if (tileset.TerrainSets != null)
             {
-                //check that we have a matching enum for this terrain
-                Type enumType = Type.GetType($"Threadlock.StaticData.Terrains+{terrainSet.Name}");
-                if (enumType == null || !enumType.IsEnum)
-                    continue;
-
-                //get the mask for each tile in this terrain set
-                Dictionary<int, int> tileDictionary = new Dictionary<int, int>();
-                foreach (var tile in terrainSet.Tiles)
+                foreach (var terrainSet in tileset.TerrainSets)
                 {
-                    var mask = TileBitmaskHelper.GetMask(enumType, tile);
-                    tileDictionary.Add(tile.TileId, mask);
-                }
+                    //check that we have a matching enum for this terrain
+                    Type enumType = Type.GetType($"Threadlock.StaticData.Terrains+{terrainSet.Name}");
+                    if (enumType == null || !enumType.IsEnum)
+                        continue;
 
-                //add to terrain sets list
-                var terrainSetExt = new TerrainSetExt() { EnumType = enumType, TileDictionary = tileDictionary };
-                TerrainSets.Add(terrainSetExt);
+                    //get the mask for each tile in this terrain set
+                    Dictionary<int, int> tileDictionary = new Dictionary<int, int>(terrainSet.Tiles.Count);
+                    Dictionary<int, List<int>> maskDictionary = new Dictionary<int, List<int>>();
+                    foreach (var tile in terrainSet.Tiles)
+                    {
+                        //get the mask
+                        var mask = TileBitmaskHelper.GetMask(enumType, tile);
+
+                        //add to tile dictionary
+                        tileDictionary.Add(tile.TileId + Tileset.FirstGid, mask);
+
+                        //add to mask dictionary
+                        if (!maskDictionary.TryGetValue(mask, out List<int> tileIds))
+                        {
+                            tileIds = new List<int>();
+                            maskDictionary[mask] = tileIds;
+                        }
+                        tileIds.Add(tile.TileId + Tileset.FirstGid);
+                    }
+
+                    //add to terrain sets list
+                    var terrainSetExt = new TerrainSetExt() { EnumType = enumType, TileDictionary = tileDictionary, MaskDictionary = maskDictionary };
+                    TerrainDictionary.Add(enumType, terrainSetExt);
+                }
             }
 
             //read tiles
@@ -53,9 +68,9 @@ namespace Threadlock.Models
                             var splitParentIds = parentIds.Split(' ').Select(i => Convert.ToInt32(i)).ToList();
                             foreach (var parentId in splitParentIds)
                             {
-                                if (!ExtraTileDict.ContainsKey(parentId))
-                                    ExtraTileDict.Add(parentId, new List<ExtraTile>());
-                                ExtraTileDict[parentId].Add(new ExtraTile(tile.Key, layerName, offset));
+                                if (!ExtraTileDict.ContainsKey(parentId + tileset.FirstGid))
+                                    ExtraTileDict.Add(parentId + tileset.FirstGid, new List<ExtraTile>());
+                                ExtraTileDict[parentId + tileset.FirstGid].Add(new ExtraTile(tile.Key + tileset.FirstGid, layerName, offset));
                             }
                         }
                     }
@@ -63,18 +78,59 @@ namespace Threadlock.Models
             }
         }
 
-        public int FindMatchingTile(int mask, Type enumType)
+        /// <summary>
+        /// get a terrain set by enum type
+        /// </summary>
+        /// <param name="enumType"></param>
+        /// <param name="terrainSet"></param>
+        /// <returns></returns>
+        public bool TryGetTerrainSet(Type enumType, out TerrainSetExt terrainSet)
         {
-            var terrainSet = TerrainSets.FirstOrDefault(t => t.EnumType == enumType);
-            if (terrainSet == null)
-                return -1;
+            terrainSet = null;
+            if (!enumType.IsEnum)
+                return false;
 
-            var tileIds = terrainSet.TileDictionary.Where(x => x.Value == mask).Select(x => x.Key).ToList();
-            if (tileIds.Count > 0)
-                return tileIds.RandomItem();
-
-            return -1;
+            return TerrainDictionary.TryGetValue(enumType, out terrainSet);
         }
+
+        /// <summary>
+        /// given a bitmask, find a tile that matches it for a specific terrain
+        /// </summary>
+        /// <param name="enumType"></param>
+        /// <param name="mask"></param>
+        /// <param name="tileId"></param>
+        /// <returns></returns>
+        public bool TryFindTile(Type enumType, int mask, out int tileId)
+        {
+            tileId = -1;
+
+            if (!enumType.IsEnum)
+                return false;
+
+            if (!TryGetTerrainSet(enumType, out var terrainSet))
+                return false;
+
+            return terrainSet.TryGetTile(mask, out tileId);
+        }
+
+        /// <summary>
+        /// find a tile for a specific mask and enum type
+        /// </summary>
+        /// <param name="mask"></param>
+        /// <param name="enumType"></param>
+        /// <returns></returns>
+        //public int FindMatchingTile(int mask, Type enumType)
+        //{
+        //    var terrainSet = TerrainSets.FirstOrDefault(t => t.EnumType == enumType);
+        //    if (terrainSet == null)
+        //        return -1;
+
+        //    var tileIds = terrainSet.TileDictionary.Where(x => x.Value == mask).Select(x => x.Key).ToList();
+        //    if (tileIds.Count > 0)
+        //        return tileIds.RandomItem();
+
+        //    return -1;
+        //}
 
         //public static TmxTilesetExt CreateFromTileset(TmxTileset tileset)
         //{

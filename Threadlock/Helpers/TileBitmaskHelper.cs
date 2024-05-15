@@ -32,6 +32,12 @@ namespace Threadlock.Helpers
             [Corners.BottomRight] = DirectionHelper.DownRight,
         };
 
+        /// <summary>
+        /// get the mask of a wang tile given a specific terrain type enum
+        /// </summary>
+        /// <param name="enumType"></param>
+        /// <param name="tile"></param>
+        /// <returns></returns>
         public static int GetMask(Type enumType, TmxWangTile tile)
         {
             if (!enumType.IsEnum)
@@ -51,51 +57,12 @@ namespace Threadlock.Helpers
                 mask |= (value << bitPos);
             }
 
-            //foreach (var pair in tile.CornerTerrains)
-            //{
-            //    if (Enum.TryParse<Corners>(pair.Key, out Corners corner))
-            //    {
-            //        var bitPos = (int)corner * shift;
-
-            //        //parse string to enum
-            //        if (Enum.TryParse(enumType, pair.Value, out var tileType))
-            //            mask |= (Convert.ToInt32(tileType) << bitPos);
-            //    }
-            //}
-
             return mask;
         }
 
-        /// <summary>
-        /// Get bitmask of the terrain in a given tile
-        /// </summary>
-        /// <typeparam name="TEnum"></typeparam>
-        /// <param name="tile"></param>
-        /// <returns></returns>
-        public static int GetMask<TEnum>(TmxTilesetTile tile) where TEnum : struct, Enum
+        public static int GetMask<TEnum>(TmxWangTile tile) where TEnum : struct, Enum
         {
-            var shift = GetRequiredBitShift<TEnum>();
-            int mask = 0;
-
-            if (tile == null)
-                return mask;
-
-            if (tile.Properties != null)
-            {
-                foreach (Corners corner in Enum.GetValues(typeof(Corners)))
-                {
-                    var bitPos = (int)corner * shift;
-
-                    if (tile.Properties.TryGetValue(corner.ToString(), out var tileTypeString))
-                    {
-                        //parse string to enum
-                        if (Enum.TryParse<TEnum>(tileTypeString, out var tileType))
-                            mask |= (Convert.ToInt32(tileType) << bitPos);
-                    }
-                }
-            }
-
-            return mask;
+            return GetMask(typeof(TEnum), tile);
         }
 
         /// <summary>
@@ -134,7 +101,7 @@ namespace Threadlock.Helpers
                 if (tile != null)
                 {
                     //extract terrain type of neighboring tile
-                    var terrainType = GetTerrainInCorner<TEnum>(tile.TerrainMask, MatchingCornersDict[corner]);
+                    var terrainType = GetMaskInCorner<TEnum>(tile.TerrainMask, MatchingCornersDict[corner]);
 
                     //apply it to the corner of the current tile
                     mask |= (Convert.ToInt32(terrainType) << (Convert.ToInt32(corner) * shift));
@@ -146,7 +113,17 @@ namespace Threadlock.Helpers
             return mask;
         }
 
-        public static TEnum GetTerrainInCorner<TEnum>(int mask, Corners corner) where TEnum : struct, Enum
+        public static int GetMaskInCorner(Type enumType, int mask, Corners corner)
+        {
+            var shift = GetRequiredBitShift(enumType);
+            var shiftMask = GetShiftMask(enumType);
+
+            var maskSection = ((mask >> ((int)corner * shift)) & shiftMask);
+
+            return maskSection;
+        }
+
+        public static TEnum GetMaskInCorner<TEnum>(int mask, Corners corner) where TEnum : struct, Enum
         {
             var shift = GetRequiredBitShift<TEnum>();
             var shiftMask = GetShiftMask<TEnum>();
@@ -161,11 +138,14 @@ namespace Threadlock.Helpers
 
         public static int GetRequiredBitShift<TEnum>() where TEnum : struct, Enum
         {
-            int maxEnumValue = Convert.ToInt32(Enum.GetValues(typeof(TEnum)).Cast<TEnum>().Max());
-            int bitsNeeded = (int)Math.Ceiling(Math.Log2(maxEnumValue + 1));
-            return bitsNeeded;
+            return GetRequiredBitShift(typeof(TEnum));
         }
 
+        /// <summary>
+        /// get the size of the bit sections based on enum type
+        /// </summary>
+        /// <param name="enumType"></param>
+        /// <returns></returns>
         public static int GetRequiredBitShift(Type enumType)
         {
             if (!enumType.IsEnum)
@@ -178,8 +158,42 @@ namespace Threadlock.Helpers
 
         public static int GetShiftMask<TEnum>() where TEnum : struct, Enum
         {
-            var shift = GetRequiredBitShift<TEnum>();
+            return GetShiftMask(typeof(TEnum));
+        }
+
+        public static int GetShiftMask(Type enumType)
+        {
+            if (!enumType.IsEnum)
+                return -1;
+
+            var shift = GetRequiredBitShift(enumType);
             return (1 << shift) - 1;
+        }
+
+        public static void SetMaskInCorner<TEnum>(TEnum maskValue, Corners corner, ref int mask) where TEnum : struct, Enum
+        {
+            var shift = GetRequiredBitShift<TEnum>();
+            var shiftMask = GetShiftMask<TEnum>();
+
+            mask &= ~(shiftMask << ((int)corner * shift));
+
+            mask |= (Convert.ToInt32(maskValue) << ((int)corner * shift));
+        }
+
+        public static int ReplaceZerosWithEnumValue<TEnum>(TEnum maskValue, int mask) where TEnum : struct, Enum
+        {
+            var replaceMask = 0;
+            
+            foreach (Corners corner in Enum.GetValues(typeof(Corners)))
+            {
+                var maskInCorner = GetMaskInCorner<TEnum>(mask, corner);
+                if (Convert.ToInt32(maskInCorner) == 0)
+                    SetMaskInCorner<TEnum>(maskValue, corner, ref replaceMask);
+                else
+                    SetMaskInCorner<TEnum>(maskInCorner, corner, ref replaceMask);
+            }
+
+            return replaceMask;
         }
     }
 }

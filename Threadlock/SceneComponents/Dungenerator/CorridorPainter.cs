@@ -31,6 +31,9 @@ namespace Threadlock.SceneComponents.Dungenerator
             BottomRight = 1 << 7,
         }
 
+        /// <summary>
+        /// this must be defined in this order, since it relates to how terrains are saved in Tiled xml
+        /// </summary>
         public enum Corners
         {
             TopRight,

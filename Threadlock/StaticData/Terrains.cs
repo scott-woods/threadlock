@@ -20,5 +20,13 @@ namespace Threadlock.StaticData
             Floor = 1,
             Wall = 2
         }
+
+        [Flags]
+        public enum Corridor
+        {
+            None = 0,
+            Floor = 1,
+            Wall = 2
+        }
     }
 }

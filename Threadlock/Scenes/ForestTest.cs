@@ -186,19 +186,22 @@ namespace Threadlock.Scenes
 
             //open tileset
             var tileset = TiledHelper.GetTileset(Nez.Content.Tiled.Tilesets.Fairy_forest_tileset);
-            var backTerrainSet = tileset.TerrainSets.FirstOrDefault(t => t.EnumType == typeof(TEnum));
-            var wallTerrainSet = tileset.TerrainSets.FirstOrDefault(t => t.EnumType == typeof(WallTileType));
+            //var backTerrainSet = tileset.TerrainSets.FirstOrDefault(t => t.EnumType == typeof(TEnum));
+            //var wallTerrainSet = tileset.TerrainSets.FirstOrDefault(t => t.EnumType == typeof(WallTileType));
 
             //convert back tiles to list of TileInfo
             var backTileInfo = new List<TileInfo<TEnum>>();
-            foreach (var tile in backTiles)
+            if (tileset.TryGetTerrainSet(typeof(TEnum), out var terrainSet))
             {
-                //find mask for this tile if it exists in the tileset terrain dictionary
-                if (backTerrainSet.TileDictionary.TryGetValue(tile.Gid - tile.Tileset.FirstGid, out var mask))
+                foreach (var tile in backTiles)
                 {
-                    var pos = new Vector2(tile.X * tile.Tileset.TileWidth, tile.Y * tile.Tileset.TileHeight);
-                    var tileInfo = new TileInfo<TEnum>(pos, tile.Gid - tile.Tileset.FirstGid, mask);
-                    backTileInfo.Add(tileInfo);
+                    //find mask for this tile if it exists in the tileset terrain dictionary
+                    if (terrainSet.TryGetMask(tile.Gid - tile.Tileset.FirstGid, out var mask))
+                    {
+                        var pos = new Vector2(tile.X * tile.Tileset.TileWidth, tile.Y * tile.Tileset.TileHeight);
+                        var tileInfo = new TileInfo<TEnum>(pos, tile.Gid - tile.Tileset.FirstGid, mask);
+                        backTileInfo.Add(tileInfo);
+                    }
                 }
             }
 
@@ -219,8 +222,7 @@ namespace Threadlock.Scenes
                 pathTile.PositionalMask = TileBitmaskHelper.GetPositionalMask(pathTile, joinedTiles);
 
                 //try to find a tile that matches the mask
-                var tileId = tileset.FindMatchingTile(pathTile.CombinedMask, typeof(TEnum));
-                if (tileId < 0)
+                if (!tileset.TryFindTile(typeof(TEnum), pathTile.CombinedMask, out var tileId))
                     continue;
 
                 //update tile id and terrain mask
@@ -245,7 +247,7 @@ namespace Threadlock.Scenes
                 foreach (Corners corner in Enum.GetValues(typeof(Corners)))
                 {
                     //update neighbors
-                    var terrainType = TileBitmaskHelper.GetTerrainInCorner<TEnum>(pathTile.TerrainMask, corner);
+                    var terrainType = TileBitmaskHelper.GetMaskInCorner<TEnum>(pathTile.TerrainMask, corner);
                     var dirsToHandle = _matchingCornersDict[corner];
                     foreach (var kvp in dirsToHandle)
                     {
@@ -258,11 +260,9 @@ namespace Threadlock.Scenes
                         {
                             neighbor.SetTerrainMaskValue(terrainType, matchingCorner);
 
-                            var neighborTileId = tileset.FindMatchingTile(neighbor.TerrainMask, typeof(TEnum));
-                            if (neighborTileId >= 0)
-                            {
+                            //try to replace neighbor tile
+                            if (tileset.TryFindTile(typeof(TEnum), neighbor.TerrainMask, out var neighborTileId))
                                 neighbor.TileId = neighborTileId;
-                            }
                         }
                     }
                 }
@@ -270,14 +270,17 @@ namespace Threadlock.Scenes
 
             //convert wall tiles to list of TileInfo
             var wallTileInfo = new List<TileInfo<WallTileType>>();
-            foreach (var tile in wallTiles)
+            if (tileset.TryGetTerrainSet(typeof(WallTileType), out var wallTerrainSet))
             {
-                //find mask for this tile if it exists in the tileset terrain dictionary
-                if (wallTerrainSet.TileDictionary.TryGetValue(tile.Gid, out var mask))
+                foreach (var tile in wallTiles)
                 {
-                    var pos = new Vector2(tile.X * tile.Tileset.TileWidth, tile.Y * tile.Tileset.TileHeight);
-                    var tileInfo = new TileInfo<WallTileType>(pos, tile.Gid, mask);
-                    wallTileInfo.Add(tileInfo);
+                    //find mask for this tile if it exists in the tileset terrain dictionary
+                    if (wallTerrainSet.TryGetMask(tile.Gid, out var mask))
+                    {
+                        var pos = new Vector2(tile.X * tile.Tileset.TileWidth, tile.Y * tile.Tileset.TileHeight);
+                        var tileInfo = new TileInfo<WallTileType>(pos, tile.Gid, mask);
+                        wallTileInfo.Add(tileInfo);
+                    }
                 }
             }
 
@@ -307,16 +310,12 @@ namespace Threadlock.Scenes
                 tileInfo.PositionalMask = posMask;
 
                 //find matching tile id
-                var wallTileId = tileset.FindMatchingTile(posMask, typeof(WallTileType));
-                if (wallTileId < 0)
-                {
-                    wallTileId = tileset.FindMatchingTile(tileInfo.CombinedMask, typeof(WallTileType));
-                    if (wallTileId < 0)
-                        continue;
-                }
-
-                //set tile id
-                tileInfo.TileId = wallTileId;
+                if (tileset.TryFindTile(typeof(WallTileType), posMask, out var wallTileId))
+                    tileInfo.TileId = wallTileId;
+                else if (tileset.TryFindTile(typeof(WallTileType), tileInfo.CombinedMask, out wallTileId))
+                    tileInfo.TileId = wallTileId;
+                else
+                    continue;
 
                 newWallsInfo.Add(tileInfo);
             }
