@@ -370,6 +370,8 @@ namespace Threadlock.SceneComponents.Dungenerator
                 //get all corridor positions
                 foreach (var corridorTile in room.CorridorTiles)
                 {
+                    var test = Scene.CreateEntity("", corridorTile.Position).AddComponent(new PrototypeSpriteRenderer(4, 4));
+                    test.SetColor(Color.Blue);
                     for (int x = -2; x <= 2; x++)
                     {
                         for (int y = -2; y <= 2; y++)
@@ -405,11 +407,13 @@ namespace Threadlock.SceneComponents.Dungenerator
             Dictionary<Vector2, TileData> wallTiles = new Dictionary<Vector2, TileData>();
 
             //get terrain set
-            if (tileset.TryGetTerrainSet(typeof(Corridor), out var terrainSet))
+            if (tileset.TryGetTerrainSet(typeof(Corridor), out var corridorTerrainSet))
             {
                 //loop through path tiles
                 foreach (var tileData in pathTiles)
                 {
+                    var ent = Scene.CreateEntity("", tileData.Position).AddComponent(new PrototypeSpriteRenderer(2, 2));
+
                     //check corners to create a positional mask for the tile
                     foreach (Corners corner in Enum.GetValues(typeof(Corners)))
                     {
@@ -420,7 +424,7 @@ namespace Threadlock.SceneComponents.Dungenerator
                         //check pre existing floor tiles
                         if (_floorDict.TryGetValue(neighborPos, out var neighborTileId))
                         {
-                            if (terrainSet.TryGetMask(neighborTileId, out var neighborMask))
+                            if (corridorTerrainSet.TryGetMask(neighborTileId, out var neighborMask))
                             {
                                 var neighborMaskCorner = TileBitmaskHelper.GetMaskInCorner<Corridor>(neighborMask, TileBitmaskHelper.MatchingCornersDict[corner]);
                                 TileBitmaskHelper.SetMaskInCorner<Corridor>(neighborMaskCorner, corner, ref tileData.Mask);
@@ -468,7 +472,7 @@ namespace Threadlock.SceneComponents.Dungenerator
                                 //try to replace neighbor tile only if it has previously selected one
                                 if (neighbor.TileId >= 0)
                                 {
-                                    if (terrainSet.TryGetTile(neighbor.Mask, out var replacementTileId))
+                                    if (corridorTerrainSet.TryGetTile(neighbor.Mask, out var replacementTileId))
                                         neighbor.TileId = replacementTileId;
                                 }
                             }
@@ -490,7 +494,7 @@ namespace Threadlock.SceneComponents.Dungenerator
                     }
 
                     //use the mask to find an appropriate tile
-                    if (terrainSet.TryGetTile(tileData.Mask, out var tileId))
+                    if (corridorTerrainSet.TryGetTile(tileData.Mask, out var tileId))
                         tileData.TileId = tileId;
                 }
 
@@ -585,6 +589,7 @@ namespace Threadlock.SceneComponents.Dungenerator
             var wallRenderer = Scene.CreateEntity("walls-corridor-renderer").AddComponent(new CorridorRenderer(tileset.Tileset, wallTileDict, true));
             wallRenderer.SetRenderLayer(RenderLayers.AboveFront); //for the forest, walls should be AboveFront
             var aboveFrontRenderer = Scene.CreateEntity("above-front-corridor-renderer").AddComponent(new CorridorRenderer(tileset.Tileset, aboveFrontTileDict));
+            aboveFrontRenderer.SetRenderLayer(RenderLayers.AboveFront);
         }
 
         bool ConnectRooms(DungeonRoom startRoom, DungeonRoom endRoom, List<DungeonRoom> roomsToCheck)
@@ -602,7 +607,7 @@ namespace Threadlock.SceneComponents.Dungenerator
             //init dictionary for list of valid positions and their associated valid doorway pairs
             Dictionary<Vector2, List<Tuple<DoorwayPoint, DoorwayPoint>>> validPositions = new Dictionary<Vector2, List<Tuple<DoorwayPoint, DoorwayPoint>>>();
 
-            //try all positions in a radius
+            //try all positions in a radius around the start door
             for (int x = -_maxRoomDistance; x <= _maxRoomDistance; x++)
             {
                 if (Math.Abs(x) <= _minRoomDistance)
@@ -612,10 +617,12 @@ namespace Threadlock.SceneComponents.Dungenerator
                     if (Math.Abs(y) <= _minRoomDistance)
                         continue;
 
+                    //get the distance the end door should be from the start door
                     var dist = new Vector2(x * 16, y * 16);
 
                     var pairsList = pairs.ToList();
 
+                    //try each possible doorway pair at this position
                     while (pairsList.Any())
                     {
                         //pick a random doorway pair
@@ -632,62 +639,77 @@ namespace Threadlock.SceneComponents.Dungenerator
                         }
 
                         //check for overlaps
-                        if (roomsToCheck.Any(r =>
+                        if (roomsToCheck.Any(roomToCheck =>
                         {
-                            if (r.Map == null)
+                            //if the room to check doesn't have a map, there's nothing to overlap with
+                            if (roomToCheck.Map == null)
                                 return false;
 
-                            if (roomsToMove.Any(r2 =>
+                            //check against each room to move
+                            if (roomsToMove.Any(roomToMove =>
                             {
-                                if (r2.Map == null)
+                                //if room to move has no map, there's nothing to overlap with
+                                if (roomToMove.Map == null)
                                     return false;
-                                if (r2.CollisionBounds.Intersects(r.CollisionBounds))
+
+                                //if the collision bounds intersect, this position is invalid
+                                if (roomToMove.CollisionBounds.Intersects(roomToCheck.CollisionBounds))
                                     return true;
-                                if (r.CorridorTiles.Any())
+
+                                //get walls from the room to move map
+                                if (_mapWallDict.TryGetValue(roomToMove.Map, out var roomToMoveMapWalls))
                                 {
-                                    if (_mapWallDict.TryGetValue(r2.Map, out var mapWalls))
+                                    //adjust to world space
+                                    var adjustedMapWalls = roomToMoveMapWalls.Select(w => w + roomToMove.Position).ToList();
+
+                                    //check room to check's corridor tiles for overlaps with room to move wall tiles
+                                    if (roomToCheck.CorridorTiles.Any(t =>
                                     {
-                                        var walls = new List<Vector2>();
-                                        foreach (var wall in mapWalls)
-                                        {
-                                            var wallPos = wall + r2.Position;
-
-                                            //extra walls for path padding
-                                            for (int x = -_wallPadding; x <= _wallPadding; x++)
-                                            {
-                                                var paddedPos = wallPos + new Vector2(x * 16, 0);
-                                                walls.Add(paddedPos);
-                                            }
-                                            for (int y = -_wallPadding; y <= _wallPadding; y++)
-                                            {
-                                                var paddedPos = wallPos + new Vector2(0, y * 16);
-                                                walls.Add(paddedPos);
-                                            }
-                                        }
-
-                                        if (r.CorridorTiles.Any(t => walls.Any(w => w == t.Position)))
-                                            return true;
-                                    }
+                                        var tileRect = new RectangleF(t.Position + new Vector2(-_wallPadding * 16, -_wallPadding * 16), new Vector2(((_wallPadding * 2) + 1) * 16));
+                                        return adjustedMapWalls.Any(w => tileRect.Contains(w));
+                                    }))
+                                        return true;
                                 }
+
+                                //get walls from the room to check map
+                                if (_mapWallDict.TryGetValue(roomToCheck.Map, out var roomToCheckMapWalls))
+                                {
+                                    //adjust to world space
+                                    var adjustedMapWalls = roomToCheckMapWalls.Select(w => w + roomToCheck.Position).ToList();
+
+                                    //check room to move's corridor tiles for overlaps with room to check wall tiles
+                                    if (roomToMove.CorridorTiles.Any(t =>
+                                    {
+                                        var tileRect = new RectangleF(t.Position + new Vector2(-_wallPadding * 16, -_wallPadding * 16), new Vector2(((_wallPadding * 2) + 1) * 16));
+                                        return adjustedMapWalls.Any(w => tileRect.Contains(w));
+                                    }))
+                                        return true;
+                                }
+
+                                //no overlap with this room to move, return false
                                 return false;
                             }))
-                                return true;
+                                return true; //overlap found with a room to move
 
+                            //no overlap found
                             return false;
                         }))
-                        if (roomsToCheck.Any(r => r.Map != null && roomsToMove.Any(x => x.Map != null && x.CollisionBounds.Intersects(r.CollisionBounds))))
+                        {
+                            //overlap found, continue to try next pair
                             continue;
-
-                        //add pair and position to dictionary
-                        if (!validPositions.ContainsKey(pair.Item2.ParentRoom.Position))
-                            validPositions[pair.Item2.ParentRoom.Position] = new List<Tuple<DoorwayPoint, DoorwayPoint>>();
-                        validPositions[pair.Item2.ParentRoom.Position].Add(pair);
-
-                        break;
+                        }
+                        else
+                        {
+                            //add pair and position to dictionary
+                            if (!validPositions.ContainsKey(pair.Item2.ParentRoom.Position))
+                                validPositions[pair.Item2.ParentRoom.Position] = new List<Tuple<DoorwayPoint, DoorwayPoint>>();
+                            validPositions[pair.Item2.ParentRoom.Position].Add(pair);
+                        }
                     }
                 }
             }
 
+            //try all valid room positions in order of closest to farthest away
             bool success = false;
             foreach (var kvp in validPositions.OrderBy(p => p.Value.Select(x => Vector2.Distance(x.Item1.Position, x.Item2.Position)).Min()))
             {
@@ -727,47 +749,6 @@ namespace Threadlock.SceneComponents.Dungenerator
             }
 
             return success;
-
-            ////try all valid positions
-            //while (validPositions.Any())
-            //{
-            //    //pick a random position
-            //    var pos = validPositions.Keys.ToList().RandomItem();
-
-            //    //move rooms
-            //    var movement = pos - endRoom.Position;
-            //    for (int i = 0; i < roomsToMove.Count; i++)
-            //    {
-            //        var room = roomsToMove[i];
-            //        room.Position += movement;
-            //    }
-
-            //    //try all pairs at this position
-            //    var possiblePairs = validPositions[pos];
-            //    while (possiblePairs.Any())
-            //    {
-            //        //pick a pair
-            //        var pair = possiblePairs.RandomItem();
-
-            //        //try to connect doorways
-            //        if (ConnectDoorways(pair.Item1, pair.Item2, roomsToCheck))
-            //        {
-            //            //update doorway status
-            //            pair.Item1.HasConnection = true;
-            //            pair.Item2.HasConnection = true;
-            //            break;
-            //        }
-
-            //        possiblePairs.Remove(pair);
-            //    }
-
-            //    if (possiblePairs.Any())
-            //        break;
-
-            //    validPositions.Remove(pos);
-            //}
-
-            //return validPositions.Any();
         }
 
         /// <summary>
@@ -793,23 +774,36 @@ namespace Threadlock.SceneComponents.Dungenerator
             List<Point> finalWalls = new List<Point>();
 
             //init final path list
+            var beginningPath = new List<Vector2>();
+            var endPath = new List<Vector2>();
             var finalPath = new List<Vector2>();
 
-            //var reservedPositions = new List<Vector2>() { startDoor.Position, endDoor.Position };
+            var reservedPositions = new List<Vector2>();
             for (int i = Mathf.CeilToInt(_minHallDistance / 2); i <= _minHallDistance; i++)
             {
                 var nextStartPos = startDoor.Position + (startDoor.Direction * i * 16);
-                //reservedPositions.Add(nextStartPos);
-                //reservedPositions.Add(endDoor.Position + (endDoor.Direction * i * 16));
+                var nextEndPos = endDoor.Position + (endDoor.Direction * i * 16);
+                reservedPositions.Add(nextStartPos);
+                reservedPositions.Add(nextEndPos);
 
-                finalPath.Add(nextStartPos);
+                beginningPath.Add(nextStartPos);
+                endPath.Add(nextEndPos);
+
+                //finalPath.Add(nextStartPos);
             }
 
-            //get adjusted start and end positions
-            var actualStartPos = finalPath.Last() + (startDoor.Direction * 16);
-            var actualEndPos = endDoor.Position + (endDoor.Direction * 16 * (_minHallDistance + 1));
+            //reverse end positions
+            endPath.Reverse();
 
-            var reservedPositions = new List<Vector2>() { actualStartPos, actualEndPos };
+            //get adjusted start and end positions
+            var actualStartPos = beginningPath.Last() + (startDoor.Direction * 16);
+            //var actualEndPos = endDoor.Position + (endDoor.Direction * 16 * (_minHallDistance + 1));
+            var actualEndPos = endPath.First() + (endDoor.Direction * 16);
+
+            reservedPositions.Add(actualStartPos);
+            reservedPositions.Add(actualEndPos);
+
+            //var reservedPositions = new List<Vector2>() { actualStartPos, actualEndPos };
 
             //get walls from each room
             var wallRooms = new List<DungeonRoom>(roomsToCheck);
@@ -832,26 +826,38 @@ namespace Threadlock.SceneComponents.Dungenerator
                         //finalWalls.Add(((wallPos - graphOffset) / 16).ToPoint());
                         //continue;
 
-                        //extra walls for path padding
+                        ////extra walls for path padding
+                        //for (int x = -_wallPadding; x <= _wallPadding; x++)
+                        //{
+                        //    var paddedPos = wallPos + new Vector2(x * 16, 0);
+
+                        //    if (reservedPositions.Contains(paddedPos))
+                        //        continue;
+
+                        //    //if (graphRect.Contains(paddedPos))
+                        //    finalWalls.Add(((paddedPos - graphOffset) / 16).ToPoint());
+                        //}
+                        //for (int y = -_wallPadding; y <= _wallPadding; y++)
+                        //{
+                        //    var paddedPos = wallPos + new Vector2(0, y * 16);
+
+                        //    if (reservedPositions.Contains(paddedPos))
+                        //        continue;
+
+                        //    //if (graphRect.Contains(paddedPos))
+                        //    finalWalls.Add(((paddedPos - graphOffset) / 16).ToPoint());
+                        //}
+
                         for (int x = -_wallPadding; x <= _wallPadding; x++)
                         {
-                            var paddedPos = wallPos + new Vector2(x * 16, 0);
-
-                            if (reservedPositions.Contains(paddedPos))
-                                continue;
-
-                            //if (graphRect.Contains(paddedPos))
-                            finalWalls.Add(((paddedPos - graphOffset) / 16).ToPoint());
-                        }
-                        for (int y = -_wallPadding; y <= _wallPadding; y++)
-                        {
-                            var paddedPos = wallPos + new Vector2(0, y * 16);
-
-                            if (reservedPositions.Contains(paddedPos))
-                                continue;
-
-                            //if (graphRect.Contains(paddedPos))
-                            finalWalls.Add(((paddedPos - graphOffset) / 16).ToPoint());
+                            for (int y = -_wallPadding; y <= _wallPadding; y++)
+                            {
+                                var paddedPos = wallPos + new Vector2(x * 16, y * 16);
+                                if (reservedPositions.Contains(paddedPos))
+                                    continue;
+                                if (graphRect.Contains(paddedPos))
+                                    finalWalls.Add(((paddedPos - graphOffset) / 16).ToPoint());
+                            }
                         }
                     }
                 }
@@ -867,14 +873,19 @@ namespace Threadlock.SceneComponents.Dungenerator
             if (pathfindResults == null || pathfindResults.Count <= 0)
                 return false;
 
-            //add pathfinding results to final path
+            //add to final path in proper order
+            finalPath.AddRange(beginningPath);
             finalPath.AddRange(pathfindResults.Select(p => (p.ToVector2() * 16) + graphOffset));
+            finalPath.AddRange(endPath);
 
-            //add path section leading up to end door
-            for (int i = _minHallDistance; i >= Mathf.CeilToInt(_minHallDistance / 2); i--)
-            {
-                finalPath.Add(endDoor.Position + (endDoor.Direction * 16 * i));
-            }
+            ////add pathfinding results to final path
+            //finalPath.AddRange(pathfindResults.Select(p => (p.ToVector2() * 16) + graphOffset));
+
+            ////add path section leading up to end door
+            //for (int i = _minHallDistance; i >= Mathf.CeilToInt(_minHallDistance / 2); i--)
+            //{
+            //    finalPath.Add(endDoor.Position + (endDoor.Direction * 16 * i));
+            //}
 
             //translate path positions into corridor tiles and add them to the start door's room
             List<CorridorTile> corridorPath = finalPath.Select(p => new CorridorTile(startDoor.ParentRoom, p - startDoor.ParentRoom.Position)).ToList();

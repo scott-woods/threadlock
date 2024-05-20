@@ -1014,6 +1014,7 @@
   <wangset name="Corridor" type="corner" tile="-1">
    <wangcolor name="Floor" color="#ff0000" tile="-1" probability="1"/>
    <wangcolor name="Wall" color="#00ff00" tile="-1" probability="1"/>
+   <wangtile tileid="121" wangid="0,2,0,2,0,2,0,2"/>
    <wangtile tileid="182" wangid="0,1,0,2,0,1,0,1"/>
    <wangtile tileid="183" wangid="0,1,0,2,0,2,0,1"/>
    <wangtile tileid="184" wangid="0,1,0,1,0,2,0,1"/>
