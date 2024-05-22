@@ -1,10 +1,13 @@
-﻿using Nez.Sprites;
+﻿using Nez.Persistence;
+using Nez.Sprites;
 using Nez.Textures;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Threadlock.Models;
 
 namespace Threadlock.Helpers
 {
@@ -95,6 +98,47 @@ namespace Threadlock.Helpers
             var iterationDuration = secondsPerFrame * animator.Animations[animationName].Sprites.Length;
 
             return iterationDuration;
+        }
+
+        public static void ParseAnimationFile(string folderPath, string filename, ref SpriteAnimator animator, int fps = 10)
+        {
+            //read file
+            var json = File.ReadAllText($"{folderPath}/{filename}.json");
+            if (string.IsNullOrWhiteSpace(json))
+                return;
+
+            //parse json
+            var export = Json.FromJson<AsepriteExport>(json);
+            if (export == null)
+                return;
+
+            //load texture
+            var texture = Game1.Scene.Content.LoadTexture($"{folderPath}/{export.Meta.Image}");
+
+            //each frame tag represents an animation
+            foreach (var tag in export.Meta.FrameTags)
+            {
+                //init sprite list
+                var sprites = new List<Sprite>();
+
+                //go through frames for this tag
+                var currentFrame = tag.From;
+                while (currentFrame < tag.To)
+                {
+                    //get frame data
+                    var frameData = export.Frames[currentFrame];
+
+                    //create sprite from frame data and add it to the list
+                    var sprite = new Sprite(texture, frameData.Frame.ToRectangle());
+                    sprites.Add(sprite);
+
+                    //increment frame
+                    currentFrame++;
+                }
+
+                //create animation and add it to the animator
+                animator.AddAnimation(tag.Name, sprites.ToArray(), fps);
+            }
         }
     }
 }

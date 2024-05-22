@@ -19,6 +19,30 @@ namespace Threadlock.GlobalManagers
     {
         public Emitter<UIEvents> Emitter = new Emitter<UIEvents>();
 
+        public IEnumerator ShowTextboxText(string text)
+        {
+            var canvas = Game1.Scene.CreateEntity("textbox-ui").AddComponent(new UICanvas());
+            canvas.SetRenderLayer(RenderLayers.ScreenSpaceRenderLayer);
+            canvas.IsFullScreen = true;
+            var skin = Skins.GetDefaultSkin();
+
+            var baseTable = canvas.Stage.AddElement(new Table()).Bottom().SetFillParent(false);
+            baseTable.SetWidth(Game1.ResolutionManager.UIResolution.X);
+            baseTable.SetHeight(Game1.ResolutionManager.UIResolution.Y);
+            //baseTable.SetFillParent(false);d
+
+            var textbox = new Textbox(skin);
+            baseTable.Add(textbox).Expand().Bottom().SetPadBottom(Value.PercentHeight(.05f, baseTable)).Width(Value.PercentWidth(1f)).Height(Value.PercentHeight(1f));
+
+            Emitter.Emit(UIEvents.DialogueStarted);
+
+            yield return textbox.DisplayText(text);
+
+            Emitter.Emit(UIEvents.DialogueEnded);
+
+            canvas.Entity.Destroy();
+        }
+
         public IEnumerator ShowTextboxText(List<DialogueLine> dialogueSet)
         {
             var canvas = Game1.Scene.CreateEntity("textbox-ui").AddComponent(new UICanvas());

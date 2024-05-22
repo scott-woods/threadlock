@@ -28,6 +28,8 @@ namespace Threadlock.Entities.Characters.Player.States
 
         public override void Update(float deltaTime)
         {
+            base.Update(deltaTime);
+
             _context.Run();
         }
     }

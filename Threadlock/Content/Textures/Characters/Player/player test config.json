@@ -1,0 +1,2263 @@
+{ "frames": [
+   {
+    "filename": "04 Stranded - Pack 4 #Idle Down 0.aseprite",
+    "frame": { "x": 0, "y": 0, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle Down 1.aseprite",
+    "frame": { "x": 64, "y": 0, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle Down 2.aseprite",
+    "frame": { "x": 128, "y": 0, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle Down 3.aseprite",
+    "frame": { "x": 192, "y": 0, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle Down 4.aseprite",
+    "frame": { "x": 256, "y": 0, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle Down 5.aseprite",
+    "frame": { "x": 320, "y": 0, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle Down 6.aseprite",
+    "frame": { "x": 384, "y": 0, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle Down 7.aseprite",
+    "frame": { "x": 448, "y": 0, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle Down 8.aseprite",
+    "frame": { "x": 512, "y": 0, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle Down 9.aseprite",
+    "frame": { "x": 576, "y": 0, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle Down 10.aseprite",
+    "frame": { "x": 640, "y": 0, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle Down 11.aseprite",
+    "frame": { "x": 704, "y": 0, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Heal 0.aseprite",
+    "frame": { "x": 0, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Heal 1.aseprite",
+    "frame": { "x": 64, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Heal 2.aseprite",
+    "frame": { "x": 128, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Heal 3.aseprite",
+    "frame": { "x": 192, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Heal 4.aseprite",
+    "frame": { "x": 256, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Heal 5.aseprite",
+    "frame": { "x": 320, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Heal 6.aseprite",
+    "frame": { "x": 384, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Heal 7.aseprite",
+    "frame": { "x": 448, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Heal 8.aseprite",
+    "frame": { "x": 512, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Heal 9.aseprite",
+    "frame": { "x": 576, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Heal 10.aseprite",
+    "frame": { "x": 640, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Heal 11.aseprite",
+    "frame": { "x": 704, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Heal 12.aseprite",
+    "frame": { "x": 768, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Heal 13.aseprite",
+    "frame": { "x": 832, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Heal 14.aseprite",
+    "frame": { "x": 896, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Heal 15.aseprite",
+    "frame": { "x": 960, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Heal 16.aseprite",
+    "frame": { "x": 1024, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Heal 17.aseprite",
+    "frame": { "x": 1088, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Heal 18.aseprite",
+    "frame": { "x": 1152, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Heal 19.aseprite",
+    "frame": { "x": 1216, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Heal 20.aseprite",
+    "frame": { "x": 1280, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Heal 21.aseprite",
+    "frame": { "x": 1344, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Heal 22.aseprite",
+    "frame": { "x": 1408, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Heal 23.aseprite",
+    "frame": { "x": 1472, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Defence 0.aseprite",
+    "frame": { "x": 0, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Defence 1.aseprite",
+    "frame": { "x": 64, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Defence 2.aseprite",
+    "frame": { "x": 128, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Defence 3.aseprite",
+    "frame": { "x": 192, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Defence 4.aseprite",
+    "frame": { "x": 256, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Defence 5.aseprite",
+    "frame": { "x": 320, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Defence 6.aseprite",
+    "frame": { "x": 384, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Defence 7.aseprite",
+    "frame": { "x": 448, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Defence 8.aseprite",
+    "frame": { "x": 512, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Defence 9.aseprite",
+    "frame": { "x": 576, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Defence 10.aseprite",
+    "frame": { "x": 640, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Defence 11.aseprite",
+    "frame": { "x": 704, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Defence 12.aseprite",
+    "frame": { "x": 768, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Defence 13.aseprite",
+    "frame": { "x": 832, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Defence 14.aseprite",
+    "frame": { "x": 896, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Defence 15.aseprite",
+    "frame": { "x": 960, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Defence 16.aseprite",
+    "frame": { "x": 1024, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Defence 17.aseprite",
+    "frame": { "x": 1088, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Defence 18.aseprite",
+    "frame": { "x": 1152, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Defence 19.aseprite",
+    "frame": { "x": 1216, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Defence 20.aseprite",
+    "frame": { "x": 1280, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Defence 21.aseprite",
+    "frame": { "x": 1344, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Defence 22.aseprite",
+    "frame": { "x": 1408, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Defence 23.aseprite",
+    "frame": { "x": 1472, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Flames 0.aseprite",
+    "frame": { "x": 0, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Flames 1.aseprite",
+    "frame": { "x": 64, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Flames 2.aseprite",
+    "frame": { "x": 128, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Flames 3.aseprite",
+    "frame": { "x": 192, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Flames 4.aseprite",
+    "frame": { "x": 256, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Flames 5.aseprite",
+    "frame": { "x": 320, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Flames 6.aseprite",
+    "frame": { "x": 384, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Flames 7.aseprite",
+    "frame": { "x": 448, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Flames 8.aseprite",
+    "frame": { "x": 512, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Flames 9.aseprite",
+    "frame": { "x": 576, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Flames 10.aseprite",
+    "frame": { "x": 640, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Flames 11.aseprite",
+    "frame": { "x": 704, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Flames 12.aseprite",
+    "frame": { "x": 768, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Flames 13.aseprite",
+    "frame": { "x": 832, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Flames 14.aseprite",
+    "frame": { "x": 896, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Flames 15.aseprite",
+    "frame": { "x": 960, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Flames 16.aseprite",
+    "frame": { "x": 1024, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Flames 17.aseprite",
+    "frame": { "x": 1088, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Flames 18.aseprite",
+    "frame": { "x": 1152, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Flames 19.aseprite",
+    "frame": { "x": 1216, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Flames 20.aseprite",
+    "frame": { "x": 1280, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Flames 21.aseprite",
+    "frame": { "x": 1344, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Flames 22.aseprite",
+    "frame": { "x": 1408, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Flames 23.aseprite",
+    "frame": { "x": 1472, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Buff 0.aseprite",
+    "frame": { "x": 0, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Buff 1.aseprite",
+    "frame": { "x": 64, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Buff 2.aseprite",
+    "frame": { "x": 128, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Buff 3.aseprite",
+    "frame": { "x": 192, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Buff 4.aseprite",
+    "frame": { "x": 256, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Buff 5.aseprite",
+    "frame": { "x": 320, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Buff 6.aseprite",
+    "frame": { "x": 384, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Buff 7.aseprite",
+    "frame": { "x": 448, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Buff 8.aseprite",
+    "frame": { "x": 512, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Buff 9.aseprite",
+    "frame": { "x": 576, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Buff 10.aseprite",
+    "frame": { "x": 640, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Buff 11.aseprite",
+    "frame": { "x": 704, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Buff 12.aseprite",
+    "frame": { "x": 768, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Buff 13.aseprite",
+    "frame": { "x": 832, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Buff 14.aseprite",
+    "frame": { "x": 896, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Buff 15.aseprite",
+    "frame": { "x": 960, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Buff 16.aseprite",
+    "frame": { "x": 1024, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Buff 17.aseprite",
+    "frame": { "x": 1088, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Buff 18.aseprite",
+    "frame": { "x": 1152, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Buff 19.aseprite",
+    "frame": { "x": 1216, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Buff 20.aseprite",
+    "frame": { "x": 1280, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Buff 21.aseprite",
+    "frame": { "x": 1344, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Buff 22.aseprite",
+    "frame": { "x": 1408, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Buff 23.aseprite",
+    "frame": { "x": 1472, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Move Down 0.aseprite",
+    "frame": { "x": 0, "y": 325, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Move Down 1.aseprite",
+    "frame": { "x": 64, "y": 325, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Move Down 2.aseprite",
+    "frame": { "x": 128, "y": 325, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Move Down 3.aseprite",
+    "frame": { "x": 192, "y": 325, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Move Down 4.aseprite",
+    "frame": { "x": 256, "y": 325, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Move Down 5.aseprite",
+    "frame": { "x": 320, "y": 325, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Move Down 6.aseprite",
+    "frame": { "x": 384, "y": 325, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Move Down 7.aseprite",
+    "frame": { "x": 448, "y": 325, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Run Down 0.aseprite",
+    "frame": { "x": 0, "y": 390, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Run Down 1.aseprite",
+    "frame": { "x": 64, "y": 390, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Run Down 2.aseprite",
+    "frame": { "x": 128, "y": 390, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Run Down 3.aseprite",
+    "frame": { "x": 192, "y": 390, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Run Down 4.aseprite",
+    "frame": { "x": 256, "y": 390, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Run Down 5.aseprite",
+    "frame": { "x": 320, "y": 390, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Run Down 6.aseprite",
+    "frame": { "x": 384, "y": 390, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Run Down 7.aseprite",
+    "frame": { "x": 448, "y": 390, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Chop Down 0.aseprite",
+    "frame": { "x": 0, "y": 455, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Chop Down 1.aseprite",
+    "frame": { "x": 64, "y": 455, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Chop Down 2.aseprite",
+    "frame": { "x": 128, "y": 455, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Chop Down 3.aseprite",
+    "frame": { "x": 192, "y": 455, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Slash Down 0.aseprite",
+    "frame": { "x": 0, "y": 520, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Slash Down 1.aseprite",
+    "frame": { "x": 64, "y": 520, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Slash Down 2.aseprite",
+    "frame": { "x": 128, "y": 520, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Slash Down 3.aseprite",
+    "frame": { "x": 192, "y": 520, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Slash Down 4.aseprite",
+    "frame": { "x": 256, "y": 520, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Slash Down 5.aseprite",
+    "frame": { "x": 320, "y": 520, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Slash Down 6.aseprite",
+    "frame": { "x": 384, "y": 520, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Roll Down 0.aseprite",
+    "frame": { "x": 0, "y": 585, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Roll Down 1.aseprite",
+    "frame": { "x": 64, "y": 585, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Roll Down 2.aseprite",
+    "frame": { "x": 128, "y": 585, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Roll Down 3.aseprite",
+    "frame": { "x": 192, "y": 585, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Roll Down 4.aseprite",
+    "frame": { "x": 256, "y": 585, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Roll Down 5.aseprite",
+    "frame": { "x": 320, "y": 585, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Roll Down 6.aseprite",
+    "frame": { "x": 384, "y": 585, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Roll Down 7.aseprite",
+    "frame": { "x": 448, "y": 585, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle L/R 0.aseprite",
+    "frame": { "x": 0, "y": 650, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle L/R 1.aseprite",
+    "frame": { "x": 64, "y": 650, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle L/R 2.aseprite",
+    "frame": { "x": 128, "y": 650, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle L/R 3.aseprite",
+    "frame": { "x": 192, "y": 650, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle L/R 4.aseprite",
+    "frame": { "x": 256, "y": 650, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle L/R 5.aseprite",
+    "frame": { "x": 320, "y": 650, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle L/R 6.aseprite",
+    "frame": { "x": 384, "y": 650, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle L/R 7.aseprite",
+    "frame": { "x": 448, "y": 650, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle L/R 8.aseprite",
+    "frame": { "x": 512, "y": 650, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle L/R 9.aseprite",
+    "frame": { "x": 576, "y": 650, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle L/R 10.aseprite",
+    "frame": { "x": 640, "y": 650, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle L/R 11.aseprite",
+    "frame": { "x": 704, "y": 650, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #L/R move 0.aseprite",
+    "frame": { "x": 0, "y": 715, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #L/R move 1.aseprite",
+    "frame": { "x": 64, "y": 715, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #L/R move 2.aseprite",
+    "frame": { "x": 128, "y": 715, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #L/R move 3.aseprite",
+    "frame": { "x": 192, "y": 715, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #L/R move 4.aseprite",
+    "frame": { "x": 256, "y": 715, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #L/R move 5.aseprite",
+    "frame": { "x": 320, "y": 715, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #L/R move 6.aseprite",
+    "frame": { "x": 384, "y": 715, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #L/R move 7.aseprite",
+    "frame": { "x": 448, "y": 715, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #L/R Run 0.aseprite",
+    "frame": { "x": 0, "y": 780, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #L/R Run 1.aseprite",
+    "frame": { "x": 64, "y": 780, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #L/R Run 2.aseprite",
+    "frame": { "x": 128, "y": 780, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #L/R Run 3.aseprite",
+    "frame": { "x": 192, "y": 780, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #L/R Run 4.aseprite",
+    "frame": { "x": 256, "y": 780, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #L/R Run 5.aseprite",
+    "frame": { "x": 320, "y": 780, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #L/R Run 6.aseprite",
+    "frame": { "x": 384, "y": 780, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #L/R Run 7.aseprite",
+    "frame": { "x": 448, "y": 780, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #L/R Roll 0.aseprite",
+    "frame": { "x": 0, "y": 845, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #L/R Roll 1.aseprite",
+    "frame": { "x": 64, "y": 845, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #L/R Roll 2.aseprite",
+    "frame": { "x": 128, "y": 845, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #L/R Roll 3.aseprite",
+    "frame": { "x": 192, "y": 845, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #L/R Roll 4.aseprite",
+    "frame": { "x": 256, "y": 845, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #L/R Roll 5.aseprite",
+    "frame": { "x": 320, "y": 845, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #L/R CHop 0.aseprite",
+    "frame": { "x": 0, "y": 910, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #L/R CHop 1.aseprite",
+    "frame": { "x": 64, "y": 910, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #L/R CHop 2.aseprite",
+    "frame": { "x": 128, "y": 910, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #L/R CHop 3.aseprite",
+    "frame": { "x": 192, "y": 910, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #L/R Slash 0.aseprite",
+    "frame": { "x": 0, "y": 975, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #L/R Slash 1.aseprite",
+    "frame": { "x": 64, "y": 975, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #L/R Slash 2.aseprite",
+    "frame": { "x": 128, "y": 975, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #L/R Slash 3.aseprite",
+    "frame": { "x": 192, "y": 975, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #L/R Slash 4.aseprite",
+    "frame": { "x": 256, "y": 975, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle Up 0.aseprite",
+    "frame": { "x": 0, "y": 1040, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle Up 1.aseprite",
+    "frame": { "x": 64, "y": 1040, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle Up 2.aseprite",
+    "frame": { "x": 128, "y": 1040, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle Up 3.aseprite",
+    "frame": { "x": 192, "y": 1040, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle Up 4.aseprite",
+    "frame": { "x": 256, "y": 1040, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle Up 5.aseprite",
+    "frame": { "x": 320, "y": 1040, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle Up 6.aseprite",
+    "frame": { "x": 384, "y": 1040, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle Up 7.aseprite",
+    "frame": { "x": 448, "y": 1040, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle Up 8.aseprite",
+    "frame": { "x": 512, "y": 1040, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle Up 9.aseprite",
+    "frame": { "x": 576, "y": 1040, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle Up 10.aseprite",
+    "frame": { "x": 640, "y": 1040, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Idle Up 11.aseprite",
+    "frame": { "x": 704, "y": 1040, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Move Up 0.aseprite",
+    "frame": { "x": 0, "y": 1105, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Move Up 1.aseprite",
+    "frame": { "x": 64, "y": 1105, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Move Up 2.aseprite",
+    "frame": { "x": 128, "y": 1105, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Move Up 3.aseprite",
+    "frame": { "x": 192, "y": 1105, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Move Up 4.aseprite",
+    "frame": { "x": 256, "y": 1105, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Move Up 5.aseprite",
+    "frame": { "x": 320, "y": 1105, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Move Up 6.aseprite",
+    "frame": { "x": 384, "y": 1105, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Move Up 7.aseprite",
+    "frame": { "x": 448, "y": 1105, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Run UP 0.aseprite",
+    "frame": { "x": 0, "y": 1170, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Run UP 1.aseprite",
+    "frame": { "x": 64, "y": 1170, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Run UP 2.aseprite",
+    "frame": { "x": 128, "y": 1170, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Run UP 3.aseprite",
+    "frame": { "x": 192, "y": 1170, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Run UP 4.aseprite",
+    "frame": { "x": 256, "y": 1170, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Run UP 5.aseprite",
+    "frame": { "x": 320, "y": 1170, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Run UP 6.aseprite",
+    "frame": { "x": 384, "y": 1170, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Run UP 7.aseprite",
+    "frame": { "x": 448, "y": 1170, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Chop Up 0.aseprite",
+    "frame": { "x": 0, "y": 1235, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Chop Up 1.aseprite",
+    "frame": { "x": 64, "y": 1235, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Chop Up 2.aseprite",
+    "frame": { "x": 128, "y": 1235, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Chop Up 3.aseprite",
+    "frame": { "x": 192, "y": 1235, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Attack Down 0.aseprite",
+    "frame": { "x": 0, "y": 1300, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Attack Down 1.aseprite",
+    "frame": { "x": 64, "y": 1300, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Attack Down 2.aseprite",
+    "frame": { "x": 128, "y": 1300, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Attack Down 3.aseprite",
+    "frame": { "x": 192, "y": 1300, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Attack Down 4.aseprite",
+    "frame": { "x": 256, "y": 1300, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Attack Down 5.aseprite",
+    "frame": { "x": 320, "y": 1300, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Attack Down 6.aseprite",
+    "frame": { "x": 384, "y": 1300, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Roll Up 0.aseprite",
+    "frame": { "x": 0, "y": 1365, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Roll Up 1.aseprite",
+    "frame": { "x": 64, "y": 1365, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Roll Up 2.aseprite",
+    "frame": { "x": 128, "y": 1365, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Roll Up 3.aseprite",
+    "frame": { "x": 192, "y": 1365, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Roll Up 4.aseprite",
+    "frame": { "x": 256, "y": 1365, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Roll Up 5.aseprite",
+    "frame": { "x": 320, "y": 1365, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Roll Up 6.aseprite",
+    "frame": { "x": 384, "y": 1365, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Roll Up 7.aseprite",
+    "frame": { "x": 448, "y": 1365, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Death 0.aseprite",
+    "frame": { "x": 0, "y": 1430, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Death 1.aseprite",
+    "frame": { "x": 64, "y": 1430, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Death 2.aseprite",
+    "frame": { "x": 128, "y": 1430, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Death 3.aseprite",
+    "frame": { "x": 192, "y": 1430, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Death 4.aseprite",
+    "frame": { "x": 256, "y": 1430, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Death 5.aseprite",
+    "frame": { "x": 320, "y": 1430, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Death 6.aseprite",
+    "frame": { "x": 384, "y": 1430, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Death 7.aseprite",
+    "frame": { "x": 448, "y": 1430, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Death 8.aseprite",
+    "frame": { "x": 512, "y": 1430, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Death 9.aseprite",
+    "frame": { "x": 576, "y": 1430, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Death 10.aseprite",
+    "frame": { "x": 640, "y": 1430, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Death 11.aseprite",
+    "frame": { "x": 704, "y": 1430, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "04 Stranded - Pack 4 #Death 12.aseprite",
+    "frame": { "x": 768, "y": 1430, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   }
+ ],
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.2.40-x64",
+  "image": "player test.png",
+  "format": "RGBA8888",
+  "size": { "w": 1536, "h": 1495 },
+  "scale": "1",
+  "frameTags": [
+   { "name": "Idle Down", "from": 1, "to": 12, "direction": "forward" },
+   { "name": "Heal", "from": 13, "to": 36, "direction": "forward" },
+   { "name": "Defence", "from": 37, "to": 60, "direction": "forward" },
+   { "name": "Flames", "from": 61, "to": 84, "direction": "forward" },
+   { "name": "Buff", "from": 85, "to": 108, "direction": "forward" },
+   { "name": "Move Down", "from": 109, "to": 116, "direction": "forward" },
+   { "name": "Run Down", "from": 117, "to": 124, "direction": "forward" },
+   { "name": "Chop Down", "from": 125, "to": 128, "direction": "forward" },
+   { "name": "Slash Down", "from": 129, "to": 135, "direction": "forward" },
+   { "name": "Roll Down", "from": 136, "to": 143, "direction": "forward" },
+   { "name": "Idle L/R", "from": 144, "to": 155, "direction": "forward" },
+   { "name": "L/R move", "from": 156, "to": 163, "direction": "forward" },
+   { "name": "L/R Run", "from": 164, "to": 171, "direction": "forward" },
+   { "name": "L/R Roll", "from": 172, "to": 177, "direction": "forward" },
+   { "name": "L/R CHop", "from": 178, "to": 181, "direction": "forward" },
+   { "name": "L/R Slash", "from": 182, "to": 186, "direction": "forward" },
+   { "name": "Idle Up", "from": 187, "to": 198, "direction": "forward" },
+   { "name": "Move Up", "from": 199, "to": 206, "direction": "forward" },
+   { "name": "Run UP", "from": 207, "to": 214, "direction": "forward" },
+   { "name": "Chop Up", "from": 215, "to": 218, "direction": "forward" },
+   { "name": "Attack Down", "from": 219, "to": 225, "direction": "forward" },
+   { "name": "Roll Up", "from": 226, "to": 233, "direction": "forward" },
+   { "name": "Death", "from": 234, "to": 246, "direction": "forward" }
+  ],
+  "layers": [
+   { "name": "Bag", "opacity": 255, "blendMode": "normal" },
+   { "name": "Body", "opacity": 255, "blendMode": "normal" },
+   { "name": "Poncho", "opacity": 255, "blendMode": "normal" },
+   { "name": "Head", "opacity": 255, "blendMode": "normal" },
+   { "name": "Weapons" },
+   { "name": "Sword", "group": "Weapons", "opacity": 255, "blendMode": "normal" },
+   { "name": "VFX", "opacity": 255, "blendMode": "normal" },
+   { "name": "Spells" },
+   { "name": "Heal VFX", "group": "Spells", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}

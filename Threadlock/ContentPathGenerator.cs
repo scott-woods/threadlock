@@ -107,6 +107,11 @@ namespace Nez
 
 		public static class Data
 		{
+			public static class Dialogue
+			{
+				public const string Odran = @"Content\Data\Dialogue\Odran.json";
+			}
+
 			public const string Areas = @"Content\Data\Areas.json";
 			public const string DungeonFlows = @"Content\Data\DungeonFlows.json";
 			public const string DungeonFlows2 = @"Content\Data\DungeonFlows2.json";
@@ -228,7 +233,11 @@ namespace Nez
 				public static class Player
 				{
 					public const string Gun1 = @"Content\Textures\Characters\Player\gun1.png";
+					public const string Playertestconfig = @"Content\Textures\Characters\Player\player test config.json";
+					public const string Playertest = @"Content\Textures\Characters\Player\player test.png";
 					public const string Player_gun_projectile = @"Content\Textures\Characters\Player\player_gun_projectile.png";
+					public const string PlayerMain = @"Content\Textures\Characters\Player\PlayerMain.png";
+					public const string PlayerMainConfig = @"Content\Textures\Characters\Player\PlayerMainConfig.json";
 					public const string Sci_fi_player_no_sword = @"Content\Textures\Characters\Player\sci_fi_player_no_sword.png";
 					public const string Sci_fi_player_with_sword = @"Content\Textures\Characters\Player\sci_fi_player_with_sword.png";
 				}

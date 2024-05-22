@@ -271,10 +271,10 @@
                 17
             ],
             "scale": 1.5,
-            "selectedLayer": 3,
+            "selectedLayer": 4,
             "viewCenter": {
-                "x": 237.99999999999997,
-                "y": 128
+                "x": 336.6666666666667,
+                "y": 136
             }
         },
         "Tilemaps/FairyForest/forest_test_3.tmx": {
@@ -691,8 +691,8 @@
             "scale": 1,
             "selectedLayer": 8,
             "viewCenter": {
-                "x": 263.5,
-                "y": 287
+                "x": 221,
+                "y": 286
             }
         },
         "Tilemaps/Forge/forge_test.tmx": {
@@ -718,8 +718,8 @@
             "scale": 1.5,
             "selectedLayer": 9,
             "viewCenter": {
-                "x": 183.33333333333334,
-                "y": 55.33333333333334
+                "x": 108.66666666666666,
+                "y": 251.33333333333331
             }
         },
         "Tilemaps/enemy_test_zone.tmx": {

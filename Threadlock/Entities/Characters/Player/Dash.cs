@@ -54,8 +54,8 @@ namespace Threadlock.Entities.Characters.Player
             //play sound
             Game1.AudioManager.PlaySound(Content.Audio.Sounds.Player_dash);
             var animationName = $"Roll{DirectionHelper.GetDirectionStringByVector(_velocityComponent.Direction)}";
-            if (!Entity.TryGetComponent<Sword>(out var swordAttack))
-                animationName += "NoSword";
+            //if (!Entity.TryGetComponent<Sword>(out var swordAttack))
+            //    animationName += "NoSword";
 
             //start animation
             _spriteAnimator.Color = Color.White * .8f;

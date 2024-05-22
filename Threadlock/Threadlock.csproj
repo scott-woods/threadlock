@@ -49,6 +49,7 @@
     <None Remove="Content\Audio\Sounds\Socket_Remove.wav" />
     <None Remove="Content\CompiledEffects\SpriteOutline.fxb" />
     <None Remove="Content\Data\Areas.json" />
+    <None Remove="Content\Data\Dialogue\Odran.json" />
     <None Remove="Content\Data\DungeonFlows2.json" />
     <None Remove="Content\Data\DungeonFlows3.json" />
     <None Remove="Content\Data\DungeonFlows4.json" />

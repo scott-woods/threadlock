@@ -1,0 +1,7 @@
+{
+  "Generic1": {
+    "Priority": 0,
+    "Requirements": ["HasWeaponEquipped:Gun"],
+    "Dialogue": "Hello![wait]I'mma steal yo bish."
+  }
+}

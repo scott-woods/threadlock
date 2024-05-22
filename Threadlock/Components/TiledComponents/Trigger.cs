@@ -79,14 +79,17 @@ namespace Threadlock.Components.TiledComponents
             }
             else if (TriggerType == TriggerType.Interact)
             {
-                Flags.SetFlagExclusive(ref Collider.PhysicsLayer, PhysicsLayers.PromptTrigger);
-                Collider.CollidesWithLayers = 0;
-                Flags.SetFlag(ref Collider.CollidesWithLayers, PhysicsLayers.PlayerCollider);
-                Flags.SetFlag(ref Collider.CollidesWithLayers, PhysicsLayers.PlayerHurtbox);
+                var interactable = Entity.AddComponent(new Interactable(Collider, PromptOffset));
+                interactable.OnInteracted += () => Game1.StartCoroutine(HandleTriggered());
 
-                //interact triggers get a button prompt
-                _buttonPrompt = Entity.AddComponent(new ButtonPrompt(Collider, PromptOffset));
-                _buttonPrompt.OnClicked += () => Game1.StartCoroutine(HandleTriggered());
+                //Flags.SetFlagExclusive(ref Collider.PhysicsLayer, PhysicsLayers.PromptTrigger);
+                //Collider.CollidesWithLayers = 0;
+                //Flags.SetFlag(ref Collider.CollidesWithLayers, PhysicsLayers.PlayerCollider);
+                //Flags.SetFlag(ref Collider.CollidesWithLayers, PhysicsLayers.PlayerHurtbox);
+
+                ////interact triggers get a button prompt
+                //_buttonPrompt = Entity.AddComponent(new ButtonPrompt(Collider, PromptOffset));
+                //_buttonPrompt.OnClicked += () => Game1.StartCoroutine(HandleTriggered());
             }
         }
 

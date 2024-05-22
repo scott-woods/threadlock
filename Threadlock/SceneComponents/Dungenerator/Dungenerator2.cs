@@ -873,9 +873,11 @@ namespace Threadlock.SceneComponents.Dungenerator
             if (pathfindResults == null || pathfindResults.Count <= 0)
                 return false;
 
+            var pathPoints = pathfindResults.Select(p => (p.ToVector2() * 16) + graphOffset).ToList();
+
             //add to final path in proper order
             finalPath.AddRange(beginningPath);
-            finalPath.AddRange(pathfindResults.Select(p => (p.ToVector2() * 16) + graphOffset));
+            finalPath.AddRange(pathPoints);
             finalPath.AddRange(endPath);
 
             ////add pathfinding results to final path

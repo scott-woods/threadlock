@@ -1,0 +1,2263 @@
+{ "frames": [
+   {
+    "filename": "PlayerMain #IdleDown 0.aseprite",
+    "frame": { "x": 0, "y": 0, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #IdleDown 1.aseprite",
+    "frame": { "x": 64, "y": 0, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #IdleDown 2.aseprite",
+    "frame": { "x": 128, "y": 0, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #IdleDown 3.aseprite",
+    "frame": { "x": 192, "y": 0, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #IdleDown 4.aseprite",
+    "frame": { "x": 256, "y": 0, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #IdleDown 5.aseprite",
+    "frame": { "x": 320, "y": 0, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #IdleDown 6.aseprite",
+    "frame": { "x": 384, "y": 0, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #IdleDown 7.aseprite",
+    "frame": { "x": 448, "y": 0, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #IdleDown 8.aseprite",
+    "frame": { "x": 512, "y": 0, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #IdleDown 9.aseprite",
+    "frame": { "x": 576, "y": 0, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #IdleDown 10.aseprite",
+    "frame": { "x": 640, "y": 0, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #IdleDown 11.aseprite",
+    "frame": { "x": 704, "y": 0, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Heal 0.aseprite",
+    "frame": { "x": 0, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Heal 1.aseprite",
+    "frame": { "x": 64, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Heal 2.aseprite",
+    "frame": { "x": 128, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Heal 3.aseprite",
+    "frame": { "x": 192, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Heal 4.aseprite",
+    "frame": { "x": 256, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Heal 5.aseprite",
+    "frame": { "x": 320, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Heal 6.aseprite",
+    "frame": { "x": 384, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Heal 7.aseprite",
+    "frame": { "x": 448, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Heal 8.aseprite",
+    "frame": { "x": 512, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Heal 9.aseprite",
+    "frame": { "x": 576, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Heal 10.aseprite",
+    "frame": { "x": 640, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Heal 11.aseprite",
+    "frame": { "x": 704, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Heal 12.aseprite",
+    "frame": { "x": 768, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Heal 13.aseprite",
+    "frame": { "x": 832, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Heal 14.aseprite",
+    "frame": { "x": 896, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Heal 15.aseprite",
+    "frame": { "x": 960, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Heal 16.aseprite",
+    "frame": { "x": 1024, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Heal 17.aseprite",
+    "frame": { "x": 1088, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Heal 18.aseprite",
+    "frame": { "x": 1152, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Heal 19.aseprite",
+    "frame": { "x": 1216, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Heal 20.aseprite",
+    "frame": { "x": 1280, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Heal 21.aseprite",
+    "frame": { "x": 1344, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Heal 22.aseprite",
+    "frame": { "x": 1408, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Heal 23.aseprite",
+    "frame": { "x": 1472, "y": 65, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Defence 0.aseprite",
+    "frame": { "x": 0, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Defence 1.aseprite",
+    "frame": { "x": 64, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Defence 2.aseprite",
+    "frame": { "x": 128, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Defence 3.aseprite",
+    "frame": { "x": 192, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Defence 4.aseprite",
+    "frame": { "x": 256, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Defence 5.aseprite",
+    "frame": { "x": 320, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Defence 6.aseprite",
+    "frame": { "x": 384, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Defence 7.aseprite",
+    "frame": { "x": 448, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Defence 8.aseprite",
+    "frame": { "x": 512, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Defence 9.aseprite",
+    "frame": { "x": 576, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Defence 10.aseprite",
+    "frame": { "x": 640, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Defence 11.aseprite",
+    "frame": { "x": 704, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Defence 12.aseprite",
+    "frame": { "x": 768, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Defence 13.aseprite",
+    "frame": { "x": 832, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Defence 14.aseprite",
+    "frame": { "x": 896, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Defence 15.aseprite",
+    "frame": { "x": 960, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Defence 16.aseprite",
+    "frame": { "x": 1024, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Defence 17.aseprite",
+    "frame": { "x": 1088, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Defence 18.aseprite",
+    "frame": { "x": 1152, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Defence 19.aseprite",
+    "frame": { "x": 1216, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Defence 20.aseprite",
+    "frame": { "x": 1280, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Defence 21.aseprite",
+    "frame": { "x": 1344, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Defence 22.aseprite",
+    "frame": { "x": 1408, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Defence 23.aseprite",
+    "frame": { "x": 1472, "y": 130, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Flames 0.aseprite",
+    "frame": { "x": 0, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Flames 1.aseprite",
+    "frame": { "x": 64, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Flames 2.aseprite",
+    "frame": { "x": 128, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Flames 3.aseprite",
+    "frame": { "x": 192, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Flames 4.aseprite",
+    "frame": { "x": 256, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Flames 5.aseprite",
+    "frame": { "x": 320, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Flames 6.aseprite",
+    "frame": { "x": 384, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Flames 7.aseprite",
+    "frame": { "x": 448, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Flames 8.aseprite",
+    "frame": { "x": 512, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Flames 9.aseprite",
+    "frame": { "x": 576, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Flames 10.aseprite",
+    "frame": { "x": 640, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Flames 11.aseprite",
+    "frame": { "x": 704, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Flames 12.aseprite",
+    "frame": { "x": 768, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Flames 13.aseprite",
+    "frame": { "x": 832, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Flames 14.aseprite",
+    "frame": { "x": 896, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Flames 15.aseprite",
+    "frame": { "x": 960, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Flames 16.aseprite",
+    "frame": { "x": 1024, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Flames 17.aseprite",
+    "frame": { "x": 1088, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Flames 18.aseprite",
+    "frame": { "x": 1152, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Flames 19.aseprite",
+    "frame": { "x": 1216, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Flames 20.aseprite",
+    "frame": { "x": 1280, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Flames 21.aseprite",
+    "frame": { "x": 1344, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Flames 22.aseprite",
+    "frame": { "x": 1408, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Flames 23.aseprite",
+    "frame": { "x": 1472, "y": 195, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Buff 0.aseprite",
+    "frame": { "x": 0, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Buff 1.aseprite",
+    "frame": { "x": 64, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Buff 2.aseprite",
+    "frame": { "x": 128, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Buff 3.aseprite",
+    "frame": { "x": 192, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Buff 4.aseprite",
+    "frame": { "x": 256, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Buff 5.aseprite",
+    "frame": { "x": 320, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Buff 6.aseprite",
+    "frame": { "x": 384, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Buff 7.aseprite",
+    "frame": { "x": 448, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Buff 8.aseprite",
+    "frame": { "x": 512, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Buff 9.aseprite",
+    "frame": { "x": 576, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Buff 10.aseprite",
+    "frame": { "x": 640, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Buff 11.aseprite",
+    "frame": { "x": 704, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Buff 12.aseprite",
+    "frame": { "x": 768, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Buff 13.aseprite",
+    "frame": { "x": 832, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Buff 14.aseprite",
+    "frame": { "x": 896, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Buff 15.aseprite",
+    "frame": { "x": 960, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Buff 16.aseprite",
+    "frame": { "x": 1024, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Buff 17.aseprite",
+    "frame": { "x": 1088, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Buff 18.aseprite",
+    "frame": { "x": 1152, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Buff 19.aseprite",
+    "frame": { "x": 1216, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Buff 20.aseprite",
+    "frame": { "x": 1280, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Buff 21.aseprite",
+    "frame": { "x": 1344, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Buff 22.aseprite",
+    "frame": { "x": 1408, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Buff 23.aseprite",
+    "frame": { "x": 1472, "y": 260, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #WalkDown 0.aseprite",
+    "frame": { "x": 0, "y": 325, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #WalkDown 1.aseprite",
+    "frame": { "x": 64, "y": 325, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #WalkDown 2.aseprite",
+    "frame": { "x": 128, "y": 325, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #WalkDown 3.aseprite",
+    "frame": { "x": 192, "y": 325, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #WalkDown 4.aseprite",
+    "frame": { "x": 256, "y": 325, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #WalkDown 5.aseprite",
+    "frame": { "x": 320, "y": 325, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #WalkDown 6.aseprite",
+    "frame": { "x": 384, "y": 325, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #WalkDown 7.aseprite",
+    "frame": { "x": 448, "y": 325, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #RunDown 0.aseprite",
+    "frame": { "x": 0, "y": 390, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #RunDown 1.aseprite",
+    "frame": { "x": 64, "y": 390, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #RunDown 2.aseprite",
+    "frame": { "x": 128, "y": 390, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #RunDown 3.aseprite",
+    "frame": { "x": 192, "y": 390, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #RunDown 4.aseprite",
+    "frame": { "x": 256, "y": 390, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #RunDown 5.aseprite",
+    "frame": { "x": 320, "y": 390, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #RunDown 6.aseprite",
+    "frame": { "x": 384, "y": 390, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #RunDown 7.aseprite",
+    "frame": { "x": 448, "y": 390, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #ThrustDown 0.aseprite",
+    "frame": { "x": 0, "y": 455, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #ThrustDown 1.aseprite",
+    "frame": { "x": 64, "y": 455, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #ThrustDown 2.aseprite",
+    "frame": { "x": 128, "y": 455, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #ThrustDown 3.aseprite",
+    "frame": { "x": 192, "y": 455, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #SlashDown 0.aseprite",
+    "frame": { "x": 0, "y": 520, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #SlashDown 1.aseprite",
+    "frame": { "x": 64, "y": 520, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #SlashDown 2.aseprite",
+    "frame": { "x": 128, "y": 520, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #SlashDown 3.aseprite",
+    "frame": { "x": 192, "y": 520, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #SlashDown 4.aseprite",
+    "frame": { "x": 256, "y": 520, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #SlashDown 5.aseprite",
+    "frame": { "x": 320, "y": 520, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #SlashDown 6.aseprite",
+    "frame": { "x": 384, "y": 520, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #RollDown 0.aseprite",
+    "frame": { "x": 0, "y": 585, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #RollDown 1.aseprite",
+    "frame": { "x": 64, "y": 585, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #RollDown 2.aseprite",
+    "frame": { "x": 128, "y": 585, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #RollDown 3.aseprite",
+    "frame": { "x": 192, "y": 585, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #RollDown 4.aseprite",
+    "frame": { "x": 256, "y": 585, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #RollDown 5.aseprite",
+    "frame": { "x": 320, "y": 585, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #RollDown 6.aseprite",
+    "frame": { "x": 384, "y": 585, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #RollDown 7.aseprite",
+    "frame": { "x": 448, "y": 585, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Idle 0.aseprite",
+    "frame": { "x": 0, "y": 650, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Idle 1.aseprite",
+    "frame": { "x": 64, "y": 650, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Idle 2.aseprite",
+    "frame": { "x": 128, "y": 650, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Idle 3.aseprite",
+    "frame": { "x": 192, "y": 650, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Idle 4.aseprite",
+    "frame": { "x": 256, "y": 650, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Idle 5.aseprite",
+    "frame": { "x": 320, "y": 650, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Idle 6.aseprite",
+    "frame": { "x": 384, "y": 650, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Idle 7.aseprite",
+    "frame": { "x": 448, "y": 650, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Idle 8.aseprite",
+    "frame": { "x": 512, "y": 650, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Idle 9.aseprite",
+    "frame": { "x": 576, "y": 650, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Idle 10.aseprite",
+    "frame": { "x": 640, "y": 650, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Idle 11.aseprite",
+    "frame": { "x": 704, "y": 650, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Walk 0.aseprite",
+    "frame": { "x": 0, "y": 715, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Walk 1.aseprite",
+    "frame": { "x": 64, "y": 715, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Walk 2.aseprite",
+    "frame": { "x": 128, "y": 715, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Walk 3.aseprite",
+    "frame": { "x": 192, "y": 715, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Walk 4.aseprite",
+    "frame": { "x": 256, "y": 715, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Walk 5.aseprite",
+    "frame": { "x": 320, "y": 715, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Walk 6.aseprite",
+    "frame": { "x": 384, "y": 715, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Walk 7.aseprite",
+    "frame": { "x": 448, "y": 715, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Run 0.aseprite",
+    "frame": { "x": 0, "y": 780, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Run 1.aseprite",
+    "frame": { "x": 64, "y": 780, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Run 2.aseprite",
+    "frame": { "x": 128, "y": 780, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Run 3.aseprite",
+    "frame": { "x": 192, "y": 780, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Run 4.aseprite",
+    "frame": { "x": 256, "y": 780, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Run 5.aseprite",
+    "frame": { "x": 320, "y": 780, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Run 6.aseprite",
+    "frame": { "x": 384, "y": 780, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Run 7.aseprite",
+    "frame": { "x": 448, "y": 780, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Roll 0.aseprite",
+    "frame": { "x": 0, "y": 845, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Roll 1.aseprite",
+    "frame": { "x": 64, "y": 845, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Roll 2.aseprite",
+    "frame": { "x": 128, "y": 845, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Roll 3.aseprite",
+    "frame": { "x": 192, "y": 845, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Roll 4.aseprite",
+    "frame": { "x": 256, "y": 845, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Roll 5.aseprite",
+    "frame": { "x": 320, "y": 845, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Thrust 0.aseprite",
+    "frame": { "x": 0, "y": 910, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Thrust 1.aseprite",
+    "frame": { "x": 64, "y": 910, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Thrust 2.aseprite",
+    "frame": { "x": 128, "y": 910, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Thrust 3.aseprite",
+    "frame": { "x": 192, "y": 910, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Slash 0.aseprite",
+    "frame": { "x": 0, "y": 975, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Slash 1.aseprite",
+    "frame": { "x": 64, "y": 975, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Slash 2.aseprite",
+    "frame": { "x": 128, "y": 975, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Slash 3.aseprite",
+    "frame": { "x": 192, "y": 975, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Slash 4.aseprite",
+    "frame": { "x": 256, "y": 975, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #IdleUp 0.aseprite",
+    "frame": { "x": 0, "y": 1040, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #IdleUp 1.aseprite",
+    "frame": { "x": 64, "y": 1040, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #IdleUp 2.aseprite",
+    "frame": { "x": 128, "y": 1040, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #IdleUp 3.aseprite",
+    "frame": { "x": 192, "y": 1040, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #IdleUp 4.aseprite",
+    "frame": { "x": 256, "y": 1040, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #IdleUp 5.aseprite",
+    "frame": { "x": 320, "y": 1040, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #IdleUp 6.aseprite",
+    "frame": { "x": 384, "y": 1040, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #IdleUp 7.aseprite",
+    "frame": { "x": 448, "y": 1040, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #IdleUp 8.aseprite",
+    "frame": { "x": 512, "y": 1040, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #IdleUp 9.aseprite",
+    "frame": { "x": 576, "y": 1040, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #IdleUp 10.aseprite",
+    "frame": { "x": 640, "y": 1040, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #IdleUp 11.aseprite",
+    "frame": { "x": 704, "y": 1040, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #WalkUp 0.aseprite",
+    "frame": { "x": 0, "y": 1105, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #WalkUp 1.aseprite",
+    "frame": { "x": 64, "y": 1105, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #WalkUp 2.aseprite",
+    "frame": { "x": 128, "y": 1105, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #WalkUp 3.aseprite",
+    "frame": { "x": 192, "y": 1105, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #WalkUp 4.aseprite",
+    "frame": { "x": 256, "y": 1105, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #WalkUp 5.aseprite",
+    "frame": { "x": 320, "y": 1105, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #WalkUp 6.aseprite",
+    "frame": { "x": 384, "y": 1105, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #WalkUp 7.aseprite",
+    "frame": { "x": 448, "y": 1105, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #RunUp 0.aseprite",
+    "frame": { "x": 0, "y": 1170, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #RunUp 1.aseprite",
+    "frame": { "x": 64, "y": 1170, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #RunUp 2.aseprite",
+    "frame": { "x": 128, "y": 1170, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #RunUp 3.aseprite",
+    "frame": { "x": 192, "y": 1170, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #RunUp 4.aseprite",
+    "frame": { "x": 256, "y": 1170, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #RunUp 5.aseprite",
+    "frame": { "x": 320, "y": 1170, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #RunUp 6.aseprite",
+    "frame": { "x": 384, "y": 1170, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #RunUp 7.aseprite",
+    "frame": { "x": 448, "y": 1170, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #ThrustUp 0.aseprite",
+    "frame": { "x": 0, "y": 1235, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #ThrustUp 1.aseprite",
+    "frame": { "x": 64, "y": 1235, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #ThrustUp 2.aseprite",
+    "frame": { "x": 128, "y": 1235, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #ThrustUp 3.aseprite",
+    "frame": { "x": 192, "y": 1235, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #SlashUp 0.aseprite",
+    "frame": { "x": 0, "y": 1300, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #SlashUp 1.aseprite",
+    "frame": { "x": 64, "y": 1300, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #SlashUp 2.aseprite",
+    "frame": { "x": 128, "y": 1300, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #SlashUp 3.aseprite",
+    "frame": { "x": 192, "y": 1300, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #SlashUp 4.aseprite",
+    "frame": { "x": 256, "y": 1300, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #SlashUp 5.aseprite",
+    "frame": { "x": 320, "y": 1300, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #SlashUp 6.aseprite",
+    "frame": { "x": 384, "y": 1300, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #RollUp 0.aseprite",
+    "frame": { "x": 0, "y": 1365, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #RollUp 1.aseprite",
+    "frame": { "x": 64, "y": 1365, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #RollUp 2.aseprite",
+    "frame": { "x": 128, "y": 1365, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #RollUp 3.aseprite",
+    "frame": { "x": 192, "y": 1365, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #RollUp 4.aseprite",
+    "frame": { "x": 256, "y": 1365, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #RollUp 5.aseprite",
+    "frame": { "x": 320, "y": 1365, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #RollUp 6.aseprite",
+    "frame": { "x": 384, "y": 1365, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #RollUp 7.aseprite",
+    "frame": { "x": 448, "y": 1365, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Die 0.aseprite",
+    "frame": { "x": 0, "y": 1430, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Die 1.aseprite",
+    "frame": { "x": 64, "y": 1430, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Die 2.aseprite",
+    "frame": { "x": 128, "y": 1430, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Die 3.aseprite",
+    "frame": { "x": 192, "y": 1430, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Die 4.aseprite",
+    "frame": { "x": 256, "y": 1430, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Die 5.aseprite",
+    "frame": { "x": 320, "y": 1430, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Die 6.aseprite",
+    "frame": { "x": 384, "y": 1430, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Die 7.aseprite",
+    "frame": { "x": 448, "y": 1430, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Die 8.aseprite",
+    "frame": { "x": 512, "y": 1430, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Die 9.aseprite",
+    "frame": { "x": 576, "y": 1430, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Die 10.aseprite",
+    "frame": { "x": 640, "y": 1430, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Die 11.aseprite",
+    "frame": { "x": 704, "y": 1430, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   },
+   {
+    "filename": "PlayerMain #Die 12.aseprite",
+    "frame": { "x": 768, "y": 1430, "w": 64, "h": 65 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 73, "y": 54, "w": 64, "h": 65 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 75
+   }
+ ],
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.2.40-x64",
+  "image": "PlayerMain2.png",
+  "format": "RGBA8888",
+  "size": { "w": 1536, "h": 1495 },
+  "scale": "1",
+  "frameTags": [
+   { "name": "IdleDown", "from": 1, "to": 12, "direction": "forward" },
+   { "name": "Heal", "from": 13, "to": 36, "direction": "forward" },
+   { "name": "Defence", "from": 37, "to": 60, "direction": "forward" },
+   { "name": "Flames", "from": 61, "to": 84, "direction": "forward" },
+   { "name": "Buff", "from": 85, "to": 108, "direction": "forward" },
+   { "name": "WalkDown", "from": 109, "to": 116, "direction": "forward" },
+   { "name": "RunDown", "from": 117, "to": 124, "direction": "forward" },
+   { "name": "ThrustDown", "from": 125, "to": 128, "direction": "forward" },
+   { "name": "SlashDown", "from": 129, "to": 135, "direction": "forward" },
+   { "name": "RollDown", "from": 136, "to": 143, "direction": "forward" },
+   { "name": "Idle", "from": 144, "to": 155, "direction": "forward" },
+   { "name": "Walk", "from": 156, "to": 163, "direction": "forward" },
+   { "name": "Run", "from": 164, "to": 171, "direction": "forward" },
+   { "name": "Roll", "from": 172, "to": 177, "direction": "forward" },
+   { "name": "Thrust", "from": 178, "to": 181, "direction": "forward" },
+   { "name": "Slash", "from": 182, "to": 186, "direction": "forward" },
+   { "name": "IdleUp", "from": 187, "to": 198, "direction": "forward" },
+   { "name": "WalkUp", "from": 199, "to": 206, "direction": "forward" },
+   { "name": "RunUp", "from": 207, "to": 214, "direction": "forward" },
+   { "name": "ThrustUp", "from": 215, "to": 218, "direction": "forward" },
+   { "name": "SlashUp", "from": 219, "to": 225, "direction": "forward" },
+   { "name": "RollUp", "from": 226, "to": 233, "direction": "forward" },
+   { "name": "Die", "from": 234, "to": 246, "direction": "forward" }
+  ],
+  "layers": [
+   { "name": "Weapons" },
+   { "name": "Sword", "group": "Weapons", "opacity": 255, "blendMode": "normal" },
+   { "name": "Body", "opacity": 255, "blendMode": "normal" },
+   { "name": "Poncho", "opacity": 255, "blendMode": "normal" },
+   { "name": "Head", "opacity": 255, "blendMode": "normal" },
+   { "name": "VFX", "opacity": 255, "blendMode": "normal" },
+   { "name": "Spells" },
+   { "name": "Heal VFX", "group": "Spells", "opacity": 255, "blendMode": "normal" },
+   { "name": "Bag", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}
