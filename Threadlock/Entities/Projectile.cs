@@ -133,6 +133,35 @@ namespace Threadlock.Entities
             //}
         }
 
+        public void Reflect()
+        {
+            //reverse flags
+            if (Flags.IsUnshiftedFlagSet(_hitbox.PhysicsLayer, PhysicsLayers.PlayerHitbox))
+            {
+                Flags.UnsetFlag(ref _hitbox.PhysicsLayer, PhysicsLayers.PlayerHitbox);
+                Flags.SetFlag(ref _hitbox.PhysicsLayer, PhysicsLayers.EnemyHitbox);
+            }
+            else if (Flags.IsUnshiftedFlagSet(_hitbox.PhysicsLayer, PhysicsLayers.EnemyHitbox))
+            {
+                Flags.UnsetFlag(ref _hitbox.PhysicsLayer, PhysicsLayers.EnemyHitbox);
+                Flags.SetFlag(ref _hitbox.PhysicsLayer, PhysicsLayers.PlayerHitbox);
+            }
+
+            if (Flags.IsUnshiftedFlagSet(_hitbox.CollidesWithLayers, PhysicsLayers.PlayerHurtbox))
+            {
+                Flags.UnsetFlag(ref _hitbox.CollidesWithLayers, PhysicsLayers.PlayerHurtbox);
+                Flags.SetFlag(ref _hitbox.CollidesWithLayers, PhysicsLayers.EnemyHurtbox);
+            }
+            else if (Flags.IsUnshiftedFlagSet(_hitbox.CollidesWithLayers, PhysicsLayers.EnemyHurtbox))
+            {
+                Flags.UnsetFlag(ref _hitbox.CollidesWithLayers, PhysicsLayers.EnemyHurtbox);
+                Flags.SetFlag(ref _hitbox.CollidesWithLayers, PhysicsLayers.PlayerHurtbox);
+            }
+
+            //reverse direction
+            _direction = _direction * -1;
+        }
+
         void Burst()
         {
             Game1.Schedule(.1f, timer =>

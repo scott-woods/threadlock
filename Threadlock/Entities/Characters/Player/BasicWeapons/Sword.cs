@@ -22,6 +22,8 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
     public class Sword : BasicWeapon
     {
         //constants
+        const float _parryWindow = .09f;
+        const float _parryDuration = .5f;
         const float _moveSpeed = 150f;
         const float _finisherMoveSpeed = 200f;
         const int _damage = 1;
@@ -44,11 +46,14 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
         //passed components
         SpriteAnimator _animator;
         VelocityComponent _velocityComponent;
+        Hurtbox _hurtbox;
 
         //added components
         CircleHitbox _hitbox;
+        Collider _parryCollider;
 
         ICoroutine _attackCoroutine;
+        ICoroutine _parryCoroutine;
 
         #region LIFECYCLE
 
@@ -69,6 +74,13 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
 
             _animator = Entity.GetComponent<SpriteAnimator>();
             _velocityComponent = Entity.GetComponent<VelocityComponent>();
+            _hurtbox = Entity.GetComponent<Hurtbox>();
+
+            _parryCollider = Entity.AddComponent(_hurtbox.Collider.Clone() as Collider);
+            Flags.SetFlagExclusive(ref _parryCollider.PhysicsLayer, PhysicsLayers.None);
+            Flags.SetFlagExclusive(ref _parryCollider.CollidesWithLayers, PhysicsLayers.EnemyHitbox);
+            _parryCollider.IsTrigger = true;
+            _parryCollider.SetEnabled(false);
         }
 
         #endregion
@@ -80,6 +92,11 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
             if (Controls.Instance.Melee.IsPressed)
             {
                 _attackCoroutine = Game1.StartCoroutine(StartMeleeAttack(1, Player.GetFacingDirection()));
+                return true;
+            }
+            else if (Controls.Instance.AltAttack.IsPressed)
+            {
+                _parryCoroutine = Game1.StartCoroutine(Parry());
                 return true;
             }
 
@@ -97,9 +114,14 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
             _hitbox.SetEnabled(false);
             _hitbox.PushForce = _normalPushForce;
 
+            //parry collider
+            _parryCollider.SetEnabled(false);
+
             //coroutines
             _attackCoroutine?.Stop();
             _attackCoroutine = null;
+            _parryCoroutine?.Stop();
+            _parryCoroutine = null;
         }
 
         #endregion
@@ -172,6 +194,70 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
                 _attackCoroutine = Game1.StartCoroutine(StartMeleeAttack(comboCount + 1, nextAttackDir));
             else
                 CompletionEmitter.Emit(BasicWeaponEventTypes.Completed);
+        }
+
+        IEnumerator Parry()
+        {
+            //TODO: play parry start animation
+
+            //play sound
+            Game1.AudioManager.PlaySound(Nez.Content.Audio.Sounds._40_Block_04);
+
+            //disable hurtbox
+            _hurtbox.SetEnabled(false);
+
+            //enable parry collider
+            _parryCollider.SetEnabled(true);
+
+            //wait for the parry window time frame
+            var timer = 0f;
+            while (timer <= _parryDuration)
+            {
+                if (timer <= _parryWindow)
+                {
+                    //check for collisions with the parry collider
+                    if (_parryCollider.CollidesWithAny(out var collisionResult))
+                    {
+                        //check if the collider is a projectile
+                        if (collisionResult.Collider.Entity is Projectile projectile)
+                        {
+                            //reflect the projectile and play a sound
+                            projectile.Reflect();
+
+                            //play reflect sound
+                            Game1.AudioManager.PlaySound(Nez.Content.Audio.Sounds._19_Slash_01);
+
+                            //TODO: play successful parry animation
+
+                            //wait a moment before finishing up
+                            yield return Coroutine.WaitForSeconds(.25f);
+
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    //disable parry collider
+                    _parryCollider.SetEnabled(false);
+
+                    //re enable hurtbox
+                    _hurtbox.SetEnabled(true);
+                }
+
+                //increment timer
+                timer += Time.DeltaTime;
+                yield return null;
+            }
+
+            //disable parry collider
+            _parryCollider.SetEnabled(false);
+
+            //re enable hurtbox
+            _hurtbox.SetEnabled(true);
+
+            //return control to player
+            CompletionEmitter.Emit(BasicWeaponEventTypes.Completed);
         }
     }
 }

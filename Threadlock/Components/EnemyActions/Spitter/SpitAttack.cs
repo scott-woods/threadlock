@@ -2,8 +2,10 @@
 using Nez;
 using Nez.Sprites;
 using System.Collections;
+using Threadlock.Entities;
 using Threadlock.Entities.Characters.Enemies;
 using Threadlock.Helpers;
+using Threadlock.StaticData;
 
 namespace Threadlock.Components.EnemyActions.Spitter
 {
@@ -92,8 +94,10 @@ namespace Threadlock.Components.EnemyActions.Spitter
 
         void CreateProjectile(Vector2 dir)
         {
-            var projectile = Entity.Scene.AddEntity(new SpitAttackProjectile(dir));
+            var projectile = Entity.Scene.AddEntity(new Projectile(dir, Projectiles.SpitterProjectile));
             projectile.SetPosition(Enemy.Position);
+            //var projectile = Entity.Scene.AddEntity(new SpitAttackProjectile(dir));
+            //projectile.SetPosition(Enemy.Position);
         }
     }
 }

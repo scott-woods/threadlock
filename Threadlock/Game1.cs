@@ -64,7 +64,7 @@ namespace Threadlock
             //IMGUI
 
 
-            Scene = new Hub();
+            Scene = new EnemyTestZone();
         }
     }
 }

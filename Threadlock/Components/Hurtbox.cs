@@ -68,6 +68,20 @@ namespace Threadlock.Components
                 dc.Emitter.RemoveObserver(DeathEventTypes.Started, OnDeathStarted);
         }
 
+        public override void OnEnabled()
+        {
+            base.OnEnabled();
+
+            _collider?.SetEnabled(true);
+        }
+
+        public override void OnDisabled()
+        {
+            base.OnDisabled();
+
+            _collider?.SetEnabled(false);
+        }
+
         public void Update()
         {
             var colliders = Physics.BoxcastBroadphaseExcludingSelf(_collider, _collider.CollidesWithLayers);

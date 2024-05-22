@@ -38,6 +38,7 @@ namespace Nez
 				public const string _31_swoosh_sword_1 = @"Content\Audio\Sounds\31_swoosh_sword_1.wav";
 				public const string _32_Swoosh_sword_2 = @"Content\Audio\Sounds\32_Swoosh_sword_2.wav";
 				public const string _33_Swoosh_Sword_3 = @"Content\Audio\Sounds\33_Swoosh_Sword_3.wav";
+				public const string _40_Block_04 = @"Content\Audio\Sounds\40_Block_04.wav";
 				public const string _64_Get_hit_03 = @"Content\Audio\Sounds\64_Get_hit_03.wav";
 				public const string _69_Die_02 = @"Content\Audio\Sounds\69_Die_02.wav";
 				public const string _81_Whip_woosh_1 = @"Content\Audio\Sounds\81_Whip_woosh_1.wav";
@@ -107,11 +108,6 @@ namespace Nez
 
 		public static class Data
 		{
-			public static class Dialogue
-			{
-				public const string Odran = @"Content\Data\Dialogue\Odran.json";
-			}
-
 			public const string Areas = @"Content\Data\Areas.json";
 			public const string DungeonFlows = @"Content\Data\DungeonFlows.json";
 			public const string DungeonFlows2 = @"Content\Data\DungeonFlows2.json";
@@ -125,6 +121,11 @@ namespace Nez
 			public const string SimpleLoop = @"Content\Data\SimpleLoop.json";
 			public const string SingleRoom = @"Content\Data\SingleRoom.json";
 			public const string TestDialogue = @"Content\Data\TestDialogue.json";
+		}
+
+		public static class Dialogue
+		{
+			public const string Odran = @"Content\Dialogue\Odran.json";
 		}
 
 		public static class Effects
@@ -237,6 +238,8 @@ namespace Nez
 					public const string Playertest = @"Content\Textures\Characters\Player\player test.png";
 					public const string Player_gun_projectile = @"Content\Textures\Characters\Player\player_gun_projectile.png";
 					public const string PlayerMain = @"Content\Textures\Characters\Player\PlayerMain.png";
+					public const string PlayerMain2 = @"Content\Textures\Characters\Player\PlayerMain2.png";
+					public const string PlayerMain2Config = @"Content\Textures\Characters\Player\PlayerMain2Config.json";
 					public const string PlayerMainConfig = @"Content\Textures\Characters\Player\PlayerMainConfig.json";
 					public const string Sci_fi_player_no_sword = @"Content\Textures\Characters\Player\sci_fi_player_no_sword.png";
 					public const string Sci_fi_player_with_sword = @"Content\Textures\Characters\Player\sci_fi_player_with_sword.png";
@@ -248,6 +251,8 @@ namespace Nez
 					public const string Spitter_sheet = @"Content\Textures\Characters\Spitter\spitter_sheet.png";
 				}
 
+				public const string OdranSpriteConfig = @"Content\Textures\Characters\OdranSpriteConfig.json";
+				public const string OdranSpritesheet = @"Content\Textures\Characters\OdranSpritesheet.png";
 			}
 
 			public static class Decorations
