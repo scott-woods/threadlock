@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
+using Nez;
 using Nez.AI.FSM;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,15 +15,22 @@ namespace Threadlock.Entities.Characters.Player.States
     public class BasicAttackState : PlayerState
     {
         BasicWeapon _basicWeapon;
+        ICoroutine _performAttackCoroutine;
 
         public override void OnInitialized()
         {
             base.OnInitialized();
 
             _basicWeapon = _context.GetComponent<BasicWeapon>();
-            _basicWeapon.CompletionEmitter.AddObserver(BasicWeaponEventTypes.Completed, AttackCompletedCallback);
 
             _context.OnWeaponChanged += OnWeaponChanged;
+        }
+
+        public override void Begin()
+        {
+            base.Begin();
+
+            _performAttackCoroutine = Game1.StartCoroutine(PerformAttack());
         }
 
         public override void Update(float deltaTime)
@@ -39,7 +48,21 @@ namespace Threadlock.Entities.Characters.Player.States
         {
             base.End();
 
+            _performAttackCoroutine?.Stop();
+            _performAttackCoroutine = null;
+
             _basicWeapon.Reset();
+        }
+
+        IEnumerator PerformAttack()
+        {
+            yield return _basicWeapon.PerformQueuedAction();
+
+            //exit attack state
+            if (TryMove())
+                yield break;
+            else
+                _machine.ChangeState<Idle>();
         }
 
         void OnWeaponChanged(BasicWeapon weapon)
@@ -47,20 +70,10 @@ namespace Threadlock.Entities.Characters.Player.States
             if (_basicWeapon != null && _basicWeapon != weapon)
             {
                 _basicWeapon.Reset();
-                _basicWeapon.CompletionEmitter.RemoveObserver(BasicWeaponEventTypes.Completed, AttackCompletedCallback);
                 _basicWeapon = null;
             }
 
             _basicWeapon = weapon;
-            _basicWeapon.CompletionEmitter.AddObserver(BasicWeaponEventTypes.Completed, AttackCompletedCallback);
-        }
-
-        void AttackCompletedCallback()
-        {
-            if (TryMove())
-                return;
-            else
-                _machine.ChangeState<Idle>();
         }
     }
 }

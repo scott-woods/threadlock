@@ -22,5 +22,6 @@ namespace Threadlock.StaticData
         public const int Selectable = 11;
         public const int PromptTrigger = 12;
         public const int AreaTrigger = 13;
+        public const int LuteNoteExplosion = 14;
     }
 }

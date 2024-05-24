@@ -70,7 +70,7 @@ namespace Threadlock.Entities.Characters.Player
             _animator.SetRenderLayer(RenderLayers.YSort);
             _velocityComponent = AddComponent(new VelocityComponent());
             _spriteFlipper = AddComponent(new SpriteFlipper());
-            _basicWeapon = AddComponent(new Sword());
+            _basicWeapon = AddComponent(new LuteHammer());
             _dash = AddComponent(new Dash(1));
             _spriteTrail = AddComponent(new SpriteTrail());
             _spriteTrail.DisableSpriteTrail();

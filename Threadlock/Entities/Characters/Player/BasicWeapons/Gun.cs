@@ -48,8 +48,6 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
         public event Action<int> OnMaxAmmoChanged;
         public event Action<float> OnReloadStarted;
 
-        ICoroutine _activeCoroutine;
-
         GunEntity _gunEntity;
 
         #region LIFECYCLE
@@ -84,17 +82,17 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
         {
             if (Controls.Instance.Melee.IsPressed)
             {
-                _activeCoroutine = Game1.StartCoroutine(Fire());
+                QueuedAction = Fire;
                 return true;
             }
-            if (Ammo < MaxAmmo && Controls.Instance.Reload.IsPressed)
+            else if (Ammo < MaxAmmo && Controls.Instance.Reload.IsPressed)
             {
-                _activeCoroutine = Game1.StartCoroutine(Reload());
+                QueuedAction = Reload;
                 return true;
             }
-            if (Controls.Instance.AltAttack.IsPressed)
+            else if (Controls.Instance.AltAttack.IsPressed)
             {
-                _activeCoroutine = Game1.StartCoroutine(SecondaryAttack());
+                QueuedAction = SecondaryAttack;
                 return true;
             }
 
@@ -104,12 +102,6 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
         public override void OnUnequipped()
         {
             _gunEntity.SetEnabled(false);
-        }
-
-        public override void Reset()
-        {
-            _activeCoroutine?.Stop();
-            _activeCoroutine = null;
         }
 
         #endregion
@@ -135,8 +127,6 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
                 timer += Time.DeltaTime;
                 yield return null;
             }
-
-            CompletionEmitter.Emit(BasicWeaponEventTypes.Completed);
         }
 
         IEnumerator Fire()
@@ -169,7 +159,7 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
             if (continueAttack)
                 yield return Fire();
             else
-                CompletionEmitter.Emit(BasicWeaponEventTypes.Completed);
+                yield break;
         }
 
         IEnumerator Reload()
@@ -188,8 +178,6 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
             yield return _gunEntity.ReloadSpin();
 
             Ammo = _maxAmmo;
-
-            CompletionEmitter.Emit(BasicWeaponEventTypes.Completed);
         }
 
         void OnProjectileCreated(Projectile projectile)

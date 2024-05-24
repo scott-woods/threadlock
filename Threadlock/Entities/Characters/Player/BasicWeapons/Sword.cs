@@ -1,16 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Nez;
 using Nez.Sprites;
-using Nez.Systems;
-using Nez.Textures;
 using Nez.Tweens;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Threadlock.Components;
 using Threadlock.Components.Hitboxes;
 using Threadlock.Helpers;
@@ -52,8 +46,8 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
         CircleHitbox _hitbox;
         Collider _parryCollider;
 
+        //coroutines
         ICoroutine _attackCoroutine;
-        ICoroutine _parryCoroutine;
 
         #region LIFECYCLE
 
@@ -91,12 +85,14 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
         {
             if (Controls.Instance.Melee.IsPressed)
             {
-                _attackCoroutine = Game1.StartCoroutine(StartMeleeAttack(1, Player.GetFacingDirection()));
+                QueuedAction = SwordAttack;
+                //_attackCoroutine = Game1.StartCoroutine(StartMeleeAttack(1, Player.GetFacingDirection()));
                 return true;
             }
             else if (Controls.Instance.AltAttack.IsPressed)
             {
-                _parryCoroutine = Game1.StartCoroutine(Parry());
+                QueuedAction = Parry;
+                //_parryCoroutine = Game1.StartCoroutine(Parry());
                 return true;
             }
 
@@ -120,11 +116,15 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
             //coroutines
             _attackCoroutine?.Stop();
             _attackCoroutine = null;
-            _parryCoroutine?.Stop();
-            _parryCoroutine = null;
         }
 
         #endregion
+
+        IEnumerator SwordAttack()
+        {
+            _attackCoroutine = Game1.StartCoroutine(StartMeleeAttack(1, Player.GetFacingDirection()));
+            yield return _attackCoroutine;
+        }
 
         IEnumerator StartMeleeAttack(int comboCount, Vector2 dir)
         {
@@ -191,9 +191,12 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
 
             //if should continue combo, start new coroutine
             if (shouldAttackAgain)
+            {
                 _attackCoroutine = Game1.StartCoroutine(StartMeleeAttack(comboCount + 1, nextAttackDir));
+                yield return _attackCoroutine;
+            }
             else
-                CompletionEmitter.Emit(BasicWeaponEventTypes.Completed);
+                yield break;
         }
 
         IEnumerator Parry()
@@ -255,9 +258,6 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
 
             //re enable hurtbox
             _hurtbox.SetEnabled(true);
-
-            //return control to player
-            CompletionEmitter.Emit(BasicWeaponEventTypes.Completed);
         }
     }
 }

@@ -16,17 +16,19 @@ namespace Threadlock.Scenes
 {
     public class BasicDungeon : BaseScene
     {
-        public override Color SceneColor => new Color(12, 56, 33);
-        public override Color AmbientLightColor => new Color(150, 150, 150);
+        //public override Color SceneColor => new Color(12, 56, 33);
+        //public override Color AmbientLightColor => new Color(150, 150, 150);
 
-        Dungenerator2 _dungenerator;
+        public override Color SceneColor => new Color(41, 16, 19);
+
+        Dungenerator _dungenerator;
         PlayerSpawner _playerSpawner;
 
         public override void Initialize()
         {
             base.Initialize();
 
-            _dungenerator = AddSceneComponent(new Dungenerator2());
+            _dungenerator = AddSceneComponent(new Dungenerator());
             _playerSpawner = AddSceneComponent(new PlayerSpawner());
 
             Game1.SceneManager.Emitter.AddObserver(SceneManagerEvents.FadeInStarted, OnFadeInStarted);
@@ -44,7 +46,8 @@ namespace Threadlock.Scenes
             var config = new DungeonConfig();
             config.FlowFiles.Add("DungeonFlows3");
             config.AreaType = typeof(Nez.Content.Tiled.Tilemaps.FairyForest);
-            _dungenerator.Generate(config);
+            //_dungenerator.Generate(config);
+            _dungenerator.Generate();
         }
 
         public void FinalizeDungeon()

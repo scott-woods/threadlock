@@ -171,6 +171,12 @@ namespace Threadlock.Components
 
         public void OnTriggerEnter(Collider other, Collider local)
         {
+            if (local != _collider)
+                return;
+
+            if (!other.Enabled || !local.Enabled)
+                return;
+
             if (!Enabled)
                 return;
 

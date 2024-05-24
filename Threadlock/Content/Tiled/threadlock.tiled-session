@@ -729,8 +729,8 @@
             "scale": 1,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 264.5,
-                "y": 280
+                "x": 210.5,
+                "y": 181
             }
         },
         "Tilemaps/test.tmx": {
