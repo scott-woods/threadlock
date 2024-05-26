@@ -100,6 +100,8 @@ namespace Threadlock.Entities.Characters.Enemies
             //PHYSICS
             var mover = AddComponent(new Mover());
 
+            var projectileMover = AddComponent(new ProjectileMover());
+
             var velocityComponent = AddComponent(new VelocityComponent());
 
             var collider = AddComponent(new BoxCollider(config.ColliderOffset.X, config.ColliderOffset.Y, config.ColliderSize.X, config.ColliderSize.Y));

@@ -30,8 +30,29 @@ namespace Threadlock.Components.EnemyActions.Assassin
         const float _secondAttackDelay = .2f;
         const string _attackSound = Nez.Content.Audio.Sounds._19_Slash_01;
 
+        //existing components
+        SpriteAnimator _animator;
+        VelocityComponent _velocityComponent;
+
         //components
         CircleHitbox _hitbox;
+
+        public override void OnAddedToEntity()
+        {
+            base.OnAddedToEntity();
+
+            //get pre existing components
+            if (Entity.TryGetComponent<SpriteAnimator>(out var animator))
+                _animator = animator;
+            if (Entity.TryGetComponent<VelocityComponent>(out var velocityComponent))
+                _velocityComponent = velocityComponent;
+
+            //add hitbox
+            _hitbox = Entity.AddComponent(new CircleHitbox(_damage, _hitboxRadius));
+            Flags.SetFlagExclusive(ref _hitbox.PhysicsLayer, PhysicsLayers.EnemyHitbox);
+            Flags.SetFlagExclusive(ref _hitbox.CollidesWithLayers, PhysicsLayers.PlayerHurtbox);
+            _hitbox.SetEnabled(false);
+        }
 
         #region Enemy action implementation
 
@@ -50,87 +71,79 @@ namespace Threadlock.Components.EnemyActions.Assassin
 
         protected override IEnumerator ExecutionCoroutine()
         {
+            //get direction to target
             var dir = EntityHelper.DirectionToEntity(Enemy, Enemy.TargetEntity);
 
-            _hitbox = Entity.Scene.CreateEntity("hitbox").AddComponent(new CircleHitbox(_damage, _hitboxRadius));
-            Flags.SetFlagExclusive(ref _hitbox.PhysicsLayer, PhysicsLayers.EnemyHitbox);
-            Flags.SetFlagExclusive(ref _hitbox.CollidesWithLayers, PhysicsLayers.PlayerHurtbox);
-            _hitbox.Entity.SetPosition(Entity.Position + (dir * _hitboxOffset));
-            _hitbox.Entity.SetEnabled(false);
+            //update hitbox offset
+            _hitbox.SetLocalOffset(dir * _hitboxOffset);
 
-            var projectileMover = _hitbox.Entity.AddComponent(new ProjectileMover());
-
-            var velocityComponent = Entity.GetComponent<VelocityComponent>();
-            var animator = Entity.GetComponent<SpriteAnimator>();
-
-            animator.Play(_chargeName, SpriteAnimator.LoopMode.Once);
-            while (animator.CurrentAnimationName == _chargeName && animator.AnimationState != SpriteAnimator.State.Completed)
+            //play charge animation
+            _animator.Play(_chargeName, SpriteAnimator.LoopMode.Once);
+            while (_animator.CurrentAnimationName == _chargeName && _animator.AnimationState != SpriteAnimator.State.Completed)
                 yield return null;
 
-            animator.Play(_attack1Name, SpriteAnimator.LoopMode.Once);
+            //perform attack 1
+            _animator.Play(_attack1Name, SpriteAnimator.LoopMode.Once);
             Game1.AudioManager.PlaySound(_attackSound);
-            var animDuration = AnimatedSpriteHelper.GetAnimationDuration(animator);
+            var animDuration = AnimatedSpriteHelper.GetAnimationDuration(_animator);
             var timer = 0f;
-            while (animator.CurrentAnimationName == _attack1Name && animator.AnimationState != SpriteAnimator.State.Completed)
+            while (_animator.CurrentAnimationName == _attack1Name && _animator.AnimationState != SpriteAnimator.State.Completed)
             {
                 timer += Time.DeltaTime;
 
                 if (timer < animDuration)
                 {
                     var speed = Lerps.Ease(EaseType.ExpoOut, _attack1MoveSpeed, 0, timer, animDuration);
-                    velocityComponent.Move(dir, speed);
-                    projectileMover.Move(dir * speed * Time.DeltaTime);
+
+                    _velocityComponent.Move(dir, speed, true);
                 }
 
-                if (_attack1ActiveFrames.Contains(animator.CurrentFrame))
-                    _hitbox.Entity.SetEnabled(true);
+                if (_attack1ActiveFrames.Contains(_animator.CurrentFrame))
+                    _hitbox.SetEnabled(true);
                 else
-                    _hitbox.Entity.SetEnabled(false);
+                    _hitbox.SetEnabled(false);
 
                 yield return null;
             }
 
-            _hitbox.Entity.SetEnabled(false);
+            _hitbox.SetEnabled(false);
 
             //wait a moment before second part of attack
             yield return Coroutine.WaitForSeconds(_secondAttackDelay);
 
             //update dir
             dir = EntityHelper.DirectionToEntity(Enemy, Enemy.TargetEntity);
-            _hitbox.Entity.SetPosition(Entity.Position + (dir * _hitboxOffset));
+            _hitbox.SetLocalOffset(dir * _hitboxOffset);
 
-            animator.Play(_attack2Name, SpriteAnimator.LoopMode.Once);
+            _animator.Play(_attack2Name, SpriteAnimator.LoopMode.Once);
             Game1.AudioManager.PlaySound(_attackSound);
-            animDuration = AnimatedSpriteHelper.GetAnimationDuration(animator);
+            animDuration = AnimatedSpriteHelper.GetAnimationDuration(_animator);
             timer = 0f;
 
-            while (animator.CurrentAnimationName == _attack2Name && animator.AnimationState != SpriteAnimator.State.Completed)
+            while (_animator.CurrentAnimationName == _attack2Name && _animator.AnimationState != SpriteAnimator.State.Completed)
             {
                 timer += Time.DeltaTime;
 
                 if (timer < animDuration)
                 {
                     var speed = Lerps.Ease(EaseType.ExpoOut, _attack2MoveSpeed, 0, timer, animDuration);
-                    velocityComponent.Move(dir, speed);
-                    projectileMover.Move(dir * speed * Time.DeltaTime);
+                    _velocityComponent.Move(dir, speed, true);
                 }
 
-                if (_attack2ActiveFrames.Contains(animator.CurrentFrame))
-                    _hitbox.Entity.SetEnabled(true);
+                if (_attack2ActiveFrames.Contains(_animator.CurrentFrame))
+                    _hitbox.SetEnabled(true);
                 else
-                    _hitbox.Entity.SetEnabled(false);
+                    _hitbox.SetEnabled(false);
 
                 yield return null;
             }
 
-            _hitbox.Entity.SetEnabled(false);
-            _hitbox.Entity.Destroy();
+            _hitbox.SetEnabled(false);
         }
 
         protected override void Reset()
         {
-            _hitbox?.Entity?.Destroy();
-            _hitbox = null;
+            _hitbox.SetEnabled(false);
         }
 
         #endregion

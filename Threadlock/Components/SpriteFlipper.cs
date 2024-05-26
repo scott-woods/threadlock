@@ -22,6 +22,7 @@ namespace Threadlock.Components
             _velocityComponent = Entity.GetComponent<VelocityComponent>();
             _renderers = Entity.GetComponents<SpriteRenderer>();
         }
+
         public void Update()
         {
             var flip = _velocityComponent.LastNonZeroDirection.X < 0;

@@ -54,6 +54,8 @@ namespace Threadlock.Scenes
             var scale = Game1.ResolutionManager.ResolutionScale.X;
             Camera.MaximumZoom = (scale * 2) - 1;
             Camera.Zoom = .5f;
+            var cameraShake = Camera.AddComponent(new CameraShake());
+            cameraShake.SetUpdateOrder(int.MaxValue);
 
             //_gameRenderer = new YSortRenderer(0, RenderLayers.ScreenSpaceRenderLayer, RenderLayers.Cursor, RenderLayers.Light);
             //var size = Game1.ResolutionManager.DesignResolution;

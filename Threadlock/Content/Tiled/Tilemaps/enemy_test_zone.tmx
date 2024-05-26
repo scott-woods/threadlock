@@ -118,7 +118,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="4" name="Entities">
+ <objectgroup id="4" name="Entities" opacity="0.9">
   <object id="1" type="Trigger" x="160" y="48" width="32" height="16">
    <properties>
     <property name="Args" value="ChainBot"/>
@@ -134,7 +134,7 @@
   </object>
   <object id="3" type="EnemySpawnPoint" x="176" y="192">
    <properties>
-    <property name="EnemyType" value="Spitter"/>
+    <property name="EnemyType" value="Assassin"/>
    </properties>
    <point/>
   </object>

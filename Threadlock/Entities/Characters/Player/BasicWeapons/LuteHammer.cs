@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Threadlock.Components;
 using Threadlock.Components.Hitboxes;
 using Threadlock.Helpers;
 using Threadlock.SaveData;
@@ -38,7 +39,11 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
         const float _hitboxRadius = 15;
         const float _hitboxOffset = 12;
 
+        //existing components
         SpriteAnimator _animator;
+        VelocityComponent _velocityComponent;
+
+        //added components
         CircleHitbox _hitbox;
 
         float _defaultAnimatorSpeed;
@@ -87,6 +92,8 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
 
             _animator = Entity.GetComponent<SpriteAnimator>();
 
+            _velocityComponent = Entity.GetComponent<VelocityComponent>();
+
             _hitbox = Entity.AddComponent(new CircleHitbox(_slamDamage, _hitboxRadius));
             WatchHitbox(_hitbox);
             _hitbox.PhysicsLayer = 0;
@@ -113,9 +120,14 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
 
         IEnumerator Slam()
         {
+            //get aiming direction
+            var dir = Player.GetFacingDirection();
+
+            //move 0 just to update direction for animations
+            _velocityComponent.Move(dir, 0);
+
             //play animation
             var animation = "Slash";
-            var dir = Player.GetFacingDirection();
             animation += DirectionHelper.GetDirectionStringByVector(dir);
             _defaultAnimatorSpeed = _animator.Speed;
             _animator.Speed *= _animatorSpeedReduction;
@@ -137,6 +149,10 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
                         Game1.AudioManager.PlaySound(_guitarSmashSound);
                         Game1.AudioManager.PlaySound(Nez.Content.Audio.Sounds._60_Special_move_02);
                         hasPlayedSound = true;
+
+                        //camera shake
+                        if (Entity.Scene.Camera.Entity.TryGetComponent<CameraShake>(out var cameraShake))
+                            cameraShake.Shake();
                     }
                 }
                 else

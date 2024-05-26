@@ -65,6 +65,7 @@ namespace Threadlock.Entities.Characters.Player
 
             //add components
             _mover = AddComponent(new Mover());
+            AddComponent(new ProjectileMover());
             _animator = AddComponent(new SpriteAnimator());
             _animator.SetLocalOffset(DefaultSpriteOffset);
             _animator.SetRenderLayer(RenderLayers.YSort);

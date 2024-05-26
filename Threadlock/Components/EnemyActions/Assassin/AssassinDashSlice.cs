@@ -43,6 +43,21 @@ namespace Threadlock.Components.EnemyActions.Assassin
         CircleHitbox _dashHitbox;
         CircleHitbox _crossHitbox;
 
+        public override void OnAddedToEntity()
+        {
+            base.OnAddedToEntity();
+
+            _dashHitbox = Entity.AddComponent(new CircleHitbox(_dashDamage, _dashHitboxRadius));
+            Flags.SetFlagExclusive(ref _dashHitbox.PhysicsLayer, PhysicsLayers.EnemyHitbox);
+            Flags.SetFlagExclusive(ref _dashHitbox.CollidesWithLayers, PhysicsLayers.PlayerHurtbox);
+            _dashHitbox.SetEnabled(false);
+
+            _crossHitbox = Entity.AddComponent(new CircleHitbox(_crossDamge, _crossHitboxRadius));
+            Flags.SetFlagExclusive(ref _crossHitbox.PhysicsLayer, PhysicsLayers.EnemyHitbox);
+            Flags.SetFlagExclusive(ref _crossHitbox.CollidesWithLayers, PhysicsLayers.PlayerHurtbox);
+            _crossHitbox.SetEnabled(false);
+        }
+
         #region Enemy action implementation
 
         public override float CooldownTime => 5f;
@@ -60,25 +75,25 @@ namespace Threadlock.Components.EnemyActions.Assassin
 
         protected override IEnumerator ExecutionCoroutine()
         {
+            //get direction to target
             var dir = EntityHelper.DirectionToEntity(Enemy, Enemy.TargetEntity);
             var inverseDir = dir * -1;
 
+            //grab velocity component
             var velocityComponent = Entity.GetComponent<VelocityComponent>();
-
+            
+            //grab animator
             var animator = Entity.GetComponent<SpriteAnimator>();
+
+            //update hitbox offset
+            _dashHitbox.SetLocalOffset(dir * _dashHitboxOffset);
+
+            //play dash animation
             animator.Play(_dashAnimationName, SpriteAnimator.LoopMode.Once);
             var animDuration = AnimatedSpriteHelper.GetAnimationDuration(animator);
             var durPerSprite = animDuration / animator.CurrentAnimation.Sprites.Length;
             var chargeDuration = _buildUpFrames.Count * durPerSprite;
             var dashDuration = _dashFrames.Count * durPerSprite;
-
-            _dashHitbox = Entity.Scene.CreateEntity("assassin-dash-hitbox").AddComponent(new CircleHitbox(_dashDamage, _dashHitboxRadius));
-            _dashHitbox.Entity.SetPosition(Entity.Position + (dir * _dashHitboxOffset));
-            Flags.SetFlagExclusive(ref _dashHitbox.PhysicsLayer, PhysicsLayers.EnemyHitbox);
-            Flags.SetFlagExclusive(ref _dashHitbox.CollidesWithLayers, PhysicsLayers.PlayerHurtbox);
-            var dashHitboxMover = _dashHitbox.AddComponent(new ProjectileMover());
-            _dashHitbox.Entity.SetEnabled(false);
-
             var timer = 0f;
             bool hasPlayedVfx = false;
             bool hasPositionedHitbox = false;
@@ -86,6 +101,7 @@ namespace Threadlock.Components.EnemyActions.Assassin
             bool hasPlayedDashSound = false;
             while (animator.CurrentAnimationName == _dashAnimationName && animator.AnimationState != SpriteAnimator.State.Completed)
             {
+                //increment timer
                 timer += Time.DeltaTime;
 
                 if (_buildUpFrames.Contains(animator.CurrentFrame))
@@ -100,7 +116,8 @@ namespace Threadlock.Components.EnemyActions.Assassin
                     velocityComponent.Move(inverseDir, speed);
                 }
 
-                _dashHitbox.Entity.SetEnabled(_dashHitboxActiveFrames.Contains(animator.CurrentFrame));
+                //update hitbox enabled status
+                _dashHitbox.SetEnabled(_dashHitboxActiveFrames.Contains(animator.CurrentFrame));
 
                 if (_dashFrames.Contains(animator.CurrentFrame))
                 {
@@ -112,7 +129,7 @@ namespace Threadlock.Components.EnemyActions.Assassin
 
                     if (!hasPositionedHitbox)
                     {
-                        _dashHitbox.Entity.SetPosition(Entity.Position + (dir * _dashHitboxOffset));
+                        _dashHitbox.SetLocalOffset(dir * _dashHitboxOffset);
 
                         hasPositionedHitbox = true;
                     }
@@ -134,46 +151,39 @@ namespace Threadlock.Components.EnemyActions.Assassin
                     }
 
                     var speed = Lerps.Ease(EaseType.ExpoOut, _dashMoveSpeed, 0, timer - chargeDuration, dashDuration);
-                    velocityComponent.Move(dir, speed);
-                    dashHitboxMover.Move(dir * speed * Time.DeltaTime);
+                    velocityComponent.Move(dir, speed, true);
                 }
 
                 yield return null;
             }
 
-            _dashHitbox.Entity.SetEnabled(false);
-            _dashHitbox.Entity.Destroy();
-            _dashHitbox = null;
+            //make sure dash hitbox is disabled
+            _dashHitbox.SetEnabled(false);
 
+            //delay before cross slice
             yield return Coroutine.WaitForSeconds(_delayBeforeCross);
 
-            _crossHitbox = Entity.Scene.CreateEntity("assassin-cross-hitbox").AddComponent(new CircleHitbox(_crossDamge, _crossHitboxRadius));
-            _crossHitbox.Entity.SetPosition(Entity.Position + (dir * _crossHitboxOffset));
-            Flags.SetFlagExclusive(ref _crossHitbox.PhysicsLayer, PhysicsLayers.EnemyHitbox);
-            Flags.SetFlagExclusive(ref _crossHitbox.CollidesWithLayers, PhysicsLayers.PlayerHurtbox);
-            _crossHitbox.Entity.SetEnabled(false);
+            //update cross slice hitbox offset
+            _crossHitbox.SetLocalOffset(dir * _crossHitboxOffset);
 
+            //play cross slice animation
             animator.Play(_crossAnimationName, SpriteAnimator.LoopMode.Once);
             Game1.AudioManager.PlaySound(_crossSound);
             while (animator.CurrentAnimationName == _crossAnimationName && animator.AnimationState != SpriteAnimator.State.Completed)
             {
-                _crossHitbox.Entity.SetEnabled(_crossHitboxActiveFrames.Contains(animator.CurrentFrame));
+                _crossHitbox.SetEnabled(_crossHitboxActiveFrames.Contains(animator.CurrentFrame));
 
                 yield return null;
             }
 
-            _crossHitbox.Entity.SetEnabled(false);
-            _crossHitbox.Entity.Destroy();
-            _crossHitbox = null;
+            //make sure cross slice hitbox is disabled
+            _crossHitbox.SetEnabled(false);
         }
 
         protected override void Reset()
         {
-            _dashHitbox?.Entity?.Destroy();
-            _dashHitbox = null;
-
-            _crossHitbox?.Entity?.Destroy();
-            _crossHitbox = null;
+            _dashHitbox.SetEnabled(false);
+            _crossHitbox.SetEnabled(false);
         }
 
         #endregion

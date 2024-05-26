@@ -35,8 +35,6 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
             [3] = Content.Audio.Sounds._31_swoosh_sword_1
         };
 
-        public override bool CanMove => false;
-
         //passed components
         SpriteAnimator _animator;
         VelocityComponent _velocityComponent;
@@ -81,18 +79,18 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
 
         #region BASIC WEAPON
 
+        public override bool CanMove => false;
+
         public override bool Poll()
         {
             if (Controls.Instance.Melee.IsPressed)
             {
                 QueuedAction = SwordAttack;
-                //_attackCoroutine = Game1.StartCoroutine(StartMeleeAttack(1, Player.GetFacingDirection()));
                 return true;
             }
             else if (Controls.Instance.AltAttack.IsPressed)
             {
                 QueuedAction = Parry;
-                //_parryCoroutine = Game1.StartCoroutine(Parry());
                 return true;
             }
 
@@ -126,6 +124,12 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
             yield return _attackCoroutine;
         }
 
+        /// <summary>
+        /// called for each swing of the sword
+        /// </summary>
+        /// <param name="comboCount"></param>
+        /// <param name="dir"></param>
+        /// <returns></returns>
         IEnumerator StartMeleeAttack(int comboCount, Vector2 dir)
         {
             //update hitbox
@@ -163,17 +167,14 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
                 }
 
                 //handle hitbox
-                if (_animator.CurrentFrame == 0 && !_hitbox.Enabled)
-                    _hitbox.SetEnabled(true);
-                else if (_animator.CurrentFrame != 0 && _hitbox.Enabled)
-                    _hitbox.SetEnabled(false);
+                _hitbox.SetEnabled(_animator.CurrentFrame == 0);
 
                 //move player
                 var progress = elapsedTime / animDuration;
                 if (elapsedTime <= movementTime)
                 {
                     var movementLerp = Lerps.Ease(easeType, initialSpeed, 0, Math.Clamp(elapsedTime, 0, movementTime), movementTime);
-                    _velocityComponent.Move(dir, movementLerp);
+                    _velocityComponent.Move(dir, movementLerp, true);
                 }
 
                 //once more than halfway through, if we've queued up another, go ahead and start it
@@ -186,8 +187,7 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
             }
 
             //disable hitbox just in case it's somehow still enabled
-            if (_hitbox.Enabled)
-                _hitbox.SetEnabled(false);
+            _hitbox.SetEnabled(false);
 
             //if should continue combo, start new coroutine
             if (shouldAttackAgain)
