@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Threadlock.Components.EnemyActions;
 using Threadlock.Models;
 
 namespace Threadlock.StaticData
@@ -16,10 +17,11 @@ namespace Threadlock.StaticData
         {
             var dict = new Dictionary<string, EnemyConfig>();
 
-            if (File.Exists("Content/Data/Enemies.json"))
+            if (File.Exists("Content/Data/Enemies2.json"))
             {
-                var json = File.ReadAllText("Content/Data/Enemies.json");
-                var settings = new JsonSettings { TypeConverters = new JsonTypeConverter[] { new EnemyConfigTypeConverter() } };
+                var json = File.ReadAllText("Content/Data/Enemies2.json");
+                var settings = new JsonSettings();
+                //var settings = new JsonSettings { TypeConverters = new JsonTypeConverter[] { new EnemyConfigTypeConverter(), new RequirementConverter(), new EnemyActionFactory() } };
                 var enemyConfigs = Json.FromJson<EnemyConfig[]>(json, settings);
                 foreach (var config in enemyConfigs)
                     dict.Add(config.Name, config);

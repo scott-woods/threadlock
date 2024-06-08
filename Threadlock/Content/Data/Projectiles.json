@@ -1,0 +1,183 @@
+[
+  {
+    "Name": "Ghoul_Swipe",
+    "Type": "Instant",
+
+    "Damage": 1,
+    "Lifespan": 0.1,
+    "AffectsPlayer": true,
+
+    "Radius": 8
+  },
+
+  {
+    "Name": "Spitter_Spit",
+    "Type": "Straight",
+
+    "Damage": 1,
+    "Lifespan": 10,
+    "AffectsPlayer": true,
+    "DestroyOnWalls": true,
+
+    "Radius": 3,
+
+    "Speed": 210,
+    "Animation": "SpitterProjectileTravel",
+    "DestroyAnimations": [ "SpitterProjectileBurst1", "SpitterProjectileBurst2" ]
+  },
+
+  {
+    "Name": "OrbMage_Spike",
+    "Type": "Instant",
+
+    "Damage": 2,
+    "AffectsPlayer": true,
+
+    "Points": [
+      {
+        "X": -6,
+        "Y": -13
+      },
+      {
+        "X": -9,
+        "Y": 16
+      },
+      {
+        "X": -3,
+        "Y": 16
+      }
+    ],
+
+    "LaunchAnimation": "OrbMageSpikeTelegraph",
+    "LaunchDuration": 0.6,
+
+    "Animation": "OrbMageSpikeFire",
+    "DestroyAfterAnimation": true,
+
+    "HitboxActiveDuration": 0.5
+  },
+  {
+    "Name": "OrbMage_Sweep",
+    "Type": "Instant",
+
+    "Damage": 2,
+    "AffectsPlayer": true,
+
+    "Points": [
+      {
+        "X": 0,
+        "Y": 0
+      },
+      {
+        "X": 82,
+        "Y": -14
+      },
+      {
+        "X": 82,
+        "Y": 0
+      }
+    ],
+
+    "Animation": "OrbMageSweepVfx",
+    "DestroyAfterAnimation": true,
+    "AnimationOffset": {
+      "X": 44,
+      "Y": -17
+    },
+
+    "ShouldRotate": true,
+
+    "HitboxActiveDuration": 0.5
+  },
+
+  {
+    "Name": "ChainBot_Melee",
+    "Type": "Instant",
+
+    "Damage": 2,
+    "AffectsPlayer": true,
+
+    "ShouldRotate": true,
+    "MaxRotation": 0,
+
+    "Points": [
+      {
+        "X": 0,
+        "Y": -5
+      },
+      {
+        "X": 48,
+        "Y": -5
+      },
+      {
+        "X": 48,
+        "Y": 5
+      },
+      {
+        "X": 0,
+        "Y": 5
+      }
+    ],
+
+    "HitboxActiveDuration": 0.3
+  },
+
+  {
+    "Name": "Assassin_Slice1",
+    "Type": "Instant",
+
+    "Damage": 1,
+    "AffectsPlayer": true,
+
+    "AttachToOwner": true,
+
+    "ShouldRotate": true,
+    "MaxRotation": 0,
+
+    "Radius": 8,
+
+    "HitboxActiveDuration": 0.2
+  },
+  {
+    "Name": "Assassin_Execute",
+    "Type": "Instant",
+
+    "Damage": 3,
+    "AffectsPlayer": true,
+
+    "ShouldRotate": true,
+    "MaxRotation": 10,
+
+    "Radius": 14,
+
+    "HitboxActiveDuration": 0.2
+  },
+  {
+    "Name": "Assassin_DashSlice",
+    "Type": "Instant",
+
+    "Damage": 3,
+    "AffectsPlayer": true,
+    
+    "AttachToOwner": true,
+
+    "ShouldRotate": true,
+
+    "Points": [
+      {
+        "X": 0,
+        "Y": -3
+      },
+      {
+        "X": 0,
+        "Y": 3
+      },
+      {
+        "X": 16,
+        "Y": 0
+      }
+    ],
+
+    "HitboxActiveDuration": 0.4
+  }
+]

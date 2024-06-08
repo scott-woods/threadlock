@@ -26,8 +26,16 @@ namespace Threadlock.Helpers
             var toPos = GetEntityPosition(to, useOrigin);
 
             var dir = toPos - fromPos;
+
             if (shouldNormalize)
-                dir.Normalize();
+            {
+                var normalizedDir = dir;
+                normalizedDir.Normalize();
+
+                if (float.IsNaN(normalizedDir.X) || float.IsNaN(normalizedDir.Y))
+                    return dir;
+                else return normalizedDir;
+            }
 
             return dir;
         }

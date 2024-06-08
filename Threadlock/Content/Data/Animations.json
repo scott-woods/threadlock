@@ -1,0 +1,229 @@
+[
+  {
+    "Name": "Spitter_Charge",
+    "Path": "Characters/spitter_sheet",
+    "CellWidth": 77,
+    "CellHeight": 39,
+    "Row": 2,
+    "Frames": 3
+  },
+  {
+    "Name": "Spitter_Spit",
+    "Path": "Characters/spitter_sheet",
+    "CellWidth": 77,
+    "CellHeight": 39,
+    "Row": 2,
+    "Frames": 5,
+    "StartFrame": 3,
+    "FrameData": { "0": { "Sounds": [ "spitter_fire" ] } }
+  },
+  {
+    "Name": "SpitterProjectileTravel",
+    "Path": "Projectiles/spitter_projectile",
+    "CellWidth": 16,
+    "CellHeight": 16,
+    "Row": 0,
+    "Frames": 4,
+    "Loop": true
+  },
+  {
+    "Name": "SpitterProjectileBurst1",
+    "Path": "Projectiles/spitter_projectile",
+    "CellWidth": 16,
+    "CellHeight": 16,
+    "Row": 1,
+    "Frames": 7
+  },
+  {
+    "Name": "SpitterProjectileBurst2",
+    "Path": "Projectiles/spitter_projectile",
+    "CellWidth": 16,
+    "CellHeight": 16,
+    "Row": 2,
+    "Frames": 6
+  },
+
+  {
+    "Name": "OrbMageSpikeTelegraph",
+    "Path": "Projectiles/OrbMageSpike",
+    "CellWidth": 119,
+    "CellHeight": 34,
+    "Row": 0,
+    "Frames": 3,
+    "FrameData": {"0": {"Sounds": ["orb_mage_telegraph"]}}
+  },
+  {
+    "Name": "OrbMageSpikeFire",
+    "Path": "Projectiles/OrbMageSpike",
+    "CellWidth": 119,
+    "CellHeight": 34,
+    "Row": 1,
+    "Frames": 6,
+    "FrameData": { "0": { "Sounds": [ "orb_mage_attack" ] } }
+  },
+  {
+    "Name": "OrbMageSweepVfx",
+    "Path": "Projectiles/OrbMageSweepVfx",
+    "CellWidth": 87,
+    "CellHeight": 34,
+    "Row": 0,
+    "Frames": 8,
+    "FrameData": { "0": { "Sounds": [ "orb_mage_attack" ] } }
+  },
+
+  {
+    "Name": "OrbMage_Idle",
+    "Path": "Characters/OrbMageSprites",
+    "CellWidth": 119,
+    "CellHeight": 34,
+    "Row": 0,
+    "Frames": 3,
+    "Loop": true
+  },
+  {
+    "Name": "OrbMage_Move",
+    "Path": "Characters/OrbMageSprites",
+    "CellWidth": 119,
+    "CellHeight": 34,
+    "Row": 1,
+    "Frames": 8,
+    "Loop": true
+  },
+  {
+    "Name": "OrbMage_Spike",
+    "Path": "Characters/OrbMageSprites",
+    "CellWidth": 119,
+    "CellHeight": 34,
+    "Row": 3,
+    "Frames": 13
+  },
+  {
+    "Name": "OrbMage_PreSweep",
+    "Path": "Characters/OrbMageSprites",
+    "CellWidth": 119,
+    "CellHeight": 34,
+    "Row": 5,
+    "Frames": 8
+  },
+  {
+    "Name": "OrbMage_Sweep",
+    "Path": "Characters/OrbMageSprites",
+    "CellWidth": 119,
+    "CellHeight": 34,
+    "Row": 5,
+    "Frames": 7,
+    "StartFrame": 8
+  },
+  {
+    "Name": "OrbMage_Hit",
+    "Path": "Characters/OrbMageSprites",
+    "CellWidth": 119,
+    "CellHeight": 34,
+    "Row": 6,
+    "Frames": 3,
+    "Loop": true
+  },
+  {
+    "Name": "OrbMage_Die",
+    "Path": "Characters/OrbMageSprites",
+    "CellWidth": 119,
+    "CellHeight": 34,
+    "Row": 7,
+    "Frames": 7
+  },
+
+  {
+    "Name": "ChainBot_Melee1",
+    "Path": "Characters/ChainBotSprites",
+    "CellWidth": 126,
+    "CellHeight": 39,
+    "Row": 4,
+    "Frames": 4,
+    "FrameData": { "0": { "Sounds": [ "81_Whip_woosh_1" ] } }
+  },
+  {
+    "Name": "ChainBot_Melee2",
+    "Path": "Characters/ChainBotSprites",
+    "CellWidth": 126,
+    "CellHeight": 39,
+    "Row": 4,
+    "Frames": 4,
+    "StartFrame": 4,
+    "FrameData": { "0": { "Sounds": [ "81_Whip_woosh_1" ] } }
+  },
+  {
+    "Name": "ChainBot_TransitionToCharge",
+    "Path": "Characters/ChainBotSprites",
+    "CellWidth": 126,
+    "CellHeight": 39,
+    "Row": 2,
+    "Frames": 2,
+    "ChainTo": "ChainBot_Charge"
+  },
+  {
+    "Name": "ChainBot_Charge",
+    "Path": "Characters/ChainBotSprites",
+    "CellWidth": 126,
+    "CellHeight": 39,
+    "Row": 3,
+    "Frames": 4,
+    "Loop": true
+  },
+
+  {
+    "Name": "Assassin_Slice1",
+    "Path": "Characters/AssassinSprites",
+    "CellWidth": 91,
+    "CellHeight": 19,
+    "Row": 5,
+    "Frames": 4,
+    "FrameData": {"0": {"Sounds": ["19_Slash_01"]}}
+  },
+  {
+    "Name": "Assassin_Slice2",
+    "Path": "Characters/AssassinSprites",
+    "CellWidth": 91,
+    "CellHeight": 19,
+    "Row": 6,
+    "Frames": 5,
+    "FrameData": { "0": { "Sounds": [ "19_Slash_01" ] } }
+  },
+  {
+    "Name": "Assassin_DashSliceCharge",
+    "Path": "Characters/AssassinSprites",
+    "CellWidth": 91,
+    "CellHeight": 19,
+    "Row": 7,
+    "Frames": 5,
+    "FrameData": { "0": { "Sounds": [ "23_Slash_05" ] } }
+  },
+  {
+    "Name": "Assassin_DashSlice",
+    "Path": "Characters/AssassinSprites",
+    "CellWidth": 91,
+    "CellHeight": 19,
+    "Row": 7,
+    "Frames": 5,
+    "StartFrame": 5,
+    "FrameData": { "0": { "Sounds": [ "22_Slash_04" ] } }
+  },
+  {
+    "Name": "Assassin_Execute",
+    "Path": "Characters/AssassinSprites",
+    "CellWidth": 91,
+    "CellHeight": 19,
+    "Row": 8,
+    "Frames": 5,
+    "FrameData": { "0": { "Sounds": [ "21_Slash_03" ] } }
+  },
+
+  {
+    "Name": "Ghoul_Swipe",
+    "Path": "Characters/GhoulSprites",
+    "CellWidth": 62,
+    "CellHeight": 33,
+    "Row": 2,
+    "Frames": 7,
+    "FrameData": {"0": {"Sounds": ["ghoul_claw"]}}
+  }
+]

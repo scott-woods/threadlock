@@ -2,12 +2,14 @@
 using Nez.Sprites;
 using Nez.Textures;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Models;
+using Threadlock.StaticData;
 
 namespace Threadlock.Helpers
 {
@@ -34,13 +36,13 @@ namespace Threadlock.Helpers
         /// <param name="columns"></param>
         /// <param name="totalColumns"></param>
         /// <returns></returns>
-        public static Sprite[] GetSpriteArrayByRow(List<Sprite> spriteList, int row, int columns, int totalColumns)
+        public static Sprite[] GetSpriteArrayByRow(List<Sprite> spriteList, int row, int columns, int totalColumns, int startFrame = 0)
         {
             var sprites = new List<Sprite>();
 
             for (int i = 0; i < columns; i++)
             {
-                sprites.Add(spriteList[i + (row * totalColumns)]);
+                sprites.Add(spriteList[i + (row * totalColumns) + startFrame]);
             }
 
             return sprites.ToArray();
@@ -98,6 +100,70 @@ namespace Threadlock.Helpers
             var iterationDuration = secondsPerFrame * animator.Animations[animationName].Sprites.Length;
 
             return iterationDuration;
+        }
+
+        public static void PlayAnimation(ref SpriteAnimator animator, string animationName)
+        {
+            Game1.StartCoroutine(PlayAnimationCoroutine(animator, animationName));
+        }
+
+        public static IEnumerator WaitForAnimation(SpriteAnimator animator, string animationName)
+        {
+            yield return PlayAnimationCoroutine(animator, animationName);
+        }
+
+        static IEnumerator PlayAnimationCoroutine(SpriteAnimator animator, string animationName)
+        {
+            if (animator == null || string.IsNullOrWhiteSpace(animationName))
+                yield break;
+
+            if (Animations.TryGetAnimationSprites(animationName, out var sprites) && Animations.TryGetAnimationConfig(animationName, out var config))
+            {
+                if (!animator.Animations.ContainsKey(animationName))
+                    animator.AddAnimation(animationName, sprites);
+
+                animator.Play(animationName, config.Loop ? SpriteAnimator.LoopMode.Loop : SpriteAnimator.LoopMode.Once);
+
+                var currentFrame = -1;
+                while (animator.CurrentAnimationName == animationName && animator.AnimationState != SpriteAnimator.State.Completed)
+                {
+                    //if current frame is mismatched, this is the first time we're hitting this frame
+                    if (currentFrame != animator.CurrentFrame)
+                    {
+                        if (config.FrameData.TryGetValue(animator.CurrentFrame, out var frameData))
+                        {
+                            foreach (var sound in frameData.Sounds)
+                                Game1.AudioManager.PlaySound($"Content/Audio/Sounds/{sound}.wav");
+                        }
+
+                        //update frame
+                        currentFrame = animator.CurrentFrame;
+                    }
+
+                    yield return null;
+                }
+            }
+        }
+
+        public static void LoadAnimations(ref SpriteAnimator animator, params string[] animationNames)
+        {
+            foreach (var animName in animationNames)
+            {
+                LoadAnimation(animName, ref animator);
+            }
+        }
+
+        public static void LoadAnimation(string animationName, ref SpriteAnimator animator)
+        {
+            if (string.IsNullOrWhiteSpace(animationName) || animator.Animations.ContainsKey(animationName))
+                return;
+
+            if (Animations.TryGetAnimationConfig(animationName, out var config) && Animations.TryGetAnimationSprites(animationName, out var sprites))
+            {
+                animator.AddAnimation(animationName, sprites);
+                if (!string.IsNullOrWhiteSpace(config.ChainTo))
+                    LoadAnimation(config.ChainTo, ref animator);
+            }
         }
 
         public static void ParseAnimationFile(string folderPath, string filename, ref SpriteAnimator animator, int fps = 10)

@@ -3,17 +3,18 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "Tilemaps/FairyForest/forest_test_2.tmx",
+    "activeFile": "Tilemaps/enemy_test_zone.tmx",
     "expandedProjectPaths": [
         "Templates",
-        ".",
-        "Tilemaps/Hub",
+        "Tilemaps/Forge/Doorways",
         "Tilemaps/HubMaps",
-        "Tilemaps/Forge",
-        "Tilemaps/FairyForest",
         "Tilesets",
         "Tilemaps",
-        "Tilemaps/Forge/Doorways"
+        ".",
+        "Tilemaps/Hub",
+        "Tilemaps/Forge",
+        "RuleMaps",
+        "Tilemaps/FairyForest"
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
@@ -135,8 +136,8 @@
             "scale": 2,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 444.25,
-                "y": 206.5
+                "x": 256,
+                "y": 256
             }
         },
         "RuleMaps/forge_clutter_rules.tmx": {
@@ -273,8 +274,8 @@
             "scale": 1.5,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 335,
-                "y": 134.66666666666663
+                "x": 256,
+                "y": 255.33333333333331
             }
         },
         "Tilemaps/FairyForest/forest_test_3.tmx": {
@@ -691,7 +692,7 @@
             "scale": 1,
             "selectedLayer": 8,
             "viewCenter": {
-                "x": 264.5,
+                "x": 264,
                 "y": 288
             }
         },
@@ -729,7 +730,7 @@
             "scale": 1,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 264.5,
+                "x": 264,
                 "y": 280
             }
         },
@@ -796,7 +797,6 @@
         "Tilemaps/FairyForest/forest_test_2.tmx",
         "RuleMaps/stardew_leaves_rules.tmx",
         "RuleMaps/forest_walls_rules.tmx",
-        "Tilemaps/FairyForest/forest_test_3.tmx",
         "Tilesets/fairy_forest_tileset.tsx",
         "Tilemaps/enemy_test_zone.tmx",
         "Tilemaps/Forge/forge_start.tmx"
@@ -804,14 +804,14 @@
     "project": "threadlock.tiled-project",
     "property.type": "string",
     "recentFiles": [
-        "RuleMaps/forest_walls_rules.tmx",
-        "Tilemaps/HubMaps/hub.tmx",
-        "Tilemaps/Forge/forge_start.tmx",
         "Tilemaps/FairyForest/forest_test_2.tmx",
-        "Tilemaps/FairyForest/forest_test_3.tmx",
-        "Tilemaps/enemy_test_zone.tmx",
-        "Tilesets/fairy_forest_tileset.tsx",
         "RuleMaps/stardew_leaves_rules.tmx",
+        "RuleMaps/forest_walls_rules.tmx",
+        "Tilesets/fairy_forest_tileset.tsx",
+        "Tilemaps/Forge/forge_start.tmx",
+        "Tilemaps/enemy_test_zone.tmx",
+        "Tilemaps/HubMaps/hub.tmx",
+        "Tilemaps/FairyForest/forest_test_3.tmx",
         "Tilemaps/Forge/forge_action_store.tmx",
         "Tilemaps/Forge/Doorways/forge_bottom_open.tmx",
         "RuleMaps/forge_floor_rules_3.tmx",

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Nez;
+using Nez.Persistence;
 using Nez.Sprites;
 using Nez.Systems;
 using Nez.Textures;
@@ -7,12 +8,15 @@ using Nez.Tweens;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Threadlock.Components.EnemyActions;
 using Threadlock.Components.Hitboxes;
 using Threadlock.Entities.Characters.Player.BasicWeapons;
 using Threadlock.Helpers;
+using Threadlock.Models;
 using Threadlock.StaticData;
 
 namespace Threadlock.Entities
@@ -22,33 +26,45 @@ namespace Threadlock.Entities
         //consts
         const float _maxTime = 10f;
 
-        public IHitbox Hitbox { get => _hitbox; }
+        public IHitbox Hitbox { get => _hitbox as IHitbox; }
 
         //components
         SpriteAnimator _animator;
         ProjectileMover _mover;
-        CircleHitbox _hitbox;
+        Collider _hitbox;
         SpriteTrail _trail;
 
         //misc
         Vector2 _direction;
-        ProjectileConfig _config;
+        float _speed;
         bool _isBursting = false;
         float _timeSinceLaunched = 0f;
 
-        public Projectile(Vector2 direction, ProjectileConfig config)
+        public Projectile(Vector2 direction, ProjectileConfig config) : this(config.SpritePath, config.Speed, config.Radius, config.Damage, direction, config.DestroyOnWall, config.PhysicsLayer, config.HitLayers[0])
         {
-            _direction = direction;
-            _config = config;
+        }
 
-            _hitbox = new CircleHitbox(_config.Damage, _config.Radius);
-            Flags.SetFlagExclusive(ref _hitbox.PhysicsLayer, _config.PhysicsLayer);
+        public Projectile(string name, float speed, float radius, int damage, Vector2 direction, bool destroyOnWall, int physicsLayer, int collidesWithLayer)
+        {
+            //set values
+            _direction = direction;
+            _speed = speed;
+
+            //create animator
+            _animator = new SpriteAnimator();
+            _animator.SetRenderLayer(RenderLayers.YSort);
+            AnimatedSpriteHelper.ParseAnimationFile("Content/Textures/Projectiles", name, ref _animator);
+
+            //create hitbox
+            _hitbox = new CircleHitbox(damage, radius);
+
+            //set hitbox physics layers
+            _hitbox.PhysicsLayer = 0;
+            Flags.SetFlag(ref _hitbox.PhysicsLayer, physicsLayer);
             _hitbox.CollidesWithLayers = 0;
-            if (_config.DestroyOnWall)
+            Flags.SetFlag(ref _hitbox.CollidesWithLayers, collidesWithLayer);
+            if (destroyOnWall)
                 Flags.SetFlag(ref _hitbox.CollidesWithLayers, PhysicsLayers.Environment);
-            foreach (var layer in _config.HitLayers)
-                Flags.SetFlag(ref _hitbox.CollidesWithLayers, layer);
-            _hitbox.PushForce = 1f;
         }
 
         #region LIFECYCLE
@@ -57,8 +73,7 @@ namespace Threadlock.Entities
         {
             base.OnAddedToScene();
 
-            _animator = AddComponent(new SpriteAnimator());
-            _animator.SetRenderLayer(RenderLayers.YSort);
+            AddComponent(_animator);
 
             _mover = AddComponent(new ProjectileMover());
 
@@ -69,9 +84,6 @@ namespace Threadlock.Entities
             _trail.FadeDuration = .2f;
             _trail.MinDistanceBetweenInstances = 20f;
             _trail.InitialColor = Color.White * .5f;
-
-            _animator.AddAnimation("Travel", _config.TravelSprites);
-            _animator.AddAnimation("Burst", _config.BurstSprites);
 
             //start playing travel animation immediately
             _animator.Play("Travel");
@@ -84,7 +96,7 @@ namespace Threadlock.Entities
             if (_isBursting)
                 return;
 
-            if (_mover.Move(_direction * _config.Speed * Time.DeltaTime))
+            if (_mover.Move(_direction * _speed * Time.DeltaTime))
             {
                 Burst();
                 return;
@@ -170,8 +182,14 @@ namespace Threadlock.Entities
             });
 
             _isBursting = true;
-            _animator.Play("Burst", SpriteAnimator.LoopMode.Once);
-            _animator.OnAnimationCompletedEvent += OnAnimationCompleted;
+            var validAnims = _animator.Animations.Where(a => a.Key.StartsWith("Burst")).ToList();
+            if (validAnims != null && validAnims.Count > 0)
+            {
+                _animator.Play(validAnims.RandomItem().Key, SpriteAnimator.LoopMode.Once);
+                _animator.OnAnimationCompletedEvent += OnAnimationCompleted;
+            }
+            else
+                Destroy();
         }
 
         void OnAnimationCompleted(string animationName)

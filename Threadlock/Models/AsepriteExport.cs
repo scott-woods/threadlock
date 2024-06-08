@@ -11,7 +11,7 @@ namespace Threadlock.Models
     public class AsepriteExport
     {
         [DecodeAlias("frames")]
-        public List<FrameData> Frames;
+        public List<AsepriteFrameData> Frames;
 
         [DecodeAlias("meta")]
         public AsepriteMeta Meta;
@@ -47,7 +47,7 @@ namespace Threadlock.Models
         public Slice[] Slices;
     }
 
-    public class FrameData
+    public class AsepriteFrameData
     {
         [DecodeAlias("filename")]
         public string Filename;
@@ -124,6 +124,9 @@ namespace Threadlock.Models
     {
         [DecodeAlias("name")]
         public string Name;
+
+        [DecodeAlias("group")]
+        public string Group;
 
         [DecodeAlias("opacity")]
         public int Opacity;

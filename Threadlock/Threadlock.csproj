@@ -58,6 +58,7 @@
     <None Remove="Content\Audio\Sounds\Socket_Equip.wav" />
     <None Remove="Content\Audio\Sounds\Socket_Remove.wav" />
     <None Remove="Content\CompiledEffects\SpriteOutline.fxb" />
+    <None Remove="Content\Data\Animations.json" />
     <None Remove="Content\Data\Areas.json" />
     <None Remove="Content\Data\Dialogue\Odran.json" />
     <None Remove="Content\Data\DungeonFlows2.json" />
@@ -66,8 +67,11 @@
     <None Remove="Content\Data\DungeonFlows5.json" />
     <None Remove="Content\Data\DungeonFlows6.json" />
     <None Remove="Content\Data\Enemies.json" />
+    <None Remove="Content\Data\Enemies2.json" />
+    <None Remove="Content\Data\EnemyActions.json" />
     <None Remove="Content\Data\FairyForestTiles.json" />
     <None Remove="Content\Data\FairyForestTiles2.json" />
+    <None Remove="Content\Data\Projectiles.json" />
     <None Remove="Content\Data\SimpleLoop.json" />
     <None Remove="Content\Data\SingleRoom.json" />
     <None Remove="Content\Data\TestDialogue.json" />
@@ -87,6 +91,8 @@
     <None Remove="Content\Textures\Characters\Player\sci_fi_player_no_sword.png" />
     <None Remove="Content\Textures\Characters\Player\sci_fi_player_with_sword.png" />
     <None Remove="Content\Textures\Drops\Collectables-Sheet.png" />
+    <None Remove="Content\Textures\Projectiles\spitter_projectile.png" />
+    <None Remove="Content\Textures\Projectiles\spitter_projectileConfig.json" />
     <None Remove="Content\Textures\Tilesets\dungeon_prison_props.png" />
     <None Remove="Content\Textures\Tilesets\dungeon_prison_tileset.png" />
     <None Remove="Content\Textures\Tilesets\forge_tileset.png" />
@@ -96,6 +102,8 @@
     <None Remove="Content\Textures\UI\cursed tyler small.png" />
     <None Remove="Content\Textures\UI\progressBar.png" />
     <None Remove="Content\Textures\UI\progressBarGlow.png" />
+    <None Remove="Content\Textures\VFX\assassin_vfx.png" />
+    <None Remove="Content\Textures\VFX\assassin_vfxConfig.json" />
     <None Remove="Content\Tiled\Tilesets\forge_tileset.tsx" />
     <None Remove="Content\Tiled\Tilesets\prototype_tileset.tsx" />
   </ItemGroup>
@@ -125,6 +133,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\Textures\Decorations\Forge\Atlas\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
     <Message Text="Restoring dotnet tools" Importance="High" />

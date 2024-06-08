@@ -19,6 +19,7 @@ namespace Nez
 				public const string Meltingidols = @"Content\Audio\Music\melting idols.ogg";
 				public const string Shweet_sales = @"Content\Audio\Music\shweet_sales.ogg";
 				public const string The_bay = @"Content\Audio\Music\the_bay.ogg";
+				public const string YoureMajestyAndNoThatWasNotaTypo = @"Content\Audio\Music\You're Majesty! And No, That Was Not a Typo.ogg";
 			}
 
 			public static class Sounds
@@ -129,6 +130,7 @@ namespace Nez
 
 		public static class Data
 		{
+			public const string Animations = @"Content\Data\Animations.json";
 			public const string Areas = @"Content\Data\Areas.json";
 			public const string DungeonFlows = @"Content\Data\DungeonFlows.json";
 			public const string DungeonFlows2 = @"Content\Data\DungeonFlows2.json";
@@ -137,8 +139,11 @@ namespace Nez
 			public const string DungeonFlows5 = @"Content\Data\DungeonFlows5.json";
 			public const string DungeonFlows6 = @"Content\Data\DungeonFlows6.json";
 			public const string Enemies = @"Content\Data\Enemies.json";
+			public const string Enemies2 = @"Content\Data\Enemies2.json";
+			public const string EnemyActions = @"Content\Data\EnemyActions.json";
 			public const string FairyForestTiles = @"Content\Data\FairyForestTiles.json";
 			public const string FairyForestTiles2 = @"Content\Data\FairyForestTiles2.json";
+			public const string Projectiles = @"Content\Data\Projectiles.json";
 			public const string SimpleLoop = @"Content\Data\SimpleLoop.json";
 			public const string SingleRoom = @"Content\Data\SingleRoom.json";
 			public const string TestDialogue = @"Content\Data\TestDialogue.json";
@@ -272,8 +277,11 @@ namespace Nez
 					public const string Spitter_sheet = @"Content\Textures\Characters\Spitter\spitter_sheet.png";
 				}
 
+				public const string ChainBotSprites = @"Content\Textures\Characters\ChainBotSprites.png";
 				public const string OdranSpriteConfig = @"Content\Textures\Characters\OdranSpriteConfig.json";
 				public const string OdranSpritesheet = @"Content\Textures\Characters\OdranSpritesheet.png";
+				public const string OrbMageSprites = @"Content\Textures\Characters\OrbMageSprites.png";
+				public const string Spitter_sheet = @"Content\Textures\Characters\spitter_sheet.png";
 			}
 
 			public static class Decorations
@@ -317,6 +325,14 @@ namespace Nez
 				public const string Shadow = @"Content\Textures\Effects\shadow.png";
 				public const string Shadow_opaque = @"Content\Textures\Effects\shadow_opaque.png";
 				public const string Spritelight = @"Content\Textures\Effects\sprite-light.png";
+			}
+
+			public static class Projectiles
+			{
+				public const string OrbMageSpike = @"Content\Textures\Projectiles\OrbMageSpike.png";
+				public const string OrbMageSweepVfx = @"Content\Textures\Projectiles\OrbMageSweepVfx.png";
+				public const string Spitter_projectile = @"Content\Textures\Projectiles\spitter_projectile.png";
+				public const string Spitter_projectileConfig = @"Content\Textures\Projectiles\spitter_projectileConfig.json";
 			}
 
 			public static class Tilesets
@@ -1096,6 +1112,14 @@ namespace Nez
 				public const string PlayerHealthBar = @"Content\Textures\UI\playerHealthBar.png";
 				public const string ProgressBar = @"Content\Textures\UI\progressBar.png";
 				public const string ProgressBarGlow = @"Content\Textures\UI\progressBarGlow.png";
+			}
+
+			public static class VFX
+			{
+				public const string Assassin_vfx = @"Content\Textures\VFX\assassin_vfx.png";
+				public const string Assassin_vfxConfig = @"Content\Textures\VFX\assassin_vfxConfig.json";
+				public const string Orb_mage_sweep_vfx = @"Content\Textures\VFX\orb_mage_sweep_vfx.png";
+				public const string Orb_mage_sweep_vfxConfig = @"Content\Textures\VFX\orb_mage_sweep_vfxConfig.json";
 			}
 
 		}

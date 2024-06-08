@@ -39,6 +39,7 @@ namespace Threadlock
             //misc settings
             IsMouseVisible = false;
             ExitOnEscapeKeypress = false;
+            DebugRenderEnabled = true;
 
             //time step and refresh rate
             IsFixedTimeStep = true;
@@ -61,7 +62,7 @@ namespace Threadlock
             Screen.SetSize(1920, 1080);
             Screen.ApplyChanges();
 
-            Scene = new Hub();
+            Scene = new EnemyTestZone();
         }
     }
 }

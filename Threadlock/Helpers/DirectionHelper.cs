@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Threadlock.Entities;
 using static Threadlock.SceneComponents.Dungenerator.CorridorPainter;
 
 namespace Threadlock.Helpers
@@ -141,6 +142,38 @@ namespace Threadlock.Helpers
 
 
             return new Vector2(x, y);
+        }
+
+        public static float GetDegreesFromDirection(Vector2 direction)
+        {
+            float angleInRadians = (float)Math.Atan2(direction.Y, direction.X);
+
+            float angleInDegrees = MathHelper.ToDegrees(angleInRadians);
+
+            return angleInDegrees;
+        }
+
+        public static float GetClampedAngle(Vector2 direction, float maxRotation)
+        {
+            var rotationRadians = (float)Math.Atan2(direction.Y, direction.X);
+            var rotationDegrees = MathHelper.ToDegrees(rotationRadians);
+
+            float actualMinRotation, actualMaxRotation;
+            if (direction.X >= 0)
+            {
+                actualMinRotation = 0;
+                actualMaxRotation = maxRotation;
+            }
+            else
+            {
+                actualMinRotation = 180 - maxRotation;
+                actualMaxRotation = 180;
+            }
+
+            var clampedDegrees = Math.Clamp(Math.Abs(rotationDegrees), actualMinRotation, actualMaxRotation);
+            rotationRadians = MathHelper.ToRadians(clampedDegrees * Math.Sign(rotationDegrees));
+
+            return rotationRadians;
         }
     }
 }

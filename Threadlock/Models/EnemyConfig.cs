@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using Threadlock.Components.EnemyActions;
 
 namespace Threadlock.Models
 {
@@ -25,5 +26,10 @@ namespace Threadlock.Models
 
         //behavior
         public BehaviorConfig BehaviorConfig;
+
+        //actions
+        public List<string> NewActions;
+        //public List<EnemyAction2> AvailableActions;
+        //public List<ScriptedEnemyAction> Actions;
     }
 }

@@ -1,0 +1,64 @@
+{ "frames": [
+   {
+    "filename": "Slice attack",
+    "frame": { "x": 0, "y": 0, "w": 91, "h": 19 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 91, "h": 19 },
+    "sourceSize": { "w": 91, "h": 19 },
+    "duration": 100
+   },
+   {
+    "filename": "Slice attack",
+    "frame": { "x": 91, "y": 0, "w": 91, "h": 19 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 91, "h": 19 },
+    "sourceSize": { "w": 91, "h": 19 },
+    "duration": 100
+   },
+   {
+    "filename": "Slice attack",
+    "frame": { "x": 182, "y": 0, "w": 91, "h": 19 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 91, "h": 19 },
+    "sourceSize": { "w": 91, "h": 19 },
+    "duration": 100
+   },
+   {
+    "filename": "Slice attack",
+    "frame": { "x": 273, "y": 0, "w": 91, "h": 19 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 91, "h": 19 },
+    "sourceSize": { "w": 91, "h": 19 },
+    "duration": 100
+   },
+   {
+    "filename": "Slice attack",
+    "frame": { "x": 364, "y": 0, "w": 91, "h": 19 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 91, "h": 19 },
+    "sourceSize": { "w": 91, "h": 19 },
+    "duration": 100
+   }
+ ],
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.2.40-x64",
+  "image": "assassin_vfx.png",
+  "format": "RGBA8888",
+  "size": { "w": 455, "h": 19 },
+  "scale": "1",
+  "frameTags": [
+   { "name": "Play", "from": 0, "to": 4, "direction": "forward" }
+  ],
+  "layers": [
+   { "name": "Layer 6", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}

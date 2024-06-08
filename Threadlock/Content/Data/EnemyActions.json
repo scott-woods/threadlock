@@ -1,0 +1,236 @@
+[
+  {
+    "Name": "Ghoul_Swipe",
+
+    "MaxDistanceX": 16,
+    "MaxDistanceY": 8,
+
+    "AttackAnimation": "Ghoul_Swipe",
+    "WaitForAttackAnimation": true,
+
+    "Projectiles": [
+      {
+        "ProjectileName": "Ghoul_Swipe",
+        "Delay": 0.1,
+        "OffsetDistance": 9
+      }
+    ]
+  },
+
+  {
+    "Name": "Spitter_Spit",
+
+    "RequiresLoS": true,
+    "MaxDistance": 128,
+
+    "PreAttackAnimation": "Spitter_Charge",
+    "WaitForPreAttackAnimation": true,
+
+    "AttackAnimation": "Spitter_Spit",
+    "WaitForAttackAnimation": true,
+
+    "Projectiles": [
+      {
+        "ProjectileName": "Spitter_Spit"
+      }
+    ]
+  },
+
+  {
+    "Name": "OrbMage_Spike",
+
+    "MinDistance": 64,
+    "MaxDistance": 128,
+
+    "AttackAnimation": "OrbMage_Spike",
+    "WaitForAttackAnimation": true,
+
+    "Projectiles": [
+      {
+        "ProjectileName": "OrbMage_Spike",
+        "StartFromTarget": true,
+        "PredictTarget": true,
+        "MaxPredictionOffset": 64
+      }
+    ]
+  },
+  {
+    "Name": "OrbMage_Sweep",
+
+    "MaxDistance": 64,
+
+    "PreAttackAnimation": "OrbMage_PreSweep",
+    "WaitForPreAttackAnimation": true,
+
+    "AttackAnimation": "OrbMage_Sweep",
+    "WaitForAttackAnimation": true,
+
+    "Projectiles": [
+      {
+        "ProjectileName": "OrbMage_Sweep",
+        "EntityOffset": {
+          "X": 0,
+          "Y": 9
+        }
+      }
+    ]
+  },
+
+  {
+    "Name": "ChainBot_Melee1",
+
+    "PreAttackAnimation": "ChainBot_TransitionToCharge",
+    "PreAttackDuration": 0.4,
+
+    "AttackAnimation": "ChainBot_Melee1",
+    "WaitForAttackAnimation": true,
+
+    "Projectiles": [
+      {
+        "ProjectileName": "ChainBot_Melee",
+        "EntityOffset": {
+          "X": 0,
+          "Y": 4
+        }
+      }
+    ]
+  },
+  {
+    "Name": "ChainBot_Melee2",
+
+    "AttackAnimation": "ChainBot_Melee2",
+    "WaitForAttackAnimation": true,
+
+    "Projectiles": [
+      {
+        "ProjectileName": "ChainBot_Melee",
+        "EntityOffset": {
+          "X": 0,
+          "Y": 4
+        }
+      }
+    ]
+  },
+  {
+    "Name": "ChainBot_MeleeCombo",
+
+    "MaxDistanceX": 32,
+    "MaxDistanceY": 8,
+
+    "IsCombo": true,
+    "ComboActions": [ "ChainBot_Melee1", "ChainBot_Melee2" ]
+  },
+
+  {
+    "Name": "Assassin_Slice1",
+
+    "MaxDistance": 24,
+
+    "AttackAnimation": "Assassin_Slice1",
+    "AttackDuration": 0.6,
+    "AttackMovement": {
+      "Direction": "ToTarget",
+      "Speed": 450,
+      "FinalSpeed": 0,
+      "EaseType": "ExpoOut",
+      "UseAnimationDuration": false,
+      "Duration": 0.4
+    },
+
+    "Projectiles": [
+      {
+        "ProjectileName": "Assassin_Slice1",
+        "OffsetDistance": 13
+      }
+    ]
+  },
+  {
+    "Name": "Assassin_Slice2",
+
+    "MaxDistance": 24,
+
+    "AttackAnimation": "Assassin_Slice2",
+    "AttackDuration": 0.6,
+    "AttackMovement": {
+      "Direction": "ToTarget",
+      "Speed": 520,
+      "FinalSpeed": 0,
+      "EaseType": "ExpoOut",
+      "UseAnimationDuration": false,
+      "Duration": 0.4
+    },
+
+    "Projectiles": [
+      {
+        "ProjectileName": "Assassin_Slice1",
+        "OffsetDistance": 13
+      }
+    ]
+  },
+  {
+    "Name": "Assassin_SliceCombo",
+
+    "MaxDistance": 24,
+
+    "IsCombo": true,
+    "ComboActions": [ "Assassin_Slice1", "Assassin_Slice2" ]
+  },
+  {
+    "Name": "Assassin_DashSlice",
+    "Cooldown": 5,
+
+    "MaxDistance": 64,
+
+    "PreAttackAnimation": "Assassin_DashSliceCharge",
+    "PreAttackDuration": 0.8,
+    "PreAttackMovement": {
+      "Direction": "AwayFromTarget",
+      "Speed": 400,
+      "FinalSpeed": 0,
+      "EaseType": "QuartOut",
+      "UseAnimationDuration": false,
+      "Duration": 0.65
+    },
+
+    "AttackAnimation": "Assassin_DashSlice",
+    "WaitForAttackAnimation": true,
+    "AttackMovement": {
+      "Direction": "ToTarget",
+      "Speed": 1700,
+      "FinalSpeed": 0,
+      "EaseType": "ExpoOut",
+      "UseAnimationDuration": false,
+      "Duration": 0.4
+    },
+
+    "Projectiles": [
+      {
+        "ProjectileName": "Assassin_DashSlice"
+      }
+    ]
+  },
+  {
+    "Name": "Assassin_Execute",
+
+    "PreAttackDuration": 0.5,
+
+    "AttackAnimation": "Assassin_Execute",
+    "AttackDuration": 1,
+
+    "Projectiles": [
+      {
+        "ProjectileName": "Assassin_Execute",
+        "OffsetDistance": 6
+      }
+    ]
+  },
+  {
+    "Name": "Assassin_DashSliceCombo",
+
+    "MaxDistance": 64,
+    "Cooldown": 5,
+
+    "IsCombo": true,
+    "ComboActions": ["Assassin_DashSlice", "Assassin_Execute"]
+  }
+]

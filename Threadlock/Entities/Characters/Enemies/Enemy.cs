@@ -28,6 +28,8 @@ namespace Threadlock.Entities.Characters.Enemies
         public float MaxDistance;
         public bool IsPursued;
 
+        SpriteAnimator _animator;
+
         ITimer _pursuitTimer;
 
         public virtual Entity TargetEntity
@@ -65,8 +67,15 @@ namespace Threadlock.Entities.Characters.Enemies
         }
 
         BehaviorTree<Enemy> _tree;
-        EnemyAction _activeAction;
-        EnemyAction _queuedAction;
+        //ScriptedEnemyAction _activeAction;
+        //ScriptedEnemyAction _queuedAction;
+        //List<ScriptedEnemyAction> _scriptedActions;
+        //List<EnemyAction2> _actions;
+        //EnemyAction2 _activeAction;
+        //EnemyAction2 _queuedAction;
+        List<EnemyAction3> _actions;
+        EnemyAction3 _activeAction;
+        EnemyAction3 _queuedAction;
 
         public Enemy(EnemyConfig config) : base(config.Name)
         {
@@ -78,21 +87,22 @@ namespace Threadlock.Entities.Characters.Enemies
             statusComponent.Emitter.AddObserver(StatusEvents.Changed, OnStatusChanged);
 
             //RENDERERS
-            var animator = AddComponent(new SpriteAnimator());
-            animator.SetLocalOffset(config.AnimatorOffset);
-            animator.SetRenderLayer(RenderLayers.YSort);
+            _animator = AddComponent(new SpriteAnimator());
+            _animator.SetLocalOffset(config.AnimatorOffset);
+            _animator.SetRenderLayer(RenderLayers.YSort);
             foreach (var spriteSheet in config.SpriteSheets)
             {
                 var texture = Game1.Scene.Content.LoadTexture(@$"Content\Textures\Characters\{config.Name}\{spriteSheet.FileName}.png");
                 var sprites = Sprite.SpritesFromAtlas(texture, spriteSheet.CellWidth, spriteSheet.CellHeight);
                 var totalColumns = texture.Width / spriteSheet.CellWidth;
                 foreach (var anim in spriteSheet.Animations)
-                    animator.AddAnimation(anim.Name, AnimatedSpriteHelper.GetSpriteArrayByRow(sprites, anim.Row, anim.Frames, totalColumns));
+                    _animator.AddAnimation(anim.Name, AnimatedSpriteHelper.GetSpriteArrayByRow(sprites, anim.Row, anim.Frames, totalColumns));
             }
+            _animator.OnAnimationCompletedEvent += OnAnimationCompleted;
 
-            AddComponent(new Shadow(animator));
+            AddComponent(new Shadow(_animator));
 
-            AddComponent(new SelectionComponent(animator, 10));
+            AddComponent(new SelectionComponent(_animator, 10));
 
             AddComponent(new SpriteFlipper());
 
@@ -133,12 +143,27 @@ namespace Threadlock.Entities.Characters.Enemies
 
 
             //ACTIONS
-            var assembly = Assembly.GetExecutingAssembly();
-            var actionTypes = assembly.GetTypes()
-                .Where(t => t.IsSubclassOf(typeof(EnemyAction)) && !t.IsAbstract && t.Namespace == $"Threadlock.Components.EnemyActions.{config.Name}");
-            foreach (var actionType in actionTypes)
-                AddComponent(Activator.CreateInstance(actionType) as EnemyAction);
+            //var assembly = Assembly.GetExecutingAssembly();
+            //var actionTypes = assembly.GetTypes()
+            //    .Where(t => t.IsSubclassOf(typeof(EnemyAction)) && !t.IsAbstract && t.Namespace == $"Threadlock.Components.EnemyActions.{config.Name}");
+            //foreach (var actionType in actionTypes)
+            //    AddComponent(Activator.CreateInstance(actionType) as EnemyAction);
 
+            //_scriptedActions = config.Actions;
+            //for (int i = 0; i < _scriptedActions.Count; i++)
+            //    _scriptedActions[i].Enemy = this;
+
+            //_actions = config.AvailableActions;
+
+            _actions = new List<EnemyAction3>();
+            foreach (var actionString in config.NewActions)
+            {
+                if (AllEnemyActions.TryGetAction(actionString, out var action))
+                {
+                    _actions.Add(action);
+                    action.LoadAnimations(ref _animator);
+                }
+            }
 
             //BEHAVIOR
             _tree = BehaviorTrees.CreateBehaviorTree(this, config.BehaviorConfig.BehaviorTreeName);
@@ -178,9 +203,17 @@ namespace Threadlock.Entities.Characters.Enemies
 
         #region OBSERVERS
 
+        void OnAnimationCompleted(string animationName)
+        {
+            if (Animations.TryGetAnimationConfig(animationName, out var config))
+            {
+                AnimatedSpriteHelper.PlayAnimation(ref _animator, config.ChainTo);
+            }
+        }
+
         void OnSceneChange()
         {
-            _activeAction?.Abort();
+            _activeAction?.Abort(this);
             _activeAction = null;
         }
 
@@ -188,7 +221,7 @@ namespace Threadlock.Entities.Characters.Enemies
         {
             if (status != StatusPriority.Normal)
             {
-                _activeAction?.Abort();
+                _activeAction?.Abort(this);
                 _activeAction = null;
             }
         }
@@ -222,30 +255,59 @@ namespace Threadlock.Entities.Characters.Enemies
 
         public bool TryQueueAction()
         {
+            //if on cooldown, can't queue any action
             if (IsOnCooldown)
                 return false;
 
-            var actions = GetComponents<EnemyAction>();
-            var groups = actions.OrderBy(a => a.Priority).GroupBy(a => a.Priority).Select(g => g.ToList());
+            //split actions into groups by priority
+            var groups = _actions.OrderByDescending(a => a.Priority).GroupBy(a => a.Priority).Select(g => g.ToList());
+
+            //try each priority group
             foreach (var group in groups)
             {
+                //init valid actions list
+                var validActions = new List<EnemyAction3>();
+
+                //check each action in the group
                 foreach (var action in group)
                 {
-                    List<EnemyAction> validActions = new List<EnemyAction>();
-                    if (action.IsOnCooldown)
-                        continue;
-                    if (action.CanExecute())
+                    //if the action can execute, add it to valid actions
+                    if (action.CanExecute(this))
                         validActions.Add(action);
+                }
 
-                    if (validActions.Any())
-                    {
-                        _queuedAction = validActions.RandomItem();
-                        return true;
-                    }
+                //if any valid actions in this group, pick a random one to do
+                if (validActions.Any())
+                {
+                    _queuedAction = validActions.RandomItem();
+                    return true;
                 }
             }
 
+            //no valid actions found, return false
             return false;
+
+            //var actions = GetComponents<EnemyAction>();
+            //var groups = actions.OrderBy(a => a.Priority).GroupBy(a => a.Priority).Select(g => g.ToList());
+            //foreach (var group in groups)
+            //{
+            //    foreach (var action in group)
+            //    {
+            //        List<EnemyAction> validActions = new List<EnemyAction>();
+            //        if (action.IsOnCooldown)
+            //            continue;
+            //        if (action.CanExecute())
+            //            validActions.Add(action);
+
+            //        if (validActions.Any())
+            //        {
+            //            _queuedAction = validActions.RandomItem();
+            //            return true;
+            //        }
+            //    }
+            //}
+
+            //return false;
         }
 
         public bool CanExecuteAction(EnemyAction action)
@@ -299,7 +361,7 @@ namespace Threadlock.Entities.Characters.Enemies
             {
                 _activeAction = _queuedAction;
                 _queuedAction = null;
-                Game1.StartCoroutine(_activeAction.BeginExecution());
+                Game1.StartCoroutine(_activeAction.BeginExecution(this));
             }
 
             //return running as long as action is active
@@ -318,32 +380,32 @@ namespace Threadlock.Entities.Characters.Enemies
             }
         }
 
-        public TaskStatus ExecuteAction(EnemyAction action)
-        {
-            //if active action isn't set to this one, it's the first time calling this. set as active and start coroutine
-            if (_activeAction != action)
-            {
-                _activeAction = action;
+        //public TaskStatus ExecuteAction(EnemyAction action)
+        //{
+        //    //if active action isn't set to this one, it's the first time calling this. set as active and start coroutine
+        //    if (_activeAction != action)
+        //    {
+        //        _activeAction = action;
 
-                Game1.StartCoroutine(action.BeginExecution());
-            }
+        //        Game1.StartCoroutine(action.BeginExecution());
+        //    }
 
-            //return running as long as action is active
-            if (action.IsActive)
-                return TaskStatus.Running;
-            else
-            {
-                //set active action to null
-                _activeAction = null;
+        //    //return running as long as action is active
+        //    if (action.IsActive)
+        //        return TaskStatus.Running;
+        //    else
+        //    {
+        //        //set active action to null
+        //        _activeAction = null;
 
-                //handle cooldown
-                IsOnCooldown = true;
-                Game1.Schedule(BehaviorConfig.ActionCooldown, timer => IsOnCooldown = false);
+        //        //handle cooldown
+        //        IsOnCooldown = true;
+        //        Game1.Schedule(BehaviorConfig.ActionCooldown, timer => IsOnCooldown = false);
 
-                //return task success
-                return TaskStatus.Success;
-            }
-        }
+        //        //return task success
+        //        return TaskStatus.Success;
+        //    }
+        //}
 
         /// <summary>
         /// watch a target, but don't move towards it
