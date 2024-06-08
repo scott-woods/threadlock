@@ -69,7 +69,7 @@
       "RunsWhenPursued": false,
       "PursuitTime": 0
     },
-    "NewActions": [ "ChainBot_MeleeCombo" ]
+    "Actions": [ "ChainBot_MeleeCombo" ]
   },
   {
     "Name": "Ghoul",
@@ -136,7 +136,7 @@
       "RunsWhenPursued": false,
       "PursuitTime": 0
     },
-    "NewActions": [ "Ghoul_Swipe" ]
+    "Actions": [ "Ghoul_Swipe" ]
   },
   {
     "Name": "Spitter",
@@ -198,7 +198,7 @@
       "RunsWhenPursued": true,
       "PursuitTime": 2
     },
-    "NewActions": [ "Spitter_Spit" ]
+    "Actions": [ "Spitter_Spit" ]
   },
   {
     "Name": "OrbMage",
@@ -270,7 +270,7 @@
       "RunsWhenPursued": false,
       "PursuitTime": 0
     },
-    "NewActions": [ "OrbMage_Spike", "OrbMage_Sweep" ]
+    "Actions": [ "OrbMage_Spike", "OrbMage_Sweep" ]
   },
   {
     "Name": "Assassin",
@@ -362,6 +362,6 @@
       "RunsWhenPursued": false,
       "PursuitTime": 0
     },
-    "NewActions": [ "Assassin_Slice1", "Assassin_Slice2", "Assassin_SliceCombo", "Assassin_DashSlice", "Assassin_DashSliceCombo" ]
+    "Actions": [ "Assassin_Slice1", "Assassin_Slice2", "Assassin_SliceCombo", "Assassin_DashSlice", "Assassin_DashSliceCombo" ]
   }
 ]

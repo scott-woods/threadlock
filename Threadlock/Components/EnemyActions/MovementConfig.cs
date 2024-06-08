@@ -16,4 +16,10 @@ namespace Threadlock.Components.EnemyActions
         public float Duration;
         public bool UseAnimationDuration = true;
     }
+
+    public enum MovementDirection
+    {
+        ToTarget,
+        AwayFromTarget
+    }
 }

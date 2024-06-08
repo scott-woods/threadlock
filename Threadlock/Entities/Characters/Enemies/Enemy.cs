@@ -67,15 +67,9 @@ namespace Threadlock.Entities.Characters.Enemies
         }
 
         BehaviorTree<Enemy> _tree;
-        //ScriptedEnemyAction _activeAction;
-        //ScriptedEnemyAction _queuedAction;
-        //List<ScriptedEnemyAction> _scriptedActions;
-        //List<EnemyAction2> _actions;
-        //EnemyAction2 _activeAction;
-        //EnemyAction2 _queuedAction;
-        List<EnemyAction3> _actions;
-        EnemyAction3 _activeAction;
-        EnemyAction3 _queuedAction;
+        List<EnemyAction> _actions;
+        EnemyAction _activeAction;
+        EnemyAction _queuedAction;
 
         public Enemy(EnemyConfig config) : base(config.Name)
         {
@@ -143,20 +137,8 @@ namespace Threadlock.Entities.Characters.Enemies
 
 
             //ACTIONS
-            //var assembly = Assembly.GetExecutingAssembly();
-            //var actionTypes = assembly.GetTypes()
-            //    .Where(t => t.IsSubclassOf(typeof(EnemyAction)) && !t.IsAbstract && t.Namespace == $"Threadlock.Components.EnemyActions.{config.Name}");
-            //foreach (var actionType in actionTypes)
-            //    AddComponent(Activator.CreateInstance(actionType) as EnemyAction);
-
-            //_scriptedActions = config.Actions;
-            //for (int i = 0; i < _scriptedActions.Count; i++)
-            //    _scriptedActions[i].Enemy = this;
-
-            //_actions = config.AvailableActions;
-
-            _actions = new List<EnemyAction3>();
-            foreach (var actionString in config.NewActions)
+            _actions = new List<EnemyAction>();
+            foreach (var actionString in config.Actions)
             {
                 if (AllEnemyActions.TryGetAction(actionString, out var action))
                 {
@@ -266,7 +248,7 @@ namespace Threadlock.Entities.Characters.Enemies
             foreach (var group in groups)
             {
                 //init valid actions list
-                var validActions = new List<EnemyAction3>();
+                var validActions = new List<EnemyAction>();
 
                 //check each action in the group
                 foreach (var action in group)
@@ -286,42 +268,6 @@ namespace Threadlock.Entities.Characters.Enemies
 
             //no valid actions found, return false
             return false;
-
-            //var actions = GetComponents<EnemyAction>();
-            //var groups = actions.OrderBy(a => a.Priority).GroupBy(a => a.Priority).Select(g => g.ToList());
-            //foreach (var group in groups)
-            //{
-            //    foreach (var action in group)
-            //    {
-            //        List<EnemyAction> validActions = new List<EnemyAction>();
-            //        if (action.IsOnCooldown)
-            //            continue;
-            //        if (action.CanExecute())
-            //            validActions.Add(action);
-
-            //        if (validActions.Any())
-            //        {
-            //            _queuedAction = validActions.RandomItem();
-            //            return true;
-            //        }
-            //    }
-            //}
-
-            //return false;
-        }
-
-        public bool CanExecuteAction(EnemyAction action)
-        {
-            if (IsOnCooldown)
-                return false;
-
-            if (_activeAction != null)
-                return false;
-
-            if (action.IsOnCooldown)
-                return false;
-
-            return action.CanExecute();
         }
 
         public bool ShouldRunSubTree()

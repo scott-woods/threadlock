@@ -28,8 +28,6 @@ namespace Threadlock.Models
         public BehaviorConfig BehaviorConfig;
 
         //actions
-        public List<string> NewActions;
-        //public List<EnemyAction2> AvailableActions;
-        //public List<ScriptedEnemyAction> Actions;
+        public List<string> Actions;
     }
 }
