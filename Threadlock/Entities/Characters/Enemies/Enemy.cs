@@ -5,6 +5,7 @@ using Nez.AI.GOAP;
 using Nez.Sprites;
 using Nez.Textures;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -27,6 +28,8 @@ namespace Threadlock.Entities.Characters.Enemies
         public float MinDistance;
         public float MaxDistance;
         public bool IsPursued;
+
+        EnemyConfig _config;
 
         SpriteAnimator _animator;
 
@@ -71,8 +74,12 @@ namespace Threadlock.Entities.Characters.Enemies
         EnemyAction _activeAction;
         EnemyAction _queuedAction;
 
+        bool _spawning = false;
+
         public Enemy(EnemyConfig config) : base(config.Name)
         {
+            _config = config;
+
             BehaviorConfig = config.BehaviorConfig;
             BaseSpeed = config.BaseSpeed;
 
@@ -84,14 +91,7 @@ namespace Threadlock.Entities.Characters.Enemies
             _animator = AddComponent(new SpriteAnimator());
             _animator.SetLocalOffset(config.AnimatorOffset);
             _animator.SetRenderLayer(RenderLayers.YSort);
-            foreach (var spriteSheet in config.SpriteSheets)
-            {
-                var texture = Game1.Scene.Content.LoadTexture(@$"Content\Textures\Characters\{config.Name}\{spriteSheet.FileName}.png");
-                var sprites = Sprite.SpritesFromAtlas(texture, spriteSheet.CellWidth, spriteSheet.CellHeight);
-                var totalColumns = texture.Width / spriteSheet.CellWidth;
-                foreach (var anim in spriteSheet.Animations)
-                    _animator.AddAnimation(anim.Name, AnimatedSpriteHelper.GetSpriteArrayByRow(sprites, anim.Row, anim.Frames, totalColumns));
-            }
+            AnimatedSpriteHelper.LoadAnimations(ref _animator, config.IdleAnimation, config.MoveAnimation, config.HitAnimation, config.DeathAnimation, config.SpawnAnimation);
             _animator.OnAnimationCompletedEvent += OnAnimationCompleted;
 
             AddComponent(new Shadow(_animator));
@@ -121,13 +121,13 @@ namespace Threadlock.Entities.Characters.Enemies
             Flags.SetFlagExclusive(ref hurtboxCollider.CollidesWithLayers, PhysicsLayers.PlayerHitbox);
             var hurtbox = AddComponent(new Hurtbox(hurtboxCollider, 0f, Nez.Content.Audio.Sounds.Chain_bot_damaged));
 
-            AddComponent(new KnockbackComponent(velocityComponent, 150, .5f));
+            AddComponent(new KnockbackComponent(velocityComponent, config.HitAnimation, 150, .5f));
 
 
             //OTHER
             AddComponent(new HealthComponent(config.MaxHealth, config.MaxHealth));
 
-            AddComponent(new DeathComponent("Die", Nez.Content.Audio.Sounds.Enemy_death_1));
+            AddComponent(new DeathComponent(config.DeathAnimation, Nez.Content.Audio.Sounds.Enemy_death_1));
 
             AddComponent(new Pathfinder(collider));
 
@@ -160,6 +160,8 @@ namespace Threadlock.Entities.Characters.Enemies
             Game1.SceneManager.Emitter.AddObserver(GlobalManagers.SceneManagerEvents.SceneChangeStarted, OnSceneChange);
 
             StartActionCooldown();
+
+            Game1.StartCoroutine(Spawn());
         }
 
         public override void OnRemovedFromScene()
@@ -173,7 +175,8 @@ namespace Threadlock.Entities.Characters.Enemies
         {
             base.Update();
 
-            _tree.Tick();
+            if (!_spawning)
+                _tree.Tick();
         }
 
         void StartActionCooldown()
@@ -181,6 +184,13 @@ namespace Threadlock.Entities.Characters.Enemies
             //handle cooldown
             IsOnCooldown = true;
             Game1.Schedule(BehaviorConfig.ActionCooldown, timer => IsOnCooldown = false);
+        }
+
+        IEnumerator Spawn()
+        {
+            _spawning = true;
+            yield return AnimatedSpriteHelper.WaitForAnimation(_animator, _config.SpawnAnimation);
+            _spawning = false;
         }
 
         #region OBSERVERS
@@ -326,33 +336,6 @@ namespace Threadlock.Entities.Characters.Enemies
             }
         }
 
-        //public TaskStatus ExecuteAction(EnemyAction action)
-        //{
-        //    //if active action isn't set to this one, it's the first time calling this. set as active and start coroutine
-        //    if (_activeAction != action)
-        //    {
-        //        _activeAction = action;
-
-        //        Game1.StartCoroutine(action.BeginExecution());
-        //    }
-
-        //    //return running as long as action is active
-        //    if (action.IsActive)
-        //        return TaskStatus.Running;
-        //    else
-        //    {
-        //        //set active action to null
-        //        _activeAction = null;
-
-        //        //handle cooldown
-        //        IsOnCooldown = true;
-        //        Game1.Schedule(BehaviorConfig.ActionCooldown, timer => IsOnCooldown = false);
-
-        //        //return task success
-        //        return TaskStatus.Success;
-        //    }
-        //}
-
         /// <summary>
         /// watch a target, but don't move towards it
         /// </summary>
@@ -370,14 +353,6 @@ namespace Threadlock.Entities.Characters.Enemies
             return TaskStatus.Running;
         }
 
-        public virtual TaskStatus TrackTarget(Entity target)
-        {
-            var pos = target.Position;
-            if (target.TryGetComponent<OriginComponent>(out var originComponent))
-                pos = originComponent.Origin;
-            return TrackTarget(pos);
-        }
-
         public virtual TaskStatus MoveToTarget(Entity target, float speed)
         {
             if (target.TryGetComponent<OriginComponent>(out var originComponent))
@@ -388,13 +363,7 @@ namespace Threadlock.Entities.Characters.Enemies
         public virtual TaskStatus MoveToTarget(Vector2 target, float speed)
         {
             //handle animation
-            if (TryGetComponent<SpriteAnimator>(out var animator))
-            {
-                if (animator.Animations.ContainsKey("Run") && !animator.IsAnimationActive("Run"))
-                {
-                    animator.Play("Run");
-                }
-            }
+            AnimatedSpriteHelper.PlayAnimation(ref _animator, _config.MoveAnimation);
 
             //follow path
             //var gridGraphManager = MapEntity.GetComponent<GridGraphManager>();
@@ -446,13 +415,7 @@ namespace Threadlock.Entities.Characters.Enemies
         public TaskStatus MoveAway(Vector2 target, float speed)
         {
             //handle animation
-            if (TryGetComponent<SpriteAnimator>(out var animator))
-            {
-                if (animator.Animations.ContainsKey("Run") && !animator.IsAnimationActive("Run"))
-                {
-                    animator.Play("Run");
-                }
-            }
+            AnimatedSpriteHelper.PlayAnimation(ref _animator, _config.MoveAnimation);
 
             var enemyPos = Position;
             if (TryGetComponent<OriginComponent>(out var enemyOrigin))
@@ -463,51 +426,13 @@ namespace Threadlock.Entities.Characters.Enemies
 
             if (TryGetComponent<VelocityComponent>(out var velocityComponent))
                 velocityComponent.Move(dir, speed);
-
-            return TaskStatus.Running;
-        }
-
-        public virtual TaskStatus MoveAway(Entity target, float speed, float desiredDistance)
-        {
-            if (target.TryGetComponent<OriginComponent>(out var originComponent))
-                return MoveAway(originComponent.Origin, speed, desiredDistance);
-            else return MoveAway(target.Position, speed, desiredDistance);
-        }
-
-        public virtual TaskStatus MoveAway(Vector2 target, float speed, float desiredDistance)
-        {
-            //handle animation
-            if (TryGetComponent<SpriteAnimator>(out var animator))
-            {
-                if (animator.Animations.ContainsKey("Run") && !animator.IsAnimationActive("Run"))
-                {
-                    animator.Play("Run");
-                }
-            }
-
-            var enemyPos = Position;
-            if (TryGetComponent<OriginComponent>(out var enemyOrigin))
-                enemyPos = enemyOrigin.Origin;
-
-            var dir = enemyPos - target;
-            dir.Normalize();
-
-            if (TryGetComponent<VelocityComponent>(out var velocityComponent))
-                velocityComponent.Move(dir, speed);
-
-            if (EntityHelper.DistanceToEntity(this, TargetEntity) > desiredDistance)
-                return TaskStatus.Success;
 
             return TaskStatus.Running;
         }
 
         public virtual TaskStatus Idle(bool trackTarget = false)
         {
-            if (TryGetComponent<SpriteAnimator>(out var animator))
-            {
-                if (!animator.IsAnimationActive("Idle"))
-                    animator.Play("Idle");
-            }
+            AnimatedSpriteHelper.PlayAnimation(ref _animator, _config.IdleAnimation);
 
             if (trackTarget)
             {

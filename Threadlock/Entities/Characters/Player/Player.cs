@@ -26,6 +26,8 @@ namespace Threadlock.Entities.Characters.Player
     {
         const float _checkRadius = 20f;
 
+        const string _idleAnimation = "Player_Idle";
+
         public static Player Instance { get; private set; }
 
         public float MoveSpeed = 135f;
@@ -95,13 +97,13 @@ namespace Threadlock.Entities.Characters.Player
             //Flags.SetFlagExclusive(ref hurtboxCollider.CollidesWithLayers, PhysicsLayers.EnemyHitbox);
             _hurtbox = AddComponent(new Hurtbox(hurtboxCollider, 2f, Nez.Content.Audio.Sounds._64_Get_hit_03));
 
-            _knockbackComponent = AddComponent(new KnockbackComponent(_velocityComponent, 110, .5f));
+            _knockbackComponent = AddComponent(new KnockbackComponent(_velocityComponent, "Player_Hit", 110, .5f));
 
             _statusComponent = AddComponent(new StatusComponent(StatusPriority.Normal));
 
             _healthComponent = AddComponent(new HealthComponent(10, 10));
 
-            _deathComponent = AddComponent(new DeathComponent("Die", Nez.Content.Audio.Sounds._69_Die_02, false));
+            _deathComponent = AddComponent(new DeathComponent("Player_Death", Nez.Content.Audio.Sounds._69_Die_02, false));
 
             _originComponent = AddComponent(new OriginComponent(_collider));
 
@@ -120,12 +122,6 @@ namespace Threadlock.Entities.Characters.Player
                 .Where(t => t.IsSubclassOf(typeof(PlayerState)) && !t.IsAbstract && t != typeof(Idle));
             foreach (var type in stateTypes)
                 StateMachine.AddState((PlayerState)Activator.CreateInstance(type));
-            //StateMachine.AddState(new Move());
-            //StateMachine.AddState(new BasicAttackState());
-            //StateMachine.AddState(new ActionState());
-            //StateMachine.AddState(new DashState());
-            //StateMachine.AddState(new StunnedState());
-            //StateMachine.AddState(new CutsceneState());
 
             Game1.SceneManager.Emitter.AddObserver(SceneManagerEvents.SceneChangeStarted, OnSceneChangeStarted);
             Game1.Emitter.AddObserver(CoreEvents.SceneChanged, OnSceneChanged);
@@ -168,61 +164,31 @@ namespace Threadlock.Entities.Characters.Player
             var dir = Controls.Instance.DirectionalInput.Value;
             dir.Normalize();
 
-            string animation = "";
-            if (dir.Y < 0 && Math.Abs(dir.X) < .1f)
-                animation = "RunUp";
-            else if (dir.Y > 0 && Math.Abs(dir.X) < .1f)
-                animation = "RunDown";
-            else
-                animation = "Run";
-
-            //if (_basicWeapon.GetType() != typeof(Sword))
-            //    animation += "NoSword";
-
-            if (!_animator.IsAnimationActive(animation))
-                _animator.Play(animation);
+            AnimatedSpriteHelper.PlayAnimation(ref _animator, "Player_Run");
 
             _velocityComponent.Move(dir, MoveSpeed);
         }
 
         public void Idle()
         {
-            var dir = _velocityComponent.LastNonZeroDirection;
+            AnimatedSpriteHelper.PlayAnimation(ref _animator, "Player_Idle");
 
-            string animation = "";
-            if (dir.Y < 0 && Math.Abs(dir.X) < .75f)
-                animation = "IdleUp";
-            else if (dir.Y > 0 && Math.Abs(dir.X) < .75f)
-                animation = "IdleDown";
-            else
-                animation = "Idle";
-
-            //if (_basicWeapon.GetType() != typeof(Sword))
-            //    animation += "NoSword";
-
-            if (!_animator.IsAnimationActive(animation))
-                _animator.Play(animation);
-
-            _velocityComponent.Direction = Vector2.Zero;
+            //_velocityComponent.Direction = Vector2.Zero;
         }
 
         public void IdleInFacingDirection()
         {
             var dir = GetFacingDirection();
 
-            string animation = "";
-            if (dir.Y < 0 && Math.Abs(dir.X) < .75f)
-                animation = "IdleUp";
-            else if (dir.Y > 0 && Math.Abs(dir.X) < .75f)
-                animation = "IdleDown";
+            string dirString;
+            if (dir.Y < 0 && Math.Abs(dir.X) < .1f)
+                dirString = "Up";
+            else if (dir.Y > 0 && Math.Abs(dir.X) < .1f)
+                dirString = "Down";
             else
-                animation = "Idle";
+                dirString = "Right";
 
-            //if (_basicWeapon.GetType() != typeof(Sword))
-            //    animation += "NoSword";
-
-            if (!_animator.IsAnimationActive(animation))
-                _animator.Play(animation);
+            AnimatedSpriteHelper.PlayAnimation(ref _animator, $"Player_Idle_{dirString}");
 
             _velocityComponent.LastNonZeroDirection = dir;
         }
@@ -271,6 +237,7 @@ namespace Threadlock.Entities.Characters.Player
 
         void AddAnimations()
         {
+            AnimatedSpriteHelper.LoadAnimations(ref _animator, "Player_Idle", "Player_Walk", "Player_Run", "Player_Hit", "Player_Death");
             var json = File.ReadAllText("Content/Textures/Characters/Player/PlayerMainConfig.json");
             var export = Json.FromJson<AsepriteExport>(json);
             var texture = Game1.Content.LoadTexture($"Content/Textures/Characters/Player/{export.Meta.Image}");

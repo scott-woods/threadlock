@@ -3,431 +3,161 @@
     "Name": "ChainBot",
     "MaxHealth": 10,
     "BaseSpeed": 100,
-    "hurtboxSize": "8 18",
-    "colliderSize": "10 5",
-    "colliderOffset": "-1 7",
-    "animatorOffset": "",
-    "SpriteSheets": [
-      {
-        "FileName": "chain_bot_sprites",
-        "CellWidth": 126,
-        "CellHeight": 39,
-        "Animations": [
-          {
-            "Name": "Idle",
-            "Row": 0,
-            "Frames": 4
-          },
-          {
-            "Name": "Run",
-            "Row": 1,
-            "Frames": 8
-          },
-          {
-            "Name": "TransitionToCharge",
-            "Row": 2,
-            "Frames": 2
-          },
-          {
-            "Name": "Charge",
-            "Row": 3,
-            "Frames": 4
-          },
-          {
-            "Name": "Attack",
-            "Row": 4,
-            "Frames": 8
-          },
-          {
-            "Name": "Hit",
-            "Row": 5,
-            "Frames": 2
-          },
-          {
-            "Name": "Die",
-            "Row": 6,
-            "Frames": 5
-          }
-        ]
-      }
-    ],
+    "HurtboxSize": {
+      "X": 8,
+      "Y": 18
+    },
+    "ColliderSize": {
+      "X": 10,
+      "Y": 5
+    },
+    "ColliderOffset": {
+      "X": -1,
+      "Y": 7
+    },
+    "AnimatorOffset": {
+      "X": 0,
+      "Y": 0
+    },
+    "IdleAnimation": "ChainBot_Idle",
+    "MoveAnimation": "ChainBot_Move",
+    "HitAnimation": "ChainBot_Hit",
+    "DeathAnimation": "ChainBot_Death",
     "BehaviorConfig": {
       "BehaviorTreeName": "Basic",
       "ActionCooldown": 2,
       "RunsWhenPursued": false,
       "PursuitTime": 0
     },
-    "Actions": [
-      {
-        "Requirements": [
-          {
-            "Type": "DistanceRequirement",
-            "Min": 0,
-            "Max": 32,
-            "Axis": "X"
-          },
-          {
-            "Type": "DistanceRequirement",
-            "Max": 8,
-            "Axis": "Y"
-          }
-        ],
-        "ScriptActions": [
-          { "Command": "PlayAnimation(Animation={Name='TransitionToCharge'})" },
-          { "Command": "PlayAnimation(Animation={Name='Charge', Loop=true, Duration=.2})" },
-          { "Command": "Wait(Time=.2)"},
-          {
-            "Type": "MeleeAttack",
-            "Params": {
-              "Animation": {
-                "Name": "Attack",
-                "Sounds": {
-                  "0": [ "81_Whip_woosh_1" ],
-                  "4": [ "81_Whip_woosh_1" ]
-                }
-              },
-              "Hitbox": {
-                "Size": {
-                  "X": 48,
-                  "Y": 10
-                },
-                "Damage": 2,
-                "Offset": {
-                  "X": 20,
-                  "Y": 4
-                },
-                "ActiveFrames": [ 0, 4 ]
-              }
-            }
-          }
-        ]
-      }
-    ]
+    "Actions": [ "ChainBot_MeleeCombo" ]
   },
   {
     "Name": "Ghoul",
     "MaxHealth": 7,
     "BaseSpeed": 120,
-    "hurtboxSize": "10 17",
-    "colliderSize": "9 6",
-    "colliderOffset": "0 9",
-    "animatorOffset": "",
-    "SpriteSheets": [
-      {
-        "FileName": "ghoul_sprites",
-        "CellWidth": 62,
-        "CellHeight": 33,
-        "Animations": [
-          {
-            "Name": "Idle",
-            "Row": 0,
-            "Frames": 4
-          },
-          {
-            "Name": "Run",
-            "Row": 1,
-            "Frames": 9
-          },
-          {
-            "Name": "Ghoul_Swipe",
-            "Row": 2,
-            "Frames": 7
-          },
-          {
-            "Name": "Hit",
-            "Row": 3,
-            "Frames": 2
-          },
-          {
-            "Name": "Die",
-            "Row": 4,
-            "Frames": 8
-          },
-          {
-            "Name": "Spawn",
-            "Row": 5,
-            "Frames": 11
-          }
-        ]
-      }
-    ],
+    "HurtboxSize": {
+      "X": 10,
+      "Y": 17
+    },
+    "ColliderSize": {
+      "X": 9,
+      "Y": 6
+    },
+    "ColliderOffset": {
+      "X": 0,
+      "Y": 9
+    },
+    "AnimatorOffset": {
+      "X": 0,
+      "Y": 0
+    },
+    "IdleAnimation": "Ghoul_Idle",
+    "MoveAnimation": "Ghoul_Move",
+    "HitAnimation": "Ghoul_Hit",
+    "DeathAnimation": "Ghoul_Death",
+    "SpawnAnimation": "Ghoul_Spawn",
     "BehaviorConfig": {
       "BehaviorTreeName": "Basic",
       "ActionCooldown": 0.5,
       "RunsWhenPursued": false,
       "PursuitTime": 0
     },
-    "NewActions": ["Ghoul_Swipe"]
-    //"Actions": [
-    //  {
-    //    "Type": "MeleeAttack",
-    //    "MaxDistanceX": 16,
-    //    "MaxDistanceY": 8,
-
-    //  }
-    //  {
-    //    "Requirements": [
-    //      {
-    //        "Type": "DistanceRequirement",
-    //        "Max": 16,
-    //        "Axis": "X"
-    //      },
-    //      {
-    //        "Type": "DistanceRequirement",
-    //        "Max": 8,
-    //        "Axis": "Y"
-    //      }
-    //    ],
-    //    "ScriptActions": [
-    //      { "Command": "MeleeAttack(Animation={Name='Attack', Sounds={0=['ghoul_claw']}}, Hitbox={Damage=1, Radius=8, ActiveFrames=[2], LocalOffset={X=9}})" }
-    //    ]
-    //  }
-    //]
+    "Actions": [ "Ghoul_Swipe" ]
   },
   {
     "Name": "Spitter",
     "MaxHealth": 8,
     "BaseSpeed": 75,
-    "hurtboxSize": "11 20",
-    "colliderSize": "6 6",
-    "colliderOffset": "-4 8",
-    "animatorOffset": "",
-    "SpriteSheets": [
-      {
-        "FileName": "spitter_sheet",
-        "CellWidth": 77,
-        "CellHeight": 39,
-        "Animations": [
-          {
-            "Name": "Idle",
-            "Row": 0,
-            "Frames": 6
-          },
-          {
-            "Name": "Run",
-            "Row": 1,
-            "Frames": 7
-          },
-          {
-            "Name": "Attack",
-            "Row": 2,
-            "Frames": 8
-          },
-          {
-            "Name": "Hit",
-            "Row": 3,
-            "Frames": 3
-          },
-          {
-            "Name": "Die",
-            "Row": 4,
-            "Frames": 9
-          }
-        ]
-      }
-    ],
+    "HurtboxSize": {
+      "X": 11,
+      "Y": 20
+    },
+    "ColliderSize": {
+      "X": 6,
+      "Y": 6
+    },
+    "ColliderOffset": {
+      "X": -4,
+      "Y": 8
+    },
+    "AnimatorOffset": {
+      "X": 0,
+      "Y": 0
+    },
+    "IdleAnimation": "Spitter_Idle",
+    "MoveAnimation": "Spitter_Move",
+    "HitAnimation": "Spitter_Hit",
+    "DeathAnimation": "Spitter_Death",
     "BehaviorConfig": {
       "BehaviorTreeName": "Basic",
       "ActionCooldown": 1.5,
       "RunsWhenPursued": true,
       "PursuitTime": 2
     },
-    "Actions": [
-      {
-        "Requirements": [
-          {
-            "Type": "DistanceRequirement",
-            "Max": 128
-          },
-          { "Type": "LineOfSight" }
-        ],
-        "ScriptActions": [
-          { "Command": "FireProjectile(Name=spitter_projectileConfig, Speed=210, Hitbox={Damage=1,Radius=3}, DestroyOnWall=true, Animation={Name=Attack, Sounds={3=['spitter_fire']}}, LaunchFrame=3)" }
-        ]
-      }
-    ]
+    "Actions": [ "Spitter_Spit" ]
   },
   {
     "Name": "OrbMage",
     "MaxHealth": 8,
     "BaseSpeed": 45,
-    "hurtboxSize": "6 18",
-    "colliderSize": "10 7",
-    "colliderOffset": "-5 5",
-    "animatorOffset": "38 -5",
-    "SpriteSheets": [
-      {
-        "FileName": "orb_mage_sprites",
-        "CellWidth": 119,
-        "CellHeight": 34,
-        "Animations": [
-          {
-            "Name": "Idle",
-            "Row": 0,
-            "Frames": 3
-          },
-          {
-            "Name": "Run",
-            "Row": 1,
-            "Frames": 8
-          },
-          {
-            "Name": "Heal",
-            "Row": 2,
-            "Frames": 14
-          },
-          {
-            "Name": "Attack",
-            "Row": 3,
-            "Frames": 13
-          },
-          {
-            "Name": "SweepAttack",
-            "Row": 5,
-            "Frames": 16
-          },
-          {
-            "Name": "Hit",
-            "Row": 6,
-            "Frames": 3
-          },
-          {
-            "Name": "Die",
-            "Row": 7,
-            "Frames": 7
-          }
-        ]
-      }
-    ],
+    "HurtboxSize": {
+      "X": 6,
+      "Y": 18
+    },
+    "ColliderSize": {
+      "X": 10,
+      "Y": 7
+    },
+    "ColliderOffset": {
+      "X": -5,
+      "Y": 5
+    },
+    "AnimatorOffset": {
+      "X": 38,
+      "Y": -5
+    },
+    "IdleAnimation": "OrbMage_Idle",
+    "MoveAnimation": "OrbMage_Move",
+    "HitAnimation": "OrbMage_Hit",
+    "DeathAnimation": "OrbMage_Death",
     "BehaviorConfig": {
       "BehaviorTreeName": "Basic",
       "ActionCooldown": 1.5,
       "RunsWhenPursued": false,
       "PursuitTime": 0
     },
-    "Actions": [
-      {
-        "Requirements": [
-          {
-            "Type": "DistanceRequirement",
-            "Max": 64
-          }
-        ],
-        "ScriptActions": [
-          { "Command": "MeleeAttack(Animation={Name=SweepAttack, Vfx=[{Name=orb_mage_sweep_vfxConfig, Offset={X=44,Y=44}, Rotate=true, StartFrame=8, Flip=true}]}, Hitbox={Size={X=62,Y=11}, Offset={Y=10}, LocalOffset={X=31}, Damage=2, ActiveFrames=[8], Rotate=true})"}
-        ]
-      }
-    ]
+    "Actions": [ "OrbMage_Spike", "OrbMage_Sweep" ]
   },
   {
     "Name": "Assassin",
     "MaxHealth": 11,
     "BaseSpeed": 105,
-    "hurtboxSize": "13 18",
-    "colliderSize": "9 4",
-    "colliderOffset": "-4 3",
-    "animatorOffset": "30 -2",
-    "SpriteSheets": [
-      {
-        "FileName": "assassin_all",
-        "CellWidth": 91,
-        "CellHeight": 19,
-        "Animations": [
-          {
-            "Name": "Idle",
-            "Row": 0,
-            "Frames": 9
-          },
-          {
-            "Name": "Run",
-            "Row": 1,
-            "Frames": 8
-          },
-          {
-            "Name": "Jump",
-            "Row": 2,
-            "Frames": 4
-          },
-          {
-            "Name": "Fall",
-            "Row": 3,
-            "Frames": 4
-          },
-          {
-            "Name": "Land",
-            "Row": 4,
-            "Frames": 4
-          },
-          {
-            "Name": "Attack_1",
-            "Row": 5,
-            "Frames": 4
-          },
-          {
-            "Name": "Attack_2",
-            "Row": 6,
-            "Frames": 5
-          },
-          {
-            "Name": "SliceAttack",
-            "Row": 7,
-            "Frames": 10
-          },
-          {
-            "Name": "CrossSlice",
-            "Row": 8,
-            "Frames": 5
-          },
-          {
-            "Name": "Hit",
-            "Row": 9,
-            "Frames": 2
-          },
-          {
-            "Name": "Die",
-            "Row": 10,
-            "Frames": 8
-          }
-        ]
-      }
-    ],
+    "HurtboxSize": {
+      "X": 13,
+      "Y": 18
+    },
+    "ColliderSize": {
+      "X": 9,
+      "Y": 4
+    },
+    "ColliderOffset": {
+      "X": -4,
+      "Y": 3
+    },
+    "AnimatorOffset": {
+      "X": 30,
+      "Y": -2
+    },
+    "IdleAnimation": "Assassin_Idle",
+    "MoveAnimation": "Assassin_Move",
+    "HitAnimation": "Assassin_Hit",
+    "DeathAnimation": "Assassin_Death",
     "BehaviorConfig": {
       "BehaviorTreeName": "Basic",
       "ActionCooldown": 1.5,
       "RunsWhenPursued": false,
       "PursuitTime": 0
     },
-    "Actions": [
-      {
-        "Requirements": [
-          {
-            "Type": "DistanceRequirement",
-            "Max": 24
-          }
-        ],
-        "ScriptActions": [
-          { "Command": "PlayAnimation(Animation={Name='Land'})" },
-          { "Command": "MeleeAttack(Hitbox={Radius=8, Damage=1, Offset={X=13,Y=13}, ActiveFrames=[0]}, Animation={Name='Attack_1', Sounds={0=['19_Slash_01']}}, Movement={Speed=450, EaseType='ExpoOut'})" },
-          { "Command": "Wait(Time=.2)" },
-          { "Command": "MeleeAttack(Hitbox={Radius=8, Damage=1, Offset={X=13,Y=13}, ActiveFrames=[0]}, Animation={Name='Attack_2', Sounds={0=['19_Slash_01']}}, Movement={Speed=520, EaseType='ExpoOut'})" }
-        ]
-      },
-      {
-        "Priority": 1,
-        "Cooldown": 5,
-        "Requirements": [
-          {
-            "Type": "DistanceRequirement",
-            "Max": 64
-          }
-        ],
-        "ScriptActions": [
-          { "Command": "PlayAnimation(Animation={Name='SliceAttack', Frames=[0,1,2,3,4], Sounds={0=['23_Slash_05']}}, Movement={Speed=400, EaseType=QuartOut, MovementDirection=AwayFromTarget})" },
-          { "Command": "MeleeAttack(Animation={Name='SliceAttack', Frames=[5, 6, 7, 8, 9], Sounds={0=['22_Slash_04']}, Vfx=[{Name=assassin_vfxConfig, Offset={X=45,Y=45}, Rotate=true}]}, Hitbox={Radius=8, Damage=3, Offset={X=16, Y=16}, ActiveFrames=[5,6]}, Movement={Speed=1700, EaseType=ExpoOut})" },
-          { "Command": "Wait(Time=.5)" },
-          { "Command": "MeleeAttack(Animation={Name=CrossSlice, Sounds={0=['21_Slash_03']}}, Hitbox={Radius=14, Damage=3, Offset={X=6,Y=6}, ActiveFrames=[0]})"}
-        ]
-      }
-    ]
+    "Actions": [ "Assassin_Slice1", "Assassin_Slice2", "Assassin_SliceCombo", "Assassin_DashSlice", "Assassin_DashSliceCombo" ]
   }
 ]

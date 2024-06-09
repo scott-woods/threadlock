@@ -22,7 +22,11 @@ namespace Threadlock.Models
 
         //animator
         public Vector2 AnimatorOffset;
-        public List<SpriteSheetConfig> SpriteSheets;
+        public string IdleAnimation;
+        public string MoveAnimation;
+        public string HitAnimation;
+        public string DeathAnimation;
+        public string SpawnAnimation;
 
         //behavior
         public BehaviorConfig BehaviorConfig;

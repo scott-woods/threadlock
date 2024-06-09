@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Threadlock.Helpers;
 
 namespace Threadlock.Components
 {
@@ -43,7 +44,7 @@ namespace Threadlock.Components
 
             if (Entity.TryGetComponent<SpriteAnimator>(out var animator))
             {
-                animator.Play(_deathAnimName, SpriteAnimator.LoopMode.Once);
+                AnimatedSpriteHelper.PlayAnimation(ref animator, _deathAnimName);
                 animator.OnAnimationCompletedEvent += OnAnimationCompleted;
             }
             else

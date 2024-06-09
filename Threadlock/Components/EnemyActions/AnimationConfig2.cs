@@ -21,8 +21,19 @@ namespace Threadlock.Components.EnemyActions
 
         public bool Loop;
 
+        public string Base;
         public string ChainTo;
 
         public Dictionary<int, FrameData> FrameData = new Dictionary<int, FrameData>();
+
+        public bool UseDirections;
+        public Dictionary<string, string> DirectionalAnimations = new Dictionary<string, string>();
+        public DirectionSource DirectionSource;
+    }
+
+    public enum DirectionSource
+    {
+        Velocity,
+        Aiming
     }
 }

@@ -17,11 +17,10 @@ namespace Threadlock.StaticData
         {
             var dict = new Dictionary<string, EnemyConfig>();
 
-            if (File.Exists("Content/Data/Enemies2.json"))
+            if (File.Exists("Content/Data/Enemies.json"))
             {
-                var json = File.ReadAllText("Content/Data/Enemies2.json");
+                var json = File.ReadAllText("Content/Data/Enemies.json");
                 var settings = new JsonSettings();
-                //var settings = new JsonSettings { TypeConverters = new JsonTypeConverter[] { new EnemyConfigTypeConverter(), new RequirementConverter(), new EnemyActionFactory() } };
                 var enemyConfigs = Json.FromJson<EnemyConfig[]>(json, settings);
                 foreach (var config in enemyConfigs)
                     dict.Add(config.Name, config);

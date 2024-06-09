@@ -1,5 +1,365 @@
 [
   {
+    "Name": "Player_Idle",
+    "UseDirections": true,
+    "DirectionalAnimations": {
+      "Up": "Player_Idle_Up",
+      "Down": "Player_Idle_Down",
+      "Right": "Player_Idle_Right"
+    }
+  },
+  {
+    "Name": "Player_Run",
+    "UseDirections": true,
+    "DirectionalAnimations": {
+      "Up": "Player_Run_Up",
+      "Down": "Player_Run_Down",
+      "Right": "Player_Run_Right"
+    }
+  },
+  {
+    "Name": "Player_Walk",
+    "UseDirections": true,
+    "DirectionalAnimations": {
+      "Up": "Player_Walk_Up",
+      "Down": "Player_Walk_Down",
+      "Right": "Player_Walk_Right"
+    }
+  },
+  {
+    "Name": "Player_Thrust",
+    "UseDirections": true,
+    "DirectionalAnimations": {
+      "Up": "Player_Thrust_Up",
+      "Down": "Player_Thrust_Down",
+      "Right": "Player_Thrust_Right"
+    }
+  },
+  {
+    "Name": "Player_Slash",
+    "UseDirections": true,
+    "DirectionalAnimations": {
+      "Up": "Player_Slash_Up",
+      "Down": "Player_Slash_Down",
+      "Right": "Player_Slash_Right"
+    }
+  },
+  {
+    "Name": "Player_Roll",
+    "UseDirections": true,
+    "DirectionalAnimations": {
+      "Up": "Player_Roll_Up",
+      "Down": "Player_Roll_Down",
+      "Right": "Player_Roll_Right"
+    }
+  },
+  {
+    "Name": "Player_Idle_Down",
+    "Path": "Characters/PlayerSprites",
+    "CellWidth": 64,
+    "CellHeight": 65,
+    "Row": 0,
+    "Frames": 12,
+    "Loop": true
+  },
+  {
+    "Name": "Player_Walk_Down",
+    "Path": "Characters/PlayerSprites",
+    "CellWidth": 64,
+    "CellHeight": 65,
+    "Row": 5,
+    "Frames": 8,
+    "Loop": true
+  },
+  {
+    "Name": "Player_Run_Down",
+    "Path": "Characters/PlayerSprites",
+    "CellWidth": 64,
+    "CellHeight": 65,
+    "Row": 6,
+    "Frames": 8,
+    "Loop": true
+  },
+  {
+    "Name": "Player_Thrust_Down",
+    "Path": "Characters/PlayerSprites",
+    "CellWidth": 64,
+    "CellHeight": 65,
+    "Row": 7,
+    "Frames": 4
+  },
+  {
+    "Name": "Player_Slash_Down",
+    "Path": "Characters/PlayerSprites",
+    "CellWidth": 64,
+    "CellHeight": 65,
+    "Row": 8,
+    "Frames": 7
+  },
+  {
+    "Name": "Player_Roll_Down",
+    "Path": "Characters/PlayerSprites",
+    "CellWidth": 64,
+    "CellHeight": 65,
+    "Row": 9,
+    "Frames": 8
+  },
+  {
+    "Name": "Player_Idle_Right",
+    "Path": "Characters/PlayerSprites",
+    "CellWidth": 64,
+    "CellHeight": 65,
+    "Row": 10,
+    "Frames": 12,
+    "Loop": true
+  },
+  {
+    "Name": "Player_Walk_Right",
+    "Path": "Characters/PlayerSprites",
+    "CellWidth": 64,
+    "CellHeight": 65,
+    "Row": 11,
+    "Frames": 8,
+    "Loop": true
+  },
+  {
+    "Name": "Player_Run_Right",
+    "Path": "Characters/PlayerSprites",
+    "CellWidth": 64,
+    "CellHeight": 65,
+    "Row": 12,
+    "Frames": 8,
+    "Loop": true
+  },
+  {
+    "Name": "Player_Roll_Right",
+    "Path": "Characters/PlayerSprites",
+    "CellWidth": 64,
+    "CellHeight": 65,
+    "Row": 13,
+    "Frames": 6
+  },
+  {
+    "Name": "Player_Thrust_Right",
+    "Path": "Characters/PlayerSprites",
+    "CellWidth": 64,
+    "CellHeight": 65,
+    "Row": 14,
+    "Frames": 4
+  },
+  {
+    "Name": "Player_Slash_Right",
+    "Path": "Characters/PlayerSprites",
+    "CellWidth": 64,
+    "CellHeight": 65,
+    "Row": 15,
+    "Frames": 5
+  },
+  {
+    "Name": "Player_Idle_Up",
+    "Path": "Characters/PlayerSprites",
+    "CellWidth": 64,
+    "CellHeight": 65,
+    "Row": 16,
+    "Frames": 12,
+    "Loop": true
+  },
+  {
+    "Name": "Player_Walk_Up",
+    "Path": "Characters/PlayerSprites",
+    "CellWidth": 64,
+    "CellHeight": 65,
+    "Row": 17,
+    "Frames": 8,
+    "Loop": true
+  },
+  {
+    "Name": "Player_Run_Up",
+    "Path": "Characters/PlayerSprites",
+    "CellWidth": 64,
+    "CellHeight": 65,
+    "Row": 18,
+    "Frames": 8,
+    "Loop": true
+  },
+  {
+    "Name": "Player_Thrust_Up",
+    "Path": "Characters/PlayerSprites",
+    "CellWidth": 64,
+    "CellHeight": 65,
+    "Row": 19,
+    "Frames": 4
+  },
+  {
+    "Name": "Player_Slash_Up",
+    "Path": "Characters/PlayerSprites",
+    "CellWidth": 64,
+    "CellHeight": 65,
+    "Row": 20,
+    "Frames": 7
+  },
+  {
+    "Name": "Player_Roll_Up",
+    "Path": "Characters/PlayerSprites",
+    "CellWidth": 64,
+    "CellHeight": 65,
+    "Row": 21,
+    "Frames": 8
+  },
+  {
+    "Name": "Player_Death",
+    "Path": "Characters/PlayerSprites",
+    "CellWidth": 64,
+    "CellHeight": 65,
+    "Row": 22,
+    "Frames": 13
+  },
+
+  {
+    "Name": "ChainBot_Idle",
+    "Path": "Characters/ChainBotSprites",
+    "CellWidth": 126,
+    "CellHeight": 39,
+    "Row": 0,
+    "Frames": 4,
+    "Loop": true
+  },
+  {
+    "Name": "ChainBot_Move",
+    "Path": "Characters/ChainBotSprites",
+    "CellWidth": 126,
+    "CellHeight": 39,
+    "Row": 1,
+    "Frames": 8,
+    "Loop": true
+  },
+  {
+    "Name": "ChainBot_Melee1",
+    "Path": "Characters/ChainBotSprites",
+    "CellWidth": 126,
+    "CellHeight": 39,
+    "Row": 4,
+    "Frames": 4,
+    "FrameData": { "0": { "Sounds": [ "81_Whip_woosh_1" ] } }
+  },
+  {
+    "Name": "ChainBot_Melee2",
+    "Path": "Characters/ChainBotSprites",
+    "CellWidth": 126,
+    "CellHeight": 39,
+    "Row": 4,
+    "Frames": 4,
+    "StartFrame": 4,
+    "FrameData": { "0": { "Sounds": [ "81_Whip_woosh_1" ] } }
+  },
+  {
+    "Name": "ChainBot_TransitionToCharge",
+    "Path": "Characters/ChainBotSprites",
+    "CellWidth": 126,
+    "CellHeight": 39,
+    "Row": 2,
+    "Frames": 2,
+    "ChainTo": "ChainBot_Charge"
+  },
+  {
+    "Name": "ChainBot_Charge",
+    "Path": "Characters/ChainBotSprites",
+    "CellWidth": 126,
+    "CellHeight": 39,
+    "Row": 3,
+    "Frames": 4,
+    "Loop": true
+  },
+  {
+    "Name": "ChainBot_Hit",
+    "Path": "Characters/ChainBotSprites",
+    "CellWidth": 126,
+    "CellHeight": 39,
+    "Row": 5,
+    "Frames": 2,
+    "Loop": true
+  },
+  {
+    "Name": "ChainBot_Death",
+    "Path": "Characters/ChainBotSprites",
+    "CellWidth": 126,
+    "CellHeight": 39,
+    "Row": 6,
+    "Frames": 5
+  },
+
+  {
+    "Name": "Ghoul_Idle",
+    "Path": "Characters/GhoulSprites",
+    "CellWidth": 62,
+    "CellHeight": 33,
+    "Row": 0,
+    "Frames": 4,
+    "Loop": true
+  },
+  {
+    "Name": "Ghoul_Move",
+    "Path": "Characters/GhoulSprites",
+    "CellWidth": 62,
+    "CellHeight": 33,
+    "Row": 1,
+    "Frames": 9,
+    "Loop": true
+  },
+  {
+    "Name": "Ghoul_Swipe",
+    "Path": "Characters/GhoulSprites",
+    "CellWidth": 62,
+    "CellHeight": 33,
+    "Row": 2,
+    "Frames": 7,
+    "FrameData": { "0": { "Sounds": [ "ghoul_claw" ] } }
+  },
+  {
+    "Name": "Ghoul_Hit",
+    "Path": "Characters/GhoulSprites",
+    "CellWidth": 62,
+    "CellHeight": 33,
+    "Row": 3,
+    "Frames": 2,
+    "Loop": true
+  },
+  {
+    "Name": "Ghoul_Death",
+    "Path": "Characters/GhoulSprites",
+    "CellWidth": 62,
+    "CellHeight": 33,
+    "Row": 4,
+    "Frames": 8
+  },
+  {
+    "Name": "Ghoul_Spawn",
+    "Path": "Characters/GhoulSprites",
+    "CellWidth": 62,
+    "CellHeight": 33,
+    "Row": 5,
+    "Frames": 11
+  },
+
+  {
+    "Name": "Spitter_Idle",
+    "Path": "Characters/spitter_sheet",
+    "CellWidth": 77,
+    "CellHeight": 39,
+    "Row": 0,
+    "Frames": 6,
+    "Loop": true
+  },
+  {
+    "Name": "Spitter_Move",
+    "Path": "Characters/spitter_sheet",
+    "CellWidth": 77,
+    "CellHeight": 39,
+    "Row": 1,
+    "Frames": 7,
+    "Loop": true
+  },
+  {
     "Name": "Spitter_Charge",
     "Path": "Characters/spitter_sheet",
     "CellWidth": 77,
@@ -18,57 +378,21 @@
     "FrameData": { "0": { "Sounds": [ "spitter_fire" ] } }
   },
   {
-    "Name": "SpitterProjectileTravel",
-    "Path": "Projectiles/spitter_projectile",
-    "CellWidth": 16,
-    "CellHeight": 16,
-    "Row": 0,
-    "Frames": 4,
+    "Name": "Spitter_Hit",
+    "Path": "Characters/spitter_sheet",
+    "CellWidth": 77,
+    "CellHeight": 39,
+    "Row": 3,
+    "Frames": 3,
     "Loop": true
   },
   {
-    "Name": "SpitterProjectileBurst1",
-    "Path": "Projectiles/spitter_projectile",
-    "CellWidth": 16,
-    "CellHeight": 16,
-    "Row": 1,
-    "Frames": 7
-  },
-  {
-    "Name": "SpitterProjectileBurst2",
-    "Path": "Projectiles/spitter_projectile",
-    "CellWidth": 16,
-    "CellHeight": 16,
-    "Row": 2,
-    "Frames": 6
-  },
-
-  {
-    "Name": "OrbMageSpikeTelegraph",
-    "Path": "Projectiles/OrbMageSpike",
-    "CellWidth": 119,
-    "CellHeight": 34,
-    "Row": 0,
-    "Frames": 3,
-    "FrameData": {"0": {"Sounds": ["orb_mage_telegraph"]}}
-  },
-  {
-    "Name": "OrbMageSpikeFire",
-    "Path": "Projectiles/OrbMageSpike",
-    "CellWidth": 119,
-    "CellHeight": 34,
-    "Row": 1,
-    "Frames": 6,
-    "FrameData": { "0": { "Sounds": [ "orb_mage_attack" ] } }
-  },
-  {
-    "Name": "OrbMageSweepVfx",
-    "Path": "Projectiles/OrbMageSweepVfx",
-    "CellWidth": 87,
-    "CellHeight": 34,
-    "Row": 0,
-    "Frames": 8,
-    "FrameData": { "0": { "Sounds": [ "orb_mage_attack" ] } }
+    "Name": "Spitter_Death",
+    "Path": "Characters/spitter_sheet",
+    "CellWidth": 77,
+    "CellHeight": 39,
+    "Row": 4,
+    "Frames": 9
   },
 
   {
@@ -124,7 +448,7 @@
     "Loop": true
   },
   {
-    "Name": "OrbMage_Die",
+    "Name": "OrbMage_Death",
     "Path": "Characters/OrbMageSprites",
     "CellWidth": 119,
     "CellHeight": 34,
@@ -133,43 +457,47 @@
   },
 
   {
-    "Name": "ChainBot_Melee1",
-    "Path": "Characters/ChainBotSprites",
-    "CellWidth": 126,
-    "CellHeight": 39,
-    "Row": 4,
-    "Frames": 4,
-    "FrameData": { "0": { "Sounds": [ "81_Whip_woosh_1" ] } }
-  },
-  {
-    "Name": "ChainBot_Melee2",
-    "Path": "Characters/ChainBotSprites",
-    "CellWidth": 126,
-    "CellHeight": 39,
-    "Row": 4,
-    "Frames": 4,
-    "StartFrame": 4,
-    "FrameData": { "0": { "Sounds": [ "81_Whip_woosh_1" ] } }
-  },
-  {
-    "Name": "ChainBot_TransitionToCharge",
-    "Path": "Characters/ChainBotSprites",
-    "CellWidth": 126,
-    "CellHeight": 39,
-    "Row": 2,
-    "Frames": 2,
-    "ChainTo": "ChainBot_Charge"
-  },
-  {
-    "Name": "ChainBot_Charge",
-    "Path": "Characters/ChainBotSprites",
-    "CellWidth": 126,
-    "CellHeight": 39,
-    "Row": 3,
-    "Frames": 4,
+    "Name": "Assassin_Idle",
+    "Path": "Characters/AssassinSprites",
+    "CellWidth": 91,
+    "CellHeight": 19,
+    "Row": 0,
+    "Frames": 9,
     "Loop": true
   },
-
+  {
+    "Name": "Assassin_Move",
+    "Path": "Characters/AssassinSprites",
+    "CellWidth": 91,
+    "CellHeight": 19,
+    "Row": 1,
+    "Frames": 8,
+    "Loop": true
+  },
+  {
+    "Name": "Assassin_Jump",
+    "Path": "Characters/AssassinSprites",
+    "CellWidth": 91,
+    "CellHeight": 19,
+    "Row": 2,
+    "Frames": 4
+  },
+  {
+    "Name": "Assassin_Fall",
+    "Path": "Characters/AssassinSprites",
+    "CellWidth": 91,
+    "CellHeight": 19,
+    "Row": 3,
+    "Frames": 4
+  },
+  {
+    "Name": "Assassin_Land",
+    "Path": "Characters/AssassinSprites",
+    "CellWidth": 91,
+    "CellHeight": 19,
+    "Row": 4,
+    "Frames": 4
+  },
   {
     "Name": "Assassin_Slice1",
     "Path": "Characters/AssassinSprites",
@@ -177,7 +505,7 @@
     "CellHeight": 19,
     "Row": 5,
     "Frames": 4,
-    "FrameData": {"0": {"Sounds": ["19_Slash_01"]}}
+    "FrameData": { "0": { "Sounds": [ "19_Slash_01" ] } }
   },
   {
     "Name": "Assassin_Slice2",
@@ -216,14 +544,76 @@
     "Frames": 5,
     "FrameData": { "0": { "Sounds": [ "21_Slash_03" ] } }
   },
+  {
+    "Name": "Assassin_Hit",
+    "Path": "Characters/AssassinSprites",
+    "CellWidth": 91,
+    "CellHeight": 19,
+    "Row": 9,
+    "Frames": 2,
+    "Loop": true
+  },
+  {
+    "Name": "Assassin_Death",
+    "Path": "Characters/AssassinSprites",
+    "CellWidth": 91,
+    "CellHeight": 19,
+    "Row": 10,
+    "Frames": 8
+  },
+
 
   {
-    "Name": "Ghoul_Swipe",
-    "Path": "Characters/GhoulSprites",
-    "CellWidth": 62,
-    "CellHeight": 33,
+    "Name": "SpitterProjectileTravel",
+    "Path": "Projectiles/spitter_projectile",
+    "CellWidth": 16,
+    "CellHeight": 16,
+    "Row": 0,
+    "Frames": 4,
+    "Loop": true
+  },
+  {
+    "Name": "SpitterProjectileBurst1",
+    "Path": "Projectiles/spitter_projectile",
+    "CellWidth": 16,
+    "CellHeight": 16,
+    "Row": 1,
+    "Frames": 7
+  },
+  {
+    "Name": "SpitterProjectileBurst2",
+    "Path": "Projectiles/spitter_projectile",
+    "CellWidth": 16,
+    "CellHeight": 16,
     "Row": 2,
-    "Frames": 7,
-    "FrameData": {"0": {"Sounds": ["ghoul_claw"]}}
+    "Frames": 6
+  },
+
+  {
+    "Name": "OrbMageSpikeTelegraph",
+    "Path": "Projectiles/OrbMageSpike",
+    "CellWidth": 119,
+    "CellHeight": 34,
+    "Row": 0,
+    "Frames": 3,
+    "FrameData": { "0": { "Sounds": [ "orb_mage_telegraph" ] } }
+  },
+  {
+    "Name": "OrbMageSpikeFire",
+    "Path": "Projectiles/OrbMageSpike",
+    "CellWidth": 119,
+    "CellHeight": 34,
+    "Row": 1,
+    "Frames": 6,
+    "FrameData": { "0": { "Sounds": [ "orb_mage_attack" ] } }
+  },
+  {
+    "Name": "OrbMageSweepVfx",
+    "Path": "Projectiles/OrbMageSweepVfx",
+    "CellWidth": 87,
+    "CellHeight": 34,
+    "Row": 0,
+    "Frames": 8,
+    "FrameData": { "0": { "Sounds": [ "orb_mage_attack" ] } }
   }
 ]

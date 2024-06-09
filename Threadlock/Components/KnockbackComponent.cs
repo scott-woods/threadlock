@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Entities.Characters.Player;
+using Threadlock.Helpers;
 using Threadlock.Models;
 
 namespace Threadlock.Components
@@ -22,6 +23,7 @@ namespace Threadlock.Components
         //params
         float _baseSpeed = 0f;
         float _knockbackDuration = 0f;
+        string _hitAnimation;
 
         //components
         VelocityComponent _velocityComponent;
@@ -29,11 +31,12 @@ namespace Threadlock.Components
         //coroutines
         ICoroutine _knockbackCoroutine;
 
-        public KnockbackComponent(VelocityComponent velocityComponent, float speed = 110f, float knockbackDuration = .5f)
+        public KnockbackComponent(VelocityComponent velocityComponent, string hitAnimation, float speed = 110f, float knockbackDuration = .5f)
         {
             _velocityComponent = velocityComponent;
             _baseSpeed = speed;
             _knockbackDuration = knockbackDuration;
+            _hitAnimation = hitAnimation;
         }
 
         #region LIFECYCLE
@@ -137,10 +140,7 @@ namespace Threadlock.Components
             //play animation if possible
             if (Entity.TryGetComponent<SpriteAnimator>(out var animator))
             {
-                if (animator.Animations.ContainsKey("Hit") && !animator.IsAnimationActive("Hit"))
-                {
-                    animator.Play("Hit");
-                }
+                AnimatedSpriteHelper.PlayAnimation(ref animator, _hitAnimation);
             }
 
             //apply effect

@@ -1,4 +1,5 @@
-﻿using Nez.Persistence;
+﻿using Microsoft.Xna.Framework;
+using Nez.Persistence;
 using Nez.Sprites;
 using Nez.Textures;
 using System;
@@ -8,6 +9,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Threadlock.Components;
+using Threadlock.Components.EnemyActions;
+using Threadlock.Entities.Characters.Enemies;
+using Threadlock.Entities.Characters.Player;
 using Threadlock.Models;
 using Threadlock.StaticData;
 
@@ -114,24 +119,73 @@ namespace Threadlock.Helpers
 
         static IEnumerator PlayAnimationCoroutine(SpriteAnimator animator, string animationName)
         {
-            if (animator == null || string.IsNullOrWhiteSpace(animationName))
+            //if animator is null, name is null, or already active, break
+            if (animator == null || string.IsNullOrWhiteSpace(animationName) || (animator.IsAnimationActive(animationName) && animator.AnimationState != SpriteAnimator.State.Completed))
                 yield break;
 
-            if (Animations.TryGetAnimationSprites(animationName, out var sprites) && Animations.TryGetAnimationConfig(animationName, out var config))
+            //get the config for this animation
+            if (Animations.TryGetAnimationConfig(animationName, out var config))
             {
-                if (!animator.Animations.ContainsKey(animationName))
-                    animator.AddAnimation(animationName, sprites);
+                //if this is a directional animation, determine the direction
+                if (config.UseDirections)
+                {
+                    //determine direction source
+                    Vector2 dir = Vector2.Zero;
+                    switch (config.DirectionSource)
+                    {
+                        case DirectionSource.Velocity:
+                            if (animator.Entity.TryGetComponent<VelocityComponent>(out var vc))
+                                dir = vc.Direction;
+                            break;
+                        case DirectionSource.Aiming:
+                            if (animator.Entity is Player player)
+                                dir = player.GetFacingDirection();
+                            else if (animator.Entity is Enemy enemy)
+                                dir = EntityHelper.DirectionToEntity(enemy, enemy.TargetEntity);
+                            break;
+                    }
 
+                    //alter animation name for direction
+                    if (config.DirectionalAnimations.ContainsKey("Up") && dir.Y < 0)
+                        animationName = $"{animationName}_Up";
+                    else if (config.DirectionalAnimations.ContainsKey("Down") && dir.Y > 0)
+                        animationName = $"{animationName}_Down";
+                    else if (dir.X < 0)
+                    {
+                        if (config.DirectionalAnimations.TryGetValue("Left", out var leftAnim) && leftAnim != "Flip")
+                            animationName = leftAnim;
+                        else if (config.DirectionalAnimations.TryGetValue("Right", out var rightAnim))
+                            animationName = rightAnim;
+                    }
+                    else if (dir.X >= 0)
+                    {
+                        if (config.DirectionalAnimations.TryGetValue("Right", out var rightAnim) && rightAnim != "Flip")
+                            animationName = rightAnim;
+                        else if (config.DirectionalAnimations.TryGetValue("Left", out var leftAnim))
+                            animationName = leftAnim;
+                    }
+                    else
+                        animationName = $"{animationName}_Down";
+
+                    //call play animation with the new directional name and break afterwards
+                    yield return PlayAnimationCoroutine(animator, animationName);
+                    yield break;
+                }
+
+                //play the animation
                 animator.Play(animationName, config.Loop ? SpriteAnimator.LoopMode.Loop : SpriteAnimator.LoopMode.Once);
 
+                //handle what happens while animation is running
                 var currentFrame = -1;
                 while (animator.CurrentAnimationName == animationName && animator.AnimationState != SpriteAnimator.State.Completed)
                 {
                     //if current frame is mismatched, this is the first time we're hitting this frame
                     if (currentFrame != animator.CurrentFrame)
                     {
+                        //handle frame data
                         if (config.FrameData.TryGetValue(animator.CurrentFrame, out var frameData))
                         {
+                            //handle sounds
                             foreach (var sound in frameData.Sounds)
                                 Game1.AudioManager.PlaySound($"Content/Audio/Sounds/{sound}.wav");
                         }
@@ -142,6 +196,12 @@ namespace Threadlock.Helpers
 
                     yield return null;
                 }
+            }
+            else if (animator.Animations.ContainsKey(animationName)) //just in case there's an animation somehow not from the config file
+            {
+                animator.Play(animationName, SpriteAnimator.LoopMode.Once);
+                while (animator.CurrentAnimationName == animationName && animator.AnimationState != SpriteAnimator.State.Completed)
+                    yield return null;
             }
         }
 
@@ -158,9 +218,25 @@ namespace Threadlock.Helpers
             if (string.IsNullOrWhiteSpace(animationName) || animator.Animations.ContainsKey(animationName))
                 return;
 
-            if (Animations.TryGetAnimationConfig(animationName, out var config) && Animations.TryGetAnimationSprites(animationName, out var sprites))
+            if (Animations.TryGetAnimationConfig(animationName, out var config))
             {
-                animator.AddAnimation(animationName, sprites);
+                //if this is a directional only animation, load the directions
+                if (config.UseDirections)
+                {
+                    foreach (var directionalAnim in config.DirectionalAnimations)
+                    {
+                        LoadAnimation(directionalAnim.Value, ref animator);
+                    }
+                }
+                else //load normally
+                {
+                    if (Animations.TryGetAnimationSprites(animationName, out var sprites))
+                    {
+                        animator.AddAnimation(animationName, sprites);
+                    }
+                }
+
+                //load chain to if exists
                 if (!string.IsNullOrWhiteSpace(config.ChainTo))
                     LoadAnimation(config.ChainTo, ref animator);
             }

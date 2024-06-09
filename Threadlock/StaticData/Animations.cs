@@ -29,7 +29,6 @@ namespace Threadlock.StaticData
 
                     dict.Add(anim.Name, anim);
                 }
-                    
             }
 
             return dict;
@@ -44,6 +43,9 @@ namespace Threadlock.StaticData
 
             if (_animationDictionary.Value.TryGetValue(name, out var animConfig))
             {
+                if (animConfig.UseDirections)
+                    return false;
+
                 //TODO: figure out how sprite sheets should be exported and read
 
                 var texture = Game1.Scene.Content.LoadTexture($"Content/Textures/{animConfig.Path}.png");

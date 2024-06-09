@@ -67,7 +67,6 @@
     <None Remove="Content\Data\DungeonFlows5.json" />
     <None Remove="Content\Data\DungeonFlows6.json" />
     <None Remove="Content\Data\Enemies.json" />
-    <None Remove="Content\Data\Enemies2.json" />
     <None Remove="Content\Data\EnemyActions.json" />
     <None Remove="Content\Data\FairyForestTiles.json" />
     <None Remove="Content\Data\FairyForestTiles2.json" />
