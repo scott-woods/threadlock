@@ -135,9 +135,9 @@ namespace Threadlock.Scenes
         /// <param name="layerName"></param>
         /// <param name="pathTiles"></param>
         /// <returns></returns>
-        List<TmxLayerTile> HandleRenderer<TEnum>(TiledMapRenderer renderer, string layerName, List<TileInfo<TEnum>> pathTiles) where TEnum : struct, Enum
+        List<Tuple<Vector2, TmxLayerTile>> HandleRenderer<TEnum>(TiledMapRenderer renderer, string layerName, List<TileInfo<TEnum>> pathTiles) where TEnum : struct, Enum
         {
-            List<TmxLayerTile> tiles = new List<TmxLayerTile>();
+            List<Tuple<Vector2, TmxLayerTile>> tiles = new List<Tuple<Vector2, TmxLayerTile>>();
 
             if (string.IsNullOrWhiteSpace(layerName))
                 return tiles;
@@ -146,13 +146,14 @@ namespace Threadlock.Scenes
 
             foreach (var layer in layers)
             {
-                foreach (var layerTile in layer.Tiles)
+                var layerTiles = TiledHelper.GetLayerTilesWithPositions(layer);
+                foreach (var layerTile in layerTiles)
                 {
-                    if (layerTile == null)
-                        continue;
+                    var tile = layerTile.Item2;
+                    var tilePos = layerTile.Item1;
 
-                    if (pathTiles.Any(t => t.Position == new Vector2(layerTile.X * layerTile.Tileset.TileWidth, layerTile.Y * layerTile.Tileset.TileHeight)))
-                        layer.RemoveTile(layerTile.X, layerTile.Y);
+                    if (pathTiles.Any(t => t.Position == new Vector2(tilePos.X * tile.Tileset.TileWidth, tilePos.Y * tile.Tileset.TileHeight)))
+                        layer.RemoveTile((int)tilePos.X, (int)tilePos.Y);
                     else
                         tiles.Add(layerTile);
                 }
@@ -163,9 +164,9 @@ namespace Threadlock.Scenes
 
         void PaintTiles<TEnum>(List<TileInfo<TEnum>> path) where TEnum : struct, Enum
         {
-            List<TmxLayerTile> backTiles = new List<TmxLayerTile>();
-            List<TmxLayerTile> wallTiles = new List<TmxLayerTile>();
-            List<TmxLayerTile> aboveFrontTiles = new List<TmxLayerTile>();
+            List<Tuple<Vector2, TmxLayerTile>> backTiles = new List<Tuple<Vector2, TmxLayerTile>>();
+            List<Tuple<Vector2, TmxLayerTile>> wallTiles = new List<Tuple<Vector2, TmxLayerTile>>();
+            List<Tuple<Vector2, TmxLayerTile>> aboveFrontTiles = new List<Tuple<Vector2, TmxLayerTile>>();
 
             //get tiles in this map by layer
             var renderers = FindComponentsOfType<TiledMapRenderer>();
@@ -180,7 +181,7 @@ namespace Threadlock.Scenes
             }
 
             //filter tiles
-            backTiles = backTiles.DistinctBy(t => t.Position).ToList();
+            backTiles = backTiles.Distinct().ToList();
             wallTiles = wallTiles.Distinct().ToList();
             aboveFrontTiles = aboveFrontTiles.Distinct().ToList();
 
@@ -193,12 +194,15 @@ namespace Threadlock.Scenes
             var backTileInfo = new List<TileInfo<TEnum>>();
             if (tileset.TryGetTerrainSet(typeof(TEnum), out var terrainSet))
             {
-                foreach (var tile in backTiles)
+                foreach (var tileTuple in backTiles)
                 {
+                    var tile = tileTuple.Item2;
+                    var tilePos = tileTuple.Item1;
+
                     //find mask for this tile if it exists in the tileset terrain dictionary
                     if (terrainSet.TryGetMask(tile.Gid - tile.Tileset.FirstGid, out var mask))
                     {
-                        var pos = new Vector2(tile.X * tile.Tileset.TileWidth, tile.Y * tile.Tileset.TileHeight);
+                        var pos = new Vector2(tilePos.X * tile.Tileset.TileWidth, tilePos.Y * tile.Tileset.TileHeight);
                         var tileInfo = new TileInfo<TEnum>(pos, tile.Gid - tile.Tileset.FirstGid, mask);
                         backTileInfo.Add(tileInfo);
                     }
@@ -272,12 +276,15 @@ namespace Threadlock.Scenes
             var wallTileInfo = new List<TileInfo<WallTileType>>();
             if (tileset.TryGetTerrainSet(typeof(WallTileType), out var wallTerrainSet))
             {
-                foreach (var tile in wallTiles)
+                foreach (var tileTuple in wallTiles)
                 {
+                    var tile = tileTuple.Item2;
+                    var tilePos = tileTuple.Item1;
+
                     //find mask for this tile if it exists in the tileset terrain dictionary
                     if (wallTerrainSet.TryGetMask(tile.Gid, out var mask))
                     {
-                        var pos = new Vector2(tile.X * tile.Tileset.TileWidth, tile.Y * tile.Tileset.TileHeight);
+                        var pos = new Vector2(tilePos.X * tile.Tileset.TileWidth, tilePos.Y * tile.Tileset.TileHeight);
                         var tileInfo = new TileInfo<WallTileType>(pos, tile.Gid, mask);
                         wallTileInfo.Add(tileInfo);
                     }

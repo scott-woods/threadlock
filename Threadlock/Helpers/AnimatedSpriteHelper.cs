@@ -213,7 +213,15 @@ namespace Threadlock.Helpers
             }
         }
 
-        public static void LoadAnimation(string animationName, ref SpriteAnimator animator)
+        public static void LoadAnimationsGlobal(ref SpriteAnimator animator, params string[] animationNames)
+        {
+            foreach (var animName in animationNames)
+            {
+                LoadAnimation(animName, ref animator, true);
+            }
+        }
+
+        public static void LoadAnimation(string animationName, ref SpriteAnimator animator, bool global = false)
         {
             if (string.IsNullOrWhiteSpace(animationName) || animator.Animations.ContainsKey(animationName))
                 return;
@@ -225,12 +233,12 @@ namespace Threadlock.Helpers
                 {
                     foreach (var directionalAnim in config.DirectionalAnimations)
                     {
-                        LoadAnimation(directionalAnim.Value, ref animator);
+                        LoadAnimation(directionalAnim.Value, ref animator, global);
                     }
                 }
                 else //load normally
                 {
-                    if (Animations.TryGetAnimationSprites(animationName, out var sprites))
+                    if (Animations.TryGetAnimationSprites(animationName, out var sprites, global))
                     {
                         animator.AddAnimation(animationName, sprites);
                     }
@@ -238,7 +246,7 @@ namespace Threadlock.Helpers
 
                 //load chain to if exists
                 if (!string.IsNullOrWhiteSpace(config.ChainTo))
-                    LoadAnimation(config.ChainTo, ref animator);
+                    LoadAnimation(config.ChainTo, ref animator, global);
             }
         }
 

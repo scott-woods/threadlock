@@ -1,4 +1,5 @@
-﻿using Nez;
+﻿using Microsoft.Xna.Framework;
+using Nez;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
+using Threadlock.Helpers;
 using Threadlock.StaticData;
 
 namespace Threadlock.Renderers
@@ -134,11 +136,8 @@ namespace Threadlock.Renderers
                         return frontLayers.Any(l =>
                         {
                             var adjustedBounds = new RectangleF(bounds.Location - mapRenderer.Entity.Position, bounds.Size);
-                            var tiles = l.GetTilesIntersectingBounds(adjustedBounds);
-                            return tiles.Any(t =>
-                            {
-                                return r.Entity.Position.Y + (t.Y * mapRenderer.TiledMap.TileHeight) + mapRenderer.TiledMap.TileHeight > origin.Y;
-                            });
+                            var tiles = TiledHelper.GetLayerTilesWithPositions(l).Where(t => adjustedBounds.Contains(t.Item1 * new Vector2(t.Item2.Tileset.TileWidth, t.Item2.Tileset.TileHeight)));
+                            return tiles.Any(t => r.Entity.Position.Y + (t.Item1.Y * t.Item2.Tileset.TileHeight) + t.Item2.Tileset.TileHeight > origin.Y);
                         });
                     }
                     else if (r.GetType() == typeof(CorridorRenderer))

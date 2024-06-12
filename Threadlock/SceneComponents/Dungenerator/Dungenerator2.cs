@@ -175,21 +175,21 @@ namespace Threadlock.SceneComponents.Dungenerator
                         _mapWallDict[map] = new List<Vector2>();
                         foreach (var layer in map.TileLayers)
                         {
-                            foreach (var tile in layer.Tiles)
+                            foreach (var tileTuple in TiledHelper.GetLayerTilesWithPositions(layer))
                             {
-                                if (tile == null)
-                                    continue;
+                                var tile = tileTuple.Item2;
+                                var tilePos = tileTuple.Item1;
 
                                 //get world space tile pos
-                                var tilePos = new Vector2(tile.X * tile.Tileset.TileWidth, tile.Y * tile.Tileset.TileHeight);
+                                var worldSpaceTilePos = new Vector2(tilePos.X * tile.Tileset.TileWidth, tilePos.Y * tile.Tileset.TileHeight);
 
                                 //add to map wall dictionary
                                 if (layer.Name.StartsWith("Walls"))
-                                    _mapWallDict[map].Add(tilePos);
+                                    _mapWallDict[map].Add(worldSpaceTilePos);
 
                                 //remove tiles in door positions
-                                if (tilesToDelete.Contains(tilePos))
-                                    layer.RemoveTile(tile.X, tile.Y);
+                                if (tilesToDelete.Contains(worldSpaceTilePos))
+                                    layer.RemoveTile((int)tilePos.X, (int)tilePos.Y);
                             }
                         }
 
@@ -350,20 +350,18 @@ namespace Threadlock.SceneComponents.Dungenerator
                 }
 
                 //get back tile positions and their ids
-                foreach (var tile in room.Map.TileLayers.Where(l => l.Name.StartsWith("Back")).SelectMany(l => l.Tiles))
+                foreach (var tileTuple in room.Map.TileLayers.Where(l => l.Name.StartsWith("Back")).SelectMany(l => TiledHelper.GetLayerTilesWithPositions(l)))
                 {
-                    if (tile == null)
-                        continue;
-                    var tilePos = new Vector2(tile.X * tile.Tileset.TileWidth, tile.Y * tile.Tileset.TileHeight);
+                    var tile = tileTuple.Item2;
+                    var tilePos = new Vector2(tileTuple.Item1.X * tile.Tileset.TileWidth, tileTuple.Item1.Y * tile.Tileset.TileHeight);
                     _floorDict.Add(tilePos + room.Position, tile.Gid);
                 }
 
                 //get wall tile positions and their ids
-                foreach (var tile in room.Map.TileLayers.Where(l => l.Name.StartsWith("Walls")).SelectMany(l => l.Tiles))
+                foreach (var tileTuple in room.Map.TileLayers.Where(l => l.Name.StartsWith("Walls")).SelectMany(l => TiledHelper.GetLayerTilesWithPositions(l)))
                 {
-                    if (tile == null)
-                        continue;
-                    var tilePos = new Vector2(tile.X * tile.Tileset.TileWidth, tile.Y * tile.Tileset.TileHeight);
+                    var tile = tileTuple.Item2;
+                    var tilePos = new Vector2(tileTuple.Item1.X * tile.Tileset.TileWidth, tileTuple.Item1.Y * tile.Tileset.TileHeight);
                     _wallDict.Add(tilePos + room.Position, tile.Gid);
                 }
 

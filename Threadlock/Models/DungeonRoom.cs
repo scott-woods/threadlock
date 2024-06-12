@@ -24,33 +24,7 @@ namespace Threadlock.Models
         {
             get
             {
-                var rect = new RectangleF();
-                rect.Location = Position;
-                if (Map != null)
-                {
-                    var tiles = Map.TileLayers
-                        .Where(l => l.Name.StartsWith("Walls"))
-                        .SelectMany(l => l.Tiles)
-                        .Where(t => t != null).ToList();
-
-                    var minX = int.MaxValue;
-                    var minY = int.MaxValue;
-                    var maxX = int.MinValue;
-                    var maxY = int.MinValue;
-
-                    foreach (var tile in tiles)
-                    {
-                        minX = Math.Min(minX, tile.X * tile.Tileset.TileWidth);
-                        minY = Math.Min(minY, tile.Y * tile.Tileset.TileHeight);
-                        maxX = Math.Max(maxX, (tile.X + 1) * tile.Tileset.TileWidth);
-                        maxY = Math.Max(maxY, (tile.Y + 1) * tile.Tileset.TileHeight);
-                    }
-
-                    rect.Location += new Vector2(minX, minY);
-                    rect.Size = new Vector2(maxX - minX, maxY - minY);
-                }
-
-                return rect;
+                return TiledHelper.GetCollisionBounds(Map, Position);
             }
         }
         public List<DungeonRoom> Children = new List<DungeonRoom>();

@@ -3,18 +3,18 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "Tilemaps/enemy_test_zone.tmx",
+    "activeFile": "Tilemaps/HubMaps/hub.tmx",
     "expandedProjectPaths": [
-        "Templates",
-        "Tilemaps/Forge/Doorways",
-        "Tilemaps/HubMaps",
-        "Tilesets",
-        "Tilemaps",
-        ".",
-        "Tilemaps/Hub",
         "Tilemaps/Forge",
         "RuleMaps",
-        "Tilemaps/FairyForest"
+        ".",
+        "Tilemaps",
+        "Tilemaps/Forge/Doorways",
+        "Tilemaps/FairyForest",
+        "Templates",
+        "Tilemaps/Hub",
+        "Tilemaps/HubMaps",
+        "Tilesets"
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
@@ -297,8 +297,8 @@
             "scale": 4,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 39.5,
-                "y": 39.5
+                "x": 39.25,
+                "y": 39.25
             }
         },
         "Tilemaps/Forge/Doorways/forge_bottom_closed.tmx": {
@@ -314,10 +314,10 @@
                 7
             ],
             "scale": 4,
-            "selectedLayer": 1,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 39.75,
-                "y": 39.75
+                "x": 39.5,
+                "y": 39.5
             }
         },
         "Tilemaps/Forge/Doorways/forge_left.tmx": {
@@ -575,8 +575,8 @@
             "scale": 2,
             "selectedLayer": 8,
             "viewCenter": {
-                "x": 312.5,
-                "y": 319.5
+                "x": 312,
+                "y": 400
             }
         },
         "Tilemaps/Forge/forge_normal_2.tmx": {
@@ -716,11 +716,11 @@
             "expandedObjectLayers": [
                 260
             ],
-            "scale": 1.5,
+            "scale": 0.75,
             "selectedLayer": 9,
             "viewCenter": {
-                "x": 182,
-                "y": 54
+                "x": 70.66666666666663,
+                "y": 296
             }
         },
         "Tilemaps/enemy_test_zone.tmx": {
@@ -799,7 +799,8 @@
         "RuleMaps/forest_walls_rules.tmx",
         "Tilesets/fairy_forest_tileset.tsx",
         "Tilemaps/enemy_test_zone.tmx",
-        "Tilemaps/Forge/forge_start.tmx"
+        "Tilemaps/Forge/forge_start.tmx",
+        "Tilemaps/HubMaps/hub.tmx"
     ],
     "project": "threadlock.tiled-project",
     "property.type": "string",
@@ -808,8 +809,8 @@
         "RuleMaps/stardew_leaves_rules.tmx",
         "RuleMaps/forest_walls_rules.tmx",
         "Tilesets/fairy_forest_tileset.tsx",
-        "Tilemaps/Forge/forge_start.tmx",
         "Tilemaps/enemy_test_zone.tmx",
+        "Tilemaps/Forge/forge_start.tmx",
         "Tilemaps/HubMaps/hub.tmx",
         "Tilemaps/FairyForest/forest_test_3.tmx",
         "Tilemaps/Forge/forge_action_store.tmx",

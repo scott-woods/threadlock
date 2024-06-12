@@ -174,8 +174,15 @@ namespace Threadlock.Helpers
 
                     if (layer != null)
                     {
-                        foreach (var tile in layer.Tiles.Where(t => t != null))
-                            tilePositions.Add(renderer.Entity.Position + new Vector2(tile.X * 16, tile.Y * 16));
+                        for (int x = 0; x < layer.Map.Width; x++)
+                        {
+                            for (int y = 0; y < layer.Map.Height; y++)
+                            {
+                                var tile = layer.GetTile(x, y);
+                                if (tile != null)
+                                    tilePositions.Add((new Vector2(x * tile.Tileset.TileWidth, y * tile.Tileset.TileHeight) + entity.Position));
+                            }
+                        }
                     }
                 }
                     
@@ -225,6 +232,23 @@ namespace Threadlock.Helpers
             return true;
         }
 
+        public static List<Tuple<Vector2, TmxLayerTile>> GetLayerTilesWithPositions(TmxLayer layer)
+        {
+            List<Tuple<Vector2, TmxLayerTile>> tiles = new List<Tuple<Vector2, TmxLayerTile>>();
+
+            for (int x = 0; x < layer.Map.Width; x++)
+            {
+                for (int y = 0; y < layer.Map.Height; y++)
+                {
+                    var tile = layer.GetTile(x, y);
+                    if (tile != null)
+                        tiles.Add(Tuple.Create(new Vector2(x, y), tile));
+                }
+            }
+
+            return tiles;
+        }
+
         public static List<Entity> SetupLightingTiles(Entity mapEntity, TmxMap map, bool addEntitiesToScene = true)
         {
             var entities = new List<Entity>();
@@ -234,12 +258,16 @@ namespace Threadlock.Helpers
                 if (layer.Name.StartsWith("Prototype"))
                     continue;
 
-                foreach (var tile in layer.Tiles)
+                var tiles = GetLayerTilesWithPositions(layer);
+                foreach (var tileTuple in tiles)
                 {
-                    if (tile == null || tile.TilesetTile == null)
+                    var tile = tileTuple.Item2;
+                    var tilePos = tileTuple.Item1;
+
+                    if (tile.TilesetTile == null)
                         continue;
 
-                    var pos = new Vector2((tile.X * tile.Tileset.TileWidth) + (tile.Tileset.TileWidth / 2), (tile.Y * tile.Tileset.TileHeight) + (tile.Tileset.TileHeight / 2));
+                    var pos = new Vector2((tilePos.X * tile.Tileset.TileWidth) + (tile.Tileset.TileWidth / 2), (tilePos.Y * tile.Tileset.TileHeight) + (tile.Tileset.TileHeight / 2));
                     pos += mapEntity.Position;
 
                     if (tile.TilesetTile.Type == "LightSource")
@@ -290,42 +318,6 @@ namespace Threadlock.Helpers
                     lightRadius = float.Parse(radius);
             }
         }
-
-        public static Rectangle GetActualBounds(Entity mapEntity)
-        {
-            var renderers = mapEntity.GetComponents<TiledMapRenderer>();
-
-            var minX = int.MaxValue;
-            var minY = int.MaxValue;
-            var maxX = int.MinValue;
-            var maxY = int.MinValue;
-
-            foreach (var renderer in renderers)
-            {
-                for (int i = 0; i < renderer.TiledMap.TileLayers.Count; i++)
-                {
-                    var layer = renderer.TiledMap.TileLayers[i];
-
-                    if (!renderer.LayerIndicesToRender.Contains(i))
-                        continue;
-
-                    foreach (var tile in layer.Tiles)
-                    {
-                        if (tile == null)
-                            continue;
-
-                        minX = Math.Min(minX, tile.X * tile.Tileset.TileWidth);
-                        minY = Math.Min(minY, tile.Y * tile.Tileset.TileHeight);
-                        maxX = Math.Max(maxX, (tile.X * tile.Tileset.TileWidth) + tile.Tileset.TileWidth);
-                        maxY = Math.Max(maxY, (tile.Y * tile.Tileset.TileHeight) + tile.Tileset.TileHeight);
-                    }
-                }
-            }
-
-            var rect = new Rectangle(minX, minY, maxX - minX, maxY - minY);
-            rect.Location += mapEntity.Position.ToPoint();
-            return rect;
-        }
         
         public static TmxTilesetExt GetTileset(string path)
         {
@@ -338,6 +330,41 @@ namespace Threadlock.Helpers
             tileset.TmxDirectory = tsxDir;
 
             return new TmxTilesetExt(tileset);
+        }
+
+        public static RectangleF GetCollisionBounds(TmxMap map, Vector2 position)
+        {
+            var rect = new RectangleF();
+            rect.Location = position;
+            if (map != null)
+            {
+                var collisionLayers = map.TileLayers
+                    .Where(l => l.Name.StartsWith("Walls"));
+
+                var minX = int.MaxValue;
+                var minY = int.MaxValue;
+                var maxX = int.MinValue;
+                var maxY = int.MinValue;
+
+                for (int x = 0; x < map.Width; x++)
+                {
+                    for (int y = 0; y < map.Height; y++)
+                    {
+                        if (collisionLayers.Any(l => l.GetTile(x, y) != null))
+                        {
+                            minX = Math.Min(minX, x * map.TileWidth);
+                            minY = Math.Min(minY, y * map.TileHeight);
+                            maxX = Math.Max(maxX, (x + 1) * map.TileWidth);
+                            maxY = Math.Max(maxY, (y + 1) * map.TileHeight);
+                        }
+                    }
+                }
+
+                rect.Location += new Vector2(minX, minY);
+                rect.Size = new Vector2(maxX - minX, maxY - minY);
+            }
+
+            return rect;
         }
     }
 }

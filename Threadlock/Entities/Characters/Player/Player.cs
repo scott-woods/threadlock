@@ -127,7 +127,7 @@ namespace Threadlock.Entities.Characters.Player
             Game1.Emitter.AddObserver(CoreEvents.SceneChanged, OnSceneChanged);
             _deathComponent.Emitter.AddObserver(DeathEventTypes.Finished, OnDeath);
 
-            _shadow = AddComponent(new Shadow(_animator));
+            //_shadow = AddComponent(new Shadow(_animator));
 
             var pointLight = AddComponent(new PointLight(Color.White));
             pointLight.SetRenderLayer(RenderLayers.Light);
@@ -237,7 +237,7 @@ namespace Threadlock.Entities.Characters.Player
 
         void AddAnimations()
         {
-            AnimatedSpriteHelper.LoadAnimations(ref _animator, "Player_Idle", "Player_Walk", "Player_Run", "Player_Hit", "Player_Death");
+            AnimatedSpriteHelper.LoadAnimationsGlobal(ref _animator, "Player_Idle", "Player_Walk", "Player_Run", "Player_Hit", "Player_Death");
             var json = File.ReadAllText("Content/Textures/Characters/Player/PlayerMainConfig.json");
             var export = Json.FromJson<AsepriteExport>(json);
             var texture = Game1.Content.LoadTexture($"Content/Textures/Characters/Player/{export.Meta.Image}");
@@ -334,7 +334,7 @@ namespace Threadlock.Entities.Characters.Player
             _apComponent.ActionPoints = 0;
             _statusComponent.Reset();
             _hurtbox.SetEnabled(true);
-            _shadow.SetEnabled(true);
+            //_shadow.SetEnabled(true);
         }
 
         public bool TryRaycast(int mask, out RaycastHit raycastHit)

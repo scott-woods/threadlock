@@ -176,16 +176,16 @@ namespace Threadlock.SceneComponents.Dungenerator
             }
 
             //unload unused maps
-            foreach (var map in _allMaps)
-            {
-                if (!_allMapEntities.Any(m => m.Map == map))
-                {
-                    if (mapDictionary.TryGetValue(map, out var name))
-                    {
-                        Scene.Content.UnloadAsset<TmxMap>(name);
-                    }
-                }
-            }
+            //foreach (var map in _allMaps)
+            //{
+            //    if (!_allMapEntities.Any(m => m.Map == map))
+            //    {
+            //        if (mapDictionary.TryGetValue(map, out var name))
+            //        {
+            //            Scene.Content.UnloadAsset<TmxMap>(name);
+            //        }
+            //    }
+            //}
 
             //re enable everything
             foreach (var room in _allMapEntities)

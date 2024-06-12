@@ -110,9 +110,9 @@
     <ProjectReference Include="..\FNA\FNA.Core.csproj">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </ProjectReference>
-    <ProjectReference Include="..\Nez\Nez.ImGui\Nez.FNA.ImGui.csproj" />
-    <ProjectReference Include="..\Nez\Nez.Persistence\Nez.FNA.Persistence.csproj" />
-    <ProjectReference Include="..\Nez\Nez.Portable\Nez.FNA.csproj" />
+    <ProjectReference Include="..\Nez\Nez.ImGui\Nez.FNA.Core.ImGui.csproj" />
+    <ProjectReference Include="..\Nez\Nez.Persistence\Nez.FNA.Core.Persistence.csproj" />
+    <ProjectReference Include="..\Nez\Nez.Portable\Nez.FNA.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="ContentPathGenerator.tt">

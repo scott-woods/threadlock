@@ -88,26 +88,51 @@ namespace Threadlock.Entities
             get
             {
                 var collisionRenderers = GetComponents<TiledMapRenderer>().Where(r => r.CollisionLayer != null);
-                var tiles = collisionRenderers.SelectMany(r => r.CollisionLayer.Tiles.Where(t => t != null));
                 var minX = int.MaxValue;
                 var maxX = int.MinValue;
                 var minY = int.MaxValue;
                 var maxY = int.MinValue;
-                foreach (var tile in tiles)
+                foreach (var renderer in collisionRenderers)
                 {
-                    var x = tile.X * tile.Tileset.TileWidth;
-                    var y = tile.Y * tile.Tileset.TileHeight;
-                    minX = Math.Min(minX, x);
-                    maxX = Math.Max(maxX, x + tile.Tileset.TileWidth);
-                    minY = Math.Min(minY, y);
-                    maxY = Math.Max(maxY, y + tile.Tileset.TileHeight);
+                    for (int x = 0; x < renderer.CollisionLayer.Width; x++)
+                    {
+                        for (int y = 0; y < renderer.CollisionLayer.Height; y++)
+                        {
+                            var tile = renderer.CollisionLayer.GetTile(x, y);
+                            if (tile != null)
+                            {
+                                minX = Math.Min(minX, x * tile.Tileset.TileWidth);
+                                maxX = Math.Max(maxX, (x + 1) * tile.Tileset.TileWidth);
+                                minY = Math.Min(minY, y * tile.Tileset.TileHeight);
+                                maxY = Math.Max(maxY, (y + 1) * tile.Tileset.TileHeight);
+                            }
+                        }
+                    }
                 }
 
-                var rectPos = new Vector2(minX, minY);
-                var bottomRight = new Vector2(maxX, maxY);
-                var rectSize = bottomRight - rectPos;
+                return new RectangleF(Position + new Vector2(minX, minY), new Vector2(maxX, maxY) - new Vector2(minX, minY));
 
-                return new RectangleF(rectPos + Position, rectSize);
+                //var collisionRenderers = GetComponents<TiledMapRenderer>().Where(r => r.CollisionLayer != null);
+                //var tiles = collisionRenderers.SelectMany(r => r.CollisionLayer.Tiles.Values.Where(t => t != null));
+                //var minX = int.MaxValue;
+                //var maxX = int.MinValue;
+                //var minY = int.MaxValue;
+                //var maxY = int.MinValue;
+                //foreach (var tile in tiles)
+                //{
+                //    var x = tile.X * tile.Tileset.TileWidth;
+                //    var y = tile.Y * tile.Tileset.TileHeight;
+                //    minX = Math.Min(minX, x);
+                //    maxX = Math.Max(maxX, x + tile.Tileset.TileWidth);
+                //    minY = Math.Min(minY, y);
+                //    maxY = Math.Max(maxY, y + tile.Tileset.TileHeight);
+                //}
+
+                //var rectPos = new Vector2(minX, minY);
+                //var bottomRight = new Vector2(maxX, maxY);
+                //var rectSize = bottomRight - rectPos;
+
+                //return new RectangleF(rectPos + Position, rectSize);
             }
         }
 
@@ -115,10 +140,23 @@ namespace Threadlock.Entities
         {
             get
             {
-                var collisionRenderers = GetComponents<TiledMapRenderer>().Where(r => r.CollisionLayer != null);
-                var tiles = collisionRenderers.SelectMany(r => r.CollisionLayer.Tiles.Where(t => t != null));
+                var allPositions = new List<Vector2>();
 
-                return tiles.Select(t => Position + new Vector2(t.X * t.Tileset.TileWidth, t.Y * t.Tileset.TileHeight)).ToList();
+                var collisionRenderers = GetComponents<TiledMapRenderer>().Where(r => r.CollisionLayer != null);
+                foreach (var renderer in collisionRenderers)
+                {
+                    for (int x = 0; x < renderer.CollisionLayer.Width; x++)
+                    {
+                        for (int y = 0; y < renderer.CollisionLayer.Height; y++)
+                        {
+                            var tile = renderer.CollisionLayer.GetTile(x, y);
+                            if (tile != null)
+                                allPositions.Add((new Vector2(x * tile.Tileset.TileWidth, y * tile.Tileset.TileHeight) + Position));
+                        }
+                    }
+                }
+
+                return allPositions;
             }
         }
 
@@ -208,89 +246,6 @@ namespace Threadlock.Entities
             //var comps = Scene.FindComponentsOfType<TiledComponent>().Where(c => c.MapEntity == this);
             //foreach (var comp in comps)
             //    comp.Entity.Destroy();
-        }
-
-        public bool OverlapsRoom(RectangleF rectangle, bool checkDoorways = true)
-        {
-            if (checkDoorways)
-            {
-                var doorways = FindComponentsOnMap<DungeonDoorway>();
-                foreach (var doorway in doorways)
-                {
-                    var doorwayRect = new RectangleF(doorway.Entity.Position, new Vector2(doorway.TmxObject.Width, doorway.TmxObject.Height));
-                    if (doorwayRect.Intersects(rectangle))
-                        return true;
-                }
-            }
-
-            if (CollisionBounds.Size == Vector2.Zero)
-                return false;
-
-            if (!CollisionBounds.Intersects(rectangle))
-                return false;
-
-            var roomRenderer = GetComponents<TiledMapRenderer>().FirstOrDefault(r => r.CollisionLayer != null);
-            if (roomRenderer == null)
-                return false;
-
-            foreach (var tile in roomRenderer.CollisionLayer.Tiles.Where(t => t != null))
-            {
-                var tileWorldPos = Position + new Vector2(tile.X * 16, tile.Y * 16);
-                if (rectangle.Contains(tileWorldPos))
-                    return true;
-            }
-
-            return false;
-        }
-
-        public bool OverlapsRoom(List<Vector2> positions, out List<Vector2> overlappingPositions, bool checkDoorways = true)
-        {
-            overlappingPositions = new List<Vector2>();
-
-            if (positions.Count == 0)
-                return false;
-
-            //if no collision layer, can't overlap
-            var roomRenderer = GetComponents<TiledMapRenderer>().FirstOrDefault(r => r.CollisionLayer != null);
-            if (roomRenderer == null)
-                return false;
-
-            //check if bounds intersect
-            var minPos = new Vector2(positions.Select(p => p.X).Min(), positions.Select(p => p.Y).Min());
-            var maxPos = new Vector2(positions.Select(p => p.X).Max(), positions.Select(p => p.Y).Max());
-            var rect = new RectangleF(minPos, maxPos - minPos);
-            if (!Bounds.Intersects(rect))
-                return false;
-
-            foreach (var tile in roomRenderer.CollisionLayer.Tiles.Where(t => t != null))
-            {
-                var tileWorldPos = Position + new Vector2(tile.X * 16, tile.Y * 16);
-                var matchingTiles = positions.Where(p => p == tileWorldPos);
-                if (matchingTiles.Any())
-                {
-                    overlappingPositions.AddRange(matchingTiles);
-                }
-            }
-
-            if (checkDoorways)
-            {
-                var doorways = FindComponentsOnMap<DungeonDoorway>();
-                foreach (var doorway in doorways)
-                {
-                    for (int y = 0; y < doorway.TmxObject.Height / 16; y++)
-                    {
-                        for (int x = 0; x < doorway.TmxObject.Width / 16; x++)
-                        {
-                            var doorwayTileWorldPos = doorway.Entity.Position + new Vector2(x * 16, y * 16);
-                            var matchingTiles = positions.Where(p => p == doorwayTileWorldPos);
-                            if (matchingTiles.Any())
-                                overlappingPositions.AddRange(matchingTiles);
-                        }
-                    }
-                }
-            }
-
-            return overlappingPositions.Any();
         }
 
         public bool OverlapsRoom(DungeonRoomEntity otherRoom, Vector2? movement = null)

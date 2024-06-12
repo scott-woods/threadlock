@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Threadlock.Helpers;
 
 namespace Threadlock.SceneComponents
 {
@@ -57,21 +58,17 @@ namespace Threadlock.SceneComponents
 
             foreach (var renderer in mapRenderers)
             {
-                var tiles = renderer.CollisionLayer.Tiles
-                    .Where(t => t != null)
-                    .Select(t =>
-                    {
-                        var x = t.X;
-                        var y = t.Y;
-                        var pos = new Vector2(x, y);
-                        pos += (renderer.Entity.Position / 16);
-                        pos -= _gridOffset;
-                        return pos.ToPoint();
-                    });
+                var tiles = TiledHelper.GetLayerTilesWithPositions(renderer.CollisionLayer);
                 foreach (var tile in tiles)
                 {
-                    if (!_graph.Walls.Contains(tile))
-                        _graph.Walls.Add(tile);
+                    var x = tile.Item1.X;
+                    var y = tile.Item1.Y;
+                    var pos = new Vector2(x, y);
+                    pos += (renderer.Entity.Position / 16);
+                    pos -= _gridOffset;
+
+                    if (!_graph.Walls.Contains(pos.ToPoint()))
+                        _graph.Walls.Add(pos.ToPoint());
                 }
             }
         }

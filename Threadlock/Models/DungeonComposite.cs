@@ -38,7 +38,6 @@ namespace Threadlock.Models
                 return new RectangleF(topLeft, bottomRight - topLeft);
             }
         }
-        public List<SingleTileRenderer> SingleTileRenderers = new List<SingleTileRenderer>();
 
         public DungeonComposite(List<DungeonNode> roomNodes, DungeonCompositeType compositeType)
         {
@@ -72,67 +71,8 @@ namespace Threadlock.Models
             }
         }
 
-        /// <summary>
-        /// returns a pathfinding graph that is the size of the entire composite, with walls for all non-null tiles
-        /// </summary>
-        /// <returns></returns>
-        public WeightedGridGraph GetPathfindingGraph(out RectangleF paddedRectangle)
-        {
-            var tilePadding = 8;
-            paddedRectangle = Bounds;
-            paddedRectangle.X -= tilePadding * 16;
-            paddedRectangle.Y -= tilePadding * 16;
-            paddedRectangle.Width += (tilePadding * 16 * 2);
-            paddedRectangle.Height += (tilePadding * 16 * 2);
-
-            var graph = new WeightedGridGraph((int)paddedRectangle.Width / 16, (int)paddedRectangle.Height / 16);
-            foreach (var room in RoomEntities)
-            {
-                var collisionRenderer = room.GetComponents<TiledMapRenderer>().FirstOrDefault(r => r.CollisionLayer != null);
-                if (collisionRenderer == null)
-                    continue;
-
-                if (room.TryGetComponent<TiledMapRenderer>(out var renderer))
-                {
-                    foreach (var layer in renderer.TiledMap.TileLayers)
-                    {
-                        foreach (var tile in layer.Tiles.Where(t => t != null))
-                        {
-                            var tilePos = new Vector2(tile.X, tile.Y);
-                            var adjustedTilePos = tilePos + (room.Position / 16);
-                            graph.Walls.Add(adjustedTilePos.ToPoint() - (paddedRectangle.Location / 16).ToPoint());
-                        }
-                    }
-                }
-
-                var doorways = room.FindComponentsOnMap<DungeonDoorway>();
-                if (doorways != null)
-                {
-                    foreach (var doorway in doorways)
-                    {
-                        for (var y = 0; y < doorway.TmxObject.Height / 16; y++)
-                        {
-                            for (var x = 0; x < doorway.TmxObject.Width / 16; x++)
-                            {
-                                var tilePos = new Vector2(x, y);
-                                var adjustedTilePos = tilePos + (doorway.Entity.Position / 16);
-                                graph.Walls.Add(adjustedTilePos.ToPoint() - (paddedRectangle.Location / 16).ToPoint());
-                            }
-                        }
-                    }
-                }
-            }
-
-            return graph;
-        }
-
         public void MoveRooms(Vector2 movement, bool moveChildComposites = true)
         {
-            foreach (var tileRenderer in SingleTileRenderers)
-            {
-                tileRenderer.Entity.Position += movement;
-            }
-
             foreach (var room in RoomEntities)
                 room.MoveRoom(movement, moveChildComposites);
         }
@@ -146,13 +86,6 @@ namespace Threadlock.Models
 
         public void Reset()
         {
-            //clear tile renderers
-            foreach (var tileRenderer in SingleTileRenderers)
-            {
-                tileRenderer.Entity.Destroy();
-            }
-            SingleTileRenderers.Clear();
-
             //clear maps
             foreach (var map in RoomEntities)
                 map.ClearMap();

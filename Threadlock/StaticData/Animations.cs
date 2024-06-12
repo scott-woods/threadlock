@@ -1,4 +1,5 @@
-﻿using Nez.Persistence;
+﻿using Microsoft.Xna.Framework.Graphics;
+using Nez.Persistence;
 using Nez.Textures;
 using System;
 using System.Collections.Generic;
@@ -34,7 +35,7 @@ namespace Threadlock.StaticData
             return dict;
         });
 
-        public static bool TryGetAnimationSprites(string name, out Sprite[] sprites)
+        public static bool TryGetAnimationSprites(string name, out Sprite[] sprites, bool global = false)
         {
             sprites = null;
 
@@ -48,7 +49,11 @@ namespace Threadlock.StaticData
 
                 //TODO: figure out how sprite sheets should be exported and read
 
-                var texture = Game1.Scene.Content.LoadTexture($"Content/Textures/{animConfig.Path}.png");
+                Texture2D texture = null;
+                if (global)
+                    texture = Game1.Content.LoadTexture($"Content/Textures/{animConfig.Path}.png");
+                else
+                    texture = Game1.Scene.Content.LoadTexture($"Content/Textures/{animConfig.Path}.png");
                 var allSprites = Sprite.SpritesFromAtlas(texture, animConfig.CellWidth, animConfig.CellHeight);
                 var totalColumns = texture.Width / animConfig.CellWidth;
 

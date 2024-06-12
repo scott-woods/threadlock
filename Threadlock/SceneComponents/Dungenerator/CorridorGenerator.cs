@@ -264,23 +264,17 @@ namespace Threadlock.SceneComponents.Dungenerator
                 var renderers = room.GetComponents<TiledMapRenderer>().Where(r => r.CollisionLayer != null);
                 foreach (var renderer in renderers)
                 {
-                    var tiles = renderer.CollisionLayer.Tiles.Where(t => t != null)
-                    .Select(t =>
+                    var tiles = TiledHelper.GetLayerTilesWithPositions(renderer.CollisionLayer);
+                    foreach (var tile in tiles)
                     {
-                        var x = t.X;
-                        var y = t.Y;
+                        var x = tile.Item1.X;
+                        var y = tile.Item1.Y;
                         var pos = new Vector2(x, y);
                         pos += (renderer.Entity.Position / 16);
                         pos -= graphOffset;
-                        return pos.ToPoint();
-                    });
-                    foreach (var tile in tiles)
-                    {
-                        if (!wallPositions.Contains(tile))
-                            wallPositions.Add(tile);
-                        ////only add walls that are within bounds and haven't already been added
-                        //if (tile.X >= 0 && tile.Y >= 0 && !graph.Walls.Contains(tile))
-                        //    graph.Walls.Add(tile);
+
+                        if (!wallPositions.Contains(pos.ToPoint()))
+                            wallPositions.Add(pos.ToPoint());
                     }
                 }
 
