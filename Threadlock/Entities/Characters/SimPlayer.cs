@@ -1,4 +1,5 @@
-﻿using Nez;
+﻿using Microsoft.Xna.Framework;
+using Nez;
 using Nez.Sprites;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
 using Threadlock.Entities.Characters.Player;
+using Threadlock.Entities.Characters.Player.PlayerActions;
 using Threadlock.Helpers;
 using Threadlock.StaticData;
 
@@ -22,25 +24,32 @@ namespace Threadlock.Entities.Characters
         OriginComponent _originComponent;
         Collider _collider;
 
+        SimPlayerType _simType;
+        string _animation;
+        Vector2 _targetPosition;
+
+        public SimPlayer(SimPlayerType type, string animation, Vector2 targetPosition)
+        {
+            _simType = type;
+            _animation = animation;
+            _targetPosition = targetPosition;
+        }
+
         public override void OnAddedToScene()
         {
             base.OnAddedToScene();
 
             //create animator, slightly transparent
-            _animator = AddComponent(new SpriteAnimator());
-            _animator.SetColor(new Microsoft.Xna.Framework.Color(255, 255, 255, 128));
-            _animator.SetRenderLayer(RenderLayers.YSort);
+            //_animator = AddComponent(new SpriteAnimator());
 
             //get animations from player animator
             if (Player.Player.Instance.TryGetComponent<SpriteAnimator>(out var animator))
             {
-                foreach (var animation in animator.Animations)
-                {
-                    _animator.AddAnimation(animation.Key, animation.Value);
-                }
-
-                _animator.SetLocalOffset(Player.Player.Instance.DefaultSpriteOffset);
+                _animator = AddComponent(animator.Clone() as SpriteAnimator);
             }
+
+            _animator.SetColor(new Microsoft.Xna.Framework.Color(255, 255, 255, 128));
+            _animator.SetRenderLayer(RenderLayers.YSort);
 
             _mover = AddComponent(new Mover());
 
@@ -61,12 +70,24 @@ namespace Threadlock.Entities.Characters
         {
             base.Update();
 
-            var dir = DirectionHelper.GetDirectionStringByVector(_velocityComponent.Direction);
-            var animName = $"Idle{dir}";
-            if (!_animator.Animations.ContainsKey(animName))
-                animName = "IdleDown";
-            if (!_animator.IsAnimationActive(animName))
-                _animator.Play(animName);
+            switch (_simType)
+            {
+                case SimPlayerType.AttachToCursor:
+                    Position = _targetPosition;
+                    AnimatedSpriteHelper.PlayAnimation(ref _animator, _animation);
+                    break;
+            }
+            //var dir = DirectionHelper.GetDirectionStringByVector(_velocityComponent.Direction);
+            //var animName = $"Idle{dir}";
+            //if (!_animator.Animations.ContainsKey(animName))
+            //    animName = "IdleDown";
+            //if (!_animator.IsAnimationActive(animName))
+            //    _animator.Play(animName);
+        }
+
+        public void UpdateTarget(Vector2 targetPosition)
+        {
+            _targetPosition = targetPosition;
         }
     }
 }

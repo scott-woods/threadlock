@@ -1,5 +1,11 @@
 [
   {
+    "Name": "PlayerBase",
+    "Path": "Characters/PlayerSprites",
+    "CellWidth": 64,
+    "CellHeight": 65
+  },
+  {
     "Name": "Player_Idle",
     "UseDirections": true,
     "DirectionalAnimations": {
@@ -29,6 +35,7 @@
   {
     "Name": "Player_Thrust",
     "UseDirections": true,
+    "DirectionSource": "Aiming",
     "DirectionalAnimations": {
       "Up": "Player_Thrust_Up",
       "Down": "Player_Thrust_Down",
@@ -54,163 +61,185 @@
     }
   },
   {
+    "Name": "Player_ChargeDash",
+    "UseDirections": true,
+    "DirectionSource": "Aiming",
+    "CanDirectionChange": true,
+    "DirectionalAnimations": {
+      "Up": "Player_ChargeDash_Up",
+      "Down": "Player_ChargeDash_Down",
+      "Right": "Player_ChargeDash_Right"
+    }
+  },
+  {
+    "Name": "Player_DashAttack",
+    "UseDirections": true,
+    "DirectionSource": "Aiming",
+    "DirectionalAnimations": {
+      "Up": "Player_DashAttack_Up",
+      "Down": "Player_DashAttack_Down",
+      "Right":  "Player_DashAttack_Right"
+    }
+  },
+  {
     "Name": "Player_Idle_Down",
-    "Path": "Characters/PlayerSprites",
-    "CellWidth": 64,
-    "CellHeight": 65,
+    "Base": "PlayerBase",
     "Row": 0,
     "Frames": 12,
     "Loop": true
   },
   {
     "Name": "Player_Walk_Down",
-    "Path": "Characters/PlayerSprites",
-    "CellWidth": 64,
-    "CellHeight": 65,
+    "Base": "PlayerBase",
     "Row": 5,
     "Frames": 8,
     "Loop": true
   },
   {
     "Name": "Player_Run_Down",
-    "Path": "Characters/PlayerSprites",
-    "CellWidth": 64,
-    "CellHeight": 65,
+    "Base": "PlayerBase",
     "Row": 6,
     "Frames": 8,
     "Loop": true
   },
   {
     "Name": "Player_Thrust_Down",
-    "Path": "Characters/PlayerSprites",
-    "CellWidth": 64,
-    "CellHeight": 65,
+    "Base": "PlayerBase",
     "Row": 7,
     "Frames": 4
   },
   {
+    "Name": "Player_DashAttack_Down",
+    "Base": "Player_Thrust_Down",
+    "FrameData": { "0": { "Sounds": [ "20_Slash_02" ] } }
+  },
+  {
+    "Name": "Player_ChargeDash_Down",
+    "Base": "PlayerBase",
+    "Row": 8,
+    "Frames": 1,
+    "StartFrame": 5,
+    "Loop": true
+  },
+  {
     "Name": "Player_Slash_Down",
-    "Path": "Characters/PlayerSprites",
-    "CellWidth": 64,
-    "CellHeight": 65,
+    "Base": "PlayerBase",
     "Row": 8,
     "Frames": 7
   },
   {
     "Name": "Player_Roll_Down",
-    "Path": "Characters/PlayerSprites",
-    "CellWidth": 64,
-    "CellHeight": 65,
+    "Base": "PlayerBase",
     "Row": 9,
     "Frames": 8
   },
   {
     "Name": "Player_Idle_Right",
-    "Path": "Characters/PlayerSprites",
-    "CellWidth": 64,
-    "CellHeight": 65,
+    "Base": "PlayerBase",
     "Row": 10,
     "Frames": 12,
     "Loop": true
   },
   {
     "Name": "Player_Walk_Right",
-    "Path": "Characters/PlayerSprites",
-    "CellWidth": 64,
-    "CellHeight": 65,
+    "Base": "PlayerBase",
     "Row": 11,
     "Frames": 8,
     "Loop": true
   },
   {
     "Name": "Player_Run_Right",
-    "Path": "Characters/PlayerSprites",
-    "CellWidth": 64,
-    "CellHeight": 65,
+    "Base": "PlayerBase",
     "Row": 12,
     "Frames": 8,
     "Loop": true
   },
   {
     "Name": "Player_Roll_Right",
-    "Path": "Characters/PlayerSprites",
-    "CellWidth": 64,
-    "CellHeight": 65,
+    "Base": "PlayerBase",
     "Row": 13,
     "Frames": 6
   },
   {
     "Name": "Player_Thrust_Right",
-    "Path": "Characters/PlayerSprites",
-    "CellWidth": 64,
-    "CellHeight": 65,
+    "Base": "PlayerBase",
     "Row": 14,
     "Frames": 4
   },
   {
+    "Name": "Player_DashAttack_Right",
+    "Base": "Player_Thrust_Right",
+    "FrameData": { "0": { "Sounds": [ "20_Slash_02" ] } }
+  },
+  {
+    "Name": "Player_ChargeDash_Right",
+    "Base": "PlayerBase",
+    "Row": 15,
+    "Frames": 1,
+    "StartFrame": 2,
+    "Loop": true
+  },
+  {
     "Name": "Player_Slash_Right",
-    "Path": "Characters/PlayerSprites",
-    "CellWidth": 64,
-    "CellHeight": 65,
+    "Base": "PlayerBase",
     "Row": 15,
     "Frames": 5
   },
   {
     "Name": "Player_Idle_Up",
-    "Path": "Characters/PlayerSprites",
-    "CellWidth": 64,
-    "CellHeight": 65,
+    "Base": "PlayerBase",
     "Row": 16,
     "Frames": 12,
     "Loop": true
   },
   {
     "Name": "Player_Walk_Up",
-    "Path": "Characters/PlayerSprites",
-    "CellWidth": 64,
-    "CellHeight": 65,
+    "Base": "PlayerBase",
     "Row": 17,
     "Frames": 8,
     "Loop": true
   },
   {
     "Name": "Player_Run_Up",
-    "Path": "Characters/PlayerSprites",
-    "CellWidth": 64,
-    "CellHeight": 65,
+    "Base": "PlayerBase",
     "Row": 18,
     "Frames": 8,
     "Loop": true
   },
   {
     "Name": "Player_Thrust_Up",
-    "Path": "Characters/PlayerSprites",
-    "CellWidth": 64,
-    "CellHeight": 65,
+    "Base": "PlayerBase",
     "Row": 19,
     "Frames": 4
   },
   {
+    "Name": "Player_DashAttack_Up",
+    "Base": "Player_Thrust_Up",
+    "FrameData": { "0": { "Sounds": [ "20_Slash_02" ] } }
+  },
+  {
+    "Name": "Player_ChargeDash_Up",
+    "Base": "PlayerBase",
+    "Row": 20,
+    "Frames": 1,
+    "StartFrame": 4,
+    "Loop": true
+  },
+  {
     "Name": "Player_Slash_Up",
-    "Path": "Characters/PlayerSprites",
-    "CellWidth": 64,
-    "CellHeight": 65,
+    "Base": "PlayerBase",
     "Row": 20,
     "Frames": 7
   },
   {
     "Name": "Player_Roll_Up",
-    "Path": "Characters/PlayerSprites",
-    "CellWidth": 64,
-    "CellHeight": 65,
+    "Base": "PlayerBase",
     "Row": 21,
     "Frames": 8
   },
   {
     "Name": "Player_Death",
-    "Path": "Characters/PlayerSprites",
-    "CellWidth": 64,
-    "CellHeight": 65,
+    "Base": "PlayerBase",
     "Row": 22,
     "Frames": 13
   },

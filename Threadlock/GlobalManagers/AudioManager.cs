@@ -54,8 +54,14 @@ namespace Threadlock.GlobalManagers
 
         public IEnumerator PlaySoundCoroutine(string soundName)
         {
+            if (string.IsNullOrWhiteSpace(soundName))
+                yield break;
+
             //load sound
             var sound = Game1.Scene.Content.LoadSoundEffect(soundName);
+
+            if (sound == null)
+                yield break;
 
             //if an instance of this sound isn't already in the list, add it
             if (!_soundInstances.ContainsKey(sound))

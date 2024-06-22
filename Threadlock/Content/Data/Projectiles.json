@@ -1,5 +1,35 @@
 [
   {
+    "Name": "Player_DashAttack",
+    "Type": "Instant",
+
+    "Damage": 4,
+
+    "AffectsEnemies": true,
+
+    "AttachToOwner": true,
+
+    "Points": [
+      {
+        "X": 0,
+        "Y": -5
+      },
+      {
+        "X": 0,
+        "Y": 5
+      },
+      {
+        "X": 20,
+        "Y": 0
+      }
+    ],
+
+    "ShouldRotate": true,
+
+    "Lifespan": 0.5
+  },
+
+  {
     "Name": "Ghoul_Swipe",
     "Type": "Instant",
 
@@ -158,7 +188,7 @@
 
     "Damage": 3,
     "AffectsPlayer": true,
-    
+
     "AttachToOwner": true,
 
     "ShouldRotate": true,

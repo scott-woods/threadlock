@@ -37,7 +37,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
         public override IEnumerator PreparationCoroutine()
         {
             //create sim player
-            _simPlayer = Entity.Scene.AddEntity(new SimPlayer());
+            _simPlayer = Entity.Scene.AddEntity(new SimPlayer(SimPlayerType.AttachToCursor, "Player_Idle", _targetPosition));
 
             UpdateSimPlayerPosition();
 

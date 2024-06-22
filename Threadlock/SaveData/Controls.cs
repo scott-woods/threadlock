@@ -80,8 +80,8 @@ namespace Threadlock.SaveData
             new VirtualButton.KeyboardKey(Settings.Instance.Action2Key)
             );
 
-        public VirtualButton SupportAction = new VirtualButton(
-            new VirtualButton.KeyboardKey(Settings.Instance.SupportActionKey)
+        public VirtualButton Action3 = new VirtualButton(
+            new VirtualButton.KeyboardKey(Settings.Instance.Action3Key)
             );
 
         public VirtualButton Reload = new VirtualButton(

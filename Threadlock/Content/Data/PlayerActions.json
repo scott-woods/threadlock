@@ -1,0 +1,59 @@
+[
+  {
+    "Name": "Player_DashAttack",
+    "Description": "Slice through enemies along a straight line.",
+    "ApCost": 2,
+
+    "ChargeAnimation": "Player_ChargeDash",
+
+    "ExecuteAnimation": "Player_DashAttack",
+    "WaitForExecuteAnimation": true,
+    "ExecutionMovement": {
+      "MovementType": "ToTarget",
+      "Duration": 0.05,
+      "UseAnimationDuration": false
+    },
+
+    "ConfirmType": "ClosestFloorPosition",
+    "MaxConfirmDistance": 64,
+    "WallBehavior": "Shorten",
+    "SnapToEdgeIfOutsideRadius": true,
+    "CanPassThroughWalls": false,
+    "CanAimInsideWalls": true,
+
+    "Projectiles": [
+      {
+        "ProjectileName": "Player_DashAttack"
+      }
+    ],
+
+    "ShowSim": true,
+    "SimType": "AttachToCursor",
+    "SimAnimation": "Player_Idle"
+  },
+  {
+    "Name": "Player_Teleport",
+    "Description": "Blink a short distance away.",
+    "ApCost": 1,
+
+    "ChargeAnimation": "Player_Idle",
+
+    "MaxConfirmDistance": 200,
+    "WallBehavior": "Disable",
+    "SnapToEdgeIfOutsideRadius": false,
+    "CanPassThroughWalls": true,
+    "CanAimInsideWalls": false,
+
+    "ExecutionMovement": {
+      "MovementType": "Instant",
+      "Duration": 0,
+      "UseAnimationDuration": false
+    },
+
+    "ExecutionSound": "Content/Audio/Sounds/player_teleport.wav",
+
+    "ShowSim": true,
+    "SimType": "AttachToCursor",
+    "SimAnimation": "Player_Idle"
+  }
+]

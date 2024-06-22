@@ -299,11 +299,11 @@ namespace Threadlock.Entities.Characters.Player.States
 
         public bool TryOpenOverview()
         {
-            if (Controls.Instance.ShowStats.IsPressed)
-            {
-                Game1.StartCoroutine(Game1.UIManager.ShowMenu(new CharacterOverview()));
-                return true;
-            }
+            //if (Controls.Instance.ShowStats.IsPressed)
+            //{
+            //    Game1.StartCoroutine(Game1.UIManager.ShowMenu(new CharacterOverview()));
+            //    return true;
+            //}
 
             return false;
         }

@@ -36,7 +36,7 @@ namespace Threadlock.Scenes
         };
 
         ScreenSpaceRenderer _uiRenderer;
-        ScreenSpaceRenderer _cursorRenderer;
+        RenderLayerRenderer _cursorRenderer;
         RenderLayerExcludeRenderer _gameRenderer;
         YSortDeferredLightingRenderer _deferredLightingRenderer;
 
@@ -71,7 +71,7 @@ namespace Threadlock.Scenes
             _uiRenderer.RenderTexture = uiRenderTarget;
             AddRenderer(_uiRenderer);
 
-            _cursorRenderer = new ScreenSpaceRenderer(2, RenderLayers.Cursor);
+            _cursorRenderer = new RenderLayerRenderer(2, RenderLayers.Cursor);
             var cursorRenderTarget = new RenderTexture(Game1.ResolutionManager.DesignResolution.X, Game1.ResolutionManager.DesignResolution.Y);
             cursorRenderTarget.ResizeBehavior = RenderTexture.RenderTextureResizeBehavior.None;
             _cursorRenderer.RenderTexture = cursorRenderTarget;
@@ -161,7 +161,7 @@ namespace Threadlock.Scenes
             Graphics.Instance.Batcher.Draw(_uiRenderer.RenderTexture, uiRect, Color.White);
 
             //render cursor
-            Graphics.Instance.Batcher.Draw(_cursorRenderer.RenderTexture, uiRect, Color.White);
+            Graphics.Instance.Batcher.Draw(_cursorRenderer.RenderTexture, finalRenderDestinationRect, Color.White);
 
             Graphics.Instance.Batcher.End();
         }

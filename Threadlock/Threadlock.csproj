@@ -70,6 +70,7 @@
     <None Remove="Content\Data\EnemyActions.json" />
     <None Remove="Content\Data\FairyForestTiles.json" />
     <None Remove="Content\Data\FairyForestTiles2.json" />
+    <None Remove="Content\Data\PlayerActions.json" />
     <None Remove="Content\Data\Projectiles.json" />
     <None Remove="Content\Data\SimpleLoop.json" />
     <None Remove="Content\Data\SingleRoom.json" />

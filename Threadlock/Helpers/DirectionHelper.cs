@@ -146,9 +146,12 @@ namespace Threadlock.Helpers
 
         public static float GetDegreesFromDirection(Vector2 direction)
         {
-            float angleInRadians = (float)Math.Atan2(direction.Y, direction.X);
+            //get angle in degrees
+            float angleInDegrees = (float)Math.Atan2(direction.Y, direction.X) * Mathf.Rad2Deg;
 
-            float angleInDegrees = MathHelper.ToDegrees(angleInRadians);
+            //make sure angle is in bounds of 360
+            if (angleInDegrees < 0)
+                angleInDegrees += 360;
 
             return angleInDegrees;
         }

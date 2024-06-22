@@ -31,9 +31,9 @@ namespace Threadlock.SaveData
         //public PlayerActionType OffensiveAction2 = PlayerActionType.FromType<Grip>();
         //public PlayerActionType SupportAction = PlayerActionType.FromType<Teleport>();
 
-        public PlayerActionType OffensiveAction1 = PlayerActionType.FromType<DashAction>();
-        public PlayerActionType OffensiveAction2 = null;
-        public PlayerActionType SupportAction = null;
+        public string Action1 = "Player_DashAttack";
+        public string Action2 = null;
+        public string Action3 = null;
 
         [JsonInclude]
         int _dollahs = 0;

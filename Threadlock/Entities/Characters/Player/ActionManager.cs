@@ -1,4 +1,5 @@
 ﻿using Nez;
+using Nez.Sprites;
 using Nez.Systems;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Threadlock.DebugTools;
 using Threadlock.Entities.Characters.Player.PlayerActions;
+using Threadlock.Helpers;
 using Threadlock.Models;
 using Threadlock.SaveData;
 using Threadlock.StaticData;
@@ -21,7 +23,7 @@ namespace Threadlock.Entities.Characters.Player
         {
             [Controls.Instance.Action1] = new ActionSlot(Controls.Instance.Action1),
             [Controls.Instance.Action2] = new ActionSlot(Controls.Instance.Action2),
-            [Controls.Instance.SupportAction] = new ActionSlot(Controls.Instance.SupportAction),
+            [Controls.Instance.Action3] = new ActionSlot(Controls.Instance.Action3),
         };
 
         public List<ActionSlot> AllActionSlots { get => ActionDictionary.Values.ToList(); }
@@ -31,74 +33,67 @@ namespace Threadlock.Entities.Characters.Player
 
         #region LIFECYCLE
 
-        public override void Initialize()
-        {
-            base.Initialize();
-
-            if (PlayerData.Instance.OffensiveAction1 != null)
-                EquipAction(PlayerData.Instance.OffensiveAction1, Controls.Instance.Action1);
-            if (PlayerData.Instance.OffensiveAction2 != null)
-                EquipAction(PlayerData.Instance.OffensiveAction2, Controls.Instance.Action2);
-            if (PlayerData.Instance.SupportAction != null)
-                EquipAction(PlayerData.Instance.SupportAction, Controls.Instance.SupportAction);
-        }
-
         public override void OnAddedToEntity()
         {
             base.OnAddedToEntity();
 
             if (Entity.TryGetComponent<ApComponent>(out var apComponent))
                 _apComponent = apComponent;
+
+            if (PlayerData.Instance.Action1 != null)
+                EquipAction(PlayerData.Instance.Action1, Controls.Instance.Action1);
+            if (PlayerData.Instance.Action2 != null)
+                EquipAction(PlayerData.Instance.Action2, Controls.Instance.Action2);
+            if (PlayerData.Instance.Action3 != null)
+                EquipAction(PlayerData.Instance.Action3, Controls.Instance.Action3);
         }
 
         #endregion
 
-        public bool EquipAction(PlayerActionType actionType, VirtualButton button)
+        public bool EquipAction(string actionName, VirtualButton button)
         {
-            var existingAction = AllActionSlots.FirstOrDefault(s => s.Action?.GetType() == actionType.ToType());
-            if (existingAction != null)
+            //see if this is already equipped
+            var existingActionSlot = AllActionSlots.FirstOrDefault(s => s.Action?.Name == actionName);
+            if (existingActionSlot != null)
             {
-                if (existingAction.Button == button)
+                //see if it's on the same button
+                if (existingActionSlot.Button == button)
                 {
                     Emitter.Emit(ActionManagerEvents.ActionsChanged);
                     return true;
                 }
                 else
                 {
+                    //get the slot we want to take
                     var swapSlot = ActionDictionary[button];
-                    var swapAction = swapSlot.ReplaceAction(existingAction.Action);
-                    existingAction.ReplaceAction(swapAction);
+
+                    //replace the action in that slot with this one, returning the action that was previously there
+                    var swapAction = swapSlot.ReplaceAction(existingActionSlot.Action);
+
+                    //replace the action that was in the existing slot with the one we just replaced
+                    existingActionSlot.ReplaceAction(swapAction);
 
                     Emitter.Emit(ActionManagerEvents.ActionsChanged);
                     return true;
                 }
             }
 
-            PlayerAction actionInstance = existingAction?.Action ?? (PlayerAction)Activator.CreateInstance(actionType.ToType(), button);
-
-            if (ActionDictionary.ContainsKey(button))
+            //if not already equipped, get action
+            if (AllPlayerActions.TryGetAction(actionName, out var action))
             {
-                if (ActionDictionary[button].Action != null && ActionDictionary[button].Action.State != PlayerActionState.None)
-                    return false;
+                if (ActionDictionary.ContainsKey(button))
+                {
+                    ActionDictionary[button].EquipAction(action);
+                    Emitter.Emit(ActionManagerEvents.ActionsChanged);
 
-                ActionDictionary[button].EquipAction(actionInstance);
-                Emitter.Emit(ActionManagerEvents.ActionsChanged);
-                return true;
+                    //load animations
+                    action.LoadAnimations();
+
+                    return true;
+                }
             }
 
             return false;
-        }
-
-        public void UnequipAction(VirtualButton button)
-        {
-            if (ActionDictionary.ContainsKey(button))
-            {
-                if (ActionDictionary[button].Action != null && ActionDictionary[button].Action.State != PlayerActionState.None)
-                    return;
-
-                ActionDictionary[button].UnequipAction();
-                Emitter.Emit(ActionManagerEvents.ActionsChanged);
-            }
         }
 
         /// <summary>
@@ -147,12 +142,11 @@ namespace Threadlock.Entities.Characters.Player
             return false;
         }
 
-        bool CanAffordAction(PlayerAction action)
+        bool CanAffordAction(PlayerAction2 action)
         {
             if (DebugSettings.FreeActions)
                 return true;
-            var cost = PlayerActionUtils.GetApCost(action.GetType());
-            return cost <= _apComponent.ActionPoints;
+            return action.ApCost <= _apComponent.ActionPoints;
         }
     }
 
@@ -163,7 +157,7 @@ namespace Threadlock.Entities.Characters.Player
 
     public class ActionSlot
     {
-        public PlayerAction Action { get; private set; }
+        public PlayerAction2 Action { get; private set; }
         public VirtualButton Button { get; private set; }
 
         public ActionSlot(VirtualButton button)
@@ -171,17 +165,15 @@ namespace Threadlock.Entities.Characters.Player
             Button = button;
         }
 
-        public void EquipAction(PlayerAction action)
+        public void EquipAction(PlayerAction2 action)
         {
             if (Action != null && Action == action)
                 return;
 
-            Action?.RemoveComponent(Action);
             Action = action;
-            Player.Instance.AddComponent(Action);
         }
 
-        public PlayerAction ReplaceAction(PlayerAction action)
+        public PlayerAction2 ReplaceAction(PlayerAction2 action)
         {
             var prevAction = Action;
 
@@ -192,7 +184,6 @@ namespace Threadlock.Entities.Characters.Player
 
         public void UnequipAction()
         {
-            Action?.RemoveComponent(Action);
             Action = null;
         }
     }

@@ -22,13 +22,17 @@ namespace Threadlock.StaticData
             {
                 var json = File.ReadAllText("Content/Data/Animations.json");
                 var animations = Json.FromJson<AnimationConfig2[]>(json);
-                foreach (var anim in animations)
+
+                dict = animations.ToDictionary(a => a.Name, a => a);
+
+                foreach (var anim in dict.Values)
                 {
                     //yeah i know this is terrible, my b
                     foreach (var kvp in anim.FrameData)
                         anim.FrameData[kvp.Key].Frame = kvp.Key;
 
-                    dict.Add(anim.Name, anim);
+                    if (!string.IsNullOrWhiteSpace(anim.Base))
+                        ApplyInheritance(anim, dict);
                 }
             }
 
@@ -44,7 +48,7 @@ namespace Threadlock.StaticData
 
             if (_animationDictionary.Value.TryGetValue(name, out var animConfig))
             {
-                if (animConfig.UseDirections)
+                if (animConfig.UseDirections != null && animConfig.UseDirections.Value)
                     return false;
 
                 //TODO: figure out how sprite sheets should be exported and read
@@ -54,10 +58,10 @@ namespace Threadlock.StaticData
                     texture = Game1.Content.LoadTexture($"Content/Textures/{animConfig.Path}.png");
                 else
                     texture = Game1.Scene.Content.LoadTexture($"Content/Textures/{animConfig.Path}.png");
-                var allSprites = Sprite.SpritesFromAtlas(texture, animConfig.CellWidth, animConfig.CellHeight);
-                var totalColumns = texture.Width / animConfig.CellWidth;
+                var allSprites = Sprite.SpritesFromAtlas(texture, animConfig.CellWidth ?? 16, animConfig.CellHeight ?? 16);
+                var totalColumns = texture.Width / animConfig?.CellWidth ?? 16;
 
-                sprites = AnimatedSpriteHelper.GetSpriteArrayByRow(allSprites, animConfig.Row, animConfig.Frames, totalColumns, animConfig.StartFrame);
+                sprites = AnimatedSpriteHelper.GetSpriteArrayByRow(allSprites, animConfig.Row ?? 0, animConfig.Frames ?? 0, totalColumns, animConfig.StartFrame ?? 0);
 
                 return true;
             }
@@ -73,6 +77,26 @@ namespace Threadlock.StaticData
                 return false;
 
             return _animationDictionary.Value.TryGetValue(name, out config);
+        }
+
+        static void ApplyInheritance(AnimationConfig2 animation, Dictionary<string, AnimationConfig2> animDictionary)
+        {
+            if (string.IsNullOrWhiteSpace(animation.Base))
+                return;
+
+            if (animDictionary.TryGetValue(animation.Base, out var parentAnimation))
+            {
+                if (parentAnimation.Base != null)
+                    ApplyInheritance(parentAnimation, animDictionary);
+
+                animation.CellWidth ??= parentAnimation.CellWidth;
+                animation.CellHeight ??= parentAnimation.CellHeight;
+                animation.Row ??= parentAnimation.Row;
+                animation.Frames ??= parentAnimation.Frames;
+                animation.Loop ??= parentAnimation.Loop;
+                animation.Path ??= parentAnimation.Path;
+                animation.ChainTo ??= parentAnimation.ChainTo;
+            }
         }
     }
 }

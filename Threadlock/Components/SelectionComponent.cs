@@ -1,14 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez;
-using Nez.BitmapFonts;
 using Nez.PhysicsShapes;
 using Nez.Sprites;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Threadlock.Effects;
 using Threadlock.StaticData;
 
@@ -44,21 +38,12 @@ namespace Threadlock.Components
                 {
                     var shape = polygonCollider.Shape as Polygon;
                     _collider = Entity.AddComponent(new PolygonCollider(shape.Points));
-                }                
+                }
+
+                _collider.IsTrigger = true;
 
                 Flags.SetFlagExclusive(ref _collider.PhysicsLayer, PhysicsLayers.Selectable);
-                _collider.CollidesWithLayers = 0;
-            }
-        }
-
-        public override void OnRemovedFromEntity()
-        {
-            base.OnRemovedFromEntity();
-
-            if (_collider != null)
-            {
-                Entity.RemoveComponent(_collider);
-                _collider = null;
+                Flags.SetFlagExclusive(ref _collider.CollidesWithLayers, PhysicsLayers.Selector);
             }
         }
 

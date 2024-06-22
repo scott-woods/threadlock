@@ -25,7 +25,7 @@ namespace Threadlock.Entities.Characters.Player.States
         ICoroutine _executionCoroutine;
         ICoroutine _actionCoroutine;
 
-        ActionSlot _currentAction;
+        ActionSlot _currentActionSlot;
         bool _prepFinished = true;
 
         #region LIFECYCLE
@@ -43,10 +43,10 @@ namespace Threadlock.Entities.Characters.Player.States
             base.Update(deltaTime);
 
             //if current action isn't null and is in prep phase, check if we should cancel
-            if (_currentAction != null && !_prepFinished)
+            if (_currentActionSlot != null && !_prepFinished)
             {
                 //check that button is still held
-                if (!_currentAction.Button.IsDown)
+                if (!_currentActionSlot.Button.IsDown)
                 {
                     //if another button is held, switch to that action
                     if (_actionManager.TryAction(false, out var nextAction))
@@ -77,7 +77,7 @@ namespace Threadlock.Entities.Characters.Player.States
         public void StartAction(ActionSlot actionSlot)
         {
             Reset();
-            _currentAction = actionSlot;
+            _currentActionSlot = actionSlot;
             _actionCoroutine = Game1.StartCoroutine(StartActionCoroutine(actionSlot));
         }
 
@@ -169,8 +169,8 @@ namespace Threadlock.Entities.Characters.Player.States
             _executionCoroutine = null;
 
             //reset/abort action
-            _currentAction?.Action.Reset();
-            _currentAction = null;
+            _currentActionSlot?.Action.Reset();
+            _currentActionSlot = null;
         }
 
         void OnGamePaused()

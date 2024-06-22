@@ -26,7 +26,7 @@ namespace Threadlock.SaveData
         public Keys DodgeKey = Keys.Space;
         public Keys Action1Key = Keys.Q;
         public Keys Action2Key = Keys.E;
-        public Keys SupportActionKey = Keys.F;
+        public Keys Action3Key = Keys.F;
         public Keys UpKey = Keys.W;
         public Keys DownKey = Keys.S;
         public Keys LeftKey = Keys.A;
