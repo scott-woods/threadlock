@@ -97,6 +97,11 @@ namespace Threadlock.Components
             _camera.Position = ActualPosition;
         }
 
+        public void SetFollowTarget(Entity targetEntity)
+        {
+            _targetEntity = targetEntity;
+        }
+
         void UpdateBounds()
         {
             if (Min != null && Max != null && _camera != null)

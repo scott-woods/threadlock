@@ -52,13 +52,15 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
         public SimPlayerType SimType;
         public string SimAnimation;
 
+        public bool IsPrepared = false;
+
         //data saved after prep confirmation
         Vector2 _selectedPosition;
         Vector2 _selectedDirection
         {
             get
             {
-                var dir = _selectedPosition - Player.Instance.Position;
+                var dir = _selectedPosition - _baseEntity.Position;
                 dir.Normalize();
                 return dir;
             }
@@ -68,6 +70,8 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
         EntitySelector _entitySelector;
         SimPlayer _simPlayer;
 
+        Entity _baseEntity;
+
         public void LoadAnimations()
         {
             var player = Player.Instance;
@@ -76,13 +80,12 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             AnimatedSpriteHelper.LoadAnimationsGlobal(ref animator, ChargeAnimation, ExecuteAnimation);
         }
 
-        public IEnumerator Prepare()
+        public IEnumerator Prepare(Entity prepEntity)
         {
-            //grab player instance
-            var player = Player.Instance;
+            _baseEntity = prepEntity;
 
             //get necessary components from player
-            var animator = player.GetComponent<SpriteAnimator>();
+            var animator = prepEntity.GetComponent<SpriteAnimator>();
 
             //add entity selector if needed
             if (ConfirmType == ActionConfirmType.SelectEnemy)
@@ -112,19 +115,21 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             //remove sim player if necessary
             _simPlayer?.Destroy();
             _simPlayer = null;
+
+            IsPrepared = true;
         }
 
-        bool ValidateAim(Vector2 targetPosition, Player player, out Vector2 finalPosition)
+        bool ValidateAim(Vector2 targetPosition, Entity prepEntity, out Vector2 finalPosition)
         {
             finalPosition = targetPosition;
 
             //get direction between aiming position and player
-            var dir = finalPosition - player.Position;
+            var dir = finalPosition - prepEntity.Position;
             if (dir != Vector2.Zero)
                 dir.Normalize();
 
             //get distance between aiming position and player
-            var dist = Vector2.Distance(finalPosition, player.Position);
+            var dist = Vector2.Distance(finalPosition, prepEntity.Position);
 
             //handle min and max radius
             if (dist < MinConfirmDistance || dist > MaxConfirmDistance)
@@ -132,9 +137,9 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
                 if (SnapToEdgeIfOutsideRadius)
                 {
                     if (dist < MinConfirmDistance)
-                        finalPosition = player.Position + (dir * MinConfirmDistance);
+                        finalPosition = prepEntity.Position + (dir * MinConfirmDistance);
                     else if (dist > MaxConfirmDistance)
-                        finalPosition = player.Position + (dir * MaxConfirmDistance);
+                        finalPosition = prepEntity.Position + (dir * MaxConfirmDistance);
                 }
                 else
                     return false;
@@ -143,7 +148,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             if (!CanPassThroughWalls)
             {
                 //raycast to see if we hit a wall along the path
-                var raycast = Physics.Linecast(player.Position, finalPosition, 1 << PhysicsLayers.Environment);
+                var raycast = Physics.Linecast(prepEntity.Position, finalPosition, 1 << PhysicsLayers.Environment);
                 if (raycast.Collider != null)
                 {
                     switch (WallBehavior)
@@ -153,7 +158,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
                         case PlayerActionWallBehavior.Shorten:
                             finalPosition = raycast.Point + (dir * -1 * 8);
                             //check distance again. if shorter than min, there is no valid position. return false
-                            if (Vector2.Distance(finalPosition, player.Position) < MinConfirmDistance)
+                            if (Vector2.Distance(finalPosition, prepEntity.Position) < MinConfirmDistance)
                                 return false;
                             break;
                     }
@@ -172,7 +177,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
         bool TryConfirm()
         {
             var desiredPos = Game1.Scene.Camera.MouseToWorldPoint();
-            if (ValidateAim(desiredPos, Player.Instance, out var finalPosition))
+            if (ValidateAim(desiredPos, _baseEntity, out var finalPosition))
             {
                 _selectedPosition = finalPosition;
 
@@ -190,11 +195,15 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             return false;
         }
 
-        public IEnumerator Execute()
+        public IEnumerator Execute(Entity baseEntity)
         {
-            var player = Player.Instance;
-            var animator = player.GetComponent<SpriteAnimator>();
-            var velocityComponent = player.GetComponent<VelocityComponent>();
+            _baseEntity = baseEntity;
+
+            var animator = _baseEntity.GetComponent<SpriteAnimator>();
+            var velocityComponent = _baseEntity.GetComponent<VelocityComponent>();
+            var apComponent = _baseEntity.GetComponent<ApComponent>();
+
+            apComponent.ActionPoints -= ApCost;
 
             //handle projectiles
             foreach (var playerProjectile in Projectiles)
@@ -248,12 +257,12 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
                         executionMovementSpeed = ExecutionMovement.Speed;
                         break;
                     case PlayerActionMovementType.ToTarget:
-                        var dist = Vector2.Distance(_selectedPosition, player.Position);
+                        var dist = Vector2.Distance(_selectedPosition, _baseEntity.Position);
                         var time = ExecutionMovement.UseAnimationDuration ? executeAnimDuration : ExecutionMovement.Duration;
                         executionMovementSpeed = dist / time;
                         break;
                     case PlayerActionMovementType.Instant:
-                        player.Position = _selectedPosition;
+                        _baseEntity.Position = _selectedPosition;
                         break;
                 }
             }
@@ -293,6 +302,11 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
         {
             return this.MemberwiseClone();
         }
+
+        public Vector2 GetFinalPosition()
+        {
+            return _selectedPosition;
+        }
     }
 
     public enum ActionConfirmType
@@ -309,6 +323,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
     public enum SimPlayerType
     {
         AttachToCursor,
+        Static
     }
 
     public enum PlayerActionWallBehavior

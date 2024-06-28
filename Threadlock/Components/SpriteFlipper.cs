@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components.EnemyActions;
+using Threadlock.Entities.Characters;
 using Threadlock.Entities.Characters.Enemies;
 using Threadlock.Entities.Characters.Player;
 using Threadlock.Helpers;
@@ -56,6 +57,8 @@ namespace Threadlock.Components
                 case DirectionSource.Aiming:
                     if (Entity is Player player)
                         flip = player.GetFacingDirection().X < 0;
+                    else if (Entity is SimPlayer simPlayer)
+                        flip = simPlayer.GetFacingDirection().X < 0;
                     else if (Entity is Enemy enemy)
                         flip = (EntityHelper.DirectionToEntity(enemy, enemy.TargetEntity)).X < 0;
                     break;

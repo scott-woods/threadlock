@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
 using Threadlock.Components.EnemyActions;
+using Threadlock.Entities.Characters;
 using Threadlock.Entities.Characters.Enemies;
 using Threadlock.Entities.Characters.Player;
 using Threadlock.Models;
@@ -223,6 +224,8 @@ namespace Threadlock.Helpers
                 case DirectionSource.Aiming:
                     if (owner is Player player)
                         dir = player.GetFacingDirection();
+                    else if (owner is SimPlayer simPlayer)
+                        dir = simPlayer.GetFacingDirection();
                     else if (owner is Enemy enemy)
                         dir = EntityHelper.DirectionToEntity(enemy, enemy.TargetEntity);
                     break;

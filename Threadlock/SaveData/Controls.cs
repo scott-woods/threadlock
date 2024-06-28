@@ -88,6 +88,10 @@ namespace Threadlock.SaveData
             new VirtualButton.KeyboardKey(Settings.Instance.Reload)
             );
 
+        public VirtualButton Special = new VirtualButton(
+            new VirtualButton.KeyboardKey(Settings.Instance.Special)
+            );
+
         public VirtualIntegerAxis XAxisIntegerInput = new VirtualIntegerAxis(
             new VirtualAxis.GamePadDpadLeftRight(),
             new VirtualAxis.GamePadLeftStickX(),

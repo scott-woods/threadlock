@@ -40,16 +40,18 @@ namespace Threadlock.Entities.Characters
             base.OnAddedToScene();
 
             //create animator, slightly transparent
-            //_animator = AddComponent(new SpriteAnimator());
+            _animator = AddComponent(new SpriteAnimator());
+            _animator.SetColor(new Microsoft.Xna.Framework.Color(255, 255, 255, 128));
+            _animator.SetRenderLayer(RenderLayers.YSort);
 
             //get animations from player animator
             if (Player.Player.Instance.TryGetComponent<SpriteAnimator>(out var animator))
             {
-                _animator = AddComponent(animator.Clone() as SpriteAnimator);
-            }
+                foreach (var anim in animator.Animations)
+                    _animator.AddAnimation(anim.Key, anim.Value);
 
-            _animator.SetColor(new Microsoft.Xna.Framework.Color(255, 255, 255, 128));
-            _animator.SetRenderLayer(RenderLayers.YSort);
+                _animator.SetLocalOffset(animator.LocalOffset);
+            }
 
             _mover = AddComponent(new Mover());
 
@@ -64,6 +66,8 @@ namespace Threadlock.Entities.Characters
             Flags.SetFlag(ref _collider.CollidesWithLayers, PhysicsLayers.None);
 
             _originComponent = AddComponent(new OriginComponent(_collider));
+
+            AnimatedSpriteHelper.PlayAnimation(ref _animator, _animation);
         }
 
         public override void Update()
@@ -88,6 +92,13 @@ namespace Threadlock.Entities.Characters
         public void UpdateTarget(Vector2 targetPosition)
         {
             _targetPosition = targetPosition;
+        }
+
+        public Vector2 GetFacingDirection()
+        {
+            var dir = Scene.Camera.MouseToWorldPoint() - Position;
+            dir.Normalize();
+            return dir;
         }
     }
 }

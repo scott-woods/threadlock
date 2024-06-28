@@ -31,9 +31,9 @@ namespace Threadlock.Entities.Characters.Player.States
                 switch (this)
                 {
                     case Idle idle:
-                        return new List<Func<bool>>() { TryOpenOverview, TryInteract, TryAction, TryBasicAttack, TryMove };
+                        return new List<Func<bool>>() { TryOpenOverview, TryInteract, TryAction, TryBasicAttack, TryMove, TrySequencedAttack };
                     case Move move:
-                        return new List<Func<bool>>() { TryOpenOverview, TryInteract, TryAction, TryBasicAttack, TryDash, TryIdle };
+                        return new List<Func<bool>>() { TryOpenOverview, TryInteract, TryAction, TryBasicAttack, TryDash, TryIdle, TrySequencedAttack };
                     default:
                         return new List<Func<bool>>();
                 }
@@ -209,6 +209,17 @@ namespace Threadlock.Entities.Characters.Player.States
                 _machine.ChangeState<ActionState>();
                 var actionState = _machine.GetState<ActionState>();
                 actionState.StartAction(actionSlot);
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool TrySequencedAttack()
+        {
+            if (Controls.Instance.Special.IsPressed)
+            {
+                _machine.ChangeState<SequencedAttackState>();
                 return true;
             }
 

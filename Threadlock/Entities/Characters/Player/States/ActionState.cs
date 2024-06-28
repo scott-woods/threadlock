@@ -91,7 +91,7 @@ namespace Threadlock.Entities.Characters.Player.States
 
             //start preparing action
             _prepFinished = false;
-            _prepCoroutine = Game1.StartCoroutine(action.Prepare());
+            _prepCoroutine = Game1.StartCoroutine(action.Prepare(Player.Instance));
             yield return _prepCoroutine;
 
             _prepFinished = true;
@@ -105,7 +105,7 @@ namespace Threadlock.Entities.Characters.Player.States
             //start returning to normal speed
             _normalSpeedCoroutine = Game1.StartCoroutine(NormalSpeedCoroutine());
 
-            _executionCoroutine = Game1.StartCoroutine(action.Execute());
+            _executionCoroutine = Game1.StartCoroutine(action.Execute(Player.Instance));
             yield return _executionCoroutine;
             _executionCoroutine = null;
 

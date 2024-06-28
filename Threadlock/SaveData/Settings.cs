@@ -31,6 +31,7 @@ namespace Threadlock.SaveData
         public Keys DownKey = Keys.S;
         public Keys LeftKey = Keys.A;
         public Keys RightKey = Keys.D;
+        public Keys Special = Keys.Z;
 
         private Settings()
         {
