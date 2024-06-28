@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
 using Threadlock.Components.Hitboxes;
+using Threadlock.Models;
 using Threadlock.StaticData;
 
 namespace Threadlock.Entities.Characters.Player.PlayerActions
@@ -147,7 +148,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
                         hurtbox.Collider.PhysicsLayer = _previousPhysicsLayer;
                         hurtbox.Collider.CollidesWithLayers = _previousCollidesWithLayers;
 
-                        hurtbox.HandleHit(_hitbox);
+                        hurtbox.HandleHit(new HurtboxHit(new CollisionResult(), _hitbox));
                     }
                     
                     hitboxCollider.SetEnabled(false);

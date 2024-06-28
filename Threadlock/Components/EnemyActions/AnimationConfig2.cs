@@ -29,7 +29,8 @@ namespace Threadlock.Components.EnemyActions
         public bool? UseDirections;
         public Dictionary<string, string> DirectionalAnimations = new Dictionary<string, string>();
         public DirectionSource DirectionSource;
-        public bool CanDirectionChange;
+        public bool CanDirectionChange = true;
+        public bool ShouldFlip;
     }
 
     public enum DirectionSource

@@ -60,8 +60,10 @@ namespace Threadlock.StaticData
                     texture = Game1.Scene.Content.LoadTexture($"Content/Textures/{animConfig.Path}.png");
                 var allSprites = Sprite.SpritesFromAtlas(texture, animConfig.CellWidth ?? 16, animConfig.CellHeight ?? 16);
                 var totalColumns = texture.Width / animConfig?.CellWidth ?? 16;
+                var startFrame = animConfig.StartFrame ?? 0;
+                var frameCount = animConfig.Frames ?? (totalColumns - startFrame);
 
-                sprites = AnimatedSpriteHelper.GetSpriteArrayByRow(allSprites, animConfig.Row ?? 0, animConfig.Frames ?? 0, totalColumns, animConfig.StartFrame ?? 0);
+                sprites = AnimatedSpriteHelper.GetSpriteArrayByRow(allSprites, animConfig.Row ?? 0, frameCount, totalColumns, startFrame);
 
                 return true;
             }

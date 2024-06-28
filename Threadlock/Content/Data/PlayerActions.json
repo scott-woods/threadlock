@@ -55,5 +55,27 @@
     "ShowSim": true,
     "SimType": "AttachToCursor",
     "SimAnimation": "Player_Idle"
+  },
+  {
+    "Name": "Player_ChainLightning",
+    "Description": "Strike in any direction, chaining to nearby foes.",
+    "ApCost": 3,
+
+    "ChargeAnimation": "Player_ChargeDash",
+
+    "WallBehavior": "Allow",
+    "CanAimInsideWalls": true,
+    "CanPassThroughWalls": true,
+
+    "Projectiles": [
+      {
+        "ProjectileName": "Player_ChainLightning"
+      }
+    ],
+
+    "ExecuteAnimation": "Player_Slash",
+    "WaitForExecuteAnimation": true,
+
+    "ExecutionSound": "Content/Audio/Sounds/big_lightning.wav"
   }
 ]

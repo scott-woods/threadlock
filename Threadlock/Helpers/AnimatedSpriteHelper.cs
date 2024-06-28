@@ -128,23 +128,26 @@ namespace Threadlock.Helpers
             //get the config for this animation
             if (Animations.TryGetAnimationConfig(animationName, out var config))
             {
+                //retrieve sprite flipper
+                var flipper = animator.Entity.GetComponent<SpriteFlipper>();
+
                 //if this is a directional animation, determine the direction
                 if (config.UseDirections ?? false)
                 {
                     //get the directional animation name
                     var childAnimationName = GetDirectionalAnimationName(config, animator.Entity);
 
-                    //update sprite flipper if necessary
-                    if (animator.Entity.TryGetComponent<SpriteFlipper>(out var flipper))
-                    {
-                        flipper.TryFlip(config.DirectionSource);
-                    }
-
                     //call play animation with the new directional name
                     yield return PlayAnimationCoroutine(animator, childAnimationName, config);
                 }
                 else //this is not a directional animation, play it normally
                 {
+                    //update sprite flipper if necessary
+                    if ((config.ShouldFlip || (parentConfig != null && parentConfig.ShouldFlip)))
+                        flipper?.TryFlip(parentConfig != null ? parentConfig.DirectionSource : config.DirectionSource);
+                    else
+                        flipper?.SetFlip(false);
+
                     //play the animation
                     animator.Play(animationName, config.Loop ?? false ? SpriteAnimator.LoopMode.Loop : SpriteAnimator.LoopMode.Once);
 
@@ -152,22 +155,32 @@ namespace Threadlock.Helpers
                     var currentFrame = -1;
                     while (animator.CurrentAnimationName == animationName && animator.AnimationState != SpriteAnimator.State.Completed)
                     {
+                        if (animator.Entity == null || animator.Entity.IsDestroyed)
+                            yield break;
+
                         //if directional, check if we should change direction
-                        if (parentConfig != null && (parentConfig.UseDirections ?? false) && parentConfig.CanDirectionChange)
+                        if (parentConfig != null && parentConfig.CanDirectionChange)
                         {
-                            //handle sprite flipper
-                            if (animator.Entity.TryGetComponent<SpriteFlipper>(out var flipper))
-                                flipper.TryFlip(parentConfig.DirectionSource);
-
-                            //get the directional animation name
-                            var childAnimationName = GetDirectionalAnimationName(parentConfig, animator.Entity);
-
-                            //if we've changed direction, change animation
-                            if (childAnimationName != animationName)
+                            if (parentConfig.UseDirections ?? false)
                             {
-                                yield return PlayAnimationCoroutine(animator, childAnimationName, parentConfig);
-                                break;
+                                //get the directional animation name
+                                var childAnimationName = GetDirectionalAnimationName(parentConfig, animator.Entity);
+
+                                //if we've changed direction, change animation
+                                if (childAnimationName != animationName)
+                                {
+                                    yield return PlayAnimationCoroutine(animator, childAnimationName, parentConfig);
+                                    break;
+                                }
                             }
+
+                            if (config.ShouldFlip)
+                                flipper?.TryFlip(parentConfig.DirectionSource);
+                        }
+                        else
+                        {
+                            if (config.CanDirectionChange)
+                                flipper?.TryFlip(config.DirectionSource);
                         }
 
                         //if current frame is mismatched, this is the first time we're hitting this frame
@@ -334,6 +347,28 @@ namespace Threadlock.Helpers
                 //create animation and add it to the animator
                 animator.AddAnimation(tag.Name, sprites.ToArray(), fps);
             }
+        }
+
+        public static bool IsAnimationPlaying(SpriteAnimator animator, string animationName)
+        {
+            if (animator.CurrentAnimationName == animationName && animator.AnimationState != SpriteAnimator.State.Completed)
+                return true;
+            else
+            {
+                if (Animations.TryGetAnimationConfig(animationName, out var config))
+                {
+                    if (config.UseDirections ?? false)
+                    {
+                        foreach (var dir in config.DirectionalAnimations)
+                        {
+                            if (animator.CurrentAnimationName == dir.Value && animator.AnimationState != SpriteAnimator.State.Completed)
+                                return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
         }
     }
 }

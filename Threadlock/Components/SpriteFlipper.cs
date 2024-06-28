@@ -19,29 +19,39 @@ namespace Threadlock.Components
 
         bool _flipped = false;
 
-        VelocityComponent _velocityComponent;
-        List<SpriteRenderer> _renderers;
-
-        public override void OnAddedToEntity()
-        {
-            base.OnAddedToEntity();
-
-            _velocityComponent = Entity.GetComponent<VelocityComponent>();
-            _renderers = Entity.GetComponents<SpriteRenderer>();
-        }
-
         public void Update()
         {
             //TryFlip(DirectionSource);
         }
 
-        public bool TryFlip(DirectionSource directionSource)
+        public void SetFlip(bool flip)
+        {
+            //if flip status changed
+            if (_flipped != flip)
+            {
+                _flipped = flip;
+
+                var renderers = Entity.GetComponents<SpriteRenderer>();
+
+                foreach (var renderer in renderers)
+                {
+                    renderer.FlipX = flip;
+
+                    var newOffsetX = renderer.LocalOffset.X * -1;
+                    var newOffset = new Vector2(newOffsetX, renderer.LocalOffset.Y);
+                    renderer.SetLocalOffset(newOffset);
+                }
+            }
+        }
+
+        public void TryFlip(DirectionSource directionSource)
         {
             var flip = _flipped;
             switch (directionSource)
             {
                 case DirectionSource.Velocity:
-                    flip = _velocityComponent.LastNonZeroDirection.X < 0;
+                    if (Entity.TryGetComponent<VelocityComponent>(out var velocityComponent))
+                        flip = velocityComponent.LastNonZeroDirection.X < 0;
                     break;
                 case DirectionSource.Aiming:
                     if (Entity is Player player)
@@ -51,24 +61,7 @@ namespace Threadlock.Components
                     break;
             }
 
-            //if flip status changed
-            if (_flipped != flip)
-            {
-                _flipped = flip;
-
-                foreach (var renderer in _renderers)
-                {
-                    renderer.FlipX = flip;
-
-                    var newOffsetX = renderer.LocalOffset.X * -1;
-                    var newOffset = new Vector2(newOffsetX, renderer.LocalOffset.Y);
-                    renderer.SetLocalOffset(newOffset);
-                }
-
-                return true;
-            }
-
-            return false;
+            SetFlip(flip);
         }
     }
 }

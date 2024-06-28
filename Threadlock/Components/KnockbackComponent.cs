@@ -80,16 +80,11 @@ namespace Threadlock.Components
                 }
             }
 
-            //move in direction of Hitbox direction if it exists, otherwise just use collision normal
-            var dir = hit.Hitbox.Direction;
-            if (dir == Vector2.Zero)
-            {
-                dir = -hit.CollisionResult.Normal;
-                dir.Normalize();
-            }
+            //get direction
+            var dir = hit.Direction;
 
             //determine knockback speed
-            var initialSpeed = _baseSpeed * hit.Hitbox.PushForce;
+            var initialSpeed = _baseSpeed * hit.PushForce;
 
             //if already in knockback, cancel the original
             _knockbackCoroutine?.Stop();

@@ -23,7 +23,6 @@ namespace Threadlock.Components
     public class Hurtbox : Component, ITriggerListener, IUpdatable
     {
         public Emitter<HurtboxEventTypes, HurtboxHit> Emitter = new Emitter<HurtboxEventTypes, HurtboxHit>();
-        public event Action<int> OnHit;
 
         //consts
         const float _attackLifespan = 2f;
@@ -95,57 +94,16 @@ namespace Threadlock.Components
 
         public void ManualHit(int damage)
         {
-            //play sound
-            if (!String.IsNullOrWhiteSpace(_damageSound))
-            {
-                Game1.AudioManager.PlaySound(_damageSound);
-            }
+            var hurtboxHit = new HurtboxHit(damage);
 
-            //start recovery timer if necessary
-            if (_recoveryTime > 0)
-            {
-                SetEnabled(false);
-                _recoveryTimer = Game1.Schedule(_recoveryTime, timer =>
-                {
-                    SetEnabled(true);
-                });
-            }
-
-            //emit hit signal
-            OnHit?.Invoke(damage);
+            HandleHit(hurtboxHit);
         }
 
-        public void HandleHit(IHitbox hitbox)
+        public void HandleHit(HurtboxHit hurtboxHit)
         {
             //play sound
             if (!String.IsNullOrWhiteSpace(_damageSound))
-            {
                 Game1.AudioManager.PlaySound(_damageSound);
-            }
-
-            //get collision result
-            var collider = hitbox as Collider;
-
-            //add effects and such only if we can get a the collision normal
-            if (collider.CollidesWith(_collider, out CollisionResult collisionResult))
-            {
-                //get angle from normal
-                var angle = (float)Math.Atan2(collisionResult.Normal.Y, collisionResult.Normal.X);
-
-                //choose hit effect
-                var effects = new List<HitEffectModel>() { HitEffects.Hit1, HitEffects.Hit2, HitEffects.Hit3 };
-                var effect = effects.RandomItem();
-
-                //effect color
-                //Color color = Color.White;
-                //if (Entity == PlayerController.Instance.Entity)
-                //    color = Color.Red;
-
-                //hit effect
-                var effectEntity = Entity.Scene.AddEntity(new HitEffect(effect));
-                effectEntity.SetPosition(Entity.Position);
-                effectEntity.SetRotation(angle);
-            }
 
             //start recovery timer if necessary
             if (_recoveryTime > 0)
@@ -158,7 +116,7 @@ namespace Threadlock.Components
             }
 
             //emit hit signal
-            Emitter.Emit(HurtboxEventTypes.Hit, new HurtboxHit(collisionResult, hitbox));
+            Emitter.Emit(HurtboxEventTypes.Hit, hurtboxHit);
         }
 
         void OnDeathStarted(Entity entity)
@@ -183,17 +141,30 @@ namespace Threadlock.Components
             if (Entity.GetType() == typeof(Player) && !DebugSettings.PlayerHurtboxEnabled)
                 return;
 
+            //convert to hitbox
             var hitbox = other as IHitbox;
-
             if (hitbox == null)
                 return;
 
+            //make sure we haven't already been hit by this attack
             if (!_recentAttackIds.Contains(hitbox.AttackId))
             {
+                //add this attack to recent attacks
                 var id = hitbox.AttackId;
                 _recentAttackIds.Add(id);
                 Game1.Schedule(_attackLifespan, timer => _recentAttackIds.Remove(id));
-                HandleHit(hitbox);
+
+                //get collision result
+                if (other.CollidesWith(_collider, out CollisionResult collisionResult))
+                {
+                    //tell the projectile entity that it successully hit something
+                    if (other.Entity is ProjectileEntity projectileEntity)
+                        projectileEntity.OnHit(_collider, collisionResult);
+                }
+
+                var hurtboxHit = new HurtboxHit(collisionResult, hitbox);
+
+                HandleHit(hurtboxHit);
             }
         }
 

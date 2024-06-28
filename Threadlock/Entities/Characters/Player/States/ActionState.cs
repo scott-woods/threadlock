@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Entities.Characters.Player.PlayerActions;
 using Threadlock.GlobalManagers;
+using Threadlock.StaticData;
 
 namespace Threadlock.Entities.Characters.Player.States
 {
@@ -26,6 +27,7 @@ namespace Threadlock.Entities.Characters.Player.States
         ICoroutine _actionCoroutine;
 
         ActionSlot _currentActionSlot;
+        PlayerAction2 _currentAction;
         bool _prepFinished = true;
 
         #region LIFECYCLE
@@ -78,17 +80,18 @@ namespace Threadlock.Entities.Characters.Player.States
         {
             Reset();
             _currentActionSlot = actionSlot;
-            _actionCoroutine = Game1.StartCoroutine(StartActionCoroutine(actionSlot));
+            _currentAction = actionSlot.Action.Clone() as PlayerAction2;
+            _actionCoroutine = Game1.StartCoroutine(StartActionCoroutine(_currentAction));
         }
 
-        public IEnumerator StartActionCoroutine(ActionSlot actionSlot)
+        public IEnumerator StartActionCoroutine(PlayerAction2 action)
         {
             //start slow mo
             _slowMoCoroutine = Game1.StartCoroutine(SlowMoCoroutine());
 
             //start preparing action
             _prepFinished = false;
-            _prepCoroutine = Game1.StartCoroutine(actionSlot.Action.Prepare());
+            _prepCoroutine = Game1.StartCoroutine(action.Prepare());
             yield return _prepCoroutine;
 
             _prepFinished = true;
@@ -102,7 +105,7 @@ namespace Threadlock.Entities.Characters.Player.States
             //start returning to normal speed
             _normalSpeedCoroutine = Game1.StartCoroutine(NormalSpeedCoroutine());
 
-            _executionCoroutine = Game1.StartCoroutine(actionSlot.Action.Execute());
+            _executionCoroutine = Game1.StartCoroutine(action.Execute());
             yield return _executionCoroutine;
             _executionCoroutine = null;
 
@@ -169,7 +172,9 @@ namespace Threadlock.Entities.Characters.Player.States
             _executionCoroutine = null;
 
             //reset/abort action
-            _currentActionSlot?.Action.Reset();
+            _currentAction?.Reset();
+            _currentAction = null;
+
             _currentActionSlot = null;
         }
 

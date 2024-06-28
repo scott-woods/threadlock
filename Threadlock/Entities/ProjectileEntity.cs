@@ -143,6 +143,22 @@ namespace Threadlock.Entities
                 Destroy();
         }
 
+        public void OnHit(Collider hitCollider, CollisionResult collisionResult)
+        {
+            foreach (var effect in Config.HitEffects)
+            {
+                effect.Apply(this, hitCollider);
+            }
+
+            if (Config.HitVfx.Count > 0)
+            {
+                var hitVfx = Config.HitVfx.RandomItem();
+                var hitVfxPos = collisionResult.Point != Vector2.Zero ? collisionResult.Point : hitCollider.Entity.Position;
+                var hitVfxEntity = Scene.AddEntity(new HitVfx(hitVfx));
+                hitVfxEntity.SetPosition(hitVfxPos);
+            }
+        }
+
         void OnAnimationCompleted(string animationName)
         {
             if (Config.DestroyAnimations != null && Config.DestroyAnimations.Contains(animationName))

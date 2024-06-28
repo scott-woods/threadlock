@@ -65,6 +65,7 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
             base.OnAddedToEntity();
 
             _animator = Entity.GetComponent<SpriteAnimator>();
+            AnimatedSpriteHelper.LoadAnimationsGlobal(ref _animator, "Player_Thrust", "Player_Slash");
             _velocityComponent = Entity.GetComponent<VelocityComponent>();
             _hurtbox = Entity.GetComponent<Hurtbox>();
 
@@ -141,9 +142,9 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
             Game1.AudioManager.PlaySound(_soundDictionary[comboCount]);
 
             //play animation
-            var animation = comboCount == 2 ? "Slash" : "Thrust";
-            animation += DirectionHelper.GetDirectionStringByVector(dir);
-            _animator.Play(animation, SpriteAnimator.LoopMode.Once);
+            var animation = comboCount == 2 ? "Player_Slash" : "Player_Thrust";
+            AnimatedSpriteHelper.PlayAnimation(ref _animator, animation);
+            
             var animDuration = AnimatedSpriteHelper.GetAnimationDuration(_animator);
             var movementTime = animDuration;
 
@@ -154,7 +155,7 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
             var requiredProgress = comboCount == 3 ? _progressRequiredForFinisher : _progressRequiredToContinue;
             var elapsedTime = 0f;
             var easeType = comboCount == 3 ? _finisherEaseType : _normalEaseType;
-            while (_animator.CurrentAnimationName == animation && _animator.AnimationState != SpriteAnimator.State.Completed)
+            while (AnimatedSpriteHelper.IsAnimationPlaying(_animator, animation))
             {
                 //soon as we're not on the first frame, start checking for next attack
                 if (comboCount < 3 && elapsedTime > 0)

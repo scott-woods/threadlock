@@ -1,5 +1,47 @@
 [
   {
+    "Name": "HitEffect_DefaultBase",
+    "CellWidth": 82,
+    "CellHeight": 65
+  },
+  {
+    "Name": "HitEffect_Default_1",
+    "Base": "HitEffect_DefaultBase",
+    "Path": "Effects/hit 1"
+  },
+  {
+    "Name": "HitEffect_Default_2",
+    "Base": "HitEffect_DefaultBase",
+    "Path": "Effects/hit 2"
+  },
+  {
+    "Name": "HitEffect_Default_3",
+    "Base": "HitEffect_DefaultBase",
+    "Path": "Effects/hit 3"
+  },
+  {
+    "Name": "HitEffect_Default_4",
+    "Base": "HitEffect_DefaultBase",
+    "Path": "Effects/hit 4"
+  },
+
+  {
+    "Name": "HitEffect_LightningBase",
+    "CellWidth": 82,
+    "CellHeight": 65
+  },
+  {
+    "Name": "HitEffect_Lightning_1",
+    "Base": "HitEffect_LightningBase",
+    "Path": "Effects/electric_hit_1"
+  },
+  {
+    "Name": "HitEffect_Lightning_2",
+    "Base": "HitEffect_LightningBase",
+    "Path": "Effects/electric_hit_2"
+  },
+
+  {
     "Name": "PlayerBase",
     "Path": "Characters/PlayerSprites",
     "CellWidth": 64,
@@ -36,6 +78,7 @@
     "Name": "Player_Thrust",
     "UseDirections": true,
     "DirectionSource": "Aiming",
+    "CanDirectionChange": false,
     "DirectionalAnimations": {
       "Up": "Player_Thrust_Up",
       "Down": "Player_Thrust_Down",
@@ -45,6 +88,8 @@
   {
     "Name": "Player_Slash",
     "UseDirections": true,
+    "DirectionSource": "Aiming",
+    "CanDirectionChange": false,
     "DirectionalAnimations": {
       "Up": "Player_Slash_Up",
       "Down": "Player_Slash_Down",
@@ -54,6 +99,7 @@
   {
     "Name": "Player_Roll",
     "UseDirections": true,
+    "CanDirectionChange": false,
     "DirectionalAnimations": {
       "Up": "Player_Roll_Up",
       "Down": "Player_Roll_Down",
@@ -64,7 +110,6 @@
     "Name": "Player_ChargeDash",
     "UseDirections": true,
     "DirectionSource": "Aiming",
-    "CanDirectionChange": true,
     "DirectionalAnimations": {
       "Up": "Player_ChargeDash_Up",
       "Down": "Player_ChargeDash_Down",
@@ -75,10 +120,11 @@
     "Name": "Player_DashAttack",
     "UseDirections": true,
     "DirectionSource": "Aiming",
+    "CanDirectionChange": false,
     "DirectionalAnimations": {
       "Up": "Player_DashAttack_Up",
       "Down": "Player_DashAttack_Down",
-      "Right":  "Player_DashAttack_Right"
+      "Right": "Player_DashAttack_Right"
     }
   },
   {
@@ -136,6 +182,7 @@
   {
     "Name": "Player_Idle_Right",
     "Base": "PlayerBase",
+    "ShouldFlip": true,
     "Row": 10,
     "Frames": 12,
     "Loop": true
@@ -143,6 +190,7 @@
   {
     "Name": "Player_Walk_Right",
     "Base": "PlayerBase",
+    "ShouldFlip": true,
     "Row": 11,
     "Frames": 8,
     "Loop": true
@@ -150,6 +198,7 @@
   {
     "Name": "Player_Run_Right",
     "Base": "PlayerBase",
+    "ShouldFlip": true,
     "Row": 12,
     "Frames": 8,
     "Loop": true
@@ -157,18 +206,21 @@
   {
     "Name": "Player_Roll_Right",
     "Base": "PlayerBase",
+    "ShouldFlip": true,
     "Row": 13,
     "Frames": 6
   },
   {
     "Name": "Player_Thrust_Right",
     "Base": "PlayerBase",
+    "ShouldFlip": true,
     "Row": 14,
     "Frames": 4
   },
   {
     "Name": "Player_DashAttack_Right",
     "Base": "Player_Thrust_Right",
+    "ShouldFlip": true,
     "FrameData": { "0": { "Sounds": [ "20_Slash_02" ] } }
   },
   {
@@ -177,11 +229,13 @@
     "Row": 15,
     "Frames": 1,
     "StartFrame": 2,
+    "ShouldFlip": true,
     "Loop": true
   },
   {
     "Name": "Player_Slash_Right",
     "Base": "PlayerBase",
+    "ShouldFlip": true,
     "Row": 15,
     "Frames": 5
   },
@@ -329,6 +383,7 @@
   {
     "Name": "Ghoul_Move",
     "Path": "Characters/GhoulSprites",
+    "ShouldFlip": true,
     "CellWidth": 62,
     "CellHeight": 33,
     "Row": 1,

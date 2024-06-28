@@ -29,7 +29,14 @@ namespace Threadlock.StaticData
 
         public static bool TryGetAction(string name, out PlayerAction2 action)
         {
-            return _playerActionDictionary.Value.TryGetValue(name, out action);
+            if (_playerActionDictionary.Value.TryGetValue(name, out var actionTemplate))
+            {
+                action = actionTemplate.Clone() as PlayerAction2;
+                return true;
+            }
+
+            action = null;
+            return false;
         }
     }
 }

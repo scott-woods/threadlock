@@ -55,7 +55,6 @@ namespace Threadlock.Components
             if (Entity.TryGetComponent<Hurtbox>(out var hurtbox))
             {
                 hurtbox.Emitter.AddObserver(HurtboxEventTypes.Hit, OnHurtboxHit);
-                hurtbox.OnHit += OnHurtboxManualHit;
             }
         }
 
@@ -66,7 +65,6 @@ namespace Threadlock.Components
             if (Entity.TryGetComponent<Hurtbox>(out var hurtbox))
             {
                 hurtbox.Emitter.RemoveObserver(HurtboxEventTypes.Hit, OnHurtboxHit);
-                hurtbox.OnHit -= OnHurtboxManualHit;
             }
         }
 
@@ -76,14 +74,9 @@ namespace Threadlock.Components
 
         void OnHurtboxHit(HurtboxHit hit)
         {
-            Health -= hit.Hitbox.Damage;
+            Health -= hit.Damage;
 
-            hit.Hitbox.Hit(Entity, hit.Hitbox.Damage);
-        }
-
-        void OnHurtboxManualHit(int damage)
-        {
-            Health -= damage;
+            //hit.Hitbox.Hit(Entity, hit.Hitbox.Damage);
         }
 
         #endregion

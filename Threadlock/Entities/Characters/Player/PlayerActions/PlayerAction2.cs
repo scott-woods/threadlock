@@ -16,7 +16,7 @@ using Threadlock.StaticData;
 
 namespace Threadlock.Entities.Characters.Player.PlayerActions
 {
-    public class PlayerAction2
+    public class PlayerAction2 : ICloneable
     {
         //stats
         public string Name;
@@ -287,6 +287,11 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
 
             _simPlayer?.Destroy();
             _simPlayer = null;
+        }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
         }
     }
 

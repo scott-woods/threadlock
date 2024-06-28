@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Threadlock.StaticData;
 
 namespace Threadlock.Components.EnemyActions
 {
@@ -38,6 +39,9 @@ namespace Threadlock.Components.EnemyActions
         public float HitboxActiveDuration;
 
         public List<string> DestroyAnimations = new List<string>();
+
+        public List<IHitEffect2> HitEffects = new List<IHitEffect2>();
+        public List<string> HitVfx = new List<string>();
     }
 
     public class StraightProjectileConfig : ProjectileConfig2

@@ -1,4 +1,5 @@
-﻿using Nez;
+﻿using Microsoft.Xna.Framework;
+using Nez;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,13 +11,25 @@ namespace Threadlock.Models
 {
     public class HurtboxHit
     {
-        public CollisionResult CollisionResult { get; set; }
-        public IHitbox Hitbox { get; set; }
+        public int Damage;
+        public Vector2 Direction = Vector2.Zero;
+        public float PushForce = 0f;
 
         public HurtboxHit(CollisionResult collisionResult, IHitbox hitbox)
         {
-            CollisionResult = collisionResult;
-            Hitbox = hitbox;
+            var dir = hitbox.Direction != Vector2.Zero ? hitbox.Direction : -collisionResult.Normal;
+            if (dir != Vector2.Zero)
+                dir.Normalize();
+
+            Direction = dir;
+
+            Damage = hitbox.Damage;
+            PushForce = hitbox.PushForce;
+        }
+
+        public HurtboxHit(int damage)
+        {
+            Damage = damage;
         }
     }
 }

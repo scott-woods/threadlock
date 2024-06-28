@@ -28,6 +28,46 @@
 
     "Lifespan": 0.5
   },
+  {
+    "Name": "Player_ChainLightning",
+    "Type": "Instant",
+
+    "Damage": 3,
+
+    "AffectsEnemies": true,
+
+    "Points": [
+      {
+        "X": 0,
+        "Y": -6
+      },
+      {
+        "X": 0,
+        "Y": 6
+      },
+      {
+        "X": 18,
+        "Y": 0
+      }
+    ],
+
+    "ShouldRotate": true,
+
+    "Lifespan": 0.5,
+
+    "HitVfx": [ "HitEffect_Lightning_1", "HitEffect_Lightning_2" ],
+    "HitEffects": [
+      {
+        "Type": "Chain",
+        "Radius": 75,
+        "MaxChains": 3,
+        "Delay": 0.1,
+        "BaseDamage": 2,
+        "DamageIncrement": 1,
+        "HitVfx": [ "HitEffect_Lightning_1", "HitEffect_Lightning_2" ]
+      }
+    ]
+  },
 
   {
     "Name": "Ghoul_Swipe",
