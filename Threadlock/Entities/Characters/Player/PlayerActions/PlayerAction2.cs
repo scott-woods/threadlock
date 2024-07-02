@@ -3,20 +3,14 @@ using Nez;
 using Nez.Sprites;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Threadlock.Components;
-using Threadlock.Components.EnemyActions;
-using Threadlock.Entities.Characters.Enemies;
 using Threadlock.Helpers;
 using Threadlock.SaveData;
 using Threadlock.StaticData;
 
 namespace Threadlock.Entities.Characters.Player.PlayerActions
 {
-    public class PlayerAction2 : ICloneable
+    public class PlayerAction2 : BasicAction, ICloneable
     {
         //stats
         public string Name;
@@ -28,16 +22,6 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
 
         //charge
         public string ChargeAnimation;
-
-        //execute
-        public string ExecuteAnimation;
-        public bool WaitForExecuteAnimation;
-        public float ExecuteDuration;
-        public PlayerActionMovementConfig ExecutionMovement;
-        public string ExecutionSound;
-
-        //projectiles
-        public List<PlayerProjectile> Projectiles = new List<PlayerProjectile>();
 
         //prep confirmation
         public ActionConfirmType ConfirmType;
@@ -71,14 +55,6 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
         SimPlayer _simPlayer;
 
         Entity _baseEntity;
-
-        public void LoadAnimations()
-        {
-            var player = Player.Instance;
-            var animator = player.GetComponent<SpriteAnimator>();
-
-            AnimatedSpriteHelper.LoadAnimationsGlobal(ref animator, ChargeAnimation, ExecuteAnimation);
-        }
 
         public IEnumerator Prepare(Entity prepEntity)
         {
@@ -195,98 +171,6 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             return false;
         }
 
-        public IEnumerator Execute(Entity baseEntity)
-        {
-            _baseEntity = baseEntity;
-
-            var animator = _baseEntity.GetComponent<SpriteAnimator>();
-            var velocityComponent = _baseEntity.GetComponent<VelocityComponent>();
-            var apComponent = _baseEntity.GetComponent<ApComponent>();
-
-            apComponent.ActionPoints -= ApCost;
-
-            //handle projectiles
-            foreach (var playerProjectile in Projectiles)
-            {
-                if (Projectiles2.TryGetProjectile(playerProjectile.ProjectileName, out var projectileConfig))
-                {
-                    //create projectile entity
-                    var projectileEntity = ProjectileEntity.CreateProjectileEntity(projectileConfig, _selectedDirection);
-
-                    //determine if we should start from enemy or target pos
-                    Vector2 pos = Vector2.Zero;
-                    if (!projectileConfig.AttachToOwner)
-                        pos = Player.Instance.Position;
-                    else
-                        projectileEntity.SetParent(Player.Instance);
-
-                    //add entity offset
-                    pos += playerProjectile.EntityOffset;
-
-                    //add offset to starting pos
-                    pos += (_selectedDirection * playerProjectile.OffsetInDirection);
-
-                    //set the projectile position
-                    projectileEntity.SetPosition(pos);
-
-                    //handle rotation
-                    if (projectileConfig.ShouldRotate)
-                    {
-                        var rotationRadians = DirectionHelper.GetClampedAngle(_selectedDirection, projectileConfig.MaxRotation);
-                        projectileEntity.SetRotation(rotationRadians);
-                    }
-
-                    Game1.Scene.AddEntity(projectileEntity);
-                }
-            }
-
-            //play execute animation
-            AnimatedSpriteHelper.PlayAnimation(ref animator, ExecuteAnimation);
-            var executeAnimDuration = WaitForExecuteAnimation ? AnimatedSpriteHelper.GetAnimationDuration(animator) : ExecuteDuration;
-
-            //play execution sound
-            Game1.AudioManager.PlaySound(ExecutionSound);
-
-            //prepare execution movement
-            float executionMovementSpeed = 0;
-            if (ExecutionMovement != null)
-            {
-                switch (ExecutionMovement.MovementType)
-                {
-                    case PlayerActionMovementType.InDirection:
-                        executionMovementSpeed = ExecutionMovement.Speed;
-                        break;
-                    case PlayerActionMovementType.ToTarget:
-                        var dist = Vector2.Distance(_selectedPosition, _baseEntity.Position);
-                        var time = ExecutionMovement.UseAnimationDuration ? executeAnimDuration : ExecutionMovement.Duration;
-                        executionMovementSpeed = dist / time;
-                        break;
-                    case PlayerActionMovementType.Instant:
-                        _baseEntity.Position = _selectedPosition;
-                        break;
-                }
-            }
-
-            //wait for execution phase to finish
-            var executeTimer = 0f;
-            while ((!WaitForExecuteAnimation && (executeTimer < ExecuteDuration)) || (WaitForExecuteAnimation && (animator.AnimationState != SpriteAnimator.State.Completed)))
-            {
-                //increment timer
-                executeTimer += Time.DeltaTime;
-
-                if (ExecutionMovement != null && ExecutionMovement.MovementType != PlayerActionMovementType.Instant)
-                {
-                    //only move if still within movement duration, or set to move during entire animation
-                    if (ExecutionMovement.UseAnimationDuration || executeTimer < ExecutionMovement.Duration)
-                    {
-                        velocityComponent.Move(_selectedDirection, executionMovementSpeed, true);
-                    }
-                }
-
-                yield return null;
-            }
-        }
-
         public void Reset()
         {
             _entitySelector?.RemoveComponent(_entitySelector);
@@ -298,15 +182,50 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             _simPlayer = null;
         }
 
+        public Vector2 GetFinalPosition()
+        {
+            return _selectedPosition;
+        }
+
+        #region BASIC ACTION
+
+        public override IEnumerator Execute(Entity entity)
+        {
+            var apComponent = entity.GetComponent<ApComponent>();
+            apComponent.ActionPoints -= ApCost;
+
+            return base.Execute(entity);
+        }
+
+        public override TargetingInfo GetTargetingInfo(Entity entity)
+        {
+            var player = entity as Player;
+
+            return new TargetingInfo()
+            {
+                Position = _selectedPosition,
+                Direction = _selectedDirection,
+                TargetEntity = _selectedEntity
+            };
+        }
+
+        public override void LoadAnimations(ref SpriteAnimator animator)
+        {
+            base.LoadAnimations(ref animator);
+
+            AnimatedSpriteHelper.LoadAnimationsGlobal(ref animator, ChargeAnimation);
+        }
+
+        #endregion
+
+        #region ICLONEABLE
+
         public object Clone()
         {
             return this.MemberwiseClone();
         }
 
-        public Vector2 GetFinalPosition()
-        {
-            return _selectedPosition;
-        }
+        #endregion
     }
 
     public enum ActionConfirmType

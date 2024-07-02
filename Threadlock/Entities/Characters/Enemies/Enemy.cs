@@ -1,14 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Nez;
 using Nez.AI.BehaviorTrees;
-using Nez.AI.GOAP;
 using Nez.Sprites;
-using Nez.Textures;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Threadlock.Components;
 using Threadlock.Components.EnemyActions;
 using Threadlock.DebugTools;
@@ -73,9 +69,14 @@ namespace Threadlock.Entities.Characters.Enemies
         List<EnemyAction> _actions;
         EnemyAction _activeAction;
         EnemyAction _queuedAction;
+        Dictionary<string, bool> _actionCooldownDictionary = new Dictionary<string, bool>();
 
         bool _spawning = false;
 
+        /// <summary>
+        /// constructor
+        /// </summary>
+        /// <param name="config"></param>
         public Enemy(EnemyConfig config) : base(config.Name)
         {
             _config = config;
@@ -120,6 +121,7 @@ namespace Threadlock.Entities.Characters.Enemies
             Flags.SetFlagExclusive(ref hurtboxCollider.PhysicsLayer, PhysicsLayers.EnemyHurtbox);
             Flags.SetFlagExclusive(ref hurtboxCollider.CollidesWithLayers, PhysicsLayers.PlayerHitbox);
             var hurtbox = AddComponent(new Hurtbox(hurtboxCollider, 0f, Nez.Content.Audio.Sounds.Chain_bot_damaged));
+            hurtbox.Emitter.AddObserver(HurtboxEventTypes.Hit, OnHurtboxHit);
 
             AddComponent(new KnockbackComponent(velocityComponent, config.HitAnimation, 150, .5f));
 
@@ -144,14 +146,16 @@ namespace Threadlock.Entities.Characters.Enemies
                 {
                     _actions.Add(action);
                     action.LoadAnimations(ref _animator);
+
+                    _actionCooldownDictionary.Add(action.Name, false);
                 }
             }
 
             //BEHAVIOR
             _tree = BehaviorTrees.CreateBehaviorTree(this, config.BehaviorConfig.BehaviorTreeName);
-
-            hurtbox.Emitter.AddObserver(HurtboxEventTypes.Hit, OnHurtboxHit);
         }
+
+        #region LIFECYCLE
 
         public override void OnAddedToScene()
         {
@@ -179,19 +183,7 @@ namespace Threadlock.Entities.Characters.Enemies
                 _tree.Tick();
         }
 
-        void StartActionCooldown()
-        {
-            //handle cooldown
-            IsOnCooldown = true;
-            Game1.Schedule(BehaviorConfig.ActionCooldown, timer => IsOnCooldown = false);
-        }
-
-        IEnumerator Spawn()
-        {
-            _spawning = true;
-            yield return AnimatedSpriteHelper.WaitForAnimation(_animator, _config.SpawnAnimation);
-            _spawning = false;
-        }
+        #endregion
 
         #region OBSERVERS
 
@@ -263,6 +255,9 @@ namespace Threadlock.Entities.Characters.Enemies
                 //check each action in the group
                 foreach (var action in group)
                 {
+                    if (_actionCooldownDictionary.TryGetValue(action.Name, out var isActionOnCooldown) && isActionOnCooldown)
+                        continue;
+
                     //if the action can execute, add it to valid actions
                     if (action.CanExecute(this))
                         validActions.Add(action);
@@ -315,9 +310,9 @@ namespace Threadlock.Entities.Characters.Enemies
 
             if (_activeAction == null)
             {
-                _activeAction = _queuedAction;
+                _activeAction = _queuedAction.Clone() as EnemyAction;
                 _queuedAction = null;
-                Game1.StartCoroutine(_activeAction.BeginExecution(this));
+                Game1.StartCoroutine(_activeAction.Execute(this));
             }
 
             //return running as long as action is active
@@ -325,6 +320,12 @@ namespace Threadlock.Entities.Characters.Enemies
                 return TaskStatus.Running;
             else
             {
+                if (_activeAction.Cooldown > 0 && _actionCooldownDictionary.ContainsKey(_activeAction.Name))
+                {
+                    _actionCooldownDictionary[_activeAction.Name] = true;
+                    Game1.Schedule(_activeAction.Cooldown, timer => _actionCooldownDictionary[_activeAction.Name] = false);
+                }
+
                 //set active and queued action to null
                 _activeAction = null;
                 _queuedAction = null;
@@ -452,5 +453,19 @@ namespace Threadlock.Entities.Characters.Enemies
         }
 
         #endregion
+
+        void StartActionCooldown()
+        {
+            //handle cooldown
+            IsOnCooldown = true;
+            Game1.Schedule(BehaviorConfig.ActionCooldown, timer => IsOnCooldown = false);
+        }
+
+        IEnumerator Spawn()
+        {
+            _spawning = true;
+            yield return AnimatedSpriteHelper.WaitForAnimation(_animator, _config.SpawnAnimation);
+            _spawning = false;
+        }
     }
 }

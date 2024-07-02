@@ -215,7 +215,8 @@
     "Base": "PlayerBase",
     "ShouldFlip": true,
     "Row": 14,
-    "Frames": 4
+    "Frames": 4,
+    "CanDirectionChange": false
   },
   {
     "Name": "Player_DashAttack_Right",
@@ -237,7 +238,8 @@
     "Base": "PlayerBase",
     "ShouldFlip": true,
     "Row": 15,
-    "Frames": 5
+    "Frames": 5,
+    "CanDirectionChange": false
   },
   {
     "Name": "Player_Idle_Up",

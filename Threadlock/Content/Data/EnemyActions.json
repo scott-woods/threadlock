@@ -129,7 +129,7 @@
     "AttackAnimation": "Assassin_Slice1",
     "AttackDuration": 0.6,
     "AttackMovement": {
-      "Direction": "ToTarget",
+      "MovementType": "Directional",
       "Speed": 450,
       "FinalSpeed": 0,
       "EaseType": "ExpoOut",
@@ -152,7 +152,7 @@
     "AttackAnimation": "Assassin_Slice2",
     "AttackDuration": 0.6,
     "AttackMovement": {
-      "Direction": "ToTarget",
+      "MovementType": "Directional",
       "Speed": 520,
       "FinalSpeed": 0,
       "EaseType": "ExpoOut",
@@ -184,7 +184,7 @@
     "PreAttackAnimation": "Assassin_DashSliceCharge",
     "PreAttackDuration": 0.8,
     "PreAttackMovement": {
-      "Direction": "AwayFromTarget",
+      "MovementType": "DirectionalReverse",
       "Speed": 400,
       "FinalSpeed": 0,
       "EaseType": "QuartOut",
@@ -195,8 +195,8 @@
     "AttackAnimation": "Assassin_DashSlice",
     "WaitForAttackAnimation": true,
     "AttackMovement": {
-      "Direction": "ToTarget",
-      "Speed": 1700,
+      "MovementType": "Directional",
+      "Speed": 2000,
       "FinalSpeed": 0,
       "EaseType": "ExpoOut",
       "UseAnimationDuration": false,

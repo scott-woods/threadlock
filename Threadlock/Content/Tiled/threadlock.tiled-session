@@ -523,8 +523,8 @@
             "scale": 1,
             "selectedLayer": 9,
             "viewCenter": {
-                "x": 301,
-                "y": 179
+                "x": 230.5,
+                "y": 295
             }
         },
         "Tilemaps/Forge/forge_boss.tmx": {
@@ -718,8 +718,8 @@
             "scale": 0.75,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 770.6666666666667,
-                "y": 390.6666666666667
+                "x": 255.99999999999997,
+                "y": 272
             }
         },
         "Tilemaps/enemy_test_zone.tmx": {

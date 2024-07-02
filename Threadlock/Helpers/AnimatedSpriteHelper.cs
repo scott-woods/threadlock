@@ -123,7 +123,7 @@ namespace Threadlock.Helpers
         static IEnumerator PlayAnimationCoroutine(SpriteAnimator animator, string animationName, AnimationConfig2 parentConfig = null)
         {
             //if animator is null, name is null, or already active, break
-            if (animator == null || string.IsNullOrWhiteSpace(animationName) || (animator.IsAnimationActive(animationName) && animator.AnimationState != SpriteAnimator.State.Completed))
+            if (animator == null || animator.Entity == null || string.IsNullOrWhiteSpace(animationName) || (animator.IsAnimationActive(animationName) && animator.AnimationState != SpriteAnimator.State.Completed))
                 yield break;
 
             //get the config for this animation

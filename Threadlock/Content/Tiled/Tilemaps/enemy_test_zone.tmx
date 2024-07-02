@@ -134,7 +134,7 @@
   </object>
   <object id="3" type="EnemySpawnPoint" x="176" y="192">
    <properties>
-    <property name="EnemyType" value="Ghoul"/>
+    <property name="EnemyType" value="OrbMage"/>
    </properties>
    <point/>
   </object>
