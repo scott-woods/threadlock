@@ -79,6 +79,7 @@
     "UseDirections": true,
     "DirectionSource": "Aiming",
     "CanDirectionChange": false,
+    "FPS": 15,
     "DirectionalAnimations": {
       "Up": "Player_Thrust_Up",
       "Down": "Player_Thrust_Down",
@@ -90,6 +91,7 @@
     "UseDirections": true,
     "DirectionSource": "Aiming",
     "CanDirectionChange": false,
+    "FPS": 21,
     "DirectionalAnimations": {
       "Up": "Player_Slash_Up",
       "Down": "Player_Slash_Down",
@@ -100,6 +102,7 @@
     "Name": "Player_Roll",
     "UseDirections": true,
     "CanDirectionChange": false,
+    "FPS": 20,
     "DirectionalAnimations": {
       "Up": "Player_Roll_Up",
       "Down": "Player_Roll_Down",
@@ -152,7 +155,8 @@
     "Name": "Player_Thrust_Down",
     "Base": "PlayerBase",
     "Row": 7,
-    "Frames": 4
+    "Frames": 4,
+    "FrameData": { "0": { "Sounds": [ "31_swoosh_sword_1", "32_Swoosh_sword_2", "33_Swoosh_Sword_3" ] } }
   },
   {
     "Name": "Player_DashAttack_Down",
@@ -171,7 +175,8 @@
     "Name": "Player_Slash_Down",
     "Base": "PlayerBase",
     "Row": 8,
-    "Frames": 7
+    "Frames": 7,
+    "FrameData": { "2": { "Sounds": [ "31_swoosh_sword_1", "32_Swoosh_sword_2", "33_Swoosh_Sword_3" ] } }
   },
   {
     "Name": "Player_Roll_Down",
@@ -216,7 +221,8 @@
     "ShouldFlip": true,
     "Row": 14,
     "Frames": 4,
-    "CanDirectionChange": false
+    "CanDirectionChange": false,
+    "FrameData": { "0": { "Sounds": [ "31_swoosh_sword_1", "32_Swoosh_sword_2", "33_Swoosh_Sword_3" ] } }
   },
   {
     "Name": "Player_DashAttack_Right",
@@ -239,7 +245,8 @@
     "ShouldFlip": true,
     "Row": 15,
     "Frames": 5,
-    "CanDirectionChange": false
+    "CanDirectionChange": false,
+    "FrameData": { "0": { "Sounds": [ "31_swoosh_sword_1", "32_Swoosh_sword_2", "33_Swoosh_Sword_3" ] } }
   },
   {
     "Name": "Player_Idle_Up",
@@ -266,7 +273,8 @@
     "Name": "Player_Thrust_Up",
     "Base": "PlayerBase",
     "Row": 19,
-    "Frames": 4
+    "Frames": 4,
+    "FrameData": { "0": { "Sounds": [ "31_swoosh_sword_1", "32_Swoosh_sword_2", "33_Swoosh_Sword_3" ] } }
   },
   {
     "Name": "Player_DashAttack_Up",
@@ -285,7 +293,8 @@
     "Name": "Player_Slash_Up",
     "Base": "PlayerBase",
     "Row": 20,
-    "Frames": 7
+    "Frames": 7,
+    "FrameData": { "2": { "Sounds": [ "31_swoosh_sword_1", "32_Swoosh_sword_2", "33_Swoosh_Sword_3" ] } }
   },
   {
     "Name": "Player_Roll_Up",

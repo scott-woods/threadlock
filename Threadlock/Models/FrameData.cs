@@ -9,6 +9,7 @@ namespace Threadlock.Models
     public class FrameData
     {
         public int Frame;
+        public bool PickRandomSound = true;
         public List<string> Sounds;
     }
 }

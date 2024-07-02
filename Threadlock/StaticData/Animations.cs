@@ -98,6 +98,7 @@ namespace Threadlock.StaticData
                 animation.Loop ??= parentAnimation.Loop;
                 animation.Path ??= parentAnimation.Path;
                 animation.ChainTo ??= parentAnimation.ChainTo;
+                animation.FPS ??= parentAnimation.FPS;
             }
         }
     }

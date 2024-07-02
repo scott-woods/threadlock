@@ -28,12 +28,6 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
         const float _progressRequiredForFinisher = 1f;
         EaseType _normalEaseType = EaseType.CubicOut;
         EaseType _finisherEaseType = EaseType.CubicOut;
-        readonly Dictionary<int, string> _soundDictionary = new Dictionary<int, string>()
-        {
-            [1] = Content.Audio.Sounds._32_Swoosh_sword_2,
-            [2] = Content.Audio.Sounds._33_Swoosh_Sword_3,
-            [3] = Content.Audio.Sounds._31_swoosh_sword_1
-        };
 
         //passed components
         SpriteAnimator _animator;
@@ -137,9 +131,6 @@ namespace Threadlock.Entities.Characters.Player.BasicWeapons
             _hitbox.PushForce = comboCount == 3 ? _finisherPushForce : _normalPushForce;
             _hitbox.SetLocalOffset(dir * _hitboxOffset);
             _hitbox.Direction = dir;
-
-            //play sound
-            Game1.AudioManager.PlaySound(_soundDictionary[comboCount]);
 
             //play animation
             var animation = comboCount == 2 ? "Player_Slash" : "Player_Thrust";

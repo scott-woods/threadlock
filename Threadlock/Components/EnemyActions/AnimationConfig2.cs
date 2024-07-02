@@ -31,6 +31,8 @@ namespace Threadlock.Components.EnemyActions
         public DirectionSource DirectionSource;
         public bool CanDirectionChange = true;
         public bool ShouldFlip;
+
+        public int? FPS;
     }
 
     public enum DirectionSource

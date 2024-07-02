@@ -191,8 +191,16 @@ namespace Threadlock.Helpers
                             if (config.FrameData.TryGetValue(animator.CurrentFrame, out var frameData))
                             {
                                 //handle sounds
-                                foreach (var sound in frameData.Sounds)
-                                    Game1.AudioManager.PlaySound($"Content/Audio/Sounds/{sound}.wav");
+                                if (frameData.Sounds != null && frameData.Sounds.Count > 0)
+                                {
+                                    if (frameData.PickRandomSound)
+                                        Game1.AudioManager.PlaySound($"Content/Audio/Sounds/{frameData.Sounds.RandomItem()}.wav");
+                                    else
+                                    {
+                                        foreach (var sound in frameData.Sounds)
+                                            Game1.AudioManager.PlaySound($"Content/Audio/Sounds/{sound}.wav");
+                                    }
+                                }
                             }
 
                             //update frame
@@ -282,7 +290,7 @@ namespace Threadlock.Helpers
             }
         }
 
-        public static void LoadAnimation(string animationName, ref SpriteAnimator animator, bool global = false)
+        public static void LoadAnimation(string animationName, ref SpriteAnimator animator, bool global = false, int fps = 10)
         {
             if (string.IsNullOrWhiteSpace(animationName) || animator.Animations.ContainsKey(animationName))
                 return;
@@ -294,14 +302,14 @@ namespace Threadlock.Helpers
                 {
                     foreach (var directionalAnim in config.DirectionalAnimations)
                     {
-                        LoadAnimation(directionalAnim.Value, ref animator, global);
+                        LoadAnimation(directionalAnim.Value, ref animator, global, config.FPS ?? fps);
                     }
                 }
                 else //load normally
                 {
                     if (Animations.TryGetAnimationSprites(animationName, out var sprites, global))
                     {
-                        animator.AddAnimation(animationName, sprites);
+                        animator.AddAnimation(animationName, sprites, config.FPS ?? fps);
                     }
                 }
 
