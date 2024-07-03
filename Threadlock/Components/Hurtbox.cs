@@ -160,6 +160,8 @@ namespace Threadlock.Components
                     //tell the projectile entity that it successully hit something
                     if (other.Entity is ProjectileEntity projectileEntity)
                         projectileEntity.OnHit(_collider, collisionResult);
+                    else
+                        hitbox.Hit(Entity, hitbox.Damage);
                 }
 
                 var hurtboxHit = new HurtboxHit(collisionResult, hitbox);

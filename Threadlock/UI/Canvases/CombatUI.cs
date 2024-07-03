@@ -35,6 +35,8 @@ namespace Threadlock.UI.Canvases
 
         ActionManager _actionManager;
 
+        #region LIFECYCLE
+
         public override void Initialize()
         {
             base.Initialize();
@@ -152,6 +154,33 @@ namespace Threadlock.UI.Canvases
             OnDustChanged();
         }
 
+        public override void OnRemovedFromEntity()
+        {
+            base.OnRemovedFromEntity();
+
+            if (Player.Instance.TryGetComponent<HealthComponent>(out var hc))
+            {
+                hc.OnHealthChanged -= OnHealthChanged;
+            }
+
+            if (Player.Instance.TryGetComponent<ApComponent>(out var ac))
+            {
+                ac.OnApChanged -= OnApChanged;
+            }
+
+            Game1.UIManager.Emitter.RemoveObserver(GlobalManagers.UIEvents.DialogueStarted, OnDialogueStarted);
+            Game1.UIManager.Emitter.RemoveObserver(GlobalManagers.UIEvents.DialogueEnded, OnDialogueEnded);
+
+            PlayerData.Instance.Emitter.RemoveObserver(PlayerDataEvents.DollahsChanged, OnDollahsChanged);
+            PlayerData.Instance.Emitter.RemoveObserver(PlayerDataEvents.DustChanged, OnDustChanged);
+
+            _actionManager.Emitter.RemoveObserver(ActionManagerEvents.ActionsChanged, OnActionsChanged);
+        }
+
+        #endregion
+
+        #region OBSERVERS
+
         void OnActionsChanged()
         {
             _iconsTable.Clear();
@@ -162,10 +191,9 @@ namespace Threadlock.UI.Canvases
                 if (slot.Action == null)
                     continue;
 
-                var type = slot.Action.GetType();
                 var table = new Table();
                 _iconsTable.Add(table);
-                var icon = new ActionIcon(_skin, PlayerActionUtils.GetIconName(type), PlayerActionUtils.GetApCost(type));
+                var icon = new ActionIcon(_skin, slot.Action.IconName, slot.Action.ApCost);
                 _actionIcons.Add(icon);
                 table.Add(icon);
 
@@ -209,29 +237,6 @@ namespace Threadlock.UI.Canvases
             }
         }
 
-        public override void OnRemovedFromEntity()
-        {
-            base.OnRemovedFromEntity();
-
-            if (Player.Instance.TryGetComponent<HealthComponent>(out var hc))
-            {
-                hc.OnHealthChanged -= OnHealthChanged;
-            }
-
-            if (Player.Instance.TryGetComponent<ApComponent>(out var ac))
-            {
-                ac.OnApChanged -= OnApChanged;
-            }
-
-            Game1.UIManager.Emitter.RemoveObserver(GlobalManagers.UIEvents.DialogueStarted, OnDialogueStarted);
-            Game1.UIManager.Emitter.RemoveObserver(GlobalManagers.UIEvents.DialogueEnded, OnDialogueEnded);
-
-            PlayerData.Instance.Emitter.RemoveObserver(PlayerDataEvents.DollahsChanged, OnDollahsChanged);
-            PlayerData.Instance.Emitter.RemoveObserver(PlayerDataEvents.DustChanged, OnDustChanged);
-
-            _actionManager.Emitter.RemoveObserver(ActionManagerEvents.ActionsChanged, OnActionsChanged);
-        }
-
         void OnHealthChanged(int oldValue, int newValue)
         {
             _healthBar.Value = newValue;
@@ -262,5 +267,7 @@ namespace Threadlock.UI.Canvases
                 icon.UpdateDisplay(totalAp);
             }
         }
+
+        #endregion
     }
 }
