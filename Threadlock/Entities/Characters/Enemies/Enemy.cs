@@ -322,8 +322,11 @@ namespace Threadlock.Entities.Characters.Enemies
             {
                 if (_activeAction.Cooldown > 0 && _actionCooldownDictionary.ContainsKey(_activeAction.Name))
                 {
-                    _actionCooldownDictionary[_activeAction.Name] = true;
-                    Game1.Schedule(_activeAction.Cooldown, timer => _actionCooldownDictionary[_activeAction.Name] = false);
+                    if (AllEnemyActions.TryGetAction(_activeAction.Name, out var baseAction))
+                    {
+                        _actionCooldownDictionary[baseAction.Name] = true;
+                        Game1.Schedule(baseAction.Cooldown, timer => _actionCooldownDictionary[baseAction.Name] = false);
+                    }
                 }
 
                 //set active and queued action to null

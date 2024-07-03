@@ -175,8 +175,8 @@
     "Name": "Player_Slash_Down",
     "Base": "PlayerBase",
     "Row": 8,
-    "Frames": 7,
-    "FrameData": { "2": { "Sounds": [ "31_swoosh_sword_1", "32_Swoosh_sword_2", "33_Swoosh_Sword_3" ] } }
+    "Frames": 4,
+    "FrameData": { "0": { "Sounds": [ "31_swoosh_sword_1", "32_Swoosh_sword_2", "33_Swoosh_Sword_3" ] } }
   },
   {
     "Name": "Player_Roll_Down",
@@ -244,7 +244,7 @@
     "Base": "PlayerBase",
     "ShouldFlip": true,
     "Row": 15,
-    "Frames": 5,
+    "Frames": 4,
     "CanDirectionChange": false,
     "FrameData": { "0": { "Sounds": [ "31_swoosh_sword_1", "32_Swoosh_sword_2", "33_Swoosh_Sword_3" ] } }
   },
@@ -293,8 +293,8 @@
     "Name": "Player_Slash_Up",
     "Base": "PlayerBase",
     "Row": 20,
-    "Frames": 7,
-    "FrameData": { "2": { "Sounds": [ "31_swoosh_sword_1", "32_Swoosh_sword_2", "33_Swoosh_Sword_3" ] } }
+    "Frames": 4,
+    "FrameData": { "0": { "Sounds": [ "31_swoosh_sword_1", "32_Swoosh_sword_2", "33_Swoosh_Sword_3" ] } }
   },
   {
     "Name": "Player_Roll_Up",

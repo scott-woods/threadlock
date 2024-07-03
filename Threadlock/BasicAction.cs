@@ -45,7 +45,7 @@ namespace Threadlock
 
         public virtual void LoadAnimations(ref SpriteAnimator animator)
         {
-            AnimatedSpriteHelper.LoadAnimations(ref animator, PreAttackAnimation, AttackAnimation, PostAttackAnimation);
+            AnimatedSpriteHelper.LoadAnimationsGlobal(ref animator, PreAttackAnimation, AttackAnimation, PostAttackAnimation);
 
             if (IsCombo && ComboActions.Count > 0)
             {

@@ -1,14 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Nez;
 using Nez.Sprites;
-using Nez.Systems;
 using Nez.Tweens;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Threadlock.Components;
 using Threadlock.Helpers;
 using Threadlock.SaveData;
