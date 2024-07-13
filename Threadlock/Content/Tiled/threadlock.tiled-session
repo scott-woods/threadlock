@@ -290,8 +290,8 @@
         },
         "Tilemaps/Forge/Doorways/forge_bottom.tmx": {
             "expandedGroupLayers": [
-                8,
-                7
+                7,
+                8
             ],
             "scale": 4,
             "selectedLayer": 0,
@@ -523,8 +523,8 @@
             "scale": 1,
             "selectedLayer": 9,
             "viewCenter": {
-                "x": 230.5,
-                "y": 295
+                "x": 304,
+                "y": 320
             }
         },
         "Tilemaps/Forge/forge_boss.tmx": {
@@ -729,8 +729,8 @@
             "scale": 1,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 263.5,
-                "y": 277
+                "x": 264,
+                "y": 280
             }
         },
         "Tilemaps/test.tmx": {

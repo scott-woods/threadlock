@@ -1,6 +1,10 @@
-﻿using Nez;
+﻿using Microsoft.Xna.Framework;
+using Nez;
+using Nez.Persistence;
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Threadlock.Entities.Characters.Enemies;
 using Threadlock.Helpers;
 
@@ -10,41 +14,62 @@ namespace Threadlock.Components.EnemyActions
     {
         //Requirements
         public bool RequiresLoS;
-        public float MinDistance;
+        public float MinDistance = 8;
         public float MaxDistance = float.MaxValue;
-        public float MinDistanceX;
-        public float MaxDistanceX = float.MaxValue;
-        public float MinDistanceY;
-        public float MaxDistanceY = float.MaxValue;
+        public float MinAngle = 0f;
+        public float MaxAngle = 90f;
 
-        public string Name;
         public int Priority;
         public float Cooldown;
 
-        bool _isActive;
-        public bool IsActive { get => _isActive; }
+        [JsonExclude]
+        bool _isOnCooldown = false;
+        public bool IsOnCooldown { get => _isOnCooldown; }
 
         /// <summary>
         /// determine if the enemy is able to execute based on the requirements
         /// </summary>
-        /// <param name="enemy"></param>
         /// <returns></returns>
-        public bool CanExecute(Enemy enemy)
+        public bool CanExecute()
         {
-            if (RequiresLoS && !EntityHelper.HasLineOfSight(enemy, enemy.TargetEntity))
+            if (_isOnCooldown)
                 return false;
 
-            var dist = EntityHelper.DistanceToEntity(enemy, enemy.TargetEntity);
+            var currentPos = Context.Position;
+            if (Context.TryGetComponent<OriginComponent>(out var oc))
+                currentPos = oc.Origin;
+
+            return CanExecuteAtPosition(currentPos);
+        }
+
+        bool CanExecuteAtPosition(Vector2 position)
+        {
+            var enemy = Context as Enemy;
+
+            var targetPos = enemy.TargetEntity.Position;
+            if (enemy.TargetEntity.TryGetComponent<OriginComponent>(out var targetOc))
+                targetPos = targetOc.Origin;
+
+            var dist = Vector2.Distance(targetPos, position);
+            var angleToTarget = Math.Abs(MathHelper.ToDegrees(Mathf.AngleBetweenVectors(position, targetPos)));
+            if (angleToTarget > 90)
+                angleToTarget = 180 - angleToTarget;
+            var hasLoS = EntityHelper.HasLineOfSight(position, enemy.TargetEntity);
+
+            //check line of sight
+            if (RequiresLoS && !hasLoS)
+                return false;
+            
+            //check if too close or far away
             if (dist < MinDistance || dist > MaxDistance)
                 return false;
 
-            var distX = Math.Abs(enemy.TargetEntity.Position.X - enemy.Position.X);
-            if (distX < MinDistanceX || distX > MaxDistanceX)
+            //check angle
+            if (angleToTarget < MinAngle || angleToTarget > MaxAngle)
+            {
+                Debug.Log(angleToTarget);
                 return false;
-
-            var distY = Math.Abs(enemy.TargetEntity.Position.Y - enemy.Position.Y);
-            if (distY < MinDistanceY || distY > MaxDistanceY)
-                return false;
+            }
 
             return true;
         }
@@ -54,20 +79,51 @@ namespace Threadlock.Components.EnemyActions
 
         }
 
-        #region BASIC ACTION
-
-        public override IEnumerator Execute(Entity entity)
+        public Vector2 GetIdealPosition()
         {
-            _isActive = true;
+            var enemy = Context as Enemy;
 
-            yield return base.Execute(entity);
+            var targetPos = enemy.TargetEntity.Position;
+            if (enemy.TargetEntity.TryGetComponent<OriginComponent>(out var targetOc))
+                targetPos = targetOc.Origin;
 
-            _isActive = false;
+            var currentPos = Context.Position;
+            if (Context.TryGetComponent<OriginComponent>(out var oc))
+                currentPos = oc.Origin;
+
+            //if we can already execute from current position, return that
+            if (CanExecuteAtPosition(currentPos))
+                return currentPos;
+
+            var midAngle = (MaxAngle - MinAngle) / 2;
+            var oppositeMidAngle = 180 - midAngle;
+
+            List<float> angles = new List<float>()
+            {
+                midAngle,
+                oppositeMidAngle,
+                -midAngle,
+                -oppositeMidAngle
+            };
+
+            var closestByAngle = angles.Select(a => targetPos + Mathf.AngleToVector(a, MinDistance)).MinBy(x => Vector2.Distance(currentPos, x));
+
+            return closestByAngle;
         }
 
-        public override TargetingInfo GetTargetingInfo(Entity entity)
+        #region BASIC ACTION
+
+        public override IEnumerator Execute()
         {
-            var enemy = entity as Enemy;
+            yield return base.Execute();
+
+            _isOnCooldown = true;
+            Game1.Schedule(Cooldown, timer => _isOnCooldown = false);
+        }
+
+        protected override TargetingInfo GetTargetingInfo()
+        {
+            var enemy = Context as Enemy;
 
             return new TargetingInfo()
             {

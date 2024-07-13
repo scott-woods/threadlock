@@ -15,11 +15,14 @@ using Threadlock.StaticData;
 using Nez.Tweens;
 using Microsoft.Xna.Framework;
 using Random = Nez.Random;
+using Nez.Persistence;
 
 namespace Threadlock
 {
     public abstract class BasicAction
     {
+        public string Name;
+
         public string PreAttackAnimation;
         public float PreAttackDuration;
         public bool WaitForPreAttackAnimation;
@@ -41,7 +44,10 @@ namespace Threadlock
         public bool IsCombo;
         public List<string> ComboActions = new List<string>();
 
-        public abstract TargetingInfo GetTargetingInfo(Entity entity);
+        [JsonExclude]
+        public Entity Context;
+
+        protected abstract TargetingInfo GetTargetingInfo();
 
         public virtual void LoadAnimations(ref SpriteAnimator animator)
         {
@@ -51,41 +57,29 @@ namespace Threadlock
             {
                 foreach (var comboAction in ComboActions)
                 {
-                    if (AllEnemyActions.TryGetAction(comboAction, out var childAction))
+                    if (AllEnemyActions.TryGetBaseEnemyAction(comboAction, out var childAction))
                         childAction.LoadAnimations(ref animator);
-                    else if (AllPlayerActions.TryGetAction(comboAction, out var playerChildAction))
+                    else if (AllPlayerActions.TryGetBasePlayerAction(comboAction, out var playerChildAction))
                         playerChildAction.LoadAnimations(ref animator);
                 }
             }
         }
 
-        public virtual IEnumerator Execute(Entity entity)
+        public virtual IEnumerator Execute()
         {
             if (IsCombo)
             {
-                foreach (var comboActionString in ComboActions)
-                {
-                    if (AllEnemyActions.TryGetAction(comboActionString, out var enemyChildAction))
-                    {
-                        var childAction = enemyChildAction.Clone() as BasicAction;
-                        yield return childAction.Execute(entity);
-                    }
-                    else if (AllPlayerActions.TryGetAction(comboActionString, out var playerChildAction))
-                    {
-                        var childAction = playerChildAction.Clone() as BasicAction;
-                        yield return childAction.Execute(entity);
-                    }
-                }
+                yield return HandleCombo();
 
                 yield break;
             }
 
             //get targeting info
-            var targetingInfo = GetTargetingInfo(entity);
+            var targetingInfo = GetTargetingInfo();
 
             //get necessary components from entity
-            var animator = entity.GetComponent<SpriteAnimator>();
-            var velocityComponent = entity.GetComponent<VelocityComponent>();
+            var animator = Context.GetComponent<SpriteAnimator>();
+            var velocityComponent = Context.GetComponent<VelocityComponent>();
 
             //if we have a pre attack animation, play it
             AnimatedSpriteHelper.PlayAnimation(ref animator, PreAttackAnimation);
@@ -93,7 +87,7 @@ namespace Threadlock
             //handle pre attack movement
             ICoroutine preAttackMovementCoroutine = null;
             if (PreAttackMovement != null)
-                preAttackMovementCoroutine = Game1.StartCoroutine(PreAttackMovement.HandleMovement(entity, targetingInfo, PreAttackAnimation));
+                preAttackMovementCoroutine = Game1.StartCoroutine(PreAttackMovement.HandleMovement(Context, targetingInfo, PreAttackAnimation));
 
             //determine how long to wait for pre attack
             var preAttackAnimDuration = WaitForPreAttackAnimation ? AnimatedSpriteHelper.GetAnimationDuration(animator) : PreAttackDuration;
@@ -113,9 +107,9 @@ namespace Threadlock
             if (targetingInfo.Direction != null)
                 dirTowardsTarget = targetingInfo.Direction.Value;
             else if (targetingInfo.Position != null)
-                dirTowardsTarget = targetingInfo.Position.Value - entity.Position;
+                dirTowardsTarget = targetingInfo.Position.Value - Context.Position;
             else if (targetingInfo.TargetEntity != null)
-                dirTowardsTarget = targetingInfo.TargetEntity.Position - entity.Position;
+                dirTowardsTarget = targetingInfo.TargetEntity.Position - Context.Position;
 
             //normalize dir towards target
             if (dirTowardsTarget != Vector2.Zero)
@@ -137,10 +131,10 @@ namespace Threadlock
                         if (attackProjectile.StartFromTarget && (targetingInfo.TargetEntity != null || targetingInfo.Position != null))
                             pos = targetingInfo.TargetEntity != null ? targetingInfo.TargetEntity.Position : targetingInfo.Position.Value;
                         else
-                            pos = entity.Position;
+                            pos = Context.Position;
                     }
                     else
-                        projectileEntity.SetParent(entity);
+                        projectileEntity.SetParent(Context);
 
                     //add entity offset
                     pos += attackProjectile.EntityOffset;
@@ -171,9 +165,9 @@ namespace Threadlock
 
                     //add to scene either after delay or immediately
                     if (attackProjectile.Delay > 0)
-                        Game1.Schedule(attackProjectile.Delay, timer => entity.Scene.AddEntity(projectileEntity));
+                        Game1.Schedule(attackProjectile.Delay, timer => Context.Scene.AddEntity(projectileEntity));
                     else
-                        entity.Scene.AddEntity(projectileEntity);
+                        Context.Scene.AddEntity(projectileEntity);
                 }
             }
 
@@ -185,7 +179,7 @@ namespace Threadlock
 
             ICoroutine attackMovementCoroutine = null;
             if (AttackMovement != null)
-                attackMovementCoroutine = Game1.StartCoroutine(AttackMovement.HandleMovement(entity, targetingInfo, AttackAnimation));
+                attackMovementCoroutine = Game1.StartCoroutine(AttackMovement.HandleMovement(Context, targetingInfo, AttackAnimation));
 
             //determine how long to wait for attack
             var attackAnimDuration = WaitForAttackAnimation ? AnimatedSpriteHelper.GetAnimationDuration(animator) : AttackDuration;
@@ -203,7 +197,7 @@ namespace Threadlock
 
             ICoroutine postAttackMovementCoroutine = null;
             if (PostAttackMovement != null)
-                postAttackMovementCoroutine = Game1.StartCoroutine(PostAttackMovement?.HandleMovement(entity, targetingInfo, PostAttackAnimation));
+                postAttackMovementCoroutine = Game1.StartCoroutine(PostAttackMovement?.HandleMovement(Context, targetingInfo, PostAttackAnimation));
 
             //determine how long to wait for post attack
             var postAttackAnimDuration = WaitForPostAttackAnimation ? AnimatedSpriteHelper.GetAnimationDuration(animator) : PostAttackDuration;
@@ -215,6 +209,21 @@ namespace Threadlock
             }
 
             postAttackMovementCoroutine?.Stop();
+        }
+
+        public virtual IEnumerator HandleCombo()
+        {
+            foreach (var comboActionString in ComboActions)
+            {
+                if (AllEnemyActions.TryCreateEnemyAction(comboActionString, Context, out var enemyChildAction))
+                {
+                    yield return enemyChildAction.Execute();
+                }
+                else if (AllPlayerActions.TryCreatePlayerAction(comboActionString, Context, out var playerChildAction))
+                {
+                    yield return playerChildAction.Execute();
+                }
+            }
         }
     }
 

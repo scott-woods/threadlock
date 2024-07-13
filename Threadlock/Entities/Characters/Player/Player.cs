@@ -31,7 +31,7 @@ namespace Threadlock.Entities.Characters.Player
         public static Player Instance { get; private set; }
 
         public float MoveSpeed = 135f;
-        public Vector2 DefaultSpriteOffset = new Vector2(13, -2);
+        public Vector2 DefaultSpriteOffset = new Vector2(12, -2);
 
         //state machine
         public StateMachine<Player> StateMachine { get; set; }
@@ -115,6 +115,15 @@ namespace Threadlock.Entities.Characters.Player
             //add animations
             AddAnimations();
 
+            //_shadow = AddComponent(new Shadow(_animator));
+
+            var pointLight = AddComponent(new PointLight(Color.White));
+            pointLight.SetRenderLayer(RenderLayers.Light);
+            pointLight.SetIntensity(.5f);
+            pointLight.SetRadius(100f);
+
+            AddComponent(new WeaponManager());
+
             //init state machine
             StateMachine = new StateMachine<Player>(this, _initialState);
             var assembly = Assembly.GetExecutingAssembly();
@@ -126,13 +135,6 @@ namespace Threadlock.Entities.Characters.Player
             Game1.SceneManager.Emitter.AddObserver(SceneManagerEvents.SceneChangeStarted, OnSceneChangeStarted);
             Game1.Emitter.AddObserver(CoreEvents.SceneChanged, OnSceneChanged);
             _deathComponent.Emitter.AddObserver(DeathEventTypes.Finished, OnDeath);
-
-            //_shadow = AddComponent(new Shadow(_animator));
-
-            var pointLight = AddComponent(new PointLight(Color.White));
-            pointLight.SetRenderLayer(RenderLayers.Light);
-            pointLight.SetIntensity(.5f);
-            pointLight.SetRadius(100f);
         }
 
         #region LIFECYCLE

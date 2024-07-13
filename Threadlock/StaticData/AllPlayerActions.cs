@@ -1,10 +1,8 @@
-﻿using Nez.Persistence;
+﻿using Nez;
+using Nez.Persistence;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Threadlock.Components.EnemyActions;
 using Threadlock.Entities.Characters.Player.PlayerActions;
 
@@ -27,15 +25,46 @@ namespace Threadlock.StaticData
             return dict;
         });
 
-        public static bool TryGetAction(string name, out PlayerAction2 action)
+        public static PlayerAction2 GetBasePlayerAction(string name)
         {
-            if (_playerActionDictionary.Value.TryGetValue(name, out var actionTemplate))
+            return _playerActionDictionary.Value.GetValueOrDefault(name);
+        }
+
+        public static bool TryGetBasePlayerAction(string name, out PlayerAction2 action)
+        {
+            return _playerActionDictionary.Value.TryGetValue(name, out action);
+        }
+
+        public static PlayerAction2 CreatePlayerAction(string name, Entity context)
+        {
+            PlayerAction2 action = null;
+
+            if (_playerActionDictionary.Value.TryGetValue(name, out action))
             {
-                action = actionTemplate.Clone() as PlayerAction2;
+                action = action.Clone() as PlayerAction2;
+                action.Context = context;
+            }
+
+            return action;
+        }
+
+        /// <summary>
+        /// Get a clone of a player action by name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="action"></param>
+        /// <returns></returns>
+        public static bool TryCreatePlayerAction(string name, Entity context, out PlayerAction2 action)
+        {
+            action = null;
+
+            if (_playerActionDictionary.Value.TryGetValue(name, out action))
+            {
+                action = action.Clone() as PlayerAction2;
+                action.Context = context;
                 return true;
             }
 
-            action = null;
             return false;
         }
     }

@@ -2,8 +2,8 @@
   {
     "Name": "Ghoul_Swipe",
 
-    "MaxDistanceX": 16,
-    "MaxDistanceY": 8,
+    "MaxDistance": 16,
+    "MaxAngle": 45,
 
     "AttackAnimation": "Ghoul_Swipe",
     "WaitForAttackAnimation": true,
@@ -44,6 +44,8 @@
 
     "AttackAnimation": "OrbMage_Spike",
     "WaitForAttackAnimation": true,
+
+    "Cooldown": 3,
 
     "Projectiles": [
       {
@@ -114,8 +116,8 @@
   {
     "Name": "ChainBot_MeleeCombo",
 
-    "MaxDistanceX": 32,
-    "MaxDistanceY": 8,
+    "MaxDistance": 32,
+    "MaxAngle": 45,
 
     "IsCombo": true,
     "ComboActions": [ "ChainBot_Melee1", "ChainBot_Melee2" ]

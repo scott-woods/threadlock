@@ -1,0 +1,8 @@
+[
+  {
+    "Name": "Sword",
+
+    "PrimaryAttack": "Player_Sword_Attack",
+    "SecondaryAttack": "Player_Sword_Parry"
+  }
+]

@@ -12,6 +12,7 @@ using Threadlock.DebugTools;
 using Threadlock.Components;
 using Threadlock.Helpers;
 using Nez.Sprites;
+using Threadlock.StaticData;
 
 namespace Threadlock.Entities.Characters.Player.States
 {
@@ -38,13 +39,6 @@ namespace Threadlock.Entities.Characters.Player.States
             Game1.StartCoroutine(PrepSequence());
         }
 
-        public override void Update(float deltaTime)
-        {
-            base.Update(deltaTime);
-
-
-        }
-
         IEnumerator PrepSequence()
         {
             yield return null;
@@ -63,32 +57,53 @@ namespace Threadlock.Entities.Characters.Player.States
                     //check if we'll be able to afford this action
                     if (actionSlot.Action.ApCost + _totalApCost <= apComponent.ActionPoints || DebugSettings.FreeActions)
                     {
-                        var action = actionSlot.Action.Clone() as PlayerAction2;
+                        //get a unique instance of the action
+                        var action = AllPlayerActions.CreatePlayerAction(actionSlot.Action.Name, _context);
+
+                        //determine the entity we'll base from. use sim player if it exists, real player otherwise
                         Entity prepEntity = _simPlayer;
                         prepEntity ??= Player.Instance;
-                        var prepActionCoroutine = Game1.StartCoroutine(action.Prepare(prepEntity));
+
+                        //start preparing action
+                        var request = action.Prepare(prepEntity);
+                        var prepActionCoroutine = Game1.StartCoroutine(request);
+
+                        //yield while button is held and we haven't finished preparing
                         while (actionSlot.Button.IsDown && !action.IsPrepared)
                             yield return null;
 
+                        //if successfully prepared
                         if (action.IsPrepared)
                         {
+                            //add to queued actions
                             _queuedActions.Add(action);
+
+                            //get final position player would be after performing this action
                             var finalPos = action.GetFinalPosition();
+
+                            //if final pos is different from current and sim player doesn't exist yet, create one
                             if (finalPos != Player.Instance.Position && _simPlayer == null)
                             {
+                                //have the player idle while preparing the rest of the actions
                                 var animator = _context.GetComponent<SpriteAnimator>();
                                 AnimatedSpriteHelper.PlayAnimation(ref animator, "Player_Idle");
+
+                                //create sim player entity at new final pos
                                 _simPlayer = _context.Scene.AddEntity(new SimPlayer(SimPlayerType.Static, "Player_Idle", finalPos));
                                 _simPlayer.SetPosition(finalPos);
+
+                                //update camera to follow the sim player
                                 cam.SetFollowTarget(_simPlayer);
                             }
                             else if (_simPlayer != null && finalPos != _simPlayer.Position)
                             {
+                                //update sim player position if final pos has changed
                                 _simPlayer.SetPosition(finalPos);
                             }
                         }
-                        else
+                        else //did not successfully prepare
                         {
+                            //return either the sim player or normal player to idle
                             if (_simPlayer != null)
                             {
                                 var animator = _simPlayer.GetComponent<SpriteAnimator>();
@@ -99,8 +114,11 @@ namespace Threadlock.Entities.Characters.Player.States
                                 var animator = _context.GetComponent<SpriteAnimator>();
                                 AnimatedSpriteHelper.PlayAnimation(ref animator, "Player_Idle");
                             }
+
+                            //stop the action prep coroutine and null out the cloned action
                             prepActionCoroutine?.Stop();
                             action.Reset();
+                            action = null;
                         }
                     }
                 }
@@ -108,22 +126,29 @@ namespace Threadlock.Entities.Characters.Player.States
                 yield return null;
             }
 
+            //start returning to normal speed
             _normalSpeedCoroutine = Game1.StartCoroutine(NormalSpeedCoroutine());
 
+            //return cam to follow player
             cam.SetFollowTarget(_context);
 
+            //destroy the sim player
             _simPlayer?.Destroy();
             _simPlayer = null;
 
+            //execute each prepared action
             foreach (var action in _queuedActions)
             {
-                yield return action.Execute(Player.Instance);
+                yield return action.Execute();
             }
 
+            //clear queued actions list
             _queuedActions.Clear();
 
+            //wait one frame
             yield return null;
 
+            //return to idle state
             _machine.ChangeState<Idle>();
         }
 

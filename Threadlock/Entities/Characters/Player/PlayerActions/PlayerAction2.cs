@@ -3,6 +3,7 @@ using Nez;
 using Nez.Sprites;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Threadlock.Components;
 using Threadlock.Helpers;
 using Threadlock.SaveData;
@@ -13,7 +14,6 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
     public class PlayerAction2 : BasicAction, ICloneable
     {
         //stats
-        public string Name;
         public string Description;
         public int ApCost;
 
@@ -56,7 +56,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
 
         Entity _baseEntity;
 
-        public IEnumerator Prepare(Entity prepEntity)
+        public IEnumerator<TargetingInfo> Prepare(Entity prepEntity)
         {
             _baseEntity = prepEntity;
 
@@ -93,6 +93,8 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             _simPlayer = null;
 
             IsPrepared = true;
+
+            yield return new TargetingInfo() { Position = new Vector2(50, 50) };
         }
 
         bool ValidateAim(Vector2 targetPosition, Entity prepEntity, out Vector2 finalPosition)
@@ -189,17 +191,19 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
 
         #region BASIC ACTION
 
-        public override IEnumerator Execute(Entity entity)
+        public override IEnumerator Execute()
         {
-            var apComponent = entity.GetComponent<ApComponent>();
+            var apComponent = Context.GetComponent<ApComponent>();
             apComponent.ActionPoints -= ApCost;
 
-            return base.Execute(entity);
+            _baseEntity = Context;
+
+            return base.Execute();
         }
 
-        public override TargetingInfo GetTargetingInfo(Entity entity)
+        protected override TargetingInfo GetTargetingInfo()
         {
-            var player = entity as Player;
+            var player = Context as Player;
 
             return new TargetingInfo()
             {

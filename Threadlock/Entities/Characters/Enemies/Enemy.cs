@@ -67,11 +67,13 @@ namespace Threadlock.Entities.Characters.Enemies
 
         BehaviorTree<Enemy> _tree;
         List<EnemyAction> _actions;
-        EnemyAction _activeAction;
         EnemyAction _queuedAction;
-        Dictionary<string, bool> _actionCooldownDictionary = new Dictionary<string, bool>();
 
         bool _spawning = false;
+
+        ICoroutine _actionCoroutine;
+        ICoroutine _handleActionCoroutine;
+        bool _isActionFinished = false;
 
         /// <summary>
         /// constructor
@@ -93,7 +95,6 @@ namespace Threadlock.Entities.Characters.Enemies
             _animator.SetLocalOffset(config.AnimatorOffset);
             _animator.SetRenderLayer(RenderLayers.YSort);
             AnimatedSpriteHelper.LoadAnimations(ref _animator, config.IdleAnimation, config.MoveAnimation, config.HitAnimation, config.DeathAnimation, config.SpawnAnimation);
-            _animator.OnAnimationCompletedEvent += OnAnimationCompleted;
 
             AddComponent(new Shadow(_animator));
 
@@ -142,12 +143,10 @@ namespace Threadlock.Entities.Characters.Enemies
             _actions = new List<EnemyAction>();
             foreach (var actionString in config.Actions)
             {
-                if (AllEnemyActions.TryGetAction(actionString, out var action))
+                if (AllEnemyActions.TryCreateEnemyAction(actionString, this, out var action))
                 {
                     _actions.Add(action);
                     action.LoadAnimations(ref _animator);
-
-                    _actionCooldownDictionary.Add(action.Name, false);
                 }
             }
 
@@ -185,28 +184,32 @@ namespace Threadlock.Entities.Characters.Enemies
 
         #endregion
 
-        #region OBSERVERS
-
-        void OnAnimationCompleted(string animationName)
+        void ResetAction()
         {
-            if (Animations.TryGetAnimationConfig(animationName, out var config))
-            {
-                AnimatedSpriteHelper.PlayAnimation(ref _animator, config.ChainTo);
-            }
+            _queuedAction?.Abort(this);
+            _queuedAction = null;
+
+            _isActionFinished = false;
+
+            _handleActionCoroutine?.Stop();
+            _handleActionCoroutine = null;
+
+            _actionCoroutine?.Stop();
+            _actionCoroutine = null;
         }
+
+        #region OBSERVERS
 
         void OnSceneChange()
         {
-            _activeAction?.Abort(this);
-            _activeAction = null;
+            ResetAction();
         }
 
         void OnStatusChanged(StatusPriority status)
         {
             if (status != StatusPriority.Normal)
             {
-                _activeAction?.Abort(this);
-                _activeAction = null;
+                ResetAction();
             }
         }
 
@@ -237,44 +240,6 @@ namespace Threadlock.Entities.Characters.Enemies
             else return StatusPriority.Normal;
         }
 
-        public bool TryQueueAction()
-        {
-            //if on cooldown, can't queue any action
-            if (IsOnCooldown)
-                return false;
-
-            //split actions into groups by priority
-            var groups = _actions.OrderByDescending(a => a.Priority).GroupBy(a => a.Priority).Select(g => g.ToList());
-
-            //try each priority group
-            foreach (var group in groups)
-            {
-                //init valid actions list
-                var validActions = new List<EnemyAction>();
-
-                //check each action in the group
-                foreach (var action in group)
-                {
-                    if (_actionCooldownDictionary.TryGetValue(action.Name, out var isActionOnCooldown) && isActionOnCooldown)
-                        continue;
-
-                    //if the action can execute, add it to valid actions
-                    if (action.CanExecute(this))
-                        validActions.Add(action);
-                }
-
-                //if any valid actions in this group, pick a random one to do
-                if (validActions.Any())
-                {
-                    _queuedAction = validActions.RandomItem();
-                    return true;
-                }
-            }
-
-            //no valid actions found, return false
-            return false;
-        }
-
         public bool ShouldRunSubTree()
         {
             if (!DebugSettings.EnemyAIEnabled)
@@ -289,54 +254,104 @@ namespace Threadlock.Entities.Characters.Enemies
             return true;
         }
 
-        public bool IsTooClose()
-        {
-            return false;
-        }
-
-        public bool IsTooFar()
-        {
-            return true;
-        }
-
         #endregion
+
+        IEnumerator HandleAction(EnemyAction action)
+        {
+            if (action == null)
+                yield break;
+
+            _isActionFinished = false;
+
+            _actionCoroutine = Game1.StartCoroutine(action.Execute());
+            yield return _actionCoroutine;
+
+            _isActionFinished = true;
+        }
 
         #region TASKS
 
-        public TaskStatus ExecuteQueuedAction()
+        public TaskStatus GetInRange()
         {
-            if (_activeAction == null && _queuedAction == null)
-                return TaskStatus.Failure;
+            var currentPos = Position;
+            if (TryGetComponent<OriginComponent>(out var oc))
+                currentPos = oc.Origin;
 
-            if (_activeAction == null)
+            var idealPositions = new List<Vector2>();
+
+            foreach (var action in _actions)
             {
-                _activeAction = _queuedAction.Clone() as EnemyAction;
-                _queuedAction = null;
-                Game1.StartCoroutine(_activeAction.Execute(this));
+                if (action.IsOnCooldown)
+                    continue;
+
+                idealPositions.Add(action.GetIdealPosition());
             }
 
-            //return running as long as action is active
-            if (_activeAction.IsActive)
-                return TaskStatus.Running;
+            var targetPos = idealPositions.MinBy(p => Vector2.Distance(p, currentPos));
+
+            if (targetPos == currentPos)
+                return Idle(true);
             else
+                return MoveToTarget(targetPos, BaseSpeed);
+        }
+
+        /// <summary>
+        /// sets the queued action if successful
+        /// </summary>
+        /// <returns></returns>
+        public TaskStatus TryQueueAction()
+        {
+            //don't queue anything if on cooldown
+            if (IsOnCooldown)
+                return TaskStatus.Failure;
+
+            //split actions into groups by priority
+            var groups = _actions.OrderByDescending(a => a.Priority).GroupBy(a => a.Priority).Select(g => g.ToList());
+
+            //try each priority group
+            foreach (var group in groups)
             {
-                if (_activeAction.Cooldown > 0 && _actionCooldownDictionary.ContainsKey(_activeAction.Name))
+                //init valid actions list
+                var validActions = new List<EnemyAction>();
+
+                //check each action in the group
+                foreach (var action in group)
                 {
-                    if (AllEnemyActions.TryGetAction(_activeAction.Name, out var baseAction))
-                    {
-                        _actionCooldownDictionary[baseAction.Name] = true;
-                        Game1.Schedule(baseAction.Cooldown, timer => _actionCooldownDictionary[baseAction.Name] = false);
-                    }
+                    //if the action can execute, add it to valid actions
+                    if (action.CanExecute())
+                        validActions.Add(action);
                 }
 
-                //set active and queued action to null
-                _activeAction = null;
-                _queuedAction = null;
+                //if any valid actions in this group, pick a random one to do
+                if (validActions.Any())
+                {
+                    _queuedAction = validActions.RandomItem();
+                    return TaskStatus.Success;
+                }
+            }
 
-                StartActionCooldown();
+            //no valid actions found, return failure
+            return TaskStatus.Failure;
+        }
 
-                //return task success
-                return TaskStatus.Success;
+        public TaskStatus ExecuteQueuedAction()
+        {
+            //called the first time to start the coroutine
+            if (_handleActionCoroutine == null)
+            {
+                _handleActionCoroutine = Game1.StartCoroutine(HandleAction(_queuedAction));
+                return TaskStatus.Running;
+            }
+            else
+            {
+                if (_isActionFinished)
+                {
+                    ResetAction();
+                    StartActionCooldown();
+                    return TaskStatus.Success;
+                }
+                else
+                    return TaskStatus.Running;
             }
         }
 
@@ -368,32 +383,6 @@ namespace Threadlock.Entities.Characters.Enemies
         {
             //handle animation
             AnimatedSpriteHelper.PlayAnimation(ref _animator, _config.MoveAnimation);
-
-            //follow path
-            //var gridGraphManager = MapEntity.GetComponent<GridGraphManager>();
-
-            //var targetPos = _targetEntity.Position;
-            //var leftTarget = targetPos + new Vector2(-10, 0);
-            //var rightTarget = targetPos + new Vector2(10, 0);
-            //var leftDistance = Vector2.Distance(OriginComponent.Origin, leftTarget);
-            //var rightDistance = Vector2.Distance(OriginComponent.Origin, rightTarget);
-
-            //var target = leftDistance > rightDistance ? rightTarget : leftTarget;
-            //var altTarget = target == rightTarget ? leftTarget : rightTarget;
-
-            //Vector2 finalTarget = targetPos;
-
-            //if (!gridGraphManager.IsPositionInWall(target))
-            //{
-            //    finalTarget = target;
-            //}
-            //else if (!gridGraphManager.IsPositionInWall(altTarget))
-            //{
-            //    finalTarget = altTarget;
-            //}
-
-            //Pathfinder.FollowPath(finalTarget, true);
-            //VelocityComponent.Move();
 
             if (TryGetComponent<Pathfinder>(out var pathfinder))
             {
@@ -452,7 +441,7 @@ namespace Threadlock.Entities.Characters.Enemies
                 }
             }
 
-            return TaskStatus.Success;
+            return TaskStatus.Running;
         }
 
         #endregion

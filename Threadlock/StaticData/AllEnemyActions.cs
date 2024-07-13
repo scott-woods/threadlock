@@ -1,4 +1,5 @@
-﻿using Nez.Persistence;
+﻿using Nez;
+using Nez.Persistence;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,9 +27,47 @@ namespace Threadlock.StaticData
             return dict;
         });
 
-        public static bool TryGetAction(string name, out EnemyAction action)
+        public static EnemyAction GetBaseEnemyAction(string name)
+        {
+            return _enemyActionDictionary.Value.GetValueOrDefault(name);
+        }
+
+        public static bool TryGetBaseEnemyAction(string name, out EnemyAction action)
         {
             return _enemyActionDictionary.Value.TryGetValue(name, out action);
+        }
+
+        public static EnemyAction CreateEnemyAction(string name, Entity context)
+        {
+            EnemyAction action = null;
+
+            if (_enemyActionDictionary.Value.TryGetValue(name, out action))
+            {
+                action = action.Clone() as EnemyAction;
+                action.Context = context;
+            }
+
+            return action;
+        }
+
+        /// <summary>
+        /// Get a clone of an enemy action by name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="action"></param>
+        /// <returns></returns>
+        public static bool TryCreateEnemyAction(string name, Entity context, out EnemyAction action)
+        {
+            action = null;
+
+            if (_enemyActionDictionary.Value.TryGetValue(name, out action))
+            {
+                action = action.Clone() as EnemyAction;
+                action.Context = context;
+                return true;
+            }
+
+            return false;
         }
     }
 }

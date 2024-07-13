@@ -1,5 +1,21 @@
 [
   {
+    "Name": "Player_Sword_Thrust",
+    "Type": "Instant",
+
+    "Damage": 1,
+
+    "AffectsEnemies": true,
+
+    "AttachToOwner": true,
+
+    "Radius": 12,
+
+    "ShouldRotate": true,
+
+    "Lifespan": 0.2
+  },
+  {
     "Name": "Player_DashAttack",
     "Type": "Instant",
 

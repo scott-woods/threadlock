@@ -12,12 +12,12 @@
       "Y": 5
     },
     "ColliderOffset": {
-      "X": -1,
-      "Y": 7
+      "X": -5,
+      "Y": 5
     },
     "AnimatorOffset": {
-      "X": 0,
-      "Y": 0
+      "X": -3,
+      "Y": -2
     },
     "IdleAnimation": "ChainBot_Idle",
     "MoveAnimation": "ChainBot_Move",
@@ -40,16 +40,16 @@
       "Y": 17
     },
     "ColliderSize": {
-      "X": 9,
-      "Y": 6
+      "X": 6,
+      "Y": 4
     },
     "ColliderOffset": {
-      "X": 0,
-      "Y": 9
+      "X": -3,
+      "Y": 8
     },
     "AnimatorOffset": {
-      "X": 0,
-      "Y": 0
+      "X": 2,
+      "Y": -4
     },
     "IdleAnimation": "Ghoul_Idle",
     "MoveAnimation": "Ghoul_Move",

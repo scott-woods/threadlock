@@ -28,7 +28,7 @@ namespace Threadlock.Components
         };
         float _raycastRadius = 32f;
 
-        float _pathDesiredDistance = 8f;
+        float _pathDesiredDistance = 4f;
         float _updateInterval = .25f;
         bool _onCooldown = false;
 
@@ -42,6 +42,8 @@ namespace Threadlock.Components
         float[] _dangerArray = new float[8];
 
         List<Entity> _debugPoints = new List<Entity>();
+
+        int _currentPathIndex;
 
         public Pathfinder(Collider collider)
         {
@@ -69,6 +71,33 @@ namespace Threadlock.Components
             if (!_onCooldown)
             {
                 _path = _gridGraphManager.FindPath(startPosition, target);
+
+                _currentPathIndex = 0;
+
+                List<Vector2> adjustedPath = new List<Vector2>();
+
+                Vector2 currentBase = startPosition;
+                Vector2 nextVisiblePos = _path[0];
+                for (int i = 0; i < _path.Count; i++)
+                {
+                    var environmentHit = Physics.Linecast(currentBase, _path[i], 1 << PhysicsLayers.Environment);
+
+                    //if there is a collision, 
+                    if (environmentHit.Collider != null)
+                    {
+                        adjustedPath.Add(nextVisiblePos);
+                        currentBase = nextVisiblePos;
+                        nextVisiblePos = _path[i];
+                    }
+                    else
+                        nextVisiblePos = _path[i];
+                }
+
+                //always include the target position in the path
+                adjustedPath.Add(target);
+
+                _path = adjustedPath;
+
                 _onCooldown = true;
                 Game1.Schedule(_updateInterval, timer =>
                 {
@@ -93,49 +122,13 @@ namespace Threadlock.Components
 
             var finalPath = _path;
 
-            //smooth path
-            //int currentIndex = 0;
-            //while (currentIndex < _path.Count - 1)
-            //{
-            //    int furthestVisibleIndex = currentIndex;
-            //    for (int i = currentIndex + 1; i < _path.Count; i++)
-            //    {
-            //        var environmentHit = Physics.Linecast(_path[currentIndex], _path[i], 1 << PhysicsLayers.Environment);
-            //        if (environmentHit.Collider == null)
-            //            furthestVisibleIndex = i;
-            //        else
-            //            break;
-            //    }
-
-            //    //safeguard against getting stuck in while loop
-            //    if (furthestVisibleIndex == currentIndex)
-            //    {
-            //        currentIndex++;
-            //    }
-            //    else
-            //    {
-            //        currentIndex = furthestVisibleIndex;
-            //    }
-
-            //    finalPath.Add(_path[currentIndex]);
-            //}
-
-            Vector2 nextPos = target;
-            for (int i = 0; i < finalPath.Count; i++)
+            Vector2 nextPos = finalPath[_currentPathIndex];
+            if (_currentPathIndex < finalPath.Count - 1)
             {
-                var pos = finalPath[i];
-
-                if (Vector2.Distance(startPosition, pos) <= _pathDesiredDistance)
+                if (Vector2.Distance(startPosition, nextPos) <= _pathDesiredDistance)
                 {
-                    continue;
-                }
-                else
-                {
-                    var raycastHit = Physics.Linecast(startPosition, pos, 1 << PhysicsLayers.Environment);
-                    if (raycastHit.Collider == null)
-                    {
-                        nextPos = pos;
-                    }
+                    _currentPathIndex++;
+                    nextPos = finalPath[_currentPathIndex];
                 }
             }
 

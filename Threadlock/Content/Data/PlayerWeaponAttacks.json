@@ -1,0 +1,73 @@
+[
+  {
+    "Name": "Player_Sword_Attack",
+
+    "IsCombo": true,
+    "ComboActions": [ "Player_Sword_Thrust_1", "Player_Sword_Slash_1", "Player_Sword_Thrust_2" ],
+    "ComboInputDelay": 0.1,
+    "ComboWaitTime": 0.2,
+    "WaitAnimation": "Player_Idle",
+    "ShouldComboWait": false
+  },
+  {
+    "Name": "Player_Sword_Thrust_1",
+
+    "AttackAnimation": "Player_Thrust",
+    "WaitForAttackAnimation": true,
+    "AttackMovement": {
+      "MovementType": "Directional",
+      "Speed": 150,
+      "EaseType": "CubicOut",
+      "FinalSpeed": 0,
+      "UseAnimationDuration": true
+    },
+
+    "Projectiles": [
+      {
+        "ProjectileName": "Player_Sword_Thrust",
+        "OffsetDistance": 12
+      }
+    ]
+  },
+  {
+    "Name": "Player_Sword_Slash_1",
+
+    "AttackAnimation": "Player_Slash",
+    "WaitForAttackAnimation": true,
+    "AttackMovement": {
+      "MovementType": "Directional",
+      "Speed": 150,
+      "EaseType": "CubicOut",
+      "FinalSpeed": 0,
+      "UseAnimationDuration": true
+    },
+
+    "Projectiles": [
+      {
+        "ProjectileName": "Player_Sword_Thrust"
+      }
+    ]
+  },
+  {
+    "Name": "Player_Sword_Thrust_2",
+
+    "AttackAnimation": "Player_Thrust",
+    "WaitForAttackAnimation": true,
+    "AttackMovement": {
+      "MovementType": "Directional",
+      "Speed": 250,
+      "EaseType": "CubicOut",
+      "FinalSpeed": 0,
+      "UseAnimationDuration": true
+    },
+
+    "Projectiles": [
+      {
+        "ProjectileName": "Player_Sword_Thrust"
+      }
+    ]
+  }
+  {
+    "Name": "Player_Sword_Parry"
+  }
+]

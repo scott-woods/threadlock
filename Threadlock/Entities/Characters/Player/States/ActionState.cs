@@ -105,7 +105,7 @@ namespace Threadlock.Entities.Characters.Player.States
             //start returning to normal speed
             _normalSpeedCoroutine = Game1.StartCoroutine(NormalSpeedCoroutine());
 
-            _executionCoroutine = Game1.StartCoroutine(action.Execute(Player.Instance));
+            _executionCoroutine = Game1.StartCoroutine(action.Execute());
             yield return _executionCoroutine;
             _executionCoroutine = null;
 
