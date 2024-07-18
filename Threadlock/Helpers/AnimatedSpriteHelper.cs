@@ -123,7 +123,7 @@ namespace Threadlock.Helpers
         static IEnumerator PlayAnimationCoroutine(SpriteAnimator animator, string animationName, AnimationConfig2 parentConfig = null)
         {
             //if animator is null, name is null, or already active, break
-            if (animator == null || animator.Entity == null || string.IsNullOrWhiteSpace(animationName) || (animator.IsAnimationActive(animationName) && animator.AnimationState != SpriteAnimator.State.Completed))
+            if (animator == null || animator.Entity == null || string.IsNullOrWhiteSpace(animationName) || IsAnimationPlaying(animator, animationName))
                 yield break;
 
             //get the config for this animation
@@ -156,19 +156,19 @@ namespace Threadlock.Helpers
                         if (animator.Entity == null || animator.Entity.IsDestroyed)
                             yield break;
 
-                        ////if directional, check if we should change direction
-                        //if (parentConfig != null && parentConfig.CanDirectionChange && parentConfig.UseDirections)
-                        //{
-                        //    //get the directional animation name
-                        //    var childAnimationName = GetDirectionalAnimationName(parentConfig, animator.Entity);
+                        //if directional, check if we should change direction
+                        if (parentConfig != null && parentConfig.CanDirectionChange && parentConfig.UseDirections)
+                        {
+                            //get the directional animation name
+                            var childAnimationName = GetDirectionalAnimationName(parentConfig, animator.Entity);
 
-                        //    //if we've changed direction, change animation
-                        //    if (childAnimationName != animationName)
-                        //    {
-                        //        yield return PlayAnimationCoroutine(animator, childAnimationName, parentConfig, animator.CurrentFrame);
-                        //        break;
-                        //    }
-                        //}
+                            //if we've changed direction, change animation
+                            if (childAnimationName != animationName)
+                            {
+                                yield return PlayAnimationCoroutine(animator, childAnimationName, parentConfig);
+                                break;
+                            }
+                        }
 
                         //if current frame is mismatched, this is the first time we're hitting this frame
                         if (currentFrame != animator.CurrentFrame)
@@ -353,11 +353,11 @@ namespace Threadlock.Helpers
             }
         }
 
-        public static bool IsAnimationPlaying(SpriteAnimator animator, string animationName)
+        public static bool IsAnimationPlaying(SpriteAnimator animator, string animationName, bool checkParent = true)
         {
             if (animator.CurrentAnimationName == animationName && animator.AnimationState != SpriteAnimator.State.Completed)
                 return true;
-            else
+            else if (checkParent)
             {
                 if (Animations.TryGetAnimationConfig(animationName, out var config))
                 {

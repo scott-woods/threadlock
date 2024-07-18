@@ -2,11 +2,7 @@
 using Nez;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Threadlock.DebugTools;
 using Threadlock.SceneComponents;
 using Threadlock.StaticData;
 
@@ -72,38 +68,35 @@ namespace Threadlock.Components
             {
                 _currentPathIndex = 0;
 
-                _path = _gridGraphManager.FindPath(startPosition, target);
-
-                if (_path != null && _path.Count > 0)
+                if (_gridGraphManager.TryFindPath(startPosition, target, out this._path))
                 {
                     List<Vector2> adjustedPath = new List<Vector2>();
 
                     Vector2 currentBase = startPosition;
-                    Vector2 nextVisiblePos = _path[0];
-                    for (int i = 0; i < _path.Count; i++)
+                    Vector2 nextVisiblePos = this._path[0];
+                    for (int i = 0; i < this._path.Count; i++)
                     {
-                        var environmentHit = Physics.Linecast(currentBase, _path[i], 1 << PhysicsLayers.Environment);
+                        var environmentHit = Physics.Linecast(currentBase, this._path[i], (1 << PhysicsLayers.Environment) | (1 << PhysicsLayers.ProjectilePassableWall));
 
                         //if there is a collision, 
                         if (environmentHit.Collider != null)
                         {
                             adjustedPath.Add(nextVisiblePos);
                             currentBase = nextVisiblePos;
-                            nextVisiblePos = _path[i];
+                            nextVisiblePos = this._path[i];
                         }
                         else
-                            nextVisiblePos = _path[i];
+                            nextVisiblePos = this._path[i];
                     }
 
                     //always include the target position in the path
-                    adjustedPath.Add(target);
+                    if (adjustedPath.Count <= 0 || adjustedPath.Last() != target)
+                        adjustedPath.Add(target);
 
-                    _path = adjustedPath;
+                    this._path = adjustedPath;
                 }
                 else
-                {
-                    _path.Add(target);
-                }
+                    return;
 
                 _onCooldown = true;
                 Game1.Schedule(_updateInterval, timer =>
@@ -118,7 +111,7 @@ namespace Threadlock.Components
             _debugPoints.Clear();
             if (Game1.DebugRenderEnabled)
             {
-                foreach (var point in _path)
+                foreach (var point in this._path)
                 {
                     var ent = Entity.Scene.CreateEntity("path-point");
                     ent.SetPosition(point);
@@ -127,15 +120,13 @@ namespace Threadlock.Components
                 }
             }
 
-            var finalPath = _path;
-
-            Vector2 nextPos = finalPath[_currentPathIndex];
-            if (_currentPathIndex < finalPath.Count - 1)
+            Vector2 nextPos = _path[_currentPathIndex];
+            if (_currentPathIndex < _path.Count - 1)
             {
                 if (Vector2.Distance(startPosition, nextPos) <= _pathDesiredDistance)
                 {
                     _currentPathIndex++;
-                    nextPos = finalPath[_currentPathIndex];
+                    nextPos = _path[_currentPathIndex];
                 }
             }
 

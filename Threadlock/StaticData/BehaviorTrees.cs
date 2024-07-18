@@ -30,7 +30,7 @@ namespace Threadlock.StaticData
         {
             var tree = BehaviorTreeBuilder<Enemy>.Begin(enemy)
                 //root
-                .Selector()
+                .Selector(AbortTypes.Self)
 
                     //handle stunned state
                     .Sequence(AbortTypes.LowerPriority)
@@ -38,8 +38,8 @@ namespace Threadlock.StaticData
                     .EndComposite()
 
                     //handle pursuit
+                    .ConditionalDecorator(x => x.IsPursued)
                     .Sequence(AbortTypes.LowerPriority)
-                        .Conditional(x => x.IsPursued)
                         .Action(x => x.MoveAway(x.TargetEntity, x.BaseSpeed))
                     .EndComposite()
 

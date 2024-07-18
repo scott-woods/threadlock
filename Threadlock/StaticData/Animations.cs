@@ -147,10 +147,17 @@ namespace Threadlock.StaticData
                 animation.Origin ??= parentAnimation.Origin;
                 animation.Row ??= parentAnimation.Row;
                 animation.Frames ??= parentAnimation.Frames;
+                animation.StartFrame ??= parentAnimation.StartFrame;
                 animation.Loop ??= parentAnimation.Loop;
                 animation.Path ??= parentAnimation.Path;
                 animation.ChainTo ??= parentAnimation.ChainTo;
                 animation.FPS ??= parentAnimation.FPS;
+
+                foreach (var kvp in parentAnimation.FrameData)
+                {
+                    if (!animation.FrameData.ContainsKey(kvp.Key))
+                        animation.FrameData[kvp.Key] = kvp.Value;
+                }
             }
         }
     }

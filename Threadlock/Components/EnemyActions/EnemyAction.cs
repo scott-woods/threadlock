@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Threadlock.Entities.Characters.Enemies;
 using Threadlock.Helpers;
+using Threadlock.SceneComponents;
 
 namespace Threadlock.Components.EnemyActions
 {
@@ -101,9 +102,14 @@ namespace Threadlock.Components.EnemyActions
                 -oppositeMidAngle
             };
 
-            var closestByAngle = angles.Select(a => targetPos + Mathf.AngleToVector(a, MinDistance)).MinBy(x => Vector2.Distance(currentPos, x));
-
-            return closestByAngle;
+            var gridGraphManager = Game1.Scene.GetOrCreateSceneComponent<GridGraphManager>();
+            //var validPositions = angles.Select(a => targetPos + Mathf.AngleToVector(a, MinDistance)).Where(x => TiledHelper.ValidatePosition(Context.Scene, x));
+            //var validPositions = angles.Select(a => targetPos + Mathf.AngleToVector(a, MinDistance));
+            var validPositions = angles.Select(a => targetPos + Mathf.AngleToVector(a, MinDistance)).Where(x => gridGraphManager.IsPositionValid(x));
+            if (validPositions.Any())
+                return validPositions.MinBy(x => Vector2.Distance(currentPos, x));
+            else
+                return targetPos;
         }
 
         #region BASIC ACTION

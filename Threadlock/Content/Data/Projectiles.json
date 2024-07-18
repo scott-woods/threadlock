@@ -42,7 +42,7 @@
 
     "ShouldRotate": true,
 
-    "Lifespan": 0.5
+    "Lifespan": 0.2
   },
   {
     "Name": "Player_ChainLightning",
@@ -69,7 +69,7 @@
 
     "ShouldRotate": true,
 
-    "Lifespan": 0.5,
+    "Lifespan": 0.2,
 
     "HitVfx": [ "HitEffect_Lightning_1", "HitEffect_Lightning_2" ],
     "HitEffects": [

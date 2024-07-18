@@ -192,6 +192,7 @@ namespace Threadlock.Helpers
         }
 
         /// <summary>
+        /// TODO: this method is very slow, consider replacing with GridGraphManager's IsPositionValid
         /// checks that a position is not in any tiled map walls, and that it is on a non-null tile
         /// </summary>
         /// <param name="scene"></param>
@@ -199,6 +200,7 @@ namespace Threadlock.Helpers
         /// <returns></returns>
         public static bool ValidatePosition(Scene scene, Vector2 position)
         {
+            //TODO: this method is very slow, consider replacing with GridGraphManager's IsPositionValid
             var renderers = scene.FindComponentsOfType<TiledMapRenderer>();
             bool isInMap = false;
             foreach (var renderer in renderers)

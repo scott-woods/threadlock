@@ -46,6 +46,7 @@ namespace Threadlock
         BasicAction _currentComboAction;
         ICoroutine _currentComboActionExecuteCoroutine;
         ICoroutine _comboCoroutine;
+        ICoroutine _movementCoroutine;
 
         /// <summary>
         /// Execute the action
@@ -74,9 +75,8 @@ namespace Threadlock
             AnimatedSpriteHelper.PlayAnimation(ref animator, PreAttackAnimation);
 
             //handle pre attack movement
-            ICoroutine preAttackMovementCoroutine = null;
             if (PreAttackMovement != null)
-                preAttackMovementCoroutine = Game1.StartCoroutine(PreAttackMovement.HandleMovement(Context, targetingInfo, PreAttackAnimation));
+                _movementCoroutine = Game1.StartCoroutine(PreAttackMovement.HandleMovement(Context, targetingInfo, PreAttackAnimation));
 
             //determine how long to wait for pre attack
             var preAttackAnimDuration = WaitForPreAttackAnimation ? AnimatedSpriteHelper.GetAnimationDuration(animator) : PreAttackDuration;
@@ -89,7 +89,7 @@ namespace Threadlock
             }
 
             //stop pre attack movement if not null
-            preAttackMovementCoroutine?.Stop();
+            _movementCoroutine?.Stop();
 
             //get dir towards target
             var dirTowardsTarget = Vector2.Zero;
@@ -103,13 +103,6 @@ namespace Threadlock
             //normalize dir towards target
             if (dirTowardsTarget != Vector2.Zero)
                 dirTowardsTarget.Normalize();
-
-            //var angle = Math.Abs(DirectionHelper.GetDegreesFromDirection(dirTowardsTarget));
-            //if (angle > 90)
-            //    angle = 180 - angle;
-            //////if (angle > 90)
-            //////    angle = 180 - angle;
-            //Context.SetRotationDegrees(angle);
 
             //handle projectiles
             foreach (var attackProjectile in Projectiles)
@@ -173,9 +166,8 @@ namespace Threadlock
             //if we have an attack animation, play it
             AnimatedSpriteHelper.PlayAnimation(ref animator, AttackAnimation);
 
-            ICoroutine attackMovementCoroutine = null;
             if (AttackMovement != null)
-                attackMovementCoroutine = Game1.StartCoroutine(AttackMovement.HandleMovement(Context, targetingInfo, AttackAnimation));
+                _movementCoroutine = Game1.StartCoroutine(AttackMovement.HandleMovement(Context, targetingInfo, AttackAnimation));
 
             //determine how long to wait for attack
             var attackAnimDuration = WaitForAttackAnimation ? AnimatedSpriteHelper.GetAnimationDuration(animator) : AttackDuration;
@@ -186,14 +178,13 @@ namespace Threadlock
                 yield return null;
             }
 
-            attackMovementCoroutine?.Stop();
+            _movementCoroutine?.Stop();
 
             //if we have a post attack animation, play it
             AnimatedSpriteHelper.PlayAnimation(ref animator, PostAttackAnimation);
 
-            ICoroutine postAttackMovementCoroutine = null;
             if (PostAttackMovement != null)
-                postAttackMovementCoroutine = Game1.StartCoroutine(PostAttackMovement?.HandleMovement(Context, targetingInfo, PostAttackAnimation));
+                _movementCoroutine = Game1.StartCoroutine(PostAttackMovement?.HandleMovement(Context, targetingInfo, PostAttackAnimation));
 
             //determine how long to wait for post attack
             var postAttackAnimDuration = WaitForPostAttackAnimation ? AnimatedSpriteHelper.GetAnimationDuration(animator) : PostAttackDuration;
@@ -204,7 +195,7 @@ namespace Threadlock
                 yield return null;
             }
 
-            postAttackMovementCoroutine?.Stop();
+            _movementCoroutine?.Stop();
 
             OnExecutionEnded();
         }
@@ -222,6 +213,9 @@ namespace Threadlock
 
             _comboCoroutine?.Stop();
             _comboCoroutine = null;
+
+            _movementCoroutine?.Stop();
+            _movementCoroutine = null;
         }
 
         /// <summary>

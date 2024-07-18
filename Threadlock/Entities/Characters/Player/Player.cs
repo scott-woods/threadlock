@@ -168,9 +168,9 @@ namespace Threadlock.Entities.Characters.Player
             var dir = Controls.Instance.DirectionalInput.Value;
             dir.Normalize();
 
-            AnimatedSpriteHelper.PlayAnimation(ref _animator, "Player_Run");
-
             _velocityComponent.Move(dir, MoveSpeed);
+
+            AnimatedSpriteHelper.PlayAnimation(ref _animator, "Player_Run");
         }
 
         public void Idle()

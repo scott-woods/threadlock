@@ -26,9 +26,13 @@ namespace Threadlock.Entities.Characters.Player.States
 
         ICoroutine _slowMoCoroutine;
         ICoroutine _normalSpeedCoroutine;
+        ICoroutine _actionCoroutine;
+        ICoroutine _prepCoroutine;
 
         List<PlayerAction2> _queuedActions = new List<PlayerAction2>();
         int _totalApCost { get => _queuedActions.Select(a => a.ApCost).Sum(); }
+
+        PlayerAction2 _currentAction;
 
         SimPlayer _simPlayer;
 
@@ -37,6 +41,40 @@ namespace Threadlock.Entities.Characters.Player.States
             base.Begin();
 
             Game1.StartCoroutine(PrepSequence());
+        }
+
+        public override void End()
+        {
+            base.End();
+
+            Reset();
+        }
+
+        void Reset()
+        {
+            //stop action
+            _actionCoroutine?.Stop();
+            _actionCoroutine = null;
+
+            //stop slow mo coroutine
+            _slowMoCoroutine?.Stop();
+            _slowMoCoroutine = null;
+
+            //stop normal speed coroutine
+            _normalSpeedCoroutine?.Stop();
+            _normalSpeedCoroutine = null;
+
+            //stop prep
+            _prepCoroutine?.Stop();
+            _prepCoroutine = null;
+
+            //stop execute
+            _actionCoroutine?.Stop();
+            _actionCoroutine = null;
+
+            //reset/abort action
+            _currentAction?.Abort();
+            _currentAction = null;
         }
 
         IEnumerator PrepSequence()
@@ -66,7 +104,7 @@ namespace Threadlock.Entities.Characters.Player.States
 
                         //start preparing action
                         var request = action.Prepare(prepEntity);
-                        var prepActionCoroutine = Game1.StartCoroutine(request);
+                        _prepCoroutine = Game1.StartCoroutine(request);
 
                         //yield while button is held and we haven't finished preparing
                         while (actionSlot.Button.IsDown && !action.IsPrepared)
@@ -116,7 +154,7 @@ namespace Threadlock.Entities.Characters.Player.States
                             }
 
                             //stop the action prep coroutine and null out the cloned action
-                            prepActionCoroutine?.Stop();
+                            _prepCoroutine?.Stop();
                             action.Abort();
                             action = null;
                         }
@@ -139,7 +177,9 @@ namespace Threadlock.Entities.Characters.Player.States
             //execute each prepared action
             foreach (var action in _queuedActions)
             {
-                yield return action.Execute();
+                _currentAction = action;
+                _actionCoroutine = Game1.StartCoroutine(action.Execute());
+                yield return _actionCoroutine;
             }
 
             //clear queued actions list

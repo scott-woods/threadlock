@@ -100,6 +100,7 @@
     "DirectionSource": "Aiming",
     "CanDirectionChange": false,
     "FPS": 15,
+    "FrameData": { "0": { "Sounds": [ "31_swoosh_sword_1", "32_Swoosh_sword_2", "33_Swoosh_Sword_3" ] } },
     "DirectionalAnimations": {
       "Up": "Player_Thrust_Up",
       "Down": "Player_Thrust_Down",
@@ -113,6 +114,7 @@
     "UseDirections": true,
     "DirectionSource": "Aiming",
     "CanDirectionChange": false,
+    "FrameData": { "0": { "Sounds": [ "31_swoosh_sword_1", "32_Swoosh_sword_2", "33_Swoosh_Sword_3" ] } },
     "FPS": 21,
     "DirectionalAnimations": {
       "Up": "Player_Slash_Up",
@@ -153,6 +155,7 @@
     "UseDirections": true,
     "DirectionSource": "Aiming",
     "CanDirectionChange": false,
+    "FrameData": { "0": { "Sounds": [ "20_Slash_02" ] } },
     "DirectionalAnimations": {
       "Up": "Player_DashAttack_Up",
       "Down": "Player_DashAttack_Down",
@@ -182,13 +185,12 @@
     "Name": "Player_Thrust_Down",
     "Base": "Player_Thrust",
     "Row": 7,
-    "Frames": 4,
-    "FrameData": { "0": { "Sounds": [ "31_swoosh_sword_1", "32_Swoosh_sword_2", "33_Swoosh_Sword_3" ] } }
+    "Frames": 4
   },
   {
     "Name": "Player_DashAttack_Down",
     "Base": "Player_Thrust_Down",
-    "FrameData": { "0": { "Sounds": [ "20_Slash_02" ] } }
+    
   },
   {
     "Name": "Player_ChargeDash_Down",
@@ -201,8 +203,7 @@
     "Name": "Player_Slash_Down",
     "Base": "Player_Slash",
     "Row": 8,
-    "Frames": 4,
-    "FrameData": { "0": { "Sounds": [ "31_swoosh_sword_1", "32_Swoosh_sword_2", "33_Swoosh_Sword_3" ] } }
+    "Frames": 4
   },
   {
     "Name": "Player_Roll_Down",
@@ -238,13 +239,13 @@
     "Name": "Player_Thrust_Left",
     "Base": "Player_Thrust_Right",
     "FlipX": true,
-    "FlipOriginX": true,
-    "FrameData": { "0": { "Sounds": [ "31_swoosh_sword_1", "32_Swoosh_sword_2", "33_Swoosh_Sword_3" ] } }
+    "FlipOriginX": true
   },
   {
     "Name": "Player_DashAttack_Left",
     "Base": "Player_Thrust_Left",
-    "FrameData": { "0": { "Sounds": [ "20_Slash_02" ] } }
+    "FlipX": true,
+    "FlipOriginX": true
   },
   {
     "Name": "Player_ChargeDash_Left",
@@ -256,8 +257,7 @@
     "Name": "Player_Slash_Left",
     "Base": "Player_Slash_Right",
     "FlipX": true,
-    "FlipOriginX": true,
-    "FrameData": { "0": { "Sounds": [ "31_swoosh_sword_1", "32_Swoosh_sword_2", "33_Swoosh_Sword_3" ] } }
+    "FlipOriginX": true
   },
   {
     "Name": "Player_Idle_Right",
@@ -288,13 +288,11 @@
     "Base": "Player_Thrust",
     "Row": 14,
     "Frames": 4,
-    "CanDirectionChange": false,
-    "FrameData": { "0": { "Sounds": [ "31_swoosh_sword_1", "32_Swoosh_sword_2", "33_Swoosh_Sword_3" ] } }
+    "CanDirectionChange": false
   },
   {
     "Name": "Player_DashAttack_Right",
-    "Base": "Player_Thrust_Right",
-    "FrameData": { "0": { "Sounds": [ "20_Slash_02" ] } }
+    "Base": "Player_Thrust_Right"
   },
   {
     "Name": "Player_ChargeDash_Right",
@@ -308,8 +306,7 @@
     "Base": "Player_Slash",
     "Row": 15,
     "Frames": 4,
-    "CanDirectionChange": false,
-    "FrameData": { "0": { "Sounds": [ "31_swoosh_sword_1", "32_Swoosh_sword_2", "33_Swoosh_Sword_3" ] } }
+    "CanDirectionChange": false
   },
   {
     "Name": "Player_Idle_Up",
@@ -333,13 +330,11 @@
     "Name": "Player_Thrust_Up",
     "Base": "Player_Thrust",
     "Row": 19,
-    "Frames": 4,
-    "FrameData": { "0": { "Sounds": [ "31_swoosh_sword_1", "32_Swoosh_sword_2", "33_Swoosh_Sword_3" ] } }
+    "Frames": 4
   },
   {
     "Name": "Player_DashAttack_Up",
-    "Base": "Player_Thrust_Up",
-    "FrameData": { "0": { "Sounds": [ "20_Slash_02" ] } }
+    "Base": "Player_Thrust_Up"
   },
   {
     "Name": "Player_ChargeDash_Up",
@@ -352,8 +347,7 @@
     "Name": "Player_Slash_Up",
     "Base": "Player_Slash",
     "Row": 20,
-    "Frames": 4,
-    "FrameData": { "0": { "Sounds": [ "31_swoosh_sword_1", "32_Swoosh_sword_2", "33_Swoosh_Sword_3" ] } }
+    "Frames": 4
   },
   {
     "Name": "Player_Roll_Up",

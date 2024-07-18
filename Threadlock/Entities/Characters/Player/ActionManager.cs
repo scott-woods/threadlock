@@ -1,6 +1,7 @@
 ﻿using Nez;
 using Nez.Sprites;
 using Nez.Systems;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Threadlock.DebugTools;
@@ -25,6 +26,8 @@ namespace Threadlock.Entities.Characters.Player
 
         //components
         ApComponent _apComponent;
+
+        PlayerAction2 _queuedAction;
 
         #region LIFECYCLE
 
@@ -87,6 +90,20 @@ namespace Threadlock.Entities.Characters.Player
                     //load animations
                     action.LoadAnimations(ref animator);
 
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool TryQueueAction()
+        {
+            foreach (var pair in ActionDictionary)
+            {
+                if (pair.Value.Action != null && pair.Value.Button.IsDown && CanAffordAction(pair.Value.Action))
+                {
+                    _queuedAction = pair.Value.Action;
                     return true;
                 }
             }

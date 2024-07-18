@@ -80,7 +80,7 @@ namespace Threadlock.Entities.Characters.Player.States
         {
             Reset();
             _currentActionSlot = actionSlot;
-            _currentAction = actionSlot.Action.Clone() as PlayerAction2;
+            _currentAction = actionSlot.Action;
             _actionCoroutine = Game1.StartCoroutine(StartActionCoroutine(_currentAction));
         }
 
