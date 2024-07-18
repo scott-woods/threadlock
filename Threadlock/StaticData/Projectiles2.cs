@@ -1,32 +1,32 @@
 ﻿using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Nez;
-using Nez.Persistence;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Reflection.PortableExecutable;
-using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components.EnemyActions;
-using Threadlock.Entities;
-using Threadlock.Helpers;
 
 namespace Threadlock.StaticData
 {
     public class Projectiles2
     {
-        static readonly Lazy<Dictionary<string, ProjectileConfig2>> _projectileDictionary = new Lazy<Dictionary<string, ProjectileConfig2>>(() =>
+        static Dictionary<string, ProjectileConfig2> _projectileDictionary;
+
+        public static async Task InitializeProjectileDictionaryAsync()
+        {
+            _projectileDictionary = await LoadProjectilesAsync();
+        }
+
+        static async Task<Dictionary<string, ProjectileConfig2>> LoadProjectilesAsync()
         {
             var dict = new Dictionary<string, ProjectileConfig2>();
 
             if (File.Exists("Content/Data/Projectiles.json"))
             {
-                var json = File.ReadAllText("Content/Data/Projectiles.json");
+                var json = await File.ReadAllTextAsync("Content/Data/Projectiles.json");
                 var jArray = JArray.Parse(json);
 
                 foreach (var jToken in jArray)
@@ -42,7 +42,7 @@ namespace Threadlock.StaticData
                         .FirstOrDefault(t => t.Name == typeString && typeof(ProjectileConfig2).IsAssignableFrom(t));
 
                     if (projectileType == null)
-                        return null;
+                        continue;
 
                     var method = typeof(JsonConvert).GetMethods(BindingFlags.Public | BindingFlags.Static)
                     .FirstOrDefault(m => m.Name == "DeserializeObject" &&
@@ -66,11 +66,11 @@ namespace Threadlock.StaticData
             }
 
             return dict;
-        });
+        }
 
         public static bool TryGetProjectile(string name, out ProjectileConfig2 projectile)
         {
-            return _projectileDictionary.Value.TryGetValue(name, out projectile);
+            return _projectileDictionary.TryGetValue(name, out projectile);
         }
     }
 

@@ -70,33 +70,40 @@ namespace Threadlock.Components
             //if not on cooldown, get a new path
             if (!_onCooldown)
             {
-                _path = _gridGraphManager.FindPath(startPosition, target);
-
                 _currentPathIndex = 0;
 
-                List<Vector2> adjustedPath = new List<Vector2>();
+                _path = _gridGraphManager.FindPath(startPosition, target);
 
-                Vector2 currentBase = startPosition;
-                Vector2 nextVisiblePos = _path[0];
-                for (int i = 0; i < _path.Count; i++)
+                if (_path != null && _path.Count > 0)
                 {
-                    var environmentHit = Physics.Linecast(currentBase, _path[i], 1 << PhysicsLayers.Environment);
+                    List<Vector2> adjustedPath = new List<Vector2>();
 
-                    //if there is a collision, 
-                    if (environmentHit.Collider != null)
+                    Vector2 currentBase = startPosition;
+                    Vector2 nextVisiblePos = _path[0];
+                    for (int i = 0; i < _path.Count; i++)
                     {
-                        adjustedPath.Add(nextVisiblePos);
-                        currentBase = nextVisiblePos;
-                        nextVisiblePos = _path[i];
+                        var environmentHit = Physics.Linecast(currentBase, _path[i], 1 << PhysicsLayers.Environment);
+
+                        //if there is a collision, 
+                        if (environmentHit.Collider != null)
+                        {
+                            adjustedPath.Add(nextVisiblePos);
+                            currentBase = nextVisiblePos;
+                            nextVisiblePos = _path[i];
+                        }
+                        else
+                            nextVisiblePos = _path[i];
                     }
-                    else
-                        nextVisiblePos = _path[i];
+
+                    //always include the target position in the path
+                    adjustedPath.Add(target);
+
+                    _path = adjustedPath;
                 }
-
-                //always include the target position in the path
-                adjustedPath.Add(target);
-
-                _path = adjustedPath;
+                else
+                {
+                    _path.Add(target);
+                }
 
                 _onCooldown = true;
                 Game1.Schedule(_updateInterval, timer =>

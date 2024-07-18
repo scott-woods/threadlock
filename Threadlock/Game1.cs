@@ -4,8 +4,10 @@ using Microsoft.Xna.Framework.Input;
 using Nez;
 using SDL2;
 using System.IO;
+using System.Threading.Tasks;
 using Threadlock.GlobalManagers;
 using Threadlock.Scenes;
+using Threadlock.StaticData;
 
 namespace Threadlock
 {
@@ -28,6 +30,10 @@ namespace Threadlock
 
             //init data directory
             if (!Directory.Exists("Data")) Directory.CreateDirectory("Data");
+
+            //load data
+            Task.Run(() => Projectiles2.InitializeProjectileDictionaryAsync());
+            Task.Run(() => Animations.InitializeAnimationDictionaryAsync()).Wait();
 
             //global managers
             RegisterGlobalManager(ResolutionManager);

@@ -10,6 +10,9 @@ using Threadlock.StaticData;
 
 namespace Threadlock.Entities.Characters.Player
 {
+    /// <summary>
+    /// keeps track of the player's currently equipped weapon
+    /// </summary>
     public class WeaponManager : Component
     {
         PlayerWeapon _currentWeapon;
@@ -21,15 +24,8 @@ namespace Threadlock.Entities.Characters.Player
             if (PlayerWeapons.TryGetWeapon(PlayerData.Instance.CurrentWeapon, out var weapon))
             {
                 _currentWeapon = weapon;
+                Entity.AddComponent(weapon);
             }
-        }
-
-        public bool Poll()
-        {
-            if (_currentWeapon == null)
-                return false;
-
-            return _currentWeapon.Poll();
         }
 
         public IEnumerator Execute()

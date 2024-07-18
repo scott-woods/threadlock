@@ -186,7 +186,7 @@ namespace Threadlock.Entities.Characters.Enemies
 
         void ResetAction()
         {
-            _queuedAction?.Abort(this);
+            _queuedAction?.Abort();
             _queuedAction = null;
 
             _isActionFinished = false;
@@ -456,7 +456,12 @@ namespace Threadlock.Entities.Characters.Enemies
         IEnumerator Spawn()
         {
             _spawning = true;
-            yield return AnimatedSpriteHelper.WaitForAnimation(_animator, _config.SpawnAnimation);
+
+            if (!string.IsNullOrWhiteSpace(_config.SpawnAnimation))
+                yield return AnimatedSpriteHelper.WaitForAnimation(_animator, _config.SpawnAnimation);
+            else
+                AnimatedSpriteHelper.PlayAnimation(ref _animator, _config.IdleAnimation);
+
             _spawning = false;
         }
     }

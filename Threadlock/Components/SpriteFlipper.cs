@@ -14,16 +14,11 @@ using Threadlock.Helpers;
 
 namespace Threadlock.Components
 {
-    public class SpriteFlipper : Component, IUpdatable
+    public class SpriteFlipper : Component
     {
         public DirectionSource DirectionSource;
 
         bool _flipped = false;
-
-        public void Update()
-        {
-            //TryFlip(DirectionSource);
-        }
 
         public void SetFlip(bool flip)
         {
@@ -38,11 +33,19 @@ namespace Threadlock.Components
                 {
                     renderer.FlipX = flip;
 
-                    var newOffsetX = renderer.LocalOffset.X * -1;
-                    var newOffset = new Vector2(newOffsetX, renderer.LocalOffset.Y);
-                    renderer.SetLocalOffset(newOffset);
+                    //var newOffsetX = renderer.LocalOffset.X * -1;
+                    //var newOffset = new Vector2(newOffsetX, renderer.LocalOffset.Y);
+                    //renderer.SetLocalOffset(newOffset);
                 }
             }
+        }
+
+        public void SetFlipX(bool flip)
+        {
+            var renderers = Entity.GetComponents<SpriteRenderer>();
+
+            foreach (var renderer in renderers)
+                renderer.FlipX = flip;
         }
 
         public void TryFlip(DirectionSource directionSource)

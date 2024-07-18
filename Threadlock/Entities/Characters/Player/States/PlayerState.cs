@@ -181,9 +181,9 @@ namespace Threadlock.Entities.Characters.Player.States
 
         public bool TryBasicAttack()
         {
-            if (_context.TryGetComponent<WeaponManager>(out var weaponManager))
+            if (_context.TryGetComponent<PlayerWeapon>(out var playerWeapon))
             {
-                if (weaponManager.Poll())
+                if (playerWeapon.Poll())
                 {
                     _machine.ChangeState<BasicAttackState>();
                     return true;

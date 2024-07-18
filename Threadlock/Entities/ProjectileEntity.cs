@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components.EnemyActions;
 using Threadlock.Components.Hitboxes;
+using Threadlock.Entities.Characters.Player;
 using Threadlock.Helpers;
 using Threadlock.StaticData;
 
@@ -17,27 +18,30 @@ namespace Threadlock.Entities
     public abstract class ProjectileEntity : Entity
     {
         protected ProjectileConfig2 Config;
-        protected Vector2 Direction;
+        public Vector2 Direction;
 
         protected Collider Hitbox;
         protected SpriteAnimator Animator;
 
         protected bool IsBursting;
 
-        public ProjectileEntity(ProjectileConfig2 config, Vector2 initialDirection)
+        protected Entity Owner;
+
+        public ProjectileEntity(ProjectileConfig2 config, Vector2 initialDirection, Entity owner)
         {
             Config = config;
             Direction = initialDirection;
+            Owner = owner;
         }
 
-        public static ProjectileEntity CreateProjectileEntity(ProjectileConfig2 config, Vector2 initialDirection)
+        public static ProjectileEntity CreateProjectileEntity(ProjectileConfig2 config, Vector2 initialDirection, Entity owner = null)
         {
             switch (config)
             {
                 case InstantProjectileConfig instantConfig:
-                    return new InstantProjectileEntity(instantConfig, initialDirection);
+                    return new InstantProjectileEntity(instantConfig, initialDirection, owner);
                 case StraightProjectileConfig straightConfig:
-                    return new StraightProjectileEntity(straightConfig, initialDirection);
+                    return new StraightProjectileEntity(straightConfig, initialDirection, owner);
                 default:
                     throw new ArgumentException("Unknown projectile type.");
             }
@@ -82,6 +86,9 @@ namespace Threadlock.Entities
                     points = Config.Points.Select(p => new Vector2(p.X, p.Y * Math.Sign(Direction.X))).ToArray();
                 Hitbox = AddComponent(new PolygonHitbox(Config.Damage, points));
             }
+
+            if (Hitbox is IHitbox hitbox)
+                hitbox.Direction = Direction;
 
             //handle hitbox physics layers
             Hitbox.PhysicsLayer = 0;
@@ -143,7 +150,7 @@ namespace Threadlock.Entities
                 Destroy();
         }
 
-        public void OnHit(Collider hitCollider, CollisionResult collisionResult)
+        public void OnHit(Collider hitCollider, CollisionResult collisionResult, int damage)
         {
             foreach (var effect in Config.HitEffects)
             {
@@ -157,6 +164,9 @@ namespace Threadlock.Entities
                 var hitVfxEntity = Scene.AddEntity(new HitVfx(hitVfx));
                 hitVfxEntity.SetPosition(hitVfxPos);
             }
+
+            if (Owner != null && Owner.TryGetComponent<ApComponent>(out var apComponent))
+                apComponent.OnAttackHit(damage);
         }
 
         void OnAnimationCompleted(string animationName)
@@ -168,7 +178,7 @@ namespace Threadlock.Entities
 
     public class InstantProjectileEntity : ProjectileEntity
     {
-        public InstantProjectileEntity(InstantProjectileConfig config, Vector2 initialDirection) : base(config, initialDirection)
+        public InstantProjectileEntity(InstantProjectileConfig config, Vector2 initialDirection, Entity owner) : base(config, initialDirection, owner)
         { }
     }
 
@@ -178,7 +188,7 @@ namespace Threadlock.Entities
 
         float _speed;
 
-        public StraightProjectileEntity(StraightProjectileConfig config, Vector2 initialDirection) : base(config, initialDirection)
+        public StraightProjectileEntity(StraightProjectileConfig config, Vector2 initialDirection, Entity owner) : base(config, initialDirection, owner)
         {
             _speed = config.Speed;
         }

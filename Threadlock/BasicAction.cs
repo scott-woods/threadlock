@@ -1,21 +1,17 @@
-﻿using Nez;
+﻿using Microsoft.Xna.Framework;
+using Nez;
+using Nez.Persistence;
 using Nez.Sprites;
+using Nez.Tweens;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Threadlock.Components;
 using Threadlock.Components.EnemyActions;
-using Threadlock.Entities.Characters.Enemies;
 using Threadlock.Entities;
 using Threadlock.Helpers;
 using Threadlock.StaticData;
-using Nez.Tweens;
-using Microsoft.Xna.Framework;
 using Random = Nez.Random;
-using Nez.Persistence;
 
 namespace Threadlock
 {
@@ -47,29 +43,22 @@ namespace Threadlock
         [JsonExclude]
         public Entity Context;
 
-        protected abstract TargetingInfo GetTargetingInfo();
+        BasicAction _currentComboAction;
+        ICoroutine _currentComboActionExecuteCoroutine;
+        ICoroutine _comboCoroutine;
 
-        public virtual void LoadAnimations(ref SpriteAnimator animator)
+        /// <summary>
+        /// Execute the action
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator Execute()
         {
-            AnimatedSpriteHelper.LoadAnimationsGlobal(ref animator, PreAttackAnimation, AttackAnimation, PostAttackAnimation);
+            OnExecutionStarted();
 
-            if (IsCombo && ComboActions.Count > 0)
-            {
-                foreach (var comboAction in ComboActions)
-                {
-                    if (AllEnemyActions.TryGetBaseEnemyAction(comboAction, out var childAction))
-                        childAction.LoadAnimations(ref animator);
-                    else if (AllPlayerActions.TryGetBasePlayerAction(comboAction, out var playerChildAction))
-                        playerChildAction.LoadAnimations(ref animator);
-                }
-            }
-        }
-
-        public virtual IEnumerator Execute()
-        {
             if (IsCombo)
             {
-                yield return HandleCombo();
+                _comboCoroutine = Game1.StartCoroutine(HandleCombo());
+                yield return _comboCoroutine;
 
                 yield break;
             }
@@ -115,13 +104,20 @@ namespace Threadlock
             if (dirTowardsTarget != Vector2.Zero)
                 dirTowardsTarget.Normalize();
 
+            //var angle = Math.Abs(DirectionHelper.GetDegreesFromDirection(dirTowardsTarget));
+            //if (angle > 90)
+            //    angle = 180 - angle;
+            //////if (angle > 90)
+            //////    angle = 180 - angle;
+            //Context.SetRotationDegrees(angle);
+
             //handle projectiles
             foreach (var attackProjectile in Projectiles)
             {
                 if (Projectiles2.TryGetProjectile(attackProjectile.ProjectileName, out var projectileConfig))
                 {
                     //create projectile entity
-                    var projectileEntity = ProjectileEntity.CreateProjectileEntity(projectileConfig, dirTowardsTarget);
+                    var projectileEntity = ProjectileEntity.CreateProjectileEntity(projectileConfig, dirTowardsTarget, Context);
 
                     //determine if we should start from enemy or target pos
                     Vector2 pos = Vector2.Zero;
@@ -209,22 +205,82 @@ namespace Threadlock
             }
 
             postAttackMovementCoroutine?.Stop();
+
+            OnExecutionEnded();
         }
 
-        public virtual IEnumerator HandleCombo()
+        /// <summary>
+        /// called if the action needs to be aborted immediately
+        /// </summary>
+        public virtual void Abort()
+        {
+            _currentComboActionExecuteCoroutine?.Stop();
+            _currentComboActionExecuteCoroutine = null;
+
+            _currentComboAction?.Abort();
+            _currentComboAction = null;
+
+            _comboCoroutine?.Stop();
+            _comboCoroutine = null;
+        }
+
+        /// <summary>
+        /// load animations onto the sprite animator of the owner
+        /// </summary>
+        /// <param name="animator"></param>
+        public virtual void LoadAnimations(ref SpriteAnimator animator)
+        {
+            AnimatedSpriteHelper.LoadAnimationsGlobal(ref animator, PreAttackAnimation, AttackAnimation, PostAttackAnimation);
+
+            if (IsCombo && ComboActions.Count > 0)
+            {
+                foreach (var comboAction in ComboActions)
+                {
+                    if (AllEnemyActions.TryGetBaseEnemyAction(comboAction, out var childAction))
+                        childAction.LoadAnimations(ref animator);
+                    else if (AllPlayerActions.TryGetBasePlayerAction(comboAction, out var playerChildAction))
+                        playerChildAction.LoadAnimations(ref animator);
+                }
+            }
+        }
+
+        /// <summary>
+        /// called once when execution of the action starts
+        /// </summary>
+        protected virtual void OnExecutionStarted() { }
+
+        /// <summary>
+        /// called once when execution of the action ends
+        /// </summary>
+        protected virtual void OnExecutionEnded() { }
+
+        /// <summary>
+        /// handles a combo action container
+        /// </summary>
+        /// <returns></returns>
+        protected IEnumerator HandleCombo()
         {
             foreach (var comboActionString in ComboActions)
             {
                 if (AllEnemyActions.TryCreateEnemyAction(comboActionString, Context, out var enemyChildAction))
                 {
-                    yield return enemyChildAction.Execute();
+                    _currentComboAction = enemyChildAction;
                 }
                 else if (AllPlayerActions.TryCreatePlayerAction(comboActionString, Context, out var playerChildAction))
                 {
-                    yield return playerChildAction.Execute();
+                    _currentComboAction = playerChildAction;
                 }
+
+                _currentComboActionExecuteCoroutine = Game1.StartCoroutine(_currentComboAction.Execute());
+                yield return _currentComboActionExecuteCoroutine;
             }
         }
+
+        /// <summary>
+        /// get data for which direction/entity/position the owner is targeting
+        /// </summary>
+        /// <returns></returns>
+        protected abstract TargetingInfo GetTargetingInfo();
     }
 
     public class TargetingInfo

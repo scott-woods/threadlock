@@ -1,10 +1,14 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 using Nez.Persistence;
 using Nez.Textures;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components.EnemyActions;
@@ -14,13 +18,20 @@ namespace Threadlock.StaticData
 {
     public class Animations
     {
-        static readonly Lazy<Dictionary<string, AnimationConfig2>> _animationDictionary = new Lazy<Dictionary<string, AnimationConfig2>>(() =>
+        static Dictionary<string, AnimationConfig2> _animationDictionary;
+
+        public static async Task InitializeAnimationDictionaryAsync()
+        {
+            _animationDictionary = await LoadAnimationsAsync();
+        }
+
+        static async Task<Dictionary<string, AnimationConfig2>> LoadAnimationsAsync()
         {
             var dict = new Dictionary<string, AnimationConfig2>();
 
             if (File.Exists("Content/Data/Animations.json"))
             {
-                var json = File.ReadAllText("Content/Data/Animations.json");
+                var json = await File.ReadAllTextAsync("Content/Data/Animations.json");
                 var animations = Json.FromJson<AnimationConfig2[]>(json);
 
                 dict = animations.ToDictionary(a => a.Name, a => a);
@@ -37,7 +48,32 @@ namespace Threadlock.StaticData
             }
 
             return dict;
-        });
+        }
+
+        //static readonly Lazy<Dictionary<string, AnimationConfig2>> _animationDictionary = new Lazy<Dictionary<string, AnimationConfig2>>(() =>
+        //{
+        //    var dict = new Dictionary<string, AnimationConfig2>();
+
+        //    if (File.Exists("Content/Data/Animations.json"))
+        //    {
+        //        var json = File.ReadAllText("Content/Data/Animations.json");
+        //        var animations = Json.FromJson<AnimationConfig2[]>(json);
+
+        //        dict = animations.ToDictionary(a => a.Name, a => a);
+
+        //        foreach (var anim in dict.Values)
+        //        {
+        //            //yeah i know this is terrible, my b
+        //            foreach (var kvp in anim.FrameData)
+        //                anim.FrameData[kvp.Key].Frame = kvp.Key;
+
+        //            if (!string.IsNullOrWhiteSpace(anim.Base))
+        //                ApplyInheritance(anim, dict);
+        //        }
+        //    }
+
+        //    return dict;
+        //});
 
         public static bool TryGetAnimationSprites(string name, out Sprite[] sprites, bool global = false)
         {
@@ -46,9 +82,10 @@ namespace Threadlock.StaticData
             if (string.IsNullOrWhiteSpace(name))
                 return false;
 
-            if (_animationDictionary.Value.TryGetValue(name, out var animConfig))
+            if (_animationDictionary.TryGetValue(name, out var animConfig))
             {
-                if (animConfig.UseDirections != null && animConfig.UseDirections.Value)
+                //directional animation won't have any sprites
+                if (animConfig.UseDirections)
                     return false;
 
                 //TODO: figure out how sprite sheets should be exported and read
@@ -65,6 +102,20 @@ namespace Threadlock.StaticData
 
                 sprites = AnimatedSpriteHelper.GetSpriteArrayByRow(allSprites, animConfig.Row ?? 0, frameCount, totalColumns, startFrame);
 
+                if (animConfig.Origin != null)
+                {
+                    for (int i = 0; i < sprites.Length; i++)
+                    {
+                        var sprite = sprites[i];
+                        var origin = animConfig.Origin.Value;
+
+                        if (animConfig.FlipOriginX)
+                            origin.X = animConfig.CellWidth.Value - origin.X;
+
+                        sprite.Origin = origin;
+                    }
+                }
+
                 return true;
             }
 
@@ -78,7 +129,7 @@ namespace Threadlock.StaticData
             if (string.IsNullOrWhiteSpace(name))
                 return false;
 
-            return _animationDictionary.Value.TryGetValue(name, out config);
+            return _animationDictionary.TryGetValue(name, out config);
         }
 
         static void ApplyInheritance(AnimationConfig2 animation, Dictionary<string, AnimationConfig2> animDictionary)
@@ -93,6 +144,7 @@ namespace Threadlock.StaticData
 
                 animation.CellWidth ??= parentAnimation.CellWidth;
                 animation.CellHeight ??= parentAnimation.CellHeight;
+                animation.Origin ??= parentAnimation.Origin;
                 animation.Row ??= parentAnimation.Row;
                 animation.Frames ??= parentAnimation.Frames;
                 animation.Loop ??= parentAnimation.Loop;

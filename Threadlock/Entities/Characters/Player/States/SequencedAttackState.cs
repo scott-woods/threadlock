@@ -117,7 +117,7 @@ namespace Threadlock.Entities.Characters.Player.States
 
                             //stop the action prep coroutine and null out the cloned action
                             prepActionCoroutine?.Stop();
-                            action.Reset();
+                            action.Abort();
                             action = null;
                         }
                     }

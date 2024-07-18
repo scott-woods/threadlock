@@ -10,6 +10,9 @@ using Threadlock.StaticData;
 
 namespace Threadlock.Components
 {
+    /// <summary>
+    /// used to select SelectionComponents
+    /// </summary>
     public class EntitySelector : Component, IUpdatable
     {
         public Color HighlightColor = Color.Yellow;

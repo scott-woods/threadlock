@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,25 +15,29 @@ namespace Threadlock.Components.EnemyActions
 
         public int? CellWidth;
         public int? CellHeight;
+        public Vector2? Origin;
+        public bool FlipX;
+        public bool FlipOriginX;
 
         public int? Row;
         public int? Frames;
         public int? StartFrame;
 
         public bool? Loop;
+        public int? FPS;
 
         public string Base;
         public string ChainTo;
 
         public Dictionary<int, FrameData> FrameData = new Dictionary<int, FrameData>();
 
-        public bool? UseDirections;
+        //directional config only
+        public bool UseDirections;
         public Dictionary<string, string> DirectionalAnimations = new Dictionary<string, string>();
         public DirectionSource DirectionSource;
         public bool CanDirectionChange = true;
-        public bool ShouldFlip;
 
-        public int? FPS;
+        
     }
 
     public enum DirectionSource

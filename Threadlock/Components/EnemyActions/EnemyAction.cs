@@ -74,11 +74,6 @@ namespace Threadlock.Components.EnemyActions
             return true;
         }
 
-        public void Abort(Enemy enemy)
-        {
-
-        }
-
         public Vector2 GetIdealPosition()
         {
             var enemy = Context as Enemy;
@@ -113,9 +108,9 @@ namespace Threadlock.Components.EnemyActions
 
         #region BASIC ACTION
 
-        public override IEnumerator Execute()
+        protected override void OnExecutionEnded()
         {
-            yield return base.Execute();
+            base.OnExecutionEnded();
 
             _isOnCooldown = true;
             Game1.Schedule(Cooldown, timer => _isOnCooldown = false);

@@ -1,5 +1,6 @@
 ﻿using Nez;
 using Nez.Persistence;
+using Nez.Sprites;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -44,6 +45,10 @@ namespace Threadlock.StaticData
             {
                 attack = attack.Clone() as PlayerWeaponAttack;
                 attack.Context = context;
+
+                if (context.TryGetComponent<SpriteAnimator>(out var animator))
+                    attack.LoadAnimations(ref animator);
+
                 return true;
             }
 
@@ -58,6 +63,9 @@ namespace Threadlock.StaticData
             {
                 attack = attack.Clone() as PlayerWeaponAttack;
                 attack.Context = context;
+
+                if (context.TryGetComponent<SpriteAnimator>(out var animator))
+                    attack.LoadAnimations(ref animator);
             }
 
             return attack;

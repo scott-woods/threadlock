@@ -172,7 +172,7 @@ namespace Threadlock.Entities.Characters.Player.States
             _executionCoroutine = null;
 
             //reset/abort action
-            _currentAction?.Reset();
+            _currentAction?.Abort();
             _currentAction = null;
 
             _currentActionSlot = null;

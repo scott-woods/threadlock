@@ -63,13 +63,15 @@ namespace Threadlock.Entities.Characters.Player
         {
             Instance = this;
 
+            
+
             SetTag(EntityTags.EnemyTarget);
 
             //add components
             _mover = AddComponent(new Mover());
             AddComponent(new ProjectileMover());
             _animator = AddComponent(new SpriteAnimator());
-            _animator.SetLocalOffset(DefaultSpriteOffset);
+            //_animator.SetLocalOffset(DefaultSpriteOffset);
             _animator.SetRenderLayer(RenderLayers.YSort);
             _velocityComponent = AddComponent(new VelocityComponent());
             _spriteFlipper = AddComponent(new SpriteFlipper());

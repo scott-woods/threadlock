@@ -8,6 +8,9 @@ using Threadlock.StaticData;
 
 namespace Threadlock.Components
 {
+    /// <summary>
+    /// Added to entities that can be selected in some way by the player
+    /// </summary>
     public class SelectionComponent : Component
     {
         SpriteRenderer _renderer;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nez;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,35 +11,52 @@ using Threadlock.StaticData;
 
 namespace Threadlock
 {
-    public class PlayerWeapon
+    public class PlayerWeapon : Component
     {
         public string Name;
 
-        public PlayerWeaponAttack PrimaryAttack;
-        public PlayerWeaponAttack SecondaryAttack;
+        public List<PlayerWeaponAttack> PrimaryAttack = new List<PlayerWeaponAttack>();
+        public List<PlayerWeaponAttack> SecondaryAttack = new List<PlayerWeaponAttack>();
+
+        public float PostBufferTime;
 
         PlayerWeaponAttack _queuedAttack;
+        ICoroutine _executionCoroutine;
+        int _nextIndex;
+        bool _isInputBuffered = false;
+        List<PlayerWeaponAttack> _activeList;
+        ITimer _bufferTimer;
 
         public PlayerWeapon(PlayerWeaponData data)
         {
             Name = data.Name;
+            PostBufferTime = data.PostBufferTime;
 
-            if (PlayerWeaponAttacks.TryCreatePlayerWeaponAttack(data.PrimaryAttack, Player.Instance, out PrimaryAttack))
-                PrimaryAttack.Button = Controls.Instance.Melee;
-            if (PlayerWeaponAttacks.TryCreatePlayerWeaponAttack(data.SecondaryAttack, Player.Instance, out SecondaryAttack))
-                SecondaryAttack.Button = Controls.Instance.AltAttack;
+            foreach (var attackName in data.PrimaryAttack)
+            {
+                if (PlayerWeaponAttacks.TryCreatePlayerWeaponAttack(attackName, Player.Instance, out var attack))
+                    PrimaryAttack.Add(attack);
+            }
+
+            foreach (var attackName in data.SecondaryAttack)
+            {
+                if (PlayerWeaponAttacks.TryCreatePlayerWeaponAttack(attackName, Player.Instance, out var attack))
+                    SecondaryAttack.Add(attack);
+            }
         }
 
         public bool Poll()
         {
             if (PrimaryAttack != null && Controls.Instance.Melee.IsPressed)
             {
-                _queuedAttack = PrimaryAttack;
+                _activeList = PrimaryAttack;
+                //_queuedAttack = PrimaryAttack[_nextIndex];
                 return true;
             }
             else if (SecondaryAttack != null && Controls.Instance.AltAttack.IsPressed)
             {
-                _queuedAttack = SecondaryAttack;
+                _activeList = SecondaryAttack;
+                //_queuedAttack = SecondaryAttack.First();
                 return true;
             }
 
@@ -47,10 +65,75 @@ namespace Threadlock
 
         public IEnumerator Execute()
         {
-            if (_queuedAttack == null)
-                yield break;
+            //stop the buffer timer if it was running
+            _bufferTimer?.Stop();
 
-            yield return _queuedAttack.Execute();
+            //loop through combo as long as input is buffered
+            _isInputBuffered = true;
+            while (_isInputBuffered)
+            {
+                //set buffer to false
+                _isInputBuffered = false;
+
+                //get the next attack in the active list
+                _queuedAttack = _activeList[_nextIndex];
+
+                //start the attack execution
+                _executionCoroutine = Game1.StartCoroutine(_queuedAttack.Execute());
+
+                //watch for input that would extend the combo
+                if (_queuedAttack.ComboInputDelay.HasValue)
+                    Game1.StartCoroutine(InputWatcher(_queuedAttack.ComboInputDelay.Value));
+
+                //wait for attack execution (may be stopped early by input watcher)
+                yield return _executionCoroutine;
+
+                //null out execution coroutine
+                _executionCoroutine = null;
+
+                //increment index, or set to 0 if at end of combo
+                _nextIndex++;
+                if (_nextIndex >= _activeList.Count)
+                {
+                    _nextIndex = 0;
+                    break;
+                }
+            }
+
+            //start buffer timer. this holds on to our current place in the combo for a short time so it can be continued
+            if (PostBufferTime > 0)
+                _bufferTimer = Game1.Schedule(PostBufferTime, timer => _nextIndex = 0);
+        }
+
+        IEnumerator InputWatcher(float comboInputDelay)
+        {
+            var timer = 0f;
+
+            while (_executionCoroutine != null)
+            {
+                //increment timer
+                timer += Time.DeltaTime;
+
+                //try to get input buffer if haven't already and combo input delay has been reached
+                if (!_isInputBuffered && timer >= comboInputDelay)
+                {
+                    if ((_activeList == PrimaryAttack && Controls.Instance.Melee.IsPressed)
+                        || (_activeList == SecondaryAttack && Controls.Instance.AltAttack.IsPressed))
+                        {
+                        _isInputBuffered = true;
+                    }
+                }
+
+                //if input is buffered and we've reached the time that the current execution can be overriden, do that
+                if (_isInputBuffered && _queuedAttack.ComboStartTime.HasValue && timer >= _queuedAttack.ComboStartTime)
+                {
+                    _executionCoroutine?.Stop();
+                    _executionCoroutine = null;
+                    yield break;
+                }
+
+                yield return null;
+            }
         }
     }
 
@@ -58,7 +141,9 @@ namespace Threadlock
     {
         public string Name;
 
-        public string PrimaryAttack;
-        public string SecondaryAttack;
+        public List<string> PrimaryAttack;
+        public List<string> SecondaryAttack;
+
+        public float PostBufferTime;
     }
 }

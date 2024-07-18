@@ -37,6 +37,7 @@ namespace Threadlock.Entities.Characters.Player
 
             _velocityComponent = Entity.GetComponent<VelocityComponent>();
             _spriteAnimator = Entity.GetComponent<SpriteAnimator>();
+            AnimatedSpriteHelper.LoadAnimation("Player_Roll", ref _spriteAnimator, true);
             _spriteTrail = Entity.GetComponent<SpriteTrail>();
             if (Entity.TryGetComponent<Hurtbox>(out var hurtbox))
                 _hurtbox = hurtbox;
@@ -53,18 +54,14 @@ namespace Threadlock.Entities.Characters.Player
 
             //play sound
             Game1.AudioManager.PlaySound(Content.Audio.Sounds.Player_dash);
-            var animationName = $"Roll{DirectionHelper.GetDirectionStringByVector(_velocityComponent.Direction)}";
-            //if (!Entity.TryGetComponent<Sword>(out var swordAttack))
-            //    animationName += "NoSword";
 
             //start animation
             _spriteAnimator.Color = Color.White * .8f;
-            _spriteAnimator.Play(animationName, SpriteAnimator.LoopMode.Once);
+            AnimatedSpriteHelper.PlayAnimation(ref _spriteAnimator, "Player_Roll");
 
-            //move and handle hurtbox while animation is playing
             var animDuration = AnimatedSpriteHelper.GetAnimationDuration(_spriteAnimator);
             var timer = 0f;
-            while (_spriteAnimator.CurrentAnimationName == animationName && _spriteAnimator.AnimationState != SpriteAnimator.State.Completed)
+            while (AnimatedSpriteHelper.IsAnimationPlaying(_spriteAnimator, "Player_Roll"))
             {
                 //handle timer
                 timer += Time.DeltaTime;

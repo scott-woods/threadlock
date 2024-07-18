@@ -14,6 +14,8 @@
 
     "AttackAnimation": "Player_Thrust",
     "WaitForAttackAnimation": true,
+    "ComboInputDelay": 0.1,
+    "ComboStartTime": 0.05,
     "AttackMovement": {
       "MovementType": "Directional",
       "Speed": 150,
@@ -34,6 +36,8 @@
 
     "AttackAnimation": "Player_Slash",
     "WaitForAttackAnimation": true,
+    "ComboInputDelay": 0.1,
+    "ComboStartTime": 0.05,
     "AttackMovement": {
       "MovementType": "Directional",
       "Speed": 150,
@@ -44,18 +48,23 @@
 
     "Projectiles": [
       {
-        "ProjectileName": "Player_Sword_Thrust"
+        "ProjectileName": "Player_Sword_Thrust",
+        "OffsetDistance": 12
       }
     ]
   },
   {
     "Name": "Player_Sword_Thrust_2",
 
+    "PreAttackAnimation": "Player_ChargeDash",
+    "PreAttackDuration": 0.1,
+
     "AttackAnimation": "Player_Thrust",
     "WaitForAttackAnimation": true,
+    "ComboInputDelay": 0.1,
     "AttackMovement": {
       "MovementType": "Directional",
-      "Speed": 250,
+      "Speed": 350,
       "EaseType": "CubicOut",
       "FinalSpeed": 0,
       "UseAnimationDuration": true
@@ -63,7 +72,8 @@
 
     "Projectiles": [
       {
-        "ProjectileName": "Player_Sword_Thrust"
+        "ProjectileName": "Player_Sword_Thrust",
+        "OffsetDistance": 12
       }
     ]
   }

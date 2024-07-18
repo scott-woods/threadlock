@@ -173,17 +173,6 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             return false;
         }
 
-        public void Reset()
-        {
-            _entitySelector?.RemoveComponent(_entitySelector);
-            _entitySelector = null;
-
-            _selectedEntity = null;
-
-            _simPlayer?.Destroy();
-            _simPlayer = null;
-        }
-
         public Vector2 GetFinalPosition()
         {
             return _selectedPosition;
@@ -191,14 +180,27 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
 
         #region BASIC ACTION
 
-        public override IEnumerator Execute()
+        protected override void OnExecutionStarted()
         {
+            base.OnExecutionStarted();
+
             var apComponent = Context.GetComponent<ApComponent>();
             apComponent.ActionPoints -= ApCost;
 
             _baseEntity = Context;
+        }
 
-            return base.Execute();
+        public override void Abort()
+        {
+            base.Abort();
+
+            _entitySelector?.RemoveComponent(_entitySelector);
+            _entitySelector = null;
+
+            _selectedEntity = null;
+
+            _simPlayer?.Destroy();
+            _simPlayer = null;
         }
 
         protected override TargetingInfo GetTargetingInfo()

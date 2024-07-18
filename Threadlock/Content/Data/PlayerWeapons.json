@@ -2,7 +2,9 @@
   {
     "Name": "Sword",
 
-    "PrimaryAttack": "Player_Sword_Attack",
-    "SecondaryAttack": "Player_Sword_Parry"
+    "PrimaryAttack": [ "Player_Sword_Thrust_1", "Player_Sword_Slash_1", "Player_Sword_Thrust_2" ],
+    "SecondaryAttack": [ "Player_Sword_Parry" ],
+
+    "PostBufferTime": 0.1
   }
 ]
