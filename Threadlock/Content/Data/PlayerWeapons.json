@@ -6,5 +6,11 @@
     "SecondaryAttack": [ "Player_Sword_Parry" ],
 
     "PostBufferTime": 0.1
+  },
+  {
+    "Name": "LuteHammer",
+
+    "PrimaryAttack": [ "Player_StrumLute" ],
+    "SecondaryAttack": [ "Player_SlamLute" ]
   }
 ]

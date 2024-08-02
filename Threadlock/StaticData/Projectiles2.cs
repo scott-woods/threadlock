@@ -105,7 +105,7 @@ namespace Threadlock.StaticData
     {
         public override bool CanConvert(Type objectType)
         {
-            return typeof(IHitEffect2).IsAssignableFrom(objectType);
+            return typeof(HitEffect).IsAssignableFrom(objectType);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -119,7 +119,7 @@ namespace Threadlock.StaticData
             typeString += "HitEffect";
 
             var hitEffectType = Assembly.GetExecutingAssembly().GetTypes()
-                .FirstOrDefault(t => t.Name == typeString && typeof(IHitEffect2).IsAssignableFrom(t));
+                .FirstOrDefault(t => t.Name == typeString && typeof(HitEffect).IsAssignableFrom(t));
 
             if (hitEffectType == null)
                 return null;
@@ -139,9 +139,9 @@ namespace Threadlock.StaticData
             var settings = new JsonSerializerSettings();
             settings.Converters.Add(new Vector2Converter());
 
-            var effect = genericMethod.Invoke(null, new object[] { jObject.ToString(), settings }) as IHitEffect2;
+            var effect = genericMethod.Invoke(null, new object[] { jObject.ToString(), settings }) as HitEffect;
 
-            serializer.Populate(jObject.CreateReader(), effect);
+            //serializer.Populate(jObject.CreateReader(), effect);
             return effect;
         }
 

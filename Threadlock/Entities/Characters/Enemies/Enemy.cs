@@ -75,6 +75,8 @@ namespace Threadlock.Entities.Characters.Enemies
         ICoroutine _handleActionCoroutine;
         bool _isActionFinished = false;
 
+        Mover _mover;
+
         /// <summary>
         /// constructor
         /// </summary>
@@ -104,7 +106,7 @@ namespace Threadlock.Entities.Characters.Enemies
 
 
             //PHYSICS
-            var mover = AddComponent(new Mover());
+            _mover = AddComponent(new Mover());
 
             var projectileMover = AddComponent(new ProjectileMover());
 
@@ -120,7 +122,8 @@ namespace Threadlock.Entities.Characters.Enemies
             var hurtboxCollider = AddComponent(new BoxCollider(config.HurtboxSize.X, config.HurtboxSize.Y));
             hurtboxCollider.IsTrigger = true;
             Flags.SetFlagExclusive(ref hurtboxCollider.PhysicsLayer, PhysicsLayers.EnemyHurtbox);
-            Flags.SetFlagExclusive(ref hurtboxCollider.CollidesWithLayers, PhysicsLayers.PlayerHitbox);
+            //Flags.SetFlagExclusive(ref hurtboxCollider.CollidesWithLayers, PhysicsLayers.PlayerHitbox);
+            hurtboxCollider.CollidesWithLayers = 0;
             var hurtbox = AddComponent(new Hurtbox(hurtboxCollider, 0f, Nez.Content.Audio.Sounds.Chain_bot_damaged));
             hurtbox.Emitter.AddObserver(HurtboxEventTypes.Hit, OnHurtboxHit);
 
@@ -175,6 +178,8 @@ namespace Threadlock.Entities.Characters.Enemies
         public override void Update()
         {
             base.Update();
+
+            _mover.ApplyMovement(Vector2.Zero);
 
             if (!_spawning)
                 _tree.Tick();

@@ -19,21 +19,11 @@ namespace Threadlock
     {
         public string Name;
 
-        public string PreAttackAnimation;
-        public float PreAttackDuration;
-        public bool WaitForPreAttackAnimation;
-        public MovementConfig2 PreAttackMovement;
+        public ActionPhase PreActionPhase;
+        public ActionPhase ActionPhase;
+        public ActionPhase PostActionPhase;
 
-        public string AttackAnimation;
-        public float AttackDuration;
-        public bool WaitForAttackAnimation;
-        public MovementConfig2 AttackMovement;
-        public string AttackSound;
-
-        public string PostAttackAnimation;
-        public float PostAttackDuration;
-        public bool WaitForPostAttackAnimation;
-        public MovementConfig2 PostAttackMovement;
+        public List<string> AttackSounds;
 
         public List<AttackProjectile> Projectiles = new List<AttackProjectile>();
 
@@ -47,6 +37,8 @@ namespace Threadlock
         ICoroutine _currentComboActionExecuteCoroutine;
         ICoroutine _comboCoroutine;
         ICoroutine _movementCoroutine;
+        ActionPhase _currentPhase;
+        ICoroutine _currentActionCoroutine;
 
         /// <summary>
         /// Execute the action
@@ -71,25 +63,13 @@ namespace Threadlock
             var animator = Context.GetComponent<SpriteAnimator>();
             var velocityComponent = Context.GetComponent<VelocityComponent>();
 
-            //if we have a pre attack animation, play it
-            AnimatedSpriteHelper.PlayAnimation(ref animator, PreAttackAnimation);
-
-            //handle pre attack movement
-            if (PreAttackMovement != null)
-                _movementCoroutine = Game1.StartCoroutine(PreAttackMovement.HandleMovement(Context, targetingInfo, PreAttackAnimation));
-
-            //determine how long to wait for pre attack
-            var preAttackAnimDuration = WaitForPreAttackAnimation ? AnimatedSpriteHelper.GetAnimationDuration(animator) : PreAttackDuration;
-            var preAttackTimer = 0f;
-            while ((!WaitForPreAttackAnimation && (preAttackTimer < PreAttackDuration)) || (WaitForPreAttackAnimation && AnimatedSpriteHelper.IsAnimationPlaying(animator, PreAttackAnimation)))
+            //pre action phase
+            if (PreActionPhase != null)
             {
-                preAttackTimer += Time.DeltaTime;
-
-                yield return null;
+                _currentPhase = PreActionPhase;
+                _currentActionCoroutine = Game1.StartCoroutine(PreActionPhase.ExecuteActionPhase(Context, targetingInfo));
+                yield return _currentActionCoroutine;
             }
-
-            //stop pre attack movement if not null
-            _movementCoroutine?.Stop();
 
             //get dir towards target
             var dirTowardsTarget = Vector2.Zero;
@@ -161,41 +141,24 @@ namespace Threadlock
             }
 
             //handle attack sound
-            Game1.AudioManager.PlaySound(AttackSound);
+            if (AttackSounds != null && AttackSounds.Count > 0)
+                Game1.AudioManager.PlaySound(AttackSounds.RandomItem());
 
-            //if we have an attack animation, play it
-            AnimatedSpriteHelper.PlayAnimation(ref animator, AttackAnimation);
-
-            if (AttackMovement != null)
-                _movementCoroutine = Game1.StartCoroutine(AttackMovement.HandleMovement(Context, targetingInfo, AttackAnimation));
-
-            //determine how long to wait for attack
-            var attackAnimDuration = WaitForAttackAnimation ? AnimatedSpriteHelper.GetAnimationDuration(animator) : AttackDuration;
-            var attackTimer = 0f;
-            while ((!WaitForAttackAnimation && (attackTimer < AttackDuration)) || (WaitForAttackAnimation && AnimatedSpriteHelper.IsAnimationPlaying(animator, AttackAnimation)))
+            //action phase
+            if (ActionPhase != null)
             {
-                attackTimer += Time.DeltaTime;
-                yield return null;
+                _currentPhase = ActionPhase;
+                _currentActionCoroutine = Game1.StartCoroutine(ActionPhase.ExecuteActionPhase(Context, targetingInfo));
+                yield return _currentActionCoroutine;
             }
 
-            _movementCoroutine?.Stop();
-
-            //if we have a post attack animation, play it
-            AnimatedSpriteHelper.PlayAnimation(ref animator, PostAttackAnimation);
-
-            if (PostAttackMovement != null)
-                _movementCoroutine = Game1.StartCoroutine(PostAttackMovement?.HandleMovement(Context, targetingInfo, PostAttackAnimation));
-
-            //determine how long to wait for post attack
-            var postAttackAnimDuration = WaitForPostAttackAnimation ? AnimatedSpriteHelper.GetAnimationDuration(animator) : PostAttackDuration;
-            var postAttackTimer = 0f;
-            while ((!WaitForPostAttackAnimation && (postAttackTimer < PostAttackDuration)) || (WaitForPostAttackAnimation && AnimatedSpriteHelper.IsAnimationPlaying(animator, PostAttackAnimation)))
+            //post action phase
+            if (PostActionPhase != null)
             {
-                postAttackTimer += Time.DeltaTime;
-                yield return null;
+                _currentPhase = PostActionPhase;
+                _currentActionCoroutine = Game1.StartCoroutine(PostActionPhase.ExecuteActionPhase(Context, targetingInfo));
+                yield return _currentActionCoroutine;
             }
-
-            _movementCoroutine?.Stop();
 
             OnExecutionEnded();
         }
@@ -214,6 +177,12 @@ namespace Threadlock
             _comboCoroutine?.Stop();
             _comboCoroutine = null;
 
+            _currentPhase?.Abort();
+            _currentPhase = null;
+
+            _currentActionCoroutine?.Stop();
+            _currentActionCoroutine = null;
+
             _movementCoroutine?.Stop();
             _movementCoroutine = null;
         }
@@ -224,7 +193,9 @@ namespace Threadlock
         /// <param name="animator"></param>
         public virtual void LoadAnimations(ref SpriteAnimator animator)
         {
-            AnimatedSpriteHelper.LoadAnimationsGlobal(ref animator, PreAttackAnimation, AttackAnimation, PostAttackAnimation);
+            PreActionPhase?.LoadAnimations(animator);
+            ActionPhase?.LoadAnimations(animator);
+            PostActionPhase?.LoadAnimations(animator);
 
             if (IsCombo && ComboActions.Count > 0)
             {
@@ -284,34 +255,93 @@ namespace Threadlock
         public Entity TargetEntity;
     }
 
+    public class ActionPhase
+    {
+        public string Animation;
+        public MovementConfig2 Movement;
+        public float Duration;
+
+        public bool WaitForAnimation;
+        public bool WaitForMovement;
+
+        ICoroutine _animationCoroutine;
+        ICoroutine _movementCoroutine;
+
+        public IEnumerator ExecuteActionPhase(Entity entity, TargetingInfo targetingInfo)
+        {
+            //retrieve animator
+            var animator = entity.GetComponent<SpriteAnimator>();
+
+            //play animation
+            var isAnimationCompleted = false;
+            if (!string.IsNullOrWhiteSpace(Animation))
+            {
+                _animationCoroutine = Game1.StartCoroutine(CoroutineHelper.CoroutineWrapper(AnimatedSpriteHelper.WaitForAnimation(animator, Animation), () => isAnimationCompleted = true));
+            }
+
+            //start movement
+            var isMovementCompleted = false;
+            if (Movement != null)
+            {
+                _movementCoroutine= Game1.StartCoroutine(CoroutineHelper.CoroutineWrapper(Movement.HandleMovement(entity, targetingInfo), () => isMovementCompleted = true));
+            }
+
+            //wait for specified duration, checking if animation or movement is done if necessary
+            var timer = 0f;
+            while (timer < Duration || (WaitForAnimation && !isAnimationCompleted) || (WaitForMovement && !isMovementCompleted))
+            {
+                timer += Time.DeltaTime;
+                yield return null;
+            }
+        }
+
+        public void Abort()
+        {
+            _animationCoroutine?.Stop();
+            _animationCoroutine = null;
+
+            _movementCoroutine?.Stop();
+            _movementCoroutine = null;
+        }
+
+        public void LoadAnimations(SpriteAnimator animator)
+        {
+            AnimatedSpriteHelper.LoadAnimation(Animation, ref animator, true);
+        }
+    }
+
     public class MovementConfig2
     {
         public MovementType2 MovementType;
         public float Speed;
         public float? FinalSpeed;
+        public float? TimeToFinalSpeed;
         public EaseType EaseType;
         public float Duration;
         public bool UseAnimationDuration = true;
 
-        public IEnumerator HandleMovement(Entity entity, TargetingInfo targetingInfo, string animation)
+        public IEnumerator HandleMovement(Entity entity, TargetingInfo targetingInfo)
         {
             //handle instant movement
             if (MovementType == MovementType2.Instant)
             {
                 if (targetingInfo.Position != null)
                     entity.Position = targetingInfo.Position.Value;
+
                 yield break;
             }
 
             //get velocity component
             var velocityComponent = entity.GetComponent<VelocityComponent>();
             if (velocityComponent == null)
+            {
                 yield break;
+            }
 
             //determine duration (use animation duration or specified)
             var duration = Duration;
-            if (UseAnimationDuration && entity.TryGetComponent<SpriteAnimator>(out var animator))
-                duration = AnimatedSpriteHelper.GetAnimationDuration(animator);
+            //if (UseAnimationDuration && entity.TryGetComponent<SpriteAnimator>(out var animator))
+            //    duration = AnimatedSpriteHelper.GetAnimationDuration(animator);
 
             var initialSpeed = 0f;
             var dir = Vector2.Zero;
@@ -319,27 +349,36 @@ namespace Threadlock
             {
                 case MovementType2.ToPoint:
                     if (targetingInfo.Position == null)
+                    {
                         yield break;
+                    }
                     var dist = Vector2.Distance(targetingInfo.Position.Value, entity.Position);
                     initialSpeed = dist / duration;
                     dir = targetingInfo.Direction != null ? targetingInfo.Direction.Value : (targetingInfo.Position.Value - entity.Position);
                     break;
                 case MovementType2.Directional:
-                    initialSpeed = Speed;
+                    initialSpeed = Math.Abs(Speed);
                     if (targetingInfo.Direction == null)
+                    {
                         yield break;
+                    }
                     dir = targetingInfo.Direction.Value;
                     break;
                 case MovementType2.DirectionalReverse:
-                    initialSpeed = Speed;
+                    initialSpeed = Math.Abs(Speed);
                     if (targetingInfo.Direction == null)
+                    {
                         yield break;
+                    }
                     dir = targetingInfo.Direction.Value * -1;
                     break;
             }
 
             if (dir != Vector2.Zero)
                 dir.Normalize();
+
+            if (Speed < 0)
+                dir *= -1;
 
             var timer = 0f;
             while (timer < duration)
@@ -348,7 +387,14 @@ namespace Threadlock
 
                 var speed = initialSpeed;
                 if (FinalSpeed.HasValue)
-                    speed = Lerps.Ease(EaseType, speed, FinalSpeed.Value, timer, duration);
+                {
+                    var timeToFinalSpeed = TimeToFinalSpeed != null ? TimeToFinalSpeed.Value : duration;
+                    if (timer >= timeToFinalSpeed)
+                        speed = FinalSpeed.Value;
+                    else
+                        speed = Lerps.Ease(EaseType, speed, FinalSpeed.Value, timer, timeToFinalSpeed);
+                }
+
                 velocityComponent.Move(dir, speed, true);
 
                 yield return null;

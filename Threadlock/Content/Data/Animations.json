@@ -189,8 +189,7 @@
   },
   {
     "Name": "Player_DashAttack_Down",
-    "Base": "Player_Thrust_Down",
-    
+    "Base": "Player_Thrust_Down"
   },
   {
     "Name": "Player_ChargeDash_Down",

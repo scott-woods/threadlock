@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "array",
+  "items": {
+    "$ref": "#/definitions/Anonymous"
+  },
+  "definitions": {
+    "PrimaryAttack": {
+      "type": "string"
+    },
+    "SecondaryAttack": {
+      "type": "string"
+    },
+    "Anonymous3": {
+      "type": "string"
+    },
+    "Anonymous4": {
+      "type": "string"
+    },
+    "Anonymous": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "PrimaryAttack": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PrimaryAttack"
+          }
+        },
+        "SecondaryAttack": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SecondaryAttack"
+          }
+        },
+        "PostBufferTime": {
+          "type": "number"
+        }
+      }
+    }
+  }
+}

@@ -5,8 +5,10 @@
     "MaxDistance": 16,
     "MaxAngle": 45,
 
-    "AttackAnimation": "Ghoul_Swipe",
-    "WaitForAttackAnimation": true,
+    "ActionPhase": {
+      "Animation": "Ghoul_Swipe",
+      "WaitForAnimation": true
+    },
 
     "Projectiles": [
       {
@@ -23,11 +25,15 @@
     "RequiresLoS": true,
     "MaxDistance": 128,
 
-    "PreAttackAnimation": "Spitter_Charge",
-    "WaitForPreAttackAnimation": true,
+    "PreActionPhase": {
+      "Animation": "Spitter_Charge",
+      "WaitForAnimation": true
+    },
 
-    "AttackAnimation": "Spitter_Spit",
-    "WaitForAttackAnimation": true,
+    "ActionPhase": {
+      "Animation": "Spitter_Spit",
+      "WaitForAnimation": true
+    },
 
     "Projectiles": [
       {
@@ -42,8 +48,10 @@
     "MinDistance": 64,
     "MaxDistance": 128,
 
-    "AttackAnimation": "OrbMage_Spike",
-    "WaitForAttackAnimation": true,
+    "ActionPhase": {
+      "Animation": "OrbMage_Spike",
+      "WaitForAnimation": true
+    },
 
     "Cooldown": 3,
 
@@ -61,11 +69,15 @@
 
     "MaxDistance": 64,
 
-    "PreAttackAnimation": "OrbMage_PreSweep",
-    "WaitForPreAttackAnimation": true,
+    "PreActionPhase": {
+      "Animation": "OrbMage_PreSweep",
+      "WaitForAnimation": true
+    },
 
-    "AttackAnimation": "OrbMage_Sweep",
-    "WaitForAttackAnimation": true,
+    "ActionPhase": {
+      "Animation": "OrbMage_Sweep",
+      "WaitForAnimation": true
+    },
 
     "Projectiles": [
       {
@@ -81,11 +93,15 @@
   {
     "Name": "ChainBot_Melee1",
 
-    "PreAttackAnimation": "ChainBot_TransitionToCharge",
-    "PreAttackDuration": 0.4,
+    "PreActionPhase": {
+      "Animation": "ChainBot_TransitionToCharge",
+      "Duration": 0.4
+    },
 
-    "AttackAnimation": "ChainBot_Melee1",
-    "WaitForAttackAnimation": true,
+    "ActionPhase": {
+      "Animation": "ChainBot_Melee1",
+      "WaitForAnimation": true
+    },
 
     "Projectiles": [
       {
@@ -100,8 +116,10 @@
   {
     "Name": "ChainBot_Melee2",
 
-    "AttackAnimation": "ChainBot_Melee2",
-    "WaitForAttackAnimation": true,
+    "ActionPhase": {
+      "Animation": "ChainBot_Melee2",
+      "WaitForAnimation": true
+    },
 
     "Projectiles": [
       {
@@ -128,15 +146,16 @@
 
     "MaxDistance": 24,
 
-    "AttackAnimation": "Assassin_Slice1",
-    "AttackDuration": 0.6,
-    "AttackMovement": {
-      "MovementType": "Directional",
-      "Speed": 450,
-      "FinalSpeed": 0,
-      "EaseType": "ExpoOut",
-      "UseAnimationDuration": false,
-      "Duration": 0.4
+    "ActionPhase": {
+      "Animation": "Assassin_Slice1",
+      "Duration": 0.6,
+      "Movement": {
+        "MovementType": "Directional",
+        "Speed": 450,
+        "FinalSpeed": 0,
+        "EaseType": "ExpoOut",
+        "Duration": 0.4
+      }
     },
 
     "Projectiles": [
@@ -151,15 +170,16 @@
 
     "MaxDistance": 24,
 
-    "AttackAnimation": "Assassin_Slice2",
-    "AttackDuration": 0.6,
-    "AttackMovement": {
-      "MovementType": "Directional",
-      "Speed": 520,
-      "FinalSpeed": 0,
-      "EaseType": "ExpoOut",
-      "UseAnimationDuration": false,
-      "Duration": 0.4
+    "ActionPhase": {
+      "Animation": "Assassin_Slice2",
+      "Duration": 0.6,
+      "Movement": {
+        "MovementType": "Directional",
+        "Speed": 520,
+        "FinalSpeed": 0,
+        "EaseType": "ExpoOut",
+        "Duration": 0.4
+      }
     },
 
     "Projectiles": [
@@ -183,26 +203,28 @@
 
     "MaxDistance": 64,
 
-    "PreAttackAnimation": "Assassin_DashSliceCharge",
-    "PreAttackDuration": 0.8,
-    "PreAttackMovement": {
-      "MovementType": "DirectionalReverse",
-      "Speed": 400,
-      "FinalSpeed": 0,
-      "EaseType": "QuartOut",
-      "UseAnimationDuration": false,
-      "Duration": 0.65
+    "PreActionPhase": {
+      "Animation": "Assassin_DashSliceCharge",
+      "Duration": 0.8,
+      "Movement": {
+        "MovementType": "Directional",
+        "Speed": -400,
+        "FinalSpeed": 0,
+        "EaseType": "QuartOut",
+        "Duration": 0.65
+      }
     },
 
-    "AttackAnimation": "Assassin_DashSlice",
-    "WaitForAttackAnimation": true,
-    "AttackMovement": {
-      "MovementType": "Directional",
-      "Speed": 2000,
-      "FinalSpeed": 0,
-      "EaseType": "ExpoOut",
-      "UseAnimationDuration": false,
-      "Duration": 0.4
+    "ActionPhase": {
+      "Animation": "Assassin_DashSlice",
+      "WaitForAnimation": true,
+      "Movement": {
+        "MovementType": "Directional",
+        "Speed": 2000,
+        "FinalSpeed": 0,
+        "EaseType": "ExpoOut",
+        "Duration": 0.4
+      }
     },
 
     "Projectiles": [
@@ -214,10 +236,14 @@
   {
     "Name": "Assassin_Execute",
 
-    "PreAttackDuration": 0.5,
+    "PreActionPhase": {
+      "Duration": 0.5
+    },
 
-    "AttackAnimation": "Assassin_Execute",
-    "AttackDuration": 1,
+    "ActionPhase": {
+      "Animation": "Assassin_Execute",
+      "Duration": 1
+    },
 
     "Projectiles": [
       {

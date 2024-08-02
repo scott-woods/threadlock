@@ -716,10 +716,10 @@
                 260
             ],
             "scale": 0.75,
-            "selectedLayer": 0,
+            "selectedLayer": 9,
             "viewCenter": {
-                "x": 255.99999999999997,
-                "y": 272
+                "x": 183.33333333333331,
+                "y": 53.33333333333337
             }
         },
         "Tilemaps/enemy_test_zone.tmx": {

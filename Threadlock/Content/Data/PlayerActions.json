@@ -7,12 +7,13 @@
 
     "ChargeAnimation": "Player_ChargeDash",
 
-    "AttackAnimation": "Player_DashAttack",
-    "WaitForAttackAnimation": true,
-    "AttackMovement": {
-      "MovementType": "ToPoint",
-      "Duration": 0.05,
-      "UseAnimationDuration": false
+    "ActionPhase": {
+      "Animation": "Player_DashAttack",
+      "WaitForAnimation": true,
+      "Movement": {
+        "MovementType": "ToPoint",
+        "Duration": 0.05
+      }
     },
 
     "ConfirmType": "ClosestFloorPosition",
@@ -46,13 +47,13 @@
     "CanPassThroughWalls": true,
     "CanAimInsideWalls": false,
 
-    "AttackMovement": {
-      "MovementType": "Instant",
-      "Duration": 0,
-      "UseAnimationDuration": false
+    "ActionPhase": {
+      "Movement": {
+        "MovementType": "Instant"
+      }
     },
 
-    "AttackSound": "Content/Audio/Sounds/player_teleport.wav",
+    "AttackSounds": [ "Content/Audio/Sounds/player_teleport.wav" ],
 
     "ShowSim": true,
     "SimType": "AttachToCursor",
@@ -76,9 +77,11 @@
       }
     ],
 
-    "AttackAnimation": "Player_Slash",
-    "WaitForAttackAnimation": true,
+    "ActionPhase": {
+      "Animation": "Player_Slash",
+      "WaitForAnimation": true
+    },
 
-    "AttackSound": "Content/Audio/Sounds/big_lightning.wav"
+    "AttackSounds": [ "Content/Audio/Sounds/big_lightning.wav" ]
   }
 ]

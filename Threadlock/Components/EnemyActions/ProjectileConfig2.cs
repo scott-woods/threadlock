@@ -1,9 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
+using Nez.Tweens;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Threadlock.StaticData;
 
 namespace Threadlock.Components.EnemyActions
@@ -14,13 +11,9 @@ namespace Threadlock.Components.EnemyActions
 
         public int Damage;
 
-        public bool AffectsPlayer;
-        public bool AffectsEnemies;
-        public bool DestroyOnWalls;
-
         public bool AttachToOwner;
 
-        public int Radius;
+        public int? Radius;
         public Vector2 Size;
         public List<Vector2> Points = new List<Vector2>();
 
@@ -38,20 +31,48 @@ namespace Threadlock.Components.EnemyActions
 
         public float HitboxActiveDuration;
 
+        /// <summary>
+        /// List of animations to choose from for when this projectile is destroyed
+        /// </summary>
         public List<string> DestroyAnimations = new List<string>();
 
-        public List<IHitEffect2> HitEffects = new List<IHitEffect2>();
+        /// <summary>
+        /// hit effects when hitting a specific layer
+        /// </summary>
+        public List<HitEffect> HitEffects = new List<HitEffect>();
+        /// <summary>
+        /// hit vfx when hitting something
+        /// </summary>
         public List<string> HitVfx = new List<string>();
+
+        public List<string> PhysicsLayers = new List<string>();
+        public bool AffectsPlayer;
+        public bool AffectsEnemies;
+
+        public bool DestroyOnHit;
+
+        public bool DestroyOnWalls;
     }
 
     public class StraightProjectileConfig : ProjectileConfig2
     {
         public float Speed;
+        public float? InitialSpeed;
+        public float? TimeToFinalSpeed;
+        public EaseType? EaseType;
     }
 
     public class InstantProjectileConfig : ProjectileConfig2
     {
         public string PreAttackAnimation;
         public string AttackAnimation;
+    }
+
+    public class ExplosionProjectileConfig : ProjectileConfig2
+    {
+        public float ExplosionTime;
+        public EaseType EaseType;
+        public float InitialRadius;
+        public float FinalRadius;
     }
 }

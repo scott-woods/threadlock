@@ -146,4 +146,5 @@
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="xcopy /y /d &quot;$(ProjectDir)fnalibs\x64\*.dll&quot; &quot;$(ProjectDir)$(OutDir)&quot;" />
   </Target>
+  <ProjectExtensions><VisualStudio><UserProperties content_4data_4animations_1json__JsonSchema="..\..\Schemas\Animations.schema.json" content_4data_4playerweapons_1json__JsonSchema="..\..\Schemas\PlayerWeapons.schema.json" schemas_4playerweapons_1schema_1json__JsonSchema="&quot;type&quot;: &quot;array&quot;," /></VisualStudio></ProjectExtensions>
 </Project>

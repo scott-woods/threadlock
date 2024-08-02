@@ -95,7 +95,7 @@ namespace Threadlock.Entities.Characters.Player
             Flags.SetFlagExclusive(ref hurtboxCollider.PhysicsLayer, PhysicsLayers.PlayerHurtbox);
             hurtboxCollider.CollidesWithLayers = 0;
             Flags.SetFlag(ref hurtboxCollider.CollidesWithLayers, PhysicsLayers.PromptTrigger);
-            Flags.SetFlag(ref hurtboxCollider.CollidesWithLayers, PhysicsLayers.EnemyHitbox);
+            //Flags.SetFlag(ref hurtboxCollider.CollidesWithLayers, PhysicsLayers.EnemyHitbox);
             //Flags.SetFlagExclusive(ref hurtboxCollider.CollidesWithLayers, PhysicsLayers.EnemyHitbox);
             _hurtbox = AddComponent(new Hurtbox(hurtboxCollider, 2f, Nez.Content.Audio.Sounds._64_Get_hit_03));
 

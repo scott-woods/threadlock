@@ -1,19 +1,12 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Nez;
+﻿using Nez;
 using Nez.Systems;
-using Nez.UI;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Threadlock.Components.Hitboxes;
 using Threadlock.DebugTools;
 using Threadlock.Entities;
 using Threadlock.Entities.Characters.Player;
 using Threadlock.Models;
-using Threadlock.StaticData;
 
 namespace Threadlock.Components
 {
@@ -34,6 +27,8 @@ namespace Threadlock.Components
         string _damageSound;
         List<string> _recentAttackIds = new List<string>();
         ITimer _recoveryTimer;
+
+        ColliderTriggerHelper _triggerHelper;
 
         public Hurtbox(Collider collider, float recoveryTime)
         {
@@ -57,6 +52,8 @@ namespace Threadlock.Components
 
             if (Entity.TryGetComponent<DeathComponent>(out var dc))
                 dc.Emitter.AddObserver(DeathEventTypes.Started, OnDeathStarted);
+
+            _triggerHelper = new ColliderTriggerHelper(Entity);
         }
 
         public override void OnRemovedFromEntity()
@@ -83,11 +80,12 @@ namespace Threadlock.Components
 
         public void Update()
         {
-            var colliders = Physics.BoxcastBroadphaseExcludingSelf(_collider, _collider.CollidesWithLayers);
-            foreach (var collider in colliders)
-            {
-                OnTriggerEnter(collider, _collider);
-            }
+            //_triggerHelper.Update();
+            //var colliders = Physics.BoxcastBroadphaseExcludingSelf(_collider, _collider.CollidesWithLayers);
+            //foreach (var collider in colliders)
+            //{
+            //    OnTriggerEnter(collider, _collider);
+            //}
         }
 
         #endregion
