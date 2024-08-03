@@ -4,8 +4,8 @@ using Nez.Systems;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Threadlock.Actions;
 using Threadlock.DebugTools;
-using Threadlock.Entities.Characters.Player.PlayerActions;
 using Threadlock.SaveData;
 using Threadlock.StaticData;
 

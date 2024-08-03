@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
-using Threadlock.Components.EnemyActions;
 
 namespace Threadlock.Models
 {

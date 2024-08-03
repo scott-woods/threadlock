@@ -1,11 +1,8 @@
 ﻿using Nez.AI.BehaviorTrees;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using Threadlock.Components;
-using Threadlock.Components.EnemyActions;
 using Threadlock.Entities.Characters.Enemies;
-using Threadlock.Helpers;
 
 namespace Threadlock.StaticData
 {

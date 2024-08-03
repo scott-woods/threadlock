@@ -1,22 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez;
-using Nez.Sprites;
 using Nez.Textures;
-using Threadlock.StaticData;
-using Threadlock.Helpers;
-using System;
+using Nez.Tiled;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Threadlock.PostProcessors;
 using Threadlock.Components;
 using Threadlock.Entities;
 using Threadlock.Renderers;
-using Nez.DeferredLighting;
-using Nez.Tiled;
 using Threadlock.SceneComponents.Dungenerator;
+using Threadlock.StaticData;
 
 namespace Threadlock.Scenes
 {

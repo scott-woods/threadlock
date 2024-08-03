@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Threadlock.Components.EnemyActions;
+using Threadlock.Actions;
 
 namespace Threadlock.StaticData
 {

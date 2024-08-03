@@ -8,7 +8,7 @@ using Threadlock.Entities.Characters.Player;
 using Threadlock.Helpers;
 using Threadlock.StaticData;
 
-namespace Threadlock
+namespace Threadlock.Actions
 {
     public class PlayerWeaponAttack : BasicAction, ICloneable
     {
@@ -33,7 +33,7 @@ namespace Threadlock
 
         public object Clone()
         {
-            return this.MemberwiseClone();
+            return MemberwiseClone();
         }
 
         #endregion

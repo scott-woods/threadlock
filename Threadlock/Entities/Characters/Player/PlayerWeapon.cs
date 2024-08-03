@@ -5,11 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Threadlock.Entities.Characters.Player;
+using Threadlock.Actions;
 using Threadlock.SaveData;
 using Threadlock.StaticData;
 
-namespace Threadlock
+namespace Threadlock.Entities.Characters.Player
 {
     public class PlayerWeapon : Component
     {
@@ -79,11 +79,11 @@ namespace Threadlock
                 _queuedAttack = _activeList[_nextIndex];
 
                 //start the attack execution
-                _executionCoroutine = Game1.StartCoroutine(_queuedAttack.Execute());
+                _executionCoroutine = Core.StartCoroutine(_queuedAttack.Execute());
 
                 //watch for input that would extend the combo
                 if (_queuedAttack.ComboInputDelay.HasValue)
-                    Game1.StartCoroutine(InputWatcher(_queuedAttack.ComboInputDelay.Value));
+                    Core.StartCoroutine(InputWatcher(_queuedAttack.ComboInputDelay.Value));
 
                 //wait for attack execution (may be stopped early by input watcher)
                 yield return _executionCoroutine;
@@ -102,7 +102,7 @@ namespace Threadlock
 
             //start buffer timer. this holds on to our current place in the combo for a short time so it can be continued
             if (PostBufferTime > 0)
-                _bufferTimer = Game1.Schedule(PostBufferTime, timer => _nextIndex = 0);
+                _bufferTimer = Core.Schedule(PostBufferTime, timer => _nextIndex = 0);
         }
 
         IEnumerator InputWatcher(float comboInputDelay)
@@ -117,9 +117,9 @@ namespace Threadlock
                 //try to get input buffer if haven't already and combo input delay has been reached
                 if (!_isInputBuffered && timer >= comboInputDelay)
                 {
-                    if ((_activeList == PrimaryAttack && Controls.Instance.Melee.IsPressed)
-                        || (_activeList == SecondaryAttack && Controls.Instance.AltAttack.IsPressed))
-                        {
+                    if (_activeList == PrimaryAttack && Controls.Instance.Melee.IsPressed
+                        || _activeList == SecondaryAttack && Controls.Instance.AltAttack.IsPressed)
+                    {
                         _isInputBuffered = true;
                     }
                 }

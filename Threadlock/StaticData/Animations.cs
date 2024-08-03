@@ -1,38 +1,33 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
 using Nez.Persistence;
 using Nez.Textures;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
-using Threadlock.Components.EnemyActions;
 using Threadlock.Helpers;
+using Threadlock.Models;
 
 namespace Threadlock.StaticData
 {
     public class Animations
     {
-        static Dictionary<string, AnimationConfig2> _animationDictionary;
+        static Dictionary<string, AnimationConfig> _animationDictionary;
 
         public static async Task InitializeAnimationDictionaryAsync()
         {
             _animationDictionary = await LoadAnimationsAsync();
         }
 
-        static async Task<Dictionary<string, AnimationConfig2>> LoadAnimationsAsync()
+        static async Task<Dictionary<string, AnimationConfig>> LoadAnimationsAsync()
         {
-            var dict = new Dictionary<string, AnimationConfig2>();
+            var dict = new Dictionary<string, AnimationConfig>();
 
             if (File.Exists("Content/Data/Animations.json"))
             {
                 var json = await File.ReadAllTextAsync("Content/Data/Animations.json");
-                var animations = Json.FromJson<AnimationConfig2[]>(json);
+                var animations = Json.FromJson<AnimationConfig[]>(json);
 
                 dict = animations.ToDictionary(a => a.Name, a => a);
 
@@ -122,7 +117,7 @@ namespace Threadlock.StaticData
             return false;
         }
 
-        public static bool TryGetAnimationConfig(string name, out AnimationConfig2 config)
+        public static bool TryGetAnimationConfig(string name, out AnimationConfig config)
         {
             config = null;
 
@@ -132,7 +127,7 @@ namespace Threadlock.StaticData
             return _animationDictionary.TryGetValue(name, out config);
         }
 
-        static void ApplyInheritance(AnimationConfig2 animation, Dictionary<string, AnimationConfig2> animDictionary)
+        static void ApplyInheritance(AnimationConfig animation, Dictionary<string, AnimationConfig> animDictionary)
         {
             if (string.IsNullOrWhiteSpace(animation.Base))
                 return;
@@ -160,5 +155,41 @@ namespace Threadlock.StaticData
                 }
             }
         }
+    }
+
+    public class AnimationConfig
+    {
+        public string Name;
+        public string Path;
+
+        public int? CellWidth;
+        public int? CellHeight;
+        public Vector2? Origin;
+        public bool FlipX;
+        public bool FlipOriginX;
+
+        public int? Row;
+        public int? Frames;
+        public int? StartFrame;
+
+        public bool? Loop;
+        public int? FPS;
+
+        public string Base;
+        public string ChainTo;
+
+        public Dictionary<int, FrameData> FrameData = new Dictionary<int, FrameData>();
+
+        //directional config only
+        public bool UseDirections;
+        public Dictionary<string, string> DirectionalAnimations = new Dictionary<string, string>();
+        public DirectionSource DirectionSource;
+        public bool CanDirectionChange = true;
+    }
+
+    public enum DirectionSource
+    {
+        Velocity,
+        Aiming
     }
 }

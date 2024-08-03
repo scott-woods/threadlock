@@ -7,13 +7,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Threadlock.Components;
-using Threadlock.Components.EnemyActions;
 using Threadlock.Entities;
 using Threadlock.Helpers;
 using Threadlock.StaticData;
 using Random = Nez.Random;
 
-namespace Threadlock
+namespace Threadlock.Actions
 {
     public abstract class BasicAction
     {
@@ -50,7 +49,7 @@ namespace Threadlock
 
             if (IsCombo)
             {
-                _comboCoroutine = Game1.StartCoroutine(HandleCombo());
+                _comboCoroutine = Core.StartCoroutine(HandleCombo());
                 yield return _comboCoroutine;
 
                 yield break;
@@ -67,7 +66,7 @@ namespace Threadlock
             if (PreActionPhase != null)
             {
                 _currentPhase = PreActionPhase;
-                _currentActionCoroutine = Game1.StartCoroutine(PreActionPhase.ExecuteActionPhase(Context, targetingInfo));
+                _currentActionCoroutine = Core.StartCoroutine(PreActionPhase.ExecuteActionPhase(Context, targetingInfo));
                 yield return _currentActionCoroutine;
             }
 
@@ -109,7 +108,7 @@ namespace Threadlock
                     pos += attackProjectile.EntityOffset;
 
                     //add offset to starting pos
-                    pos += (dirTowardsTarget * attackProjectile.OffsetDistance);
+                    pos += dirTowardsTarget * attackProjectile.OffsetDistance;
 
                     //add more offset if we should predict the target
                     if (attackProjectile.PredictTarget && targetingInfo.TargetEntity != null)
@@ -118,7 +117,7 @@ namespace Threadlock
                         {
                             var predictDir = vc.Direction;
                             var predictOffset = Random.Range(attackProjectile.MinPredictionOffset, attackProjectile.MaxPredictionOffset);
-                            pos += (predictDir * predictOffset);
+                            pos += predictDir * predictOffset;
                         }
                     }
 
@@ -134,7 +133,7 @@ namespace Threadlock
 
                     //add to scene either after delay or immediately
                     if (attackProjectile.Delay > 0)
-                        Game1.Schedule(attackProjectile.Delay, timer => Context.Scene.AddEntity(projectileEntity));
+                        Core.Schedule(attackProjectile.Delay, timer => Context.Scene.AddEntity(projectileEntity));
                     else
                         Context.Scene.AddEntity(projectileEntity);
                 }
@@ -148,7 +147,7 @@ namespace Threadlock
             if (ActionPhase != null)
             {
                 _currentPhase = ActionPhase;
-                _currentActionCoroutine = Game1.StartCoroutine(ActionPhase.ExecuteActionPhase(Context, targetingInfo));
+                _currentActionCoroutine = Core.StartCoroutine(ActionPhase.ExecuteActionPhase(Context, targetingInfo));
                 yield return _currentActionCoroutine;
             }
 
@@ -156,7 +155,7 @@ namespace Threadlock
             if (PostActionPhase != null)
             {
                 _currentPhase = PostActionPhase;
-                _currentActionCoroutine = Game1.StartCoroutine(PostActionPhase.ExecuteActionPhase(Context, targetingInfo));
+                _currentActionCoroutine = Core.StartCoroutine(PostActionPhase.ExecuteActionPhase(Context, targetingInfo));
                 yield return _currentActionCoroutine;
             }
 
@@ -236,7 +235,7 @@ namespace Threadlock
                     _currentComboAction = playerChildAction;
                 }
 
-                _currentComboActionExecuteCoroutine = Game1.StartCoroutine(_currentComboAction.Execute());
+                _currentComboActionExecuteCoroutine = Core.StartCoroutine(_currentComboAction.Execute());
                 yield return _currentComboActionExecuteCoroutine;
             }
         }
@@ -276,19 +275,19 @@ namespace Threadlock
             var isAnimationCompleted = false;
             if (!string.IsNullOrWhiteSpace(Animation))
             {
-                _animationCoroutine = Game1.StartCoroutine(CoroutineHelper.CoroutineWrapper(AnimatedSpriteHelper.WaitForAnimation(animator, Animation), () => isAnimationCompleted = true));
+                _animationCoroutine = Core.StartCoroutine(CoroutineHelper.CoroutineWrapper(AnimatedSpriteHelper.WaitForAnimation(animator, Animation), () => isAnimationCompleted = true));
             }
 
             //start movement
             var isMovementCompleted = false;
             if (Movement != null)
             {
-                _movementCoroutine= Game1.StartCoroutine(CoroutineHelper.CoroutineWrapper(Movement.HandleMovement(entity, targetingInfo), () => isMovementCompleted = true));
+                _movementCoroutine = Core.StartCoroutine(CoroutineHelper.CoroutineWrapper(Movement.HandleMovement(entity, targetingInfo), () => isMovementCompleted = true));
             }
 
             //wait for specified duration, checking if animation or movement is done if necessary
             var timer = 0f;
-            while (timer < Duration || (WaitForAnimation && !isAnimationCompleted) || (WaitForMovement && !isMovementCompleted))
+            while (timer < Duration || WaitForAnimation && !isAnimationCompleted || WaitForMovement && !isMovementCompleted)
             {
                 timer += Time.DeltaTime;
                 yield return null;
@@ -354,7 +353,7 @@ namespace Threadlock
                     }
                     var dist = Vector2.Distance(targetingInfo.Position.Value, entity.Position);
                     initialSpeed = dist / duration;
-                    dir = targetingInfo.Direction != null ? targetingInfo.Direction.Value : (targetingInfo.Position.Value - entity.Position);
+                    dir = targetingInfo.Direction != null ? targetingInfo.Direction.Value : targetingInfo.Position.Value - entity.Position;
                     break;
                 case MovementType2.Directional:
                     initialSpeed = Math.Abs(Speed);

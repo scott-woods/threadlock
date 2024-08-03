@@ -3,8 +3,7 @@ using Nez.Persistence;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Threadlock.Components.EnemyActions;
-using Threadlock.Entities.Characters.Player.PlayerActions;
+using Threadlock.Actions;
 
 namespace Threadlock.StaticData
 {

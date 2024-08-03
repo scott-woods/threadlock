@@ -7,12 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.SaveData;
-using Threadlock.Entities.Characters.Player.PlayerActions;
 using Threadlock.DebugTools;
 using Threadlock.Components;
 using Threadlock.Helpers;
 using Nez.Sprites;
 using Threadlock.StaticData;
+using Threadlock.Actions;
 
 namespace Threadlock.Entities.Characters.Player.States
 {

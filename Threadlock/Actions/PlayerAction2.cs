@@ -5,11 +5,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Threadlock.Components;
+using Threadlock.Entities;
+using Threadlock.Entities.Characters;
+using Threadlock.Entities.Characters.Player;
 using Threadlock.Helpers;
 using Threadlock.SaveData;
 using Threadlock.StaticData;
 
-namespace Threadlock.Entities.Characters.Player.PlayerActions
+namespace Threadlock.Actions
 {
     public class PlayerAction2 : BasicAction, ICloneable
     {
@@ -66,7 +69,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
             //add entity selector if needed
             if (ConfirmType == ActionConfirmType.SelectEnemy)
             {
-                var mouseCursor = Game1.Scene.FindEntity(MouseCursor.EntityName);
+                var mouseCursor = Core.Scene.FindEntity(MouseCursor.EntityName);
                 if (mouseCursor != null)
                 {
                     _entitySelector = mouseCursor.AddComponent(new EntitySelector(PhysicsLayers.Selectable));
@@ -78,7 +81,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
 
             //add sim player if necessary
             if (ShowSim)
-                _simPlayer = Game1.Scene.AddEntity(new SimPlayer(SimType, SimAnimation, _selectedPosition));
+                _simPlayer = Core.Scene.AddEntity(new SimPlayer(SimType, SimAnimation, _selectedPosition));
 
             //wait for confirmation
             while (!TryConfirm())
@@ -115,9 +118,9 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
                 if (SnapToEdgeIfOutsideRadius)
                 {
                     if (dist < MinConfirmDistance)
-                        finalPosition = prepEntity.Position + (dir * MinConfirmDistance);
+                        finalPosition = prepEntity.Position + dir * MinConfirmDistance;
                     else if (dist > MaxConfirmDistance)
-                        finalPosition = prepEntity.Position + (dir * MaxConfirmDistance);
+                        finalPosition = prepEntity.Position + dir * MaxConfirmDistance;
                 }
                 else
                     return false;
@@ -134,7 +137,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
                         case PlayerActionWallBehavior.Disable:
                             return false;
                         case PlayerActionWallBehavior.Shorten:
-                            finalPosition = raycast.Point + (dir * -1 * 8);
+                            finalPosition = raycast.Point + dir * -1 * 8;
                             //check distance again. if shorter than min, there is no valid position. return false
                             if (Vector2.Distance(finalPosition, prepEntity.Position) < MinConfirmDistance)
                                 return false;
@@ -145,7 +148,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
 
             if (!CanAimInsideWalls)
             {
-                if (!TiledHelper.ValidatePosition(Game1.Scene, finalPosition))
+                if (!TiledHelper.ValidatePosition(Core.Scene, finalPosition))
                     return false;
             }
 
@@ -154,7 +157,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
 
         bool TryConfirm()
         {
-            var desiredPos = Game1.Scene.Camera.MouseToWorldPoint();
+            var desiredPos = Core.Scene.Camera.MouseToWorldPoint();
             if (ValidateAim(desiredPos, _baseEntity, out var finalPosition))
             {
                 _selectedPosition = finalPosition;
@@ -228,7 +231,7 @@ namespace Threadlock.Entities.Characters.Player.PlayerActions
 
         public object Clone()
         {
-            return this.MemberwiseClone();
+            return MemberwiseClone();
         }
 
         #endregion

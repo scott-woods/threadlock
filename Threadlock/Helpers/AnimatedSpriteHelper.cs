@@ -3,16 +3,11 @@ using Nez;
 using Nez.Persistence;
 using Nez.Sprites;
 using Nez.Textures;
-using Nez.UI;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Threadlock.Components;
-using Threadlock.Components.EnemyActions;
 using Threadlock.Entities.Characters;
 using Threadlock.Entities.Characters.Enemies;
 using Threadlock.Entities.Characters.Player;
@@ -120,7 +115,7 @@ namespace Threadlock.Helpers
             yield return PlayAnimationCoroutine(animator, animationName);
         }
 
-        static IEnumerator PlayAnimationCoroutine(SpriteAnimator animator, string animationName, AnimationConfig2 parentConfig = null)
+        static IEnumerator PlayAnimationCoroutine(SpriteAnimator animator, string animationName, AnimationConfig parentConfig = null)
         {
             //if animator is null, name is null, or already active, break
             if (animator == null || animator.Entity == null || string.IsNullOrWhiteSpace(animationName) || IsAnimationPlaying(animator, animationName))
@@ -205,7 +200,7 @@ namespace Threadlock.Helpers
             }
         }
 
-        static string GetDirectionalAnimationName(AnimationConfig2 config, Entity owner)
+        static string GetDirectionalAnimationName(AnimationConfig config, Entity owner)
         {
             //determine direction source
             Vector2 dir = Vector2.Zero;

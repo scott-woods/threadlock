@@ -1,16 +1,10 @@
-﻿using Microsoft.Xna.Framework;
-using Nez;
+﻿using Nez;
 using Nez.Sprites;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Threadlock.Components.EnemyActions;
 using Threadlock.Entities.Characters;
 using Threadlock.Entities.Characters.Enemies;
 using Threadlock.Entities.Characters.Player;
 using Threadlock.Helpers;
+using Threadlock.StaticData;
 
 namespace Threadlock.Components
 {

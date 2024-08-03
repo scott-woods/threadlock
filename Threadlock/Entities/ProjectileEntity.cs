@@ -7,7 +7,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Threadlock.Components;
-using Threadlock.Components.EnemyActions;
 using Threadlock.Components.Hitboxes;
 using Threadlock.Entities.Characters.Player;
 using Threadlock.Helpers;
@@ -122,7 +121,7 @@ namespace Threadlock.Entities
             //hitbox should start disabled
             Hitbox.SetEnabled(false);
 
-            Game1.StartCoroutine(Fire());
+            Core.StartCoroutine(Fire());
         }
 
         #endregion
@@ -131,7 +130,7 @@ namespace Threadlock.Entities
         {
             //schedule end after lifespan
             if (Config.Lifespan > 0)
-                Game1.Schedule(Config.Lifespan, timer => End());
+                Core.Schedule(Config.Lifespan, timer => End());
 
             //play launch animation if we have one
             AnimatedSpriteHelper.PlayAnimation(ref Animator, Config.LaunchAnimation);
@@ -143,7 +142,7 @@ namespace Threadlock.Entities
 
             //set hitbox to disable if necessary
             if (Config.HitboxActiveDuration > 0)
-                Game1.Schedule(Config.HitboxActiveDuration, timer => Hitbox.SetEnabled(false));
+                Core.Schedule(Config.HitboxActiveDuration, timer => Hitbox.SetEnabled(false));
 
             //play main animation if we have one
             AnimatedSpriteHelper.PlayAnimation(ref Animator, Config.Animation);
@@ -207,7 +206,7 @@ namespace Threadlock.Entities
             if (local != Hitbox)
                 return;
 
-            if (Config.DestroyOnWalls && Flags.IsFlagSet(1 << PhysicsLayers.Environment, other.PhysicsLayer))
+            if (Config.DestroyOnWalls && (1 << PhysicsLayers.Environment).IsFlagSet(other.PhysicsLayer))
             {
                 End();
             }
@@ -267,12 +266,12 @@ namespace Threadlock.Entities
             if (_config.InitialSpeed.HasValue)
             {
                 _speed = _config.InitialSpeed.Value;
-                
+
                 if (_config.TimeToFinalSpeed.HasValue)
                 {
                     var easeType = _config.EaseType.HasValue ? _config.EaseType.Value : EaseType.Linear;
                     var timer = 0f;
-                    while (timer <  _config.TimeToFinalSpeed.Value)
+                    while (timer < _config.TimeToFinalSpeed.Value)
                     {
                         timer += Time.DeltaTime;
                         _speed = Lerps.Ease(easeType, _config.InitialSpeed.Value, _config.Speed, timer, _config.TimeToFinalSpeed.Value);

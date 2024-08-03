@@ -1,22 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Nez;
-using Nez.Persistence;
 using Nez.Sprites;
-using Nez.Systems;
 using Nez.Textures;
-using Nez.Tweens;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Threadlock.Components.EnemyActions;
 using Threadlock.Components.Hitboxes;
-using Threadlock.Entities.Characters.Player.BasicWeapons;
 using Threadlock.Helpers;
-using Threadlock.Models;
 using Threadlock.StaticData;
 
 namespace Threadlock.Entities

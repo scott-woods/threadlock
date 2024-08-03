@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Threadlock.Entities.Characters.Player.PlayerActions;
 using Threadlock.GlobalManagers;
 using Threadlock.StaticData;
+using Threadlock.Actions;
 
 namespace Threadlock.Entities.Characters.Player.States
 {

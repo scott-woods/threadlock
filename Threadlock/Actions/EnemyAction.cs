@@ -5,11 +5,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Threadlock.Components;
 using Threadlock.Entities.Characters.Enemies;
 using Threadlock.Helpers;
 using Threadlock.SceneComponents;
 
-namespace Threadlock.Components.EnemyActions
+namespace Threadlock.Actions
 {
     public class EnemyAction : BasicAction, ICloneable
     {
@@ -60,7 +61,7 @@ namespace Threadlock.Components.EnemyActions
             //check line of sight
             if (RequiresLoS && !hasLoS)
                 return false;
-            
+
             //check if too close or far away
             if (dist < MinDistance || dist > MaxDistance)
                 return false;
@@ -102,7 +103,7 @@ namespace Threadlock.Components.EnemyActions
                 -oppositeMidAngle
             };
 
-            var gridGraphManager = Game1.Scene.GetOrCreateSceneComponent<GridGraphManager>();
+            var gridGraphManager = Core.Scene.GetOrCreateSceneComponent<GridGraphManager>();
             //var validPositions = angles.Select(a => targetPos + Mathf.AngleToVector(a, MinDistance)).Where(x => TiledHelper.ValidatePosition(Context.Scene, x));
             //var validPositions = angles.Select(a => targetPos + Mathf.AngleToVector(a, MinDistance));
             var validPositions = angles.Select(a => targetPos + Mathf.AngleToVector(a, MinDistance)).Where(x => gridGraphManager.IsPositionValid(x));
@@ -119,7 +120,7 @@ namespace Threadlock.Components.EnemyActions
             base.OnExecutionEnded();
 
             _isOnCooldown = true;
-            Game1.Schedule(Cooldown, timer => _isOnCooldown = false);
+            Core.Schedule(Cooldown, timer => _isOnCooldown = false);
         }
 
         protected override TargetingInfo GetTargetingInfo()
@@ -140,7 +141,7 @@ namespace Threadlock.Components.EnemyActions
 
         public object Clone()
         {
-            return this.MemberwiseClone();
+            return MemberwiseClone();
         }
 
         #endregion
