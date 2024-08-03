@@ -14,16 +14,19 @@ namespace Threadlock.Entities.Characters.Player.States
 {
     public class BasicAttackState : PlayerState
     {
-        BasicWeapon _basicWeapon;
+        //BasicWeapon _basicWeapon;
         ICoroutine _performAttackCoroutine;
+        WeaponManager _weaponManager;
 
         public override void OnInitialized()
         {
             base.OnInitialized();
 
-            _basicWeapon = _context.GetComponent<BasicWeapon>();
+            //_basicWeapon = _context.GetComponent<BasicWeapon>();
 
-            _context.OnWeaponChanged += OnWeaponChanged;
+            //_context.OnWeaponChanged += OnWeaponChanged;
+
+            _weaponManager = _context.GetComponent<WeaponManager>();
         }
 
         public override void Begin()
@@ -33,16 +36,16 @@ namespace Threadlock.Entities.Characters.Player.States
             _performAttackCoroutine = Game1.StartCoroutine(PerformAttack());
         }
 
-        public override void Update(float deltaTime)
-        {
-            if (_basicWeapon.CanMove)
-            {
-                if (Controls.Instance.XAxisIntegerInput.Value != 0 || Controls.Instance.YAxisIntegerInput.Value != 0)
-                    _context.Run();
-                if (Controls.Instance.DirectionalInput.Value == Vector2.Zero)
-                    _context.Idle();
-            }
-        }
+        //public override void Update(float deltaTime)
+        //{
+        //    if (_basicWeapon.CanMove)
+        //    {
+        //        if (Controls.Instance.XAxisIntegerInput.Value != 0 || Controls.Instance.YAxisIntegerInput.Value != 0)
+        //            _context.Run();
+        //        if (Controls.Instance.DirectionalInput.Value == Vector2.Zero)
+        //            _context.Idle();
+        //    }
+        //}
 
         public override void End()
         {
@@ -51,12 +54,12 @@ namespace Threadlock.Entities.Characters.Player.States
             _performAttackCoroutine?.Stop();
             _performAttackCoroutine = null;
 
-            _basicWeapon.Reset();
+            //_basicWeapon.Reset();
         }
 
         IEnumerator PerformAttack()
         {
-            yield return _basicWeapon.PerformQueuedAction();
+            yield return _weaponManager.Execute();
 
             //exit attack state
             if (TryMove())
@@ -65,15 +68,15 @@ namespace Threadlock.Entities.Characters.Player.States
                 _machine.ChangeState<Idle>();
         }
 
-        void OnWeaponChanged(BasicWeapon weapon)
-        {
-            if (_basicWeapon != null && _basicWeapon != weapon)
-            {
-                _basicWeapon.Reset();
-                _basicWeapon = null;
-            }
+        //void OnWeaponChanged(BasicWeapon weapon)
+        //{
+        //    if (_basicWeapon != null && _basicWeapon != weapon)
+        //    {
+        //        _basicWeapon.Reset();
+        //        _basicWeapon = null;
+        //    }
 
-            _basicWeapon = weapon;
-        }
+        //    _basicWeapon = weapon;
+        //}
     }
 }

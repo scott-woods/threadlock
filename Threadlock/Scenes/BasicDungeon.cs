@@ -57,6 +57,9 @@ namespace Threadlock.Scenes
             var player = _playerSpawner.SpawnPlayer();
 
             Camera.Entity.AddComponent(new CustomFollowCamera(player));
+
+            var gridGraphManager = GetOrCreateSceneComponent<GridGraphManager>();
+            gridGraphManager.InitializeGraph();
         }
 
         void OnFadeInStarted()

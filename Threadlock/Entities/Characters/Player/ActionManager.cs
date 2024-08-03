@@ -1,15 +1,11 @@
 ﻿using Nez;
 using Nez.Sprites;
 using Nez.Systems;
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Threadlock.Actions;
 using Threadlock.DebugTools;
-using Threadlock.Entities.Characters.Player.PlayerActions;
-using Threadlock.Helpers;
-using Threadlock.Models;
 using Threadlock.SaveData;
 using Threadlock.StaticData;
 
@@ -31,6 +27,8 @@ namespace Threadlock.Entities.Characters.Player
         //components
         ApComponent _apComponent;
 
+        PlayerAction2 _queuedAction;
+
         #region LIFECYCLE
 
         public override void OnAddedToEntity()
@@ -40,6 +38,7 @@ namespace Threadlock.Entities.Characters.Player
             if (Entity.TryGetComponent<ApComponent>(out var apComponent))
                 _apComponent = apComponent;
 
+            //when first created, load actions from data
             if (PlayerData.Instance.Action1 != null)
                 EquipAction(PlayerData.Instance.Action1, Controls.Instance.Action1);
             if (PlayerData.Instance.Action2 != null)
@@ -79,7 +78,7 @@ namespace Threadlock.Entities.Characters.Player
             }
 
             //if not already equipped, get action
-            if (AllPlayerActions.TryGetAction(actionName, out var action))
+            if (AllPlayerActions.TryCreatePlayerAction(actionName, Entity, out var action))
             {
                 if (ActionDictionary.ContainsKey(button))
                 {
@@ -91,6 +90,20 @@ namespace Threadlock.Entities.Characters.Player
                     //load animations
                     action.LoadAnimations(ref animator);
 
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool TryQueueAction()
+        {
+            foreach (var pair in ActionDictionary)
+            {
+                if (pair.Value.Action != null && pair.Value.Button.IsDown && CanAffordAction(pair.Value.Action))
+                {
+                    _queuedAction = pair.Value.Action;
                     return true;
                 }
             }

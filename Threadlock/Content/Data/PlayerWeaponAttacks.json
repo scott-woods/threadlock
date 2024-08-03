@@ -1,0 +1,136 @@
+[
+  {
+    "Name": "Player_StrumLute",
+
+    "AttackAnimation": "Player_Idle",
+    "AttackDuration": 0.2,
+    "AttackSounds": [
+      "Content/Audio/Sounds/lute_sound-01.wav",
+      "Content/Audio/Sounds/lute_sound-02.wav",
+      "Content/Audio/Sounds/lute_sound-03.wav",
+      "Content/Audio/Sounds/lute_sound-04.wav",
+      "Content/Audio/Sounds/lute_sound-05.wav",
+      "Content/Audio/Sounds/lute_sound-06.wav",
+      "Content/Audio/Sounds/lute_sound-07.wav",
+      "Content/Audio/Sounds/lute_sound-08.wav",
+      "Content/Audio/Sounds/lute_sound-09.wav"
+    ],
+
+    "Projectiles": [
+      {
+        "ProjectileName": "Player_LuteNote"
+      }
+    ]
+  },
+  {
+    "Name": "Player_SlamLute",
+
+    "ActionPhase": {
+      "Animation": "Player_Slash",
+      "WaitForAnimation": true
+    },
+
+    "AttackSounds": [
+      "Content/Audio/Sounds/guitar_smash.wav"
+    ],
+
+    "Projectiles": [
+      {
+        "ProjectileName": "Player_LuteSlam",
+        "OffsetDistance": 12
+      }
+    ]
+  },
+  {
+    "Name": "Player_Sword_Attack",
+
+    "IsCombo": true,
+    "ComboActions": [ "Player_Sword_Thrust_1", "Player_Sword_Slash_1", "Player_Sword_Thrust_2" ],
+    "ComboInputDelay": 0.1,
+    "ComboWaitTime": 0.2,
+    "WaitAnimation": "Player_Idle",
+    "ShouldComboWait": false
+  },
+  {
+    "Name": "Player_Sword_Thrust_1",
+
+    "ActionPhase": {
+      "Animation": "Player_Thrust",
+      "WaitForAnimation": true,
+      "Movement": {
+        "MovementType": "Directional",
+        "Speed": 150,
+        "EaseType": "CubicOut",
+        "FinalSpeed": 0,
+        "Duration": 0.2
+      }
+    },
+
+    "ComboInputDelay": 0.1,
+    "ComboStartTime": 0.05,
+
+    "Projectiles": [
+      {
+        "ProjectileName": "Player_Sword_Thrust",
+        "OffsetDistance": 12
+      }
+    ]
+  },
+  {
+    "Name": "Player_Sword_Slash_1",
+
+    "ActionPhase": {
+      "Animation": "Player_Slash",
+      "WaitForAnimation": true,
+      "Movement": {
+        "MovementType": "Directional",
+        "Speed": 150,
+        "EaseType": "CubicOut",
+        "FinalSpeed": 0,
+        "Duration": 0.2,
+      }
+    },
+
+    "ComboInputDelay": 0.1,
+    "ComboStartTime": 0.05,
+
+    "Projectiles": [
+      {
+        "ProjectileName": "Player_Sword_Thrust",
+        "OffsetDistance": 12
+      }
+    ]
+  },
+  {
+    "Name": "Player_Sword_Thrust_2",
+
+    "PreActionPhase": {
+      "Animation": "Player_ChargeDash",
+      "Duration": 0.1
+    },
+
+    "ActionPhase": {
+      "Animation": "Player_Thrust",
+      "WaitForAnimation": true,
+      "Movement": {
+        "MovementType": "Directional",
+        "Speed": 350,
+        "EaseType": "CubicOut",
+        "FinalSpeed": 0,
+        "Duration": 0.2
+      }
+    },
+
+    "ComboInputDelay": 0.1,
+
+    "Projectiles": [
+      {
+        "ProjectileName": "Player_Sword_Thrust",
+        "OffsetDistance": 12
+      }
+    ]
+  }
+  {
+    "Name": "Player_Sword_Parry"
+  }
+]

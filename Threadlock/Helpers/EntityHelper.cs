@@ -49,6 +49,14 @@ namespace Threadlock.Helpers
             return cast.Collider == null;
         }
 
+        public static bool HasLineOfSight(Vector2 from, Entity to, bool useOrigin = true)
+        {
+            var toPos = GetEntityPosition(to, useOrigin);
+
+            var cast = Physics.Linecast(from, toPos, 1 << PhysicsLayers.Environment);
+            return cast.Collider == null;
+        }
+
         public static TiledMapRenderer GetCurrentMap(Entity entity, bool useOrigin = true)
         {
             var pos = GetEntityPosition(entity, useOrigin);

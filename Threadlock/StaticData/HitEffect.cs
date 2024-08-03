@@ -13,12 +13,62 @@ using Threadlock.Helpers;
 
 namespace Threadlock.StaticData
 {
-    public interface IHitEffect2
+    /// <summary>
+    /// Effect that is applied when a projectile entity hits something
+    /// </summary>
+    public abstract class HitEffect
     {
-        public void Apply(ProjectileEntity projectile, Collider hitCollider);
+        public List<string> Layers = new List<string>();
+        public bool RequiresDamage = false;
+
+        public bool IsColliderValid(Collider collider)
+        {
+            if (RequiresDamage || Layers == null || Layers.Count == 0)
+                return false;
+
+            int mask = 0;
+            foreach (var layer in Layers)
+                Flags.SetFlag(ref mask, PhysicsLayers.GetLayerByName(layer));
+
+            return Flags.IsFlagSet(mask, collider.PhysicsLayer);
+        }
+
+        public abstract void Apply(ProjectileEntity projectile, Collider hitCollider);
     }
 
-    public class ChainHitEffect : IHitEffect2
+    public class SoundHitEffect : HitEffect
+    {
+        public override void Apply(ProjectileEntity projectile, Collider hitCollider)
+        {
+            Game1.AudioManager.PlaySound(Nez.Content.Audio.Sounds.FartWithReverb);
+        }
+    }
+
+    public class DestroyHitEffect : HitEffect
+    {
+        public string NextProjectile;
+        public List<string> Sounds = new List<string>();
+
+        public override void Apply(ProjectileEntity projectile, Collider hitCollider)
+        {
+            if (Projectiles2.TryGetProjectile(NextProjectile, out var projectileConfig))
+            {
+                var nextProjectile = ProjectileEntity.CreateProjectileEntity(projectileConfig, Vector2.Zero);
+                Game1.Scene.AddEntity(nextProjectile);
+                nextProjectile.SetPosition(projectile.Position);
+            }
+
+            if (Sounds.Count > 0)
+            {
+                var sound = Sounds.RandomItem();
+                Game1.AudioManager.PlaySound(sound);
+            }
+
+            projectile.End();
+        }
+    }
+
+    public class ChainHitEffect : HitEffect
     {
         public float Radius;
         public int MaxChains;
@@ -29,7 +79,7 @@ namespace Threadlock.StaticData
 
         List<Entity> _hitEntities = new List<Entity>();
 
-        public void Apply(ProjectileEntity projectile, Collider hitCollider)
+        public override void Apply(ProjectileEntity projectile, Collider hitCollider)
         {
             if (_hitEntities.Count > 0)
                 return;

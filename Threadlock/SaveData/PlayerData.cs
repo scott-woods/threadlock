@@ -35,6 +35,8 @@ namespace Threadlock.SaveData
         public string Action2 = null;
         public string Action3 = null;
 
+        public string CurrentWeapon = "Sword";
+
         [JsonInclude]
         int _dollahs = 0;
         public int Dollahs

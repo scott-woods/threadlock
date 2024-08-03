@@ -30,6 +30,21 @@ namespace Threadlock.Entities.Characters.Player.States
         {
             base.Update(deltaTime);
 
+            //var degreesToAdd = Controls.Instance.DirectionalInput.Value.X * 5;
+
+            //var nextDegrees = (_context.RotationDegrees + degreesToAdd) % 360;
+            //_context.SetRotationDegrees(nextDegrees);
+
+            //var offset = _animator.LocalOffset;
+            //offset = Mathf.RotateAround(offset, Vector2.Zero, degreesToAdd);
+            //_animator.SetLocalOffset(offset);
+
+            //_context.SetRotationDegrees()
+            //if (Controls.Instance.DirectionalInput.Value.X > 0)
+            //    _context.SetRotationDegrees(Math.Clamp(_context.RotationDegrees + 5, 0, 360));
+            //else if (Controls.Instance.DirectionalInput.Value.X < 0)
+            //    _context.SetRotationDegrees(Math.Clamp(_context.RotationDegrees - 5, 0, 360));
+
             _context.Run();
         }
     }

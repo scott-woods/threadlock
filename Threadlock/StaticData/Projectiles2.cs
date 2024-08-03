@@ -1,32 +1,32 @@
 ﻿using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Nez;
-using Nez.Persistence;
+using Nez.Tweens;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Reflection.PortableExecutable;
-using System.Text;
 using System.Threading.Tasks;
-using Threadlock.Components.EnemyActions;
-using Threadlock.Entities;
-using Threadlock.Helpers;
 
 namespace Threadlock.StaticData
 {
     public class Projectiles2
     {
-        static readonly Lazy<Dictionary<string, ProjectileConfig2>> _projectileDictionary = new Lazy<Dictionary<string, ProjectileConfig2>>(() =>
+        static Dictionary<string, ProjectileConfig2> _projectileDictionary;
+
+        public static async Task InitializeProjectileDictionaryAsync()
+        {
+            _projectileDictionary = await LoadProjectilesAsync();
+        }
+
+        static async Task<Dictionary<string, ProjectileConfig2>> LoadProjectilesAsync()
         {
             var dict = new Dictionary<string, ProjectileConfig2>();
 
             if (File.Exists("Content/Data/Projectiles.json"))
             {
-                var json = File.ReadAllText("Content/Data/Projectiles.json");
+                var json = await File.ReadAllTextAsync("Content/Data/Projectiles.json");
                 var jArray = JArray.Parse(json);
 
                 foreach (var jToken in jArray)
@@ -42,7 +42,7 @@ namespace Threadlock.StaticData
                         .FirstOrDefault(t => t.Name == typeString && typeof(ProjectileConfig2).IsAssignableFrom(t));
 
                     if (projectileType == null)
-                        return null;
+                        continue;
 
                     var method = typeof(JsonConvert).GetMethods(BindingFlags.Public | BindingFlags.Static)
                     .FirstOrDefault(m => m.Name == "DeserializeObject" &&
@@ -66,11 +66,11 @@ namespace Threadlock.StaticData
             }
 
             return dict;
-        });
+        }
 
         public static bool TryGetProjectile(string name, out ProjectileConfig2 projectile)
         {
-            return _projectileDictionary.Value.TryGetValue(name, out projectile);
+            return _projectileDictionary.TryGetValue(name, out projectile);
         }
     }
 
@@ -105,7 +105,7 @@ namespace Threadlock.StaticData
     {
         public override bool CanConvert(Type objectType)
         {
-            return typeof(IHitEffect2).IsAssignableFrom(objectType);
+            return typeof(HitEffect).IsAssignableFrom(objectType);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -119,7 +119,7 @@ namespace Threadlock.StaticData
             typeString += "HitEffect";
 
             var hitEffectType = Assembly.GetExecutingAssembly().GetTypes()
-                .FirstOrDefault(t => t.Name == typeString && typeof(IHitEffect2).IsAssignableFrom(t));
+                .FirstOrDefault(t => t.Name == typeString && typeof(HitEffect).IsAssignableFrom(t));
 
             if (hitEffectType == null)
                 return null;
@@ -139,9 +139,9 @@ namespace Threadlock.StaticData
             var settings = new JsonSerializerSettings();
             settings.Converters.Add(new Vector2Converter());
 
-            var effect = genericMethod.Invoke(null, new object[] { jObject.ToString(), settings }) as IHitEffect2;
+            var effect = genericMethod.Invoke(null, new object[] { jObject.ToString(), settings }) as HitEffect;
 
-            serializer.Populate(jObject.CreateReader(), effect);
+            //serializer.Populate(jObject.CreateReader(), effect);
             return effect;
         }
 
@@ -149,5 +149,76 @@ namespace Threadlock.StaticData
         {
             throw new NotImplementedException();
         }
+    }
+
+    public class ProjectileConfig2
+    {
+        public string Name;
+
+        public int Damage;
+
+        public bool AttachToOwner;
+
+        public int? Radius;
+        public Vector2 Size;
+        public List<Vector2> Points = new List<Vector2>();
+
+        public bool ShouldRotate;
+        public float MaxRotation = 90;
+
+        public float Lifespan;
+
+        public string LaunchAnimation;
+        public float LaunchDuration;
+
+        public string Animation;
+        public Vector2 AnimationOffset;
+        public bool DestroyAfterAnimation;
+
+        public float HitboxActiveDuration;
+
+        /// <summary>
+        /// List of animations to choose from for when this projectile is destroyed
+        /// </summary>
+        public List<string> DestroyAnimations = new List<string>();
+
+        /// <summary>
+        /// hit effects when hitting a specific layer
+        /// </summary>
+        public List<HitEffect> HitEffects = new List<HitEffect>();
+        /// <summary>
+        /// hit vfx when hitting something
+        /// </summary>
+        public List<string> HitVfx = new List<string>();
+
+        public List<string> PhysicsLayers = new List<string>();
+        public bool AffectsPlayer;
+        public bool AffectsEnemies;
+
+        public bool DestroyOnHit;
+
+        public bool DestroyOnWalls;
+    }
+
+    public class StraightProjectileConfig : ProjectileConfig2
+    {
+        public float Speed;
+        public float? InitialSpeed;
+        public float? TimeToFinalSpeed;
+        public EaseType? EaseType;
+    }
+
+    public class InstantProjectileConfig : ProjectileConfig2
+    {
+        public string PreAttackAnimation;
+        public string AttackAnimation;
+    }
+
+    public class ExplosionProjectileConfig : ProjectileConfig2
+    {
+        public float ExplosionTime;
+        public EaseType EaseType;
+        public float InitialRadius;
+        public float FinalRadius;
     }
 }

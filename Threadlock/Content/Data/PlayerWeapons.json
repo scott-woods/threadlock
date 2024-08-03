@@ -1,0 +1,16 @@
+[
+  {
+    "Name": "Sword",
+
+    "PrimaryAttack": [ "Player_Sword_Thrust_1", "Player_Sword_Slash_1", "Player_Sword_Thrust_2" ],
+    "SecondaryAttack": [ "Player_Sword_Parry" ],
+
+    "PostBufferTime": 0.1
+  },
+  {
+    "Name": "LuteHammer",
+
+    "PrimaryAttack": [ "Player_StrumLute" ],
+    "SecondaryAttack": [ "Player_SlamLute" ]
+  }
+]

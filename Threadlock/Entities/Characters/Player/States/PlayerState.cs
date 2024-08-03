@@ -1,20 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
-using Nez;
 using Nez.AI.FSM;
-using Nez.Console;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Threadlock.Components;
-using Threadlock.Components.TiledComponents;
-using Threadlock.DebugTools;
 using Threadlock.Entities.Characters.Player.BasicWeapons;
-using Threadlock.Entities.Characters.Player.PlayerActions;
 using Threadlock.SaveData;
 using Threadlock.StaticData;
-using Threadlock.UI.Canvases;
 
 namespace Threadlock.Entities.Characters.Player.States
 {
@@ -190,9 +181,9 @@ namespace Threadlock.Entities.Characters.Player.States
 
         public bool TryBasicAttack()
         {
-            if (_context.TryGetComponent<BasicWeapon>(out var weapon))
+            if (_context.TryGetComponent<PlayerWeapon>(out var playerWeapon))
             {
-                if (weapon.Poll())
+                if (playerWeapon.Poll())
                 {
                     _machine.ChangeState<BasicAttackState>();
                     return true;
@@ -200,6 +191,17 @@ namespace Threadlock.Entities.Characters.Player.States
             }
 
             return false;
+
+            //if (_context.TryGetComponent<BasicWeapon>(out var weapon))
+            //{
+            //    if (weapon.Poll())
+            //    {
+            //        _machine.ChangeState<BasicAttackState>();
+            //        return true;
+            //    }
+            //}
+
+            //return false;
         }
 
         public bool TryAction()

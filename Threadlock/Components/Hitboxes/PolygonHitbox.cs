@@ -57,7 +57,7 @@ namespace Threadlock.Components.Hitboxes
         {
             base.Initialize();
 
-            IsTrigger = false;
+            IsTrigger = true;
         }
 
         public override void OnEnabled()

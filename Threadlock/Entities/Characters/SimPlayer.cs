@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Threadlock.Actions;
 using Threadlock.Components;
 using Threadlock.Entities.Characters.Player;
-using Threadlock.Entities.Characters.Player.PlayerActions;
 using Threadlock.Helpers;
 using Threadlock.StaticData;
 

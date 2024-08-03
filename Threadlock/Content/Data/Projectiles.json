@@ -1,5 +1,28 @@
 [
   {
+    "Name": "Player_Sword_Thrust",
+    "Type": "Instant",
+
+    "Damage": 1,
+
+    "PhysicsLayers": [ "PlayerHitbox" ],
+    "AffectsEnemies": true,
+    "HitEffects": [
+      {
+        "Layers": [ "Environment" ],
+        "Type": "Sound"
+      }
+    ],
+
+    "AttachToOwner": true,
+
+    "Radius": 12,
+
+    "ShouldRotate": true,
+
+    "Lifespan": 0.2
+  },
+  {
     "Name": "Player_DashAttack",
     "Type": "Instant",
 
@@ -26,7 +49,7 @@
 
     "ShouldRotate": true,
 
-    "Lifespan": 0.5
+    "Lifespan": 0.2
   },
   {
     "Name": "Player_ChainLightning",
@@ -34,6 +57,7 @@
 
     "Damage": 3,
 
+    "PhysicsLayers": [ "PlayerHitbox" ],
     "AffectsEnemies": true,
 
     "Points": [
@@ -53,11 +77,12 @@
 
     "ShouldRotate": true,
 
-    "Lifespan": 0.5,
+    "Lifespan": 0.2,
 
     "HitVfx": [ "HitEffect_Lightning_1", "HitEffect_Lightning_2" ],
     "HitEffects": [
       {
+        "RequiresDamage": true,
         "Type": "Chain",
         "Radius": 75,
         "MaxChains": 3,
@@ -68,14 +93,89 @@
       }
     ]
   },
+  {
+    "Name": "Player_LuteNote",
+    "Type": "Straight",
+
+    "Damage": 1,
+    "Lifespan": 10,
+
+    "PhysicsLayers": [ "PlayerHitbox" ],
+    "AffectsEnemies": true,
+
+    "Radius": 24,
+
+    "Speed": 50,
+    "InitialSpeed": 450,
+    "TimeToFinalSpeed": 0.4,
+    "EaseType": "CubicOut",
+
+    "Animation": "SpitterProjectileTravel",
+    "DestroyAnimations": [ "SpitterProjectileBurst1", "SpitterProjectileBurst2" ],
+
+    "HitEffects": [
+      {
+        "Type": "Destroy",
+        "NextProjectile": "Player_LuteNoteExplosion",
+        "Sounds": [
+          "Content/Audio/Sounds/lute explosion sounds-01.wav",
+          "Content/Audio/Sounds/lute explosion sounds-02.wav",
+          "Content/Audio/Sounds/lute explosion sounds-03.wav",
+          "Content/Audio/Sounds/lute explosion sounds-04.wav",
+          "Content/Audio/Sounds/lute explosion sounds-05.wav",
+          "Content/Audio/Sounds/lute explosion sounds-06.wav",
+          "Content/Audio/Sounds/lute explosion sounds-07.wav",
+          "Content/Audio/Sounds/lute explosion sounds-08.wav",
+          "Content/Audio/Sounds/lute explosion sounds-09.wav"
+        ],
+        "Layers": ["LuteNoteExplosion"]
+      }
+    ]
+  },
+  {
+    "Name": "Player_LuteSlam",
+    "Type": "Instant",
+
+    "Damage": 3,
+
+    "PhysicsLayers": [ "PlayerHitbox", "LuteNoteExplosion" ],
+    "AffectsEnemies": true,
+
+    "Radius": 15,
+    "AttachToOwner": true,
+
+    "ShouldRotate": true,
+    "Lifespan": 1,
+    "HitboxActiveDuration": 0.1
+  },
+  {
+    "Name": "Player_LuteNoteExplosion",
+    "Type": "Explosion",
+
+    "Damage": 2,
+
+    "PhysicsLayers": [ "PlayerHitbox", "LuteNoteExplosion" ],
+    "AffectsEnemies": true,
+
+    "Radius": 0,
+
+    "Lifespan": 0.15,
+
+    "ExplosionTime": 0.15,
+    "EaseType": "Linear",
+    "InitialRadius": 0,
+    "FinalRadius": 42
+  },
 
   {
     "Name": "Ghoul_Swipe",
     "Type": "Instant",
 
+    "AffectsPlayer": true,
+
     "Damage": 1,
     "Lifespan": 0.1,
-    "AffectsPlayer": true,
+    "PhysicsLayers": [ "EnemyHitbox" ],
 
     "Radius": 8
   },
@@ -86,8 +186,11 @@
 
     "Damage": 1,
     "Lifespan": 10,
+
+    "PhysicsLayers": [ "EnemyHitbox" ],
     "AffectsPlayer": true,
     "DestroyOnWalls": true,
+    "DestroyOnHit": true,
 
     "Radius": 3,
 
@@ -101,6 +204,7 @@
     "Type": "Instant",
 
     "Damage": 2,
+    "PhysicsLayers": [ "EnemyHitbox" ],
     "AffectsPlayer": true,
 
     "Points": [
@@ -131,6 +235,7 @@
     "Type": "Instant",
 
     "Damage": 2,
+    "PhysicsLayers": [ "EnemyHitbox" ],
     "AffectsPlayer": true,
 
     "Points": [
@@ -165,6 +270,7 @@
     "Type": "Instant",
 
     "Damage": 2,
+    "PhysicsLayers": [ "EnemyHitbox" ],
     "AffectsPlayer": true,
 
     "ShouldRotate": true,
@@ -197,6 +303,7 @@
     "Type": "Instant",
 
     "Damage": 1,
+    "PhysicsLayers": [ "EnemyHitbox" ],
     "AffectsPlayer": true,
 
     "AttachToOwner": true,
@@ -213,6 +320,7 @@
     "Type": "Instant",
 
     "Damage": 3,
+    "PhysicsLayers": [ "EnemyHitbox" ],
     "AffectsPlayer": true,
 
     "ShouldRotate": true,
@@ -227,6 +335,7 @@
     "Type": "Instant",
 
     "Damage": 3,
+    "PhysicsLayers": [ "EnemyHitbox" ],
     "AffectsPlayer": true,
 
     "AttachToOwner": true,

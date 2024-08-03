@@ -12,7 +12,7 @@ namespace Threadlock.Components.Hitboxes
     {
         int Damage { get; set; }
         float PushForce { get; set; }
-        Vector2 Direction { get; set; }
+        public Vector2 Direction { get; set; }
         string AttackId { get; set; }
 
         event Action<Entity, int> OnHit;

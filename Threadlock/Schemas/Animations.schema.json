@@ -1,0 +1,163 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "array",
+  "items": {
+    "$ref": "#/definitions/Anonymous"
+  },
+  "definitions": {
+    "Origin": {
+      "type": "object",
+      "properties": {
+        "X": {
+          "type": "number"
+        },
+        "Y": {
+          "type": "number"
+        }
+      }
+    },
+    "DirectionalAnimations": {
+      "type": "object",
+      "properties": {
+        "Up": {
+          "type": "string"
+        },
+        "Down": {
+          "type": "string"
+        },
+        "Left": {
+          "type": "string"
+        },
+        "Right": {
+          "type": "string"
+        }
+      }
+    },
+    "FrameData": {
+      "type": "object",
+      "properties": {
+        "0": {
+          "$ref": "#/definitions/_0"
+        }
+      }
+    },
+    "_0": {
+      "type": "object",
+      "properties": {
+        "Sounds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Anonymous19"
+          }
+        }
+      }
+    },
+    "Sound": {
+      "type": "string"
+    },
+    "Anonymous6": {
+      "type": "string"
+    },
+    "Anonymous7": {
+      "type": "string"
+    },
+    "Anonymous8": {
+      "type": "string"
+    },
+    "Anonymous9": {
+      "type": "string"
+    },
+    "Anonymous10": {
+      "type": "string"
+    },
+    "Anonymous11": {
+      "type": "string"
+    },
+    "Anonymous12": {
+      "type": "string"
+    },
+    "Anonymous13": {
+      "type": "string"
+    },
+    "Anonymous14": {
+      "type": "string"
+    },
+    "Anonymous15": {
+      "type": "string"
+    },
+    "Anonymous16": {
+      "type": "string"
+    },
+    "Anonymous17": {
+      "type": "string"
+    },
+    "Anonymous18": {
+      "type": "string"
+    },
+    "Anonymous19": {
+      "type": "string"
+    },
+    "Anonymous": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "CellWidth": {
+          "type": "integer"
+        },
+        "CellHeight": {
+          "type": "integer"
+        },
+        "Base": {
+          "type": "string"
+        },
+        "Path": {
+          "type": "string"
+        },
+        "Origin": {
+          "$ref": "#/definitions/Origin"
+        },
+        "FlipX": {
+          "type": "boolean"
+        },
+        "FlipOriginX": {
+          "type": "boolean"
+        },
+        "Loop": {
+          "type": "boolean"
+        },
+        "UseDirections": {
+          "type": "boolean"
+        },
+        "DirectionalAnimations": {
+          "$ref": "#/definitions/DirectionalAnimations"
+        },
+        "DirectionSource": {
+          "type": "string"
+        },
+        "CanDirectionChange": {
+          "type": "boolean"
+        },
+        "FPS": {
+          "type": "integer"
+        },
+        "FrameData": {
+          "$ref": "#/definitions/FrameData"
+        },
+        "Row": {
+          "type": "integer"
+        },
+        "Frames": {
+          "type": "integer"
+        },
+        "StartFrame": {
+          "type": "integer"
+        },
+        "ChainTo": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

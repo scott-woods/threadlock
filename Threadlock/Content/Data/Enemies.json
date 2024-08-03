@@ -2,7 +2,7 @@
   {
     "Name": "ChainBot",
     "MaxHealth": 10,
-    "BaseSpeed": 100,
+    "BaseSpeed": 50,
     "HurtboxSize": {
       "X": 8,
       "Y": 18
@@ -12,12 +12,8 @@
       "Y": 5
     },
     "ColliderOffset": {
-      "X": -1,
-      "Y": 7
-    },
-    "AnimatorOffset": {
-      "X": 0,
-      "Y": 0
+      "X": -5,
+      "Y": 5
     },
     "IdleAnimation": "ChainBot_Idle",
     "MoveAnimation": "ChainBot_Move",
@@ -34,22 +30,18 @@
   {
     "Name": "Ghoul",
     "MaxHealth": 7,
-    "BaseSpeed": 120,
+    "BaseSpeed": 60,
     "HurtboxSize": {
       "X": 10,
       "Y": 17
     },
     "ColliderSize": {
-      "X": 9,
-      "Y": 6
+      "X": 6,
+      "Y": 4
     },
     "ColliderOffset": {
-      "X": 0,
-      "Y": 9
-    },
-    "AnimatorOffset": {
-      "X": 0,
-      "Y": 0
+      "X": -3,
+      "Y": 8
     },
     "IdleAnimation": "Ghoul_Idle",
     "MoveAnimation": "Ghoul_Move",
@@ -67,7 +59,7 @@
   {
     "Name": "Spitter",
     "MaxHealth": 8,
-    "BaseSpeed": 75,
+    "BaseSpeed": 45,
     "HurtboxSize": {
       "X": 11,
       "Y": 20
@@ -79,10 +71,6 @@
     "ColliderOffset": {
       "X": -4,
       "Y": 8
-    },
-    "AnimatorOffset": {
-      "X": 0,
-      "Y": 0
     },
     "IdleAnimation": "Spitter_Idle",
     "MoveAnimation": "Spitter_Move",
@@ -99,7 +87,7 @@
   {
     "Name": "OrbMage",
     "MaxHealth": 8,
-    "BaseSpeed": 45,
+    "BaseSpeed": 30,
     "HurtboxSize": {
       "X": 6,
       "Y": 18
@@ -111,10 +99,6 @@
     "ColliderOffset": {
       "X": -5,
       "Y": 5
-    },
-    "AnimatorOffset": {
-      "X": 38,
-      "Y": -5
     },
     "IdleAnimation": "OrbMage_Idle",
     "MoveAnimation": "OrbMage_Move",
@@ -131,7 +115,7 @@
   {
     "Name": "Assassin",
     "MaxHealth": 11,
-    "BaseSpeed": 105,
+    "BaseSpeed": 55,
     "HurtboxSize": {
       "X": 13,
       "Y": 18
@@ -143,10 +127,6 @@
     "ColliderOffset": {
       "X": -4,
       "Y": 3
-    },
-    "AnimatorOffset": {
-      "X": 30,
-      "Y": -2
     },
     "IdleAnimation": "Assassin_Idle",
     "MoveAnimation": "Assassin_Move",

@@ -3,10 +3,6 @@ using Nez.Persistence;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Threadlock.Components.EnemyActions;
 using Threadlock.Models;
 
 namespace Threadlock.StaticData

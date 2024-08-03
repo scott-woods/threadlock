@@ -31,7 +31,7 @@ namespace Threadlock.Entities.Characters.Player
         public static Player Instance { get; private set; }
 
         public float MoveSpeed = 135f;
-        public Vector2 DefaultSpriteOffset = new Vector2(13, -2);
+        public Vector2 DefaultSpriteOffset = new Vector2(12, -2);
 
         //state machine
         public StateMachine<Player> StateMachine { get; set; }
@@ -63,17 +63,18 @@ namespace Threadlock.Entities.Characters.Player
         {
             Instance = this;
 
+            
+
             SetTag(EntityTags.EnemyTarget);
 
             //add components
             _mover = AddComponent(new Mover());
             AddComponent(new ProjectileMover());
             _animator = AddComponent(new SpriteAnimator());
-            _animator.SetLocalOffset(DefaultSpriteOffset);
+            //_animator.SetLocalOffset(DefaultSpriteOffset);
             _animator.SetRenderLayer(RenderLayers.YSort);
             _velocityComponent = AddComponent(new VelocityComponent());
             _spriteFlipper = AddComponent(new SpriteFlipper());
-            _basicWeapon = AddComponent(new Sword());
             _dash = AddComponent(new Dash(1));
             _spriteTrail = AddComponent(new SpriteTrail());
             _spriteTrail.DisableSpriteTrail();
@@ -93,7 +94,7 @@ namespace Threadlock.Entities.Characters.Player
             Flags.SetFlagExclusive(ref hurtboxCollider.PhysicsLayer, PhysicsLayers.PlayerHurtbox);
             hurtboxCollider.CollidesWithLayers = 0;
             Flags.SetFlag(ref hurtboxCollider.CollidesWithLayers, PhysicsLayers.PromptTrigger);
-            Flags.SetFlag(ref hurtboxCollider.CollidesWithLayers, PhysicsLayers.EnemyHitbox);
+            //Flags.SetFlag(ref hurtboxCollider.CollidesWithLayers, PhysicsLayers.EnemyHitbox);
             //Flags.SetFlagExclusive(ref hurtboxCollider.CollidesWithLayers, PhysicsLayers.EnemyHitbox);
             _hurtbox = AddComponent(new Hurtbox(hurtboxCollider, 2f, Nez.Content.Audio.Sounds._64_Get_hit_03));
 
@@ -115,6 +116,15 @@ namespace Threadlock.Entities.Characters.Player
             //add animations
             AddAnimations();
 
+            //_shadow = AddComponent(new Shadow(_animator));
+
+            var pointLight = AddComponent(new PointLight(Color.White));
+            pointLight.SetRenderLayer(RenderLayers.Light);
+            pointLight.SetIntensity(.5f);
+            pointLight.SetRadius(100f);
+
+            AddComponent(new WeaponManager());
+
             //init state machine
             StateMachine = new StateMachine<Player>(this, _initialState);
             var assembly = Assembly.GetExecutingAssembly();
@@ -126,13 +136,6 @@ namespace Threadlock.Entities.Characters.Player
             Game1.SceneManager.Emitter.AddObserver(SceneManagerEvents.SceneChangeStarted, OnSceneChangeStarted);
             Game1.Emitter.AddObserver(CoreEvents.SceneChanged, OnSceneChanged);
             _deathComponent.Emitter.AddObserver(DeathEventTypes.Finished, OnDeath);
-
-            //_shadow = AddComponent(new Shadow(_animator));
-
-            var pointLight = AddComponent(new PointLight(Color.White));
-            pointLight.SetRenderLayer(RenderLayers.Light);
-            pointLight.SetIntensity(.5f);
-            pointLight.SetRadius(100f);
         }
 
         #region LIFECYCLE
@@ -164,9 +167,9 @@ namespace Threadlock.Entities.Characters.Player
             var dir = Controls.Instance.DirectionalInput.Value;
             dir.Normalize();
 
-            AnimatedSpriteHelper.PlayAnimation(ref _animator, "Player_Run");
-
             _velocityComponent.Move(dir, MoveSpeed);
+
+            AnimatedSpriteHelper.PlayAnimation(ref _animator, "Player_Run");
         }
 
         public void Idle()

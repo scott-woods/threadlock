@@ -86,6 +86,14 @@ namespace Threadlock.Entities.Characters.Player
 
         #endregion
 
+        public void OnAttackHit(int damageAmount)
+        {
+            if (ActionPoints >= MaxActionPoints)
+                return;
+
+            AddProgress(damageAmount * _hitMultiplier);
+        }
+
         void AddProgress(float amount)
         {
             _progress += (int)amount;

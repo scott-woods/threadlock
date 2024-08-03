@@ -1,4 +1,6 @@
-﻿using Nez;
+﻿using Microsoft.Xna.Framework;
+using Nez;
+using Nez.Tiled;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,16 +21,9 @@ namespace Threadlock.Scenes
             base.OnStart();
 
             var mapEntity = CreateEntity("map");
+            
             var map = Content.LoadTiledMap(Nez.Content.Tiled.Tilemaps.Enemy_test_zone);
-            var mapRenderer = mapEntity.AddComponent(new TiledMapRenderer(map, "Walls"));
-            mapRenderer.SetLayersToRender(new[] { "Back", "Walls" }.Where(l => map.Layers.Contains(l)).ToArray());
-            mapRenderer.RenderLayer = RenderLayers.Back;
-            Flags.SetFlagExclusive(ref mapRenderer.PhysicsLayer, PhysicsLayers.Environment);
-            TiledHelper.CreateEntitiesForTiledObjects(mapRenderer);
-
-            var frontMapRenderer = mapEntity.AddComponent(new TiledMapRenderer(map));
-            frontMapRenderer.SetLayersToRender(new[] { "Front", "AboveFront" }.Where(l => map.Layers.Contains(l)).ToArray());
-            frontMapRenderer.RenderLayer = RenderLayers.Front;
+            TiledHelper.SetupMap(mapEntity, map);
 
             var ui = CreateEntity("ui").AddComponent(new CombatUI());
 

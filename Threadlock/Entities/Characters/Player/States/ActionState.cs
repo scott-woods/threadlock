@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Threadlock.Entities.Characters.Player.PlayerActions;
 using Threadlock.GlobalManagers;
 using Threadlock.StaticData;
+using Threadlock.Actions;
 
 namespace Threadlock.Entities.Characters.Player.States
 {
@@ -80,7 +80,7 @@ namespace Threadlock.Entities.Characters.Player.States
         {
             Reset();
             _currentActionSlot = actionSlot;
-            _currentAction = actionSlot.Action.Clone() as PlayerAction2;
+            _currentAction = actionSlot.Action;
             _actionCoroutine = Game1.StartCoroutine(StartActionCoroutine(_currentAction));
         }
 
@@ -105,7 +105,7 @@ namespace Threadlock.Entities.Characters.Player.States
             //start returning to normal speed
             _normalSpeedCoroutine = Game1.StartCoroutine(NormalSpeedCoroutine());
 
-            _executionCoroutine = Game1.StartCoroutine(action.Execute(Player.Instance));
+            _executionCoroutine = Game1.StartCoroutine(action.Execute());
             yield return _executionCoroutine;
             _executionCoroutine = null;
 
@@ -172,7 +172,7 @@ namespace Threadlock.Entities.Characters.Player.States
             _executionCoroutine = null;
 
             //reset/abort action
-            _currentAction?.Reset();
+            _currentAction?.Abort();
             _currentAction = null;
 
             _currentActionSlot = null;

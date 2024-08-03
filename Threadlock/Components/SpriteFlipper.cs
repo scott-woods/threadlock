@@ -1,29 +1,18 @@
-﻿using Microsoft.Xna.Framework;
-using Nez;
+﻿using Nez;
 using Nez.Sprites;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Threadlock.Components.EnemyActions;
 using Threadlock.Entities.Characters;
 using Threadlock.Entities.Characters.Enemies;
 using Threadlock.Entities.Characters.Player;
 using Threadlock.Helpers;
+using Threadlock.StaticData;
 
 namespace Threadlock.Components
 {
-    public class SpriteFlipper : Component, IUpdatable
+    public class SpriteFlipper : Component
     {
         public DirectionSource DirectionSource;
 
         bool _flipped = false;
-
-        public void Update()
-        {
-            //TryFlip(DirectionSource);
-        }
 
         public void SetFlip(bool flip)
         {
@@ -38,11 +27,19 @@ namespace Threadlock.Components
                 {
                     renderer.FlipX = flip;
 
-                    var newOffsetX = renderer.LocalOffset.X * -1;
-                    var newOffset = new Vector2(newOffsetX, renderer.LocalOffset.Y);
-                    renderer.SetLocalOffset(newOffset);
+                    //var newOffsetX = renderer.LocalOffset.X * -1;
+                    //var newOffset = new Vector2(newOffsetX, renderer.LocalOffset.Y);
+                    //renderer.SetLocalOffset(newOffset);
                 }
             }
+        }
+
+        public void SetFlipX(bool flip)
+        {
+            var renderers = Entity.GetComponents<SpriteRenderer>();
+
+            foreach (var renderer in renderers)
+                renderer.FlipX = flip;
         }
 
         public void TryFlip(DirectionSource directionSource)

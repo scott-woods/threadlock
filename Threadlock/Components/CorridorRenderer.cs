@@ -12,6 +12,9 @@ using Threadlock.StaticData;
 
 namespace Threadlock.Components
 {
+    /// <summary>
+    /// renders the corridors for a generated dungeon
+    /// </summary>
     public class CorridorRenderer : RenderableComponent
     {
         public override float Width
