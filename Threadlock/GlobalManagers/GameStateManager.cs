@@ -24,7 +24,7 @@ namespace Threadlock.GlobalManagers
 
         public void Pause()
         {
-            if (Player.Instance.StateMachine.CurrentState.GetType() == typeof(ActionState))
+            if (Game1.Scene.FindEntity("Player") is Player player && player.StateMachine.CurrentState.GetType() == typeof(ActionState))
                 return;
             
             //update state
@@ -81,7 +81,8 @@ namespace Threadlock.GlobalManagers
         {
             Game1.SceneManager.Emitter.RemoveObserver(SceneManagerEvents.ScreenObscured, OnScreenObscured);
 
-            Player.Instance.PrepareForRespawn();
+            if (Game1.Scene.FindEntity("Player") is Player player)
+                player.PrepareForRespawn();
         }
     }
 

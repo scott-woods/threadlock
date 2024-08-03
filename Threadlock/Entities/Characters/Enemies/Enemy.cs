@@ -45,7 +45,7 @@ namespace Threadlock.Entities.Characters.Enemies
 
                 //loop through potential targets and determine the closest one
                 var minDistance = float.MaxValue;
-                Entity targetEntity = Player.Player.Instance;
+                Entity targetEntity = null;
                 foreach (var target in targets)
                 {
                     //get position

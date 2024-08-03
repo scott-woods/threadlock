@@ -124,12 +124,12 @@ namespace Threadlock.Entities
             }
             else
             {
-                if (_config.Magnetized && EntityHelper.DistanceToEntity(this, Player.Instance) <= _magnetizeDistance)
+                if (_config.Magnetized && Game1.Scene.FindEntity("Player") is Player player && EntityHelper.DistanceToEntity(this, player) <= _magnetizeDistance)
                 {
                     if (_currentMagnetizeSpeed == 0)
                         _currentMagnetizeSpeed = _initialMagnetizeSpeed;
 
-                    var dir = EntityHelper.DirectionToEntity(this, Player.Instance);
+                    var dir = EntityHelper.DirectionToEntity(this, player);
                     _velocity = dir * _currentMagnetizeSpeed * Time.DeltaTime;
                     _mover.Move(_velocity);
 

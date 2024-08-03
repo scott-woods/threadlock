@@ -91,7 +91,7 @@ namespace Threadlock.Entities.Characters.Player.States
 
             //start preparing action
             _prepFinished = false;
-            _prepCoroutine = Game1.StartCoroutine(action.Prepare(Player.Instance));
+            _prepCoroutine = Game1.StartCoroutine(action.Prepare(_context));
             yield return _prepCoroutine;
 
             _prepFinished = true;

@@ -41,7 +41,7 @@ namespace Threadlock.Models
                     Magnetized = false,
                     HandlePickup = () =>
                     {
-                        if (Player.Instance.TryGetComponent<HealthComponent>(out var hc))
+                        if (Game1.Scene.FindEntity("Player") is Player player && player.TryGetComponent<HealthComponent>(out var hc))
                             hc.Health += (int)(hc.MaxHealth * .15f);
                     },
                     Scale = new Vector2(.5f, .5f)

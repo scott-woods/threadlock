@@ -73,7 +73,7 @@ namespace Threadlock.Components
 
         public void Update()
         {
-            if (Player.Instance.TryRaycast(_collider.PhysicsLayer, out var raycast))
+            if (Entity.Scene.FindEntity("Player") is Player player && player.TryRaycast(_collider.PhysicsLayer, out var raycast))
             {
                 if (raycast.Collider == _collider)
                 {

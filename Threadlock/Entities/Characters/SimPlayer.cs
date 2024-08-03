@@ -45,7 +45,7 @@ namespace Threadlock.Entities.Characters
             _animator.SetRenderLayer(RenderLayers.YSort);
 
             //get animations from player animator
-            if (Player.Player.Instance.TryGetComponent<SpriteAnimator>(out var animator))
+            if (Scene.FindEntity("Player") is Player.Player player && player.TryGetComponent<SpriteAnimator>(out var animator))
             {
                 foreach (var anim in animator.Animations)
                     _animator.AddAnimation(anim.Key, anim.Value);

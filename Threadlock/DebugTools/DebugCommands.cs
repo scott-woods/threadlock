@@ -18,10 +18,8 @@ namespace Threadlock.DebugTools
         [Command("tcl", "Disable player's collision")]
         static void TogglePlayerCollider()
         {
-            if (Player.Instance != null)
-            {
-                Player.Instance.Collider.SetEnabled(!Player.Instance.Collider.Enabled);
-            }
+            if (Game1.Scene.FindEntity("Player") is Player player)
+                player.Collider.SetEnabled(!player.Collider.Enabled);
         }
 
         [Command("tgm", "Toggle god mode (free actions, don't take damage)")]
@@ -51,11 +49,8 @@ namespace Threadlock.DebugTools
         [Command("sethp", "Set player's hp to any amount")]
         static void SetHp(string hp)
         {
-            if (Player.Instance != null)
-            {
-                if (Player.Instance.TryGetComponent<HealthComponent>(out var hc))
-                    hc.Health = Convert.ToInt32(hp);
-            }
+            if (Game1.Scene.FindEntity("Player") is Player player && player.TryGetComponent<HealthComponent>(out var hc))
+                hc.Health = Convert.ToInt32(hp);
         }
 
         [Command("add-dollahs", "Add dollahs")]

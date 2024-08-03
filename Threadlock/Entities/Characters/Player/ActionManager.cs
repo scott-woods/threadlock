@@ -85,7 +85,7 @@ namespace Threadlock.Entities.Characters.Player
                     ActionDictionary[button].EquipAction(action);
                     Emitter.Emit(ActionManagerEvents.ActionsChanged);
 
-                    var animator = Player.Instance.GetComponent<SpriteAnimator>();
+                    var animator = Entity.GetComponent<SpriteAnimator>();
 
                     //load animations
                     action.LoadAnimations(ref animator);

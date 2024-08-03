@@ -100,7 +100,7 @@ namespace Threadlock.Entities.Characters.Player.States
 
                         //determine the entity we'll base from. use sim player if it exists, real player otherwise
                         Entity prepEntity = _simPlayer;
-                        prepEntity ??= Player.Instance;
+                        prepEntity ??= _context;
 
                         //start preparing action
                         var request = action.Prepare(prepEntity);
@@ -120,7 +120,7 @@ namespace Threadlock.Entities.Characters.Player.States
                             var finalPos = action.GetFinalPosition();
 
                             //if final pos is different from current and sim player doesn't exist yet, create one
-                            if (finalPos != Player.Instance.Position && _simPlayer == null)
+                            if (finalPos != _context.Position && _simPlayer == null)
                             {
                                 //have the player idle while preparing the rest of the actions
                                 var animator = _context.GetComponent<SpriteAnimator>();

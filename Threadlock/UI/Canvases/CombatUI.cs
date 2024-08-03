@@ -109,41 +109,44 @@ namespace Threadlock.UI.Canvases
         {
             base.OnAddedToEntity();
 
-            if (Player.Instance.TryGetComponent<HealthComponent>(out var hc))
+            if (Entity.Scene.FindEntity("Player") is Player player)
             {
-                _healthBar.SetMinMax(0, hc.MaxHealth);
-                _healthBar.Value = hc.Health;
-                hc.OnHealthChanged += OnHealthChanged;
-            }
-
-            //setup actions
-            if (Player.Instance.TryGetComponent<ActionManager>(out var actionManager))
-            {
-                _actionManager = actionManager;
-                _actionManager.Emitter.AddObserver(ActionManagerEvents.ActionsChanged, OnActionsChanged);
-
-                OnActionsChanged();
-            }
-
-            if (Player.Instance.TryGetComponent<ApComponent>(out var ac))
-            {
-                ac.OnApChanged += OnApChanged;
-
-                var tableCell = _baseTable.GetCell(_apTable);
-                var width = tableCell.GetMaxWidth() / ac.MaxActionPoints;
-                for (int i = 0; i < ac.MaxActionPoints; i++)
+                if (player.TryGetComponent<HealthComponent>(out var hc))
                 {
-                    var bar = new ProgressBar(_skin, "apBar");
-                    bar.SetMinMax(0, 1);
-                    _apBars.Add(bar);
-                    _apTable.Add(bar).Width(width);
+                    _healthBar.SetMinMax(0, hc.MaxHealth);
+                    _healthBar.Value = hc.Health;
+                    hc.OnHealthChanged += OnHealthChanged;
                 }
+
+                //setup actions
+                if (player.TryGetComponent<ActionManager>(out var actionManager))
+                {
+                    _actionManager = actionManager;
+                    _actionManager.Emitter.AddObserver(ActionManagerEvents.ActionsChanged, OnActionsChanged);
+
+                    OnActionsChanged();
+                }
+
+                if (player.TryGetComponent<ApComponent>(out var ac))
+                {
+                    ac.OnApChanged += OnApChanged;
+
+                    var tableCell = _baseTable.GetCell(_apTable);
+                    var width = tableCell.GetMaxWidth() / ac.MaxActionPoints;
+                    for (int i = 0; i < ac.MaxActionPoints; i++)
+                    {
+                        var bar = new ProgressBar(_skin, "apBar");
+                        bar.SetMinMax(0, 1);
+                        _apBars.Add(bar);
+                        _apTable.Add(bar).Width(width);
+                    }
+                }
+
+                if (player.TryGetComponent<BasicWeapon>(out var weapon))
+                    OnWeaponChanged(weapon);
+
+                player.OnWeaponChanged += OnWeaponChanged;
             }
-
-            if (Player.Instance.TryGetComponent<BasicWeapon>(out var weapon))
-                OnWeaponChanged(weapon);
-
-            Player.Instance.OnWeaponChanged += OnWeaponChanged;
 
             Game1.UIManager.Emitter.AddObserver(GlobalManagers.UIEvents.DialogueStarted, OnDialogueStarted);
             Game1.UIManager.Emitter.AddObserver(GlobalManagers.UIEvents.DialogueEnded, OnDialogueEnded);
@@ -158,14 +161,17 @@ namespace Threadlock.UI.Canvases
         {
             base.OnRemovedFromEntity();
 
-            if (Player.Instance.TryGetComponent<HealthComponent>(out var hc))
+            if (Game1.Scene.FindEntity("Player") is Player player)
             {
-                hc.OnHealthChanged -= OnHealthChanged;
-            }
+                if (player.TryGetComponent<HealthComponent>(out var hc))
+                {
+                    hc.OnHealthChanged -= OnHealthChanged;
+                }
 
-            if (Player.Instance.TryGetComponent<ApComponent>(out var ac))
-            {
-                ac.OnApChanged -= OnApChanged;
+                if (player.TryGetComponent<ApComponent>(out var ac))
+                {
+                    ac.OnApChanged -= OnApChanged;
+                }
             }
 
             Game1.UIManager.Emitter.RemoveObserver(GlobalManagers.UIEvents.DialogueStarted, OnDialogueStarted);
@@ -230,11 +236,11 @@ namespace Threadlock.UI.Canvases
         {
             _weaponInfoTable?.Clear();
 
-            if (weapon is Gun gun)
-            {
-                var ammoTable = new AmmoTable(_skin, gun);
-                _weaponInfoTable.Add(ammoTable).Left();
-            }
+            //if (weapon is Gun gun)
+            //{
+            //    var ammoTable = new AmmoTable(_skin, gun);
+            //    _weaponInfoTable.Add(ammoTable).Left();
+            //}
         }
 
         void OnHealthChanged(int oldValue, int newValue)

@@ -175,15 +175,9 @@ namespace Threadlock.StaticData
                 yield break;
 
             var weaponName = trigger.Args[0];
-            var weaponType = Type.GetType($"Threadlock.Entities.Characters.Player.BasicWeapons.{weaponName}");
-            if (weaponType == null || !typeof(BasicWeapon).IsAssignableFrom(weaponType))
-                yield break;
 
-            var weaponInstance = Activator.CreateInstance(weaponType) as BasicWeapon;
-            if (weaponInstance == null)
-                yield break;
-
-            Player.Instance.EquipNewWeapon(weaponInstance);
+            if (Game1.Scene.FindEntity("Player") is Player player && player.TryGetComponent<WeaponManager>(out var weaponManager))
+                weaponManager.SetWeapon(weaponName);
 
             Game1.AudioManager.PlaySound(Nez.Content.Audio.Sounds.Menu_select);
         }

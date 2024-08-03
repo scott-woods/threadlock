@@ -15,9 +15,11 @@ namespace Threadlock.SceneComponents
     {
         public Player SpawnPlayer()
         {
-            if (Player.Instance == null)
+            var player = Scene.FindEntity("Player") as Player;
+            
+            if (player == null)
             {
-                Scene.AddEntity(new Player());
+                player = Scene.AddEntity(new Player());
             }
 
             var spawnPosition = Vector2.Zero;
@@ -33,11 +35,11 @@ namespace Threadlock.SceneComponents
                     spawnPosition = playerSpawnPoints.First().Entity.Position;
             }
 
-            Player.Instance.SetEnabled(true);
+            player.SetEnabled(true);
 
-            Player.Instance.SetPosition(spawnPosition);
+            player.SetPosition(spawnPosition);
 
-            return Player.Instance;
+            return player;
         }
     }
 }

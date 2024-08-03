@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Threadlock.Actions;
 using Threadlock.SaveData;
 using Threadlock.StaticData;
+using static Nez.Content;
 
 namespace Threadlock.Entities.Characters.Player
 {
@@ -26,21 +27,29 @@ namespace Threadlock.Entities.Characters.Player
         bool _isInputBuffered = false;
         List<PlayerWeaponAttack> _activeList;
         ITimer _bufferTimer;
+        PlayerWeaponData _data;
 
         public PlayerWeapon(PlayerWeaponData data)
         {
             Name = data.Name;
             PostBufferTime = data.PostBufferTime;
 
-            foreach (var attackName in data.PrimaryAttack)
+            _data = data;
+        }
+
+        public override void OnAddedToEntity()
+        {
+            base.OnAddedToEntity();
+
+            foreach (var attackName in _data.PrimaryAttack)
             {
-                if (PlayerWeaponAttacks.TryCreatePlayerWeaponAttack(attackName, Player.Instance, out var attack))
+                if (PlayerWeaponAttacks.TryCreatePlayerWeaponAttack(attackName, Entity, out var attack))
                     PrimaryAttack.Add(attack);
             }
 
-            foreach (var attackName in data.SecondaryAttack)
+            foreach (var attackName in _data.SecondaryAttack)
             {
-                if (PlayerWeaponAttacks.TryCreatePlayerWeaponAttack(attackName, Player.Instance, out var attack))
+                if (PlayerWeaponAttacks.TryCreatePlayerWeaponAttack(attackName, Entity, out var attack))
                     SecondaryAttack.Add(attack);
             }
         }

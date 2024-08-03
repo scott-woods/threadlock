@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Entities.Characters.Player;
+using Threadlock.SaveData;
 
 namespace Threadlock.Helpers
 {
@@ -23,14 +24,7 @@ namespace Threadlock.Helpers
             switch (requirementName)
             {
                 case "HasWeaponEquipped":
-                    var currentWeapon = Player.Instance.GetCurrentWeapon();
-                    if (currentWeapon == null)
-                        return false;
-                    var weaponType = Type.GetType($"Threadlock.Entities.Characters.Player.BasicWeapons.{parameters[0]}");
-                    if (weaponType == null)
-                        return false;
-
-                    return weaponType.IsAssignableFrom(currentWeapon.GetType());
+                    return PlayerData.Instance.CurrentWeapon == parameters[0];
                 default:
                     return true;
             }

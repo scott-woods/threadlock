@@ -28,8 +28,6 @@ namespace Threadlock.Entities.Characters.Player
 
         const string _idleAnimation = "Player_Idle";
 
-        public static Player Instance { get; private set; }
-
         public float MoveSpeed = 135f;
         public Vector2 DefaultSpriteOffset = new Vector2(12, -2);
 
@@ -61,10 +59,6 @@ namespace Threadlock.Entities.Characters.Player
 
         public Player() : base("Player")
         {
-            Instance = this;
-
-            
-
             SetTag(EntityTags.EnemyTarget);
 
             //add components

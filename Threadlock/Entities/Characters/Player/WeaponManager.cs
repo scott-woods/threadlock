@@ -21,9 +21,16 @@ namespace Threadlock.Entities.Characters.Player
         {
             base.OnAddedToEntity();
 
-            if (PlayerWeapons.TryGetWeapon(PlayerData.Instance.CurrentWeapon, out var weapon))
+            SetWeapon(PlayerData.Instance.CurrentWeapon);
+        }
+
+        public void SetWeapon(string weaponName)
+        {
+            if (PlayerWeapons.TryGetWeapon(weaponName, out var weapon))
             {
+                PlayerData.Instance.CurrentWeapon = weaponName;
                 _currentWeapon = weapon;
+                Entity.RemoveComponent<PlayerWeapon>();
                 Entity.AddComponent(weapon);
             }
         }
