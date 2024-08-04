@@ -1,0 +1,143 @@
+{
+  "Spitter": {
+    "Name": "Spitter",
+    "MaxHealth": 8,
+    "BaseSpeed": 45,
+    "HurtboxSize": {
+      "X": 11,
+      "Y": 20
+    },
+    "ColliderSize": {
+      "X": 6,
+      "Y": 6
+    },
+    "ColliderOffset": {
+      "X": -4,
+      "Y": 8
+    },
+    "IdleAnimation": "Spitter_Idle",
+    "MoveAnimation": "Spitter_Move",
+    "HitAnimation": "Spitter_Hit",
+    "DeathAnimation": "Spitter_Death",
+    "BehaviorConfig": {
+      "BehaviorTreeName": "Basic",
+      "ActionCooldown": 1.5,
+      "RunsWhenPursued": true,
+      "PursuitTime": 2
+    },
+    "Actions": [ "Spitter_Spit" ]
+  },
+  "ChainBot": {
+    "Name": "ChainBot",
+    "MaxHealth": 10,
+    "BaseSpeed": 50,
+    "HurtboxSize": {
+      "X": 8,
+      "Y": 18
+    },
+    "ColliderSize": {
+      "X": 10,
+      "Y": 5
+    },
+    "ColliderOffset": {
+      "X": -5,
+      "Y": 5
+    },
+    "IdleAnimation": "ChainBot_Idle",
+    "MoveAnimation": "ChainBot_Move",
+    "HitAnimation": "ChainBot_Hit",
+    "DeathAnimation": "ChainBot_Death",
+    "BehaviorConfig": {
+      "BehaviorTreeName": "Basic",
+      "ActionCooldown": 2,
+      "RunsWhenPursued": false,
+      "PursuitTime": 0
+    },
+    "Actions": [ "ChainBot_MeleeCombo" ]
+  },
+  "Ghoul": {
+    "Name": "Ghoul",
+    "MaxHealth": 7,
+    "BaseSpeed": 60,
+    "HurtboxSize": {
+      "X": 10,
+      "Y": 17
+    },
+    "ColliderSize": {
+      "X": 6,
+      "Y": 4
+    },
+    "ColliderOffset": {
+      "X": -3,
+      "Y": 8
+    },
+    "IdleAnimation": "Ghoul_Idle",
+    "MoveAnimation": "Ghoul_Move",
+    "HitAnimation": "Ghoul_Hit",
+    "DeathAnimation": "Ghoul_Death",
+    "SpawnAnimation": "Ghoul_Spawn",
+    "BehaviorConfig": {
+      "BehaviorTreeName": "Basic",
+      "ActionCooldown": 0.5,
+      "RunsWhenPursued": false,
+      "PursuitTime": 0
+    },
+    "Actions": [ "Ghoul_Swipe" ]
+  },
+  "Assassin": {
+    "Name": "Assassin",
+    "MaxHealth": 11,
+    "BaseSpeed": 55,
+    "HurtboxSize": {
+      "X": 13,
+      "Y": 18
+    },
+    "ColliderSize": {
+      "X": 9,
+      "Y": 4
+    },
+    "ColliderOffset": {
+      "X": -4,
+      "Y": 3
+    },
+    "IdleAnimation": "Assassin_Idle",
+    "MoveAnimation": "Assassin_Move",
+    "HitAnimation": "Assassin_Hit",
+    "DeathAnimation": "Assassin_Death",
+    "BehaviorConfig": {
+      "BehaviorTreeName": "Basic",
+      "ActionCooldown": 1.5,
+      "RunsWhenPursued": false,
+      "PursuitTime": 0
+    },
+    "Actions": [ "Assassin_Slice1", "Assassin_Slice2", "Assassin_SliceCombo", "Assassin_DashSlice", "Assassin_DashSliceCombo" ]
+  },
+  "OrbMage": {
+    "Name": "OrbMage",
+    "MaxHealth": 8,
+    "BaseSpeed": 30,
+    "HurtboxSize": {
+      "X": 6,
+      "Y": 18
+    },
+    "ColliderSize": {
+      "X": 10,
+      "Y": 7
+    },
+    "ColliderOffset": {
+      "X": -5,
+      "Y": 5
+    },
+    "IdleAnimation": "OrbMage_Idle",
+    "MoveAnimation": "OrbMage_Move",
+    "HitAnimation": "OrbMage_Hit",
+    "DeathAnimation": "OrbMage_Death",
+    "BehaviorConfig": {
+      "BehaviorTreeName": "Basic",
+      "ActionCooldown": 1.5,
+      "RunsWhenPursued": false,
+      "PursuitTime": 0
+    },
+    "Actions": [ "OrbMage_Spike", "OrbMage_Sweep" ]
+  }
+}

@@ -35,10 +35,22 @@ namespace Threadlock.Components.TiledComponents
 
         public Enemy SpawnEnemy()
         {
-            if (_config == null)
-                return null;
+            if (TmxObject.Properties != null && TmxObject.Properties.TryGetValue("EnemyType", out var enemyTypeString))
+            {
+                if (DataLoader.EnemyDataDictionary.TryGetValue(enemyTypeString, out var enemyData))
+                {
+                    var enemy = Entity.Scene.AddEntity(enemyData.CreateEnemy());
+                    enemy.SetPosition(Entity.Position);
+                    return enemy;
+                }
+            }
 
-            return SpawnEnemy(_config);
+            return null;
+
+            //if (_config == null)
+            //    return null;
+
+            //return SpawnEnemy(_config);
         }
     }
 }

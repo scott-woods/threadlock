@@ -25,7 +25,7 @@ namespace Threadlock.Entities.Characters.Enemies
         public float MaxDistance;
         public bool IsPursued;
 
-        EnemyConfig _config;
+        EnemyData _config;
 
         SpriteAnimator _animator;
 
@@ -82,6 +82,82 @@ namespace Threadlock.Entities.Characters.Enemies
         /// </summary>
         /// <param name="config"></param>
         public Enemy(EnemyConfig config) : base(config.Name)
+        {
+            //_config = config;
+
+            BehaviorConfig = config.BehaviorConfig;
+            BaseSpeed = config.BaseSpeed;
+
+            //status
+            var statusComponent = AddComponent(new StatusComponent(StatusPriority.Normal));
+            statusComponent.Emitter.AddObserver(StatusEvents.Changed, OnStatusChanged);
+
+            //RENDERERS
+            _animator = AddComponent(new SpriteAnimator());
+            _animator.SetLocalOffset(config.AnimatorOffset);
+            _animator.SetRenderLayer(RenderLayers.YSort);
+            AnimatedSpriteHelper.LoadAnimations(ref _animator, config.IdleAnimation, config.MoveAnimation, config.HitAnimation, config.DeathAnimation, config.SpawnAnimation);
+
+            AddComponent(new Shadow(_animator));
+
+            AddComponent(new SelectionComponent(_animator, 10));
+
+            AddComponent(new SpriteFlipper());
+
+
+            //PHYSICS
+            _mover = AddComponent(new Mover());
+
+            var projectileMover = AddComponent(new ProjectileMover());
+
+            var velocityComponent = AddComponent(new VelocityComponent());
+
+            var collider = AddComponent(new BoxCollider(config.ColliderOffset.X, config.ColliderOffset.Y, config.ColliderSize.X, config.ColliderSize.Y));
+            Flags.SetFlagExclusive(ref collider.PhysicsLayer, PhysicsLayers.EnemyCollider);
+            collider.CollidesWithLayers = 0;
+            Flags.SetFlag(ref collider.CollidesWithLayers, PhysicsLayers.Environment);
+            Flags.SetFlag(ref collider.CollidesWithLayers, PhysicsLayers.EnemyCollider);
+            Flags.SetFlag(ref collider.CollidesWithLayers, PhysicsLayers.ProjectilePassableWall);
+
+            var hurtboxCollider = AddComponent(new BoxCollider(config.HurtboxSize.X, config.HurtboxSize.Y));
+            hurtboxCollider.IsTrigger = true;
+            Flags.SetFlagExclusive(ref hurtboxCollider.PhysicsLayer, PhysicsLayers.EnemyHurtbox);
+            //Flags.SetFlagExclusive(ref hurtboxCollider.CollidesWithLayers, PhysicsLayers.PlayerHitbox);
+            hurtboxCollider.CollidesWithLayers = 0;
+            var hurtbox = AddComponent(new Hurtbox(hurtboxCollider, 0f, Nez.Content.Audio.Sounds.Chain_bot_damaged));
+            hurtbox.Emitter.AddObserver(HurtboxEventTypes.Hit, OnHurtboxHit);
+
+            AddComponent(new KnockbackComponent(velocityComponent, config.HitAnimation, 150, .5f));
+
+
+            //OTHER
+            AddComponent(new HealthComponent(config.MaxHealth, config.MaxHealth));
+
+            AddComponent(new DeathComponent(config.DeathAnimation, Nez.Content.Audio.Sounds.Enemy_death_1));
+
+            AddComponent(new Pathfinder(collider));
+
+            AddComponent(new OriginComponent(collider));
+
+            AddComponent(new LootDropper(LootTables.BasicEnemy));
+
+
+            //ACTIONS
+            _actions = new List<EnemyAction>();
+            foreach (var actionString in config.Actions)
+            {
+                if (AllEnemyActions.TryCreateEnemyAction(actionString, this, out var action))
+                {
+                    _actions.Add(action);
+                    action.LoadAnimations(ref _animator);
+                }
+            }
+
+            //BEHAVIOR
+            _tree = BehaviorTrees.CreateBehaviorTree(this, config.BehaviorConfig.BehaviorTreeName);
+        }
+
+        public Enemy(EnemyData config) : base(config.Name)
         {
             _config = config;
 
@@ -178,8 +254,6 @@ namespace Threadlock.Entities.Characters.Enemies
         public override void Update()
         {
             base.Update();
-
-            _mover.ApplyMovement(Vector2.Zero);
 
             if (!_spawning)
                 _tree.Tick();
