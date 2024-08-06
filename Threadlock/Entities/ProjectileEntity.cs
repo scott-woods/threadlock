@@ -27,6 +27,8 @@ namespace Threadlock.Entities
         protected bool IsBursting;
         protected Vector2 Direction;
 
+        ITimer _destroyTimer;
+
         public ProjectileEntity(ProjectileConfig2 config, Vector2 initialDirection, Entity owner)
         {
             Config = config;
@@ -130,10 +132,10 @@ namespace Threadlock.Entities
         {
             //schedule end after lifespan
             if (Config.Lifespan > 0)
-                Core.Schedule(Config.Lifespan, timer => End());
+                _destroyTimer = Core.Schedule(Config.Lifespan, timer => End());
 
             //play launch animation if we have one
-            AnimatedSpriteHelper.PlayAnimation(ref Animator, Config.LaunchAnimation);
+            AnimatedSpriteHelper.PlayAnimation(Animator, Config.LaunchAnimation);
             if (Config.LaunchDuration > 0)
                 yield return Coroutine.WaitForSeconds(Config.LaunchDuration);
 
@@ -145,7 +147,7 @@ namespace Threadlock.Entities
                 Core.Schedule(Config.HitboxActiveDuration, timer => Hitbox.SetEnabled(false));
 
             //play main animation if we have one
-            AnimatedSpriteHelper.PlayAnimation(ref Animator, Config.Animation);
+            AnimatedSpriteHelper.PlayAnimation(Animator, Config.Animation);
         }
 
         /// <summary>
@@ -153,11 +155,13 @@ namespace Threadlock.Entities
         /// </summary>
         public virtual void End()
         {
+            _destroyTimer?.Stop();
+
             IsBursting = true;
             Hitbox.SetEnabled(false);
 
             if (Config.DestroyAnimations.Any())
-                AnimatedSpriteHelper.PlayAnimation(ref Animator, Config.DestroyAnimations.RandomItem());
+                AnimatedSpriteHelper.PlayAnimation(Animator, Config.DestroyAnimations.RandomItem());
             else
                 Destroy();
         }

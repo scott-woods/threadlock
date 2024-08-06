@@ -124,7 +124,7 @@ namespace Threadlock.Entities.Characters.Player.States
                             {
                                 //have the player idle while preparing the rest of the actions
                                 var animator = _context.GetComponent<SpriteAnimator>();
-                                AnimatedSpriteHelper.PlayAnimation(ref animator, "Player_Idle");
+                                AnimatedSpriteHelper.PlayAnimation(animator, "Player_Idle");
 
                                 //create sim player entity at new final pos
                                 _simPlayer = _context.Scene.AddEntity(new SimPlayer(SimPlayerType.Static, "Player_Idle", finalPos));
@@ -145,12 +145,12 @@ namespace Threadlock.Entities.Characters.Player.States
                             if (_simPlayer != null)
                             {
                                 var animator = _simPlayer.GetComponent<SpriteAnimator>();
-                                AnimatedSpriteHelper.PlayAnimation(ref animator, "Player_Idle");
+                                AnimatedSpriteHelper.PlayAnimation(animator, "Player_Idle");
                             }
                             else
                             {
                                 var animator = _context.GetComponent<SpriteAnimator>();
-                                AnimatedSpriteHelper.PlayAnimation(ref animator, "Player_Idle");
+                                AnimatedSpriteHelper.PlayAnimation(animator, "Player_Idle");
                             }
 
                             //stop the action prep coroutine and null out the cloned action

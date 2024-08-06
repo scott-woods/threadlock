@@ -20,9 +20,9 @@ namespace Threadlock.Entities.Characters
         SpriteAnimator _animator;
         VelocityComponent _velocityComponent;
         Mover _mover;
-        SpriteFlipper _flipper;
         OriginComponent _originComponent;
         Collider _collider;
+        DirectionComponent _directionComponent;
 
         SimPlayerType _simType;
         string _animation;
@@ -57,8 +57,6 @@ namespace Threadlock.Entities.Characters
 
             _velocityComponent = AddComponent(new VelocityComponent());
 
-            _flipper = AddComponent(new SpriteFlipper());
-
             //collider
             _collider = AddComponent(new BoxCollider(-4, 4, 8, 5));
             Flags.SetFlagExclusive(ref _collider.PhysicsLayer, PhysicsLayers.None);
@@ -67,7 +65,9 @@ namespace Threadlock.Entities.Characters
 
             _originComponent = AddComponent(new OriginComponent(_collider));
 
-            AnimatedSpriteHelper.PlayAnimation(ref _animator, _animation);
+            _directionComponent = AddComponent(new DirectionComponent());
+
+            AnimatedSpriteHelper.PlayAnimation(_animator, _animation);
         }
 
         public override void Update()
@@ -78,7 +78,8 @@ namespace Threadlock.Entities.Characters
             {
                 case SimPlayerType.AttachToCursor:
                     Position = _targetPosition;
-                    AnimatedSpriteHelper.PlayAnimation(ref _animator, _animation);
+                    _directionComponent.UpdateCurrentDirection(Scene.Camera.MouseToWorldPoint() - Position);
+                    AnimatedSpriteHelper.PlayAnimation(_animator, _animation);
                     break;
             }
             //var dir = DirectionHelper.GetDirectionStringByVector(_velocityComponent.Direction);

@@ -42,7 +42,6 @@ namespace Threadlock.Entities.Characters.Player
         SpriteAnimator _animator;
         SpriteTrail _spriteTrail;
         VelocityComponent _velocityComponent;
-        SpriteFlipper _spriteFlipper;
         BasicWeapon _basicWeapon;
         Dash _dash;
         BoxCollider _collider;
@@ -56,6 +55,7 @@ namespace Threadlock.Entities.Characters.Player
         OriginComponent _originComponent;
         ApComponent _apComponent;
         ActionManager _actionManager;
+        DirectionComponent _directionComponent;
 
         public Player() : base("Player")
         {
@@ -68,7 +68,6 @@ namespace Threadlock.Entities.Characters.Player
             //_animator.SetLocalOffset(DefaultSpriteOffset);
             _animator.SetRenderLayer(RenderLayers.YSort);
             _velocityComponent = AddComponent(new VelocityComponent());
-            _spriteFlipper = AddComponent(new SpriteFlipper());
             _dash = AddComponent(new Dash(1));
             _spriteTrail = AddComponent(new SpriteTrail());
             _spriteTrail.DisableSpriteTrail();
@@ -130,6 +129,8 @@ namespace Threadlock.Entities.Characters.Player
             Game1.SceneManager.Emitter.AddObserver(SceneManagerEvents.SceneChangeStarted, OnSceneChangeStarted);
             Game1.Emitter.AddObserver(CoreEvents.SceneChanged, OnSceneChanged);
             _deathComponent.Emitter.AddObserver(DeathEventTypes.Finished, OnDeath);
+
+            _directionComponent = AddComponent(new DirectionComponent());
         }
 
         #region LIFECYCLE
@@ -161,60 +162,17 @@ namespace Threadlock.Entities.Characters.Player
             var dir = Controls.Instance.DirectionalInput.Value;
             dir.Normalize();
 
-            _velocityComponent.Move(dir, MoveSpeed);
+            _velocityComponent.Move(dir, MoveSpeed, false, true);
 
-            AnimatedSpriteHelper.PlayAnimation(ref _animator, "Player_Run");
+            AnimatedSpriteHelper.PlayAnimation(_animator, "Player_Run");
         }
 
         public void Idle()
         {
-            AnimatedSpriteHelper.PlayAnimation(ref _animator, "Player_Idle");
-
-            //_velocityComponent.Direction = Vector2.Zero;
+            AnimatedSpriteHelper.PlayAnimation(_animator, "Player_Idle");
         }
 
-        public void IdleInFacingDirection()
-        {
-            var dir = GetFacingDirection();
-
-            string dirString;
-            if (dir.Y < 0 && Math.Abs(dir.X) < .1f)
-                dirString = "Up";
-            else if (dir.Y > 0 && Math.Abs(dir.X) < .1f)
-                dirString = "Down";
-            else
-                dirString = "Right";
-
-            AnimatedSpriteHelper.PlayAnimation(ref _animator, $"Player_Idle_{dirString}");
-
-            _velocityComponent.LastNonZeroDirection = dir;
-        }
-
-        public BasicWeapon EquipNewWeapon<T>() where T : BasicWeapon, new()
-        {
-            var weapon = new T();
-            return EquipNewWeapon(weapon);
-        }
-
-        public BasicWeapon EquipNewWeapon<T>(T weapon) where T : BasicWeapon
-        {
-            if (_basicWeapon != null)
-            {
-                _basicWeapon.OnUnequipped();
-                RemoveComponent(_basicWeapon);
-            }
-
-            _basicWeapon = AddComponent(weapon);
-
-            OnWeaponChanged?.Invoke(_basicWeapon);
-
-            return _basicWeapon;
-        }
-
-        public BasicWeapon GetCurrentWeapon()
-        {
-            return _basicWeapon;
-        }
+        #region OBSERVERS
 
         void OnDeath(Entity entity)
         {
@@ -231,6 +189,8 @@ namespace Threadlock.Entities.Characters.Player
         {
             AttachToScene(Game1.Scene);
         }
+
+        #endregion
 
         void AddAnimations()
         {
@@ -338,7 +298,7 @@ namespace Threadlock.Entities.Characters.Player
         {
             var basePos = _originComponent.Origin;
 
-            var dir = _velocityComponent.Direction != Vector2.Zero ? _velocityComponent.Direction : _velocityComponent.LastNonZeroDirection;
+            var dir = _directionComponent.GetCurrentDirection();
 
             var checkEnd = basePos + (dir * _checkRadius);
 

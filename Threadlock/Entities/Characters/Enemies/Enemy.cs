@@ -102,8 +102,6 @@ namespace Threadlock.Entities.Characters.Enemies
 
             AddComponent(new SelectionComponent(_animator, 10));
 
-            AddComponent(new SpriteFlipper());
-
 
             //PHYSICS
             _mover = AddComponent(new Mover());
@@ -140,6 +138,8 @@ namespace Threadlock.Entities.Characters.Enemies
             AddComponent(new OriginComponent(collider));
 
             AddComponent(new LootDropper(LootTables.BasicEnemy));
+
+            AddComponent(new DirectionComponent());
 
 
             //ACTIONS
@@ -178,8 +178,6 @@ namespace Threadlock.Entities.Characters.Enemies
 
             AddComponent(new SelectionComponent(_animator, 10));
 
-            AddComponent(new SpriteFlipper());
-
 
             //PHYSICS
             _mover = AddComponent(new Mover());
@@ -217,6 +215,7 @@ namespace Threadlock.Entities.Characters.Enemies
 
             AddComponent(new LootDropper(LootTables.BasicEnemy));
 
+            AddComponent(new DirectionComponent());
 
             //ACTIONS
             _actions = new List<EnemyAction>();
@@ -427,34 +426,10 @@ namespace Threadlock.Entities.Characters.Enemies
             }
         }
 
-        /// <summary>
-        /// watch a target, but don't move towards it
-        /// </summary>
-        /// <param name="target"></param>
-        /// <returns></returns>
-        public virtual TaskStatus TrackTarget(Vector2 target)
-        {
-            if (TryGetComponent<VelocityComponent>(out var velocityComponent))
-            {
-                var dir = target - Position;
-                dir.Normalize();
-                velocityComponent.LastNonZeroDirection = dir;
-            }
-
-            return TaskStatus.Running;
-        }
-
-        public virtual TaskStatus MoveToTarget(Entity target, float speed)
-        {
-            if (target.TryGetComponent<OriginComponent>(out var originComponent))
-                return MoveToTarget(originComponent.Origin, speed);
-            else return MoveToTarget(target.Position, speed);
-        }
-
         public virtual TaskStatus MoveToTarget(Vector2 target, float speed)
         {
             //handle animation
-            AnimatedSpriteHelper.PlayAnimation(ref _animator, _config.MoveAnimation);
+            AnimatedSpriteHelper.PlayAnimation(_animator, _config.MoveAnimation);
 
             if (TryGetComponent<Pathfinder>(out var pathfinder))
             {
@@ -464,7 +439,7 @@ namespace Threadlock.Entities.Characters.Enemies
             {
                 var dir = target - Position;
                 dir.Normalize();
-                velocityComponent.Move(dir, speed);
+                velocityComponent.Move(dir, speed, false, true);
             }
 
             return TaskStatus.Running;
@@ -480,7 +455,7 @@ namespace Threadlock.Entities.Characters.Enemies
         public TaskStatus MoveAway(Vector2 target, float speed)
         {
             //handle animation
-            AnimatedSpriteHelper.PlayAnimation(ref _animator, _config.MoveAnimation);
+            AnimatedSpriteHelper.PlayAnimation(_animator, _config.MoveAnimation);
 
             var enemyPos = Position;
             if (TryGetComponent<OriginComponent>(out var enemyOrigin))
@@ -490,14 +465,14 @@ namespace Threadlock.Entities.Characters.Enemies
             dir.Normalize();
 
             if (TryGetComponent<VelocityComponent>(out var velocityComponent))
-                velocityComponent.Move(dir, speed);
+                velocityComponent.Move(dir, speed, false, true);
 
             return TaskStatus.Running;
         }
 
         public virtual TaskStatus Idle(bool trackTarget = false)
         {
-            AnimatedSpriteHelper.PlayAnimation(ref _animator, _config.IdleAnimation);
+            AnimatedSpriteHelper.PlayAnimation(_animator, _config.IdleAnimation);
 
             if (trackTarget)
             {
@@ -505,12 +480,11 @@ namespace Threadlock.Entities.Characters.Enemies
                 if (TargetEntity.TryGetComponent<OriginComponent>(out var originComponent))
                     pos = originComponent.Origin;
 
-                if (TryGetComponent<VelocityComponent>(out var velocityComponent))
-                {
-                    var dir = pos - Position;
-                    dir.Normalize();
-                    velocityComponent.LastNonZeroDirection = dir;
-                }
+                var dir = pos - Position;
+                dir.Normalize();
+
+                if (TryGetComponent<DirectionComponent>(out var directionComponent))
+                    directionComponent.UpdateCurrentDirection(dir);
             }
 
             return TaskStatus.Running;
@@ -529,10 +503,9 @@ namespace Threadlock.Entities.Characters.Enemies
         {
             _spawning = true;
 
-            if (!string.IsNullOrWhiteSpace(_config.SpawnAnimation))
-                yield return AnimatedSpriteHelper.WaitForAnimation(_animator, _config.SpawnAnimation);
-            else
-                AnimatedSpriteHelper.PlayAnimation(ref _animator, _config.IdleAnimation);
+            AnimatedSpriteHelper.PlayAnimation(_animator, _config.SpawnAnimation);
+            while (AnimatedSpriteHelper.IsAnimationPlaying(_animator, _config.SpawnAnimation))
+                yield return null;
 
             _spawning = false;
         }

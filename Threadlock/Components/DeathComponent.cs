@@ -44,7 +44,7 @@ namespace Threadlock.Components
 
             if (Entity.TryGetComponent<SpriteAnimator>(out var animator))
             {
-                AnimatedSpriteHelper.PlayAnimation(ref animator, _deathAnimName);
+                AnimatedSpriteHelper.PlayAnimation(animator, _deathAnimName);
                 animator.OnAnimationCompletedEvent += OnAnimationCompleted;
             }
             else

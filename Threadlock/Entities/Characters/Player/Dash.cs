@@ -57,7 +57,7 @@ namespace Threadlock.Entities.Characters.Player
 
             //start animation
             _spriteAnimator.Color = Color.White * .8f;
-            AnimatedSpriteHelper.PlayAnimation(ref _spriteAnimator, "Player_Roll");
+            AnimatedSpriteHelper.PlayAnimation(_spriteAnimator, "Player_Roll");
 
             var animDuration = AnimatedSpriteHelper.GetAnimationDuration(_spriteAnimator);
             var timer = 0f;
@@ -79,7 +79,7 @@ namespace Threadlock.Entities.Characters.Player
                     currentSpeed = 0;
 
                 //move
-                _velocityComponent.Move(_velocityComponent.Direction, currentSpeed);
+                _velocityComponent.Move(_velocityComponent.Direction, currentSpeed, false, true);
 
                 //wait until next frame
                 yield return null;

@@ -135,7 +135,7 @@ namespace Threadlock.Components
             //play animation if possible
             if (Entity.TryGetComponent<SpriteAnimator>(out var animator))
             {
-                AnimatedSpriteHelper.PlayAnimation(ref animator, _hitAnimation);
+                AnimatedSpriteHelper.PlayAnimation(animator, _hitAnimation);
             }
 
             //apply effect
@@ -153,7 +153,7 @@ namespace Threadlock.Components
                 time += Time.DeltaTime;
 
                 var currentSpeed = Lerps.Ease(EaseType.CubicOut, speed, 0f, time, _knockbackDuration);
-                _velocityComponent.Move(direction, currentSpeed);
+                _velocityComponent.Move(direction, currentSpeed, false, false);
 
                 yield return null;
             }

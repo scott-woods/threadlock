@@ -39,7 +39,10 @@ namespace Threadlock.Entities
 
         IEnumerator PlayEffect()
         {
-            yield return AnimatedSpriteHelper.WaitForAnimation(_animator, _animationName);
+            AnimatedSpriteHelper.PlayAnimation(_animator, _animationName);
+            while (AnimatedSpriteHelper.IsAnimationPlaying(_animator, _animationName))
+                yield return null;
+
             _animator.SetEnabled(false);
             Destroy();
         }

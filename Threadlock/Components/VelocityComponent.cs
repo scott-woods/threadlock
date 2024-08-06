@@ -12,21 +12,12 @@ namespace Threadlock.Components
     public class VelocityComponent : Component
     {
         public Vector2 Direction = new Vector2(1, 0);
-        Vector2 _lastNonZeroDirection = new Vector2(1, 0);
-        public Vector2 LastNonZeroDirection
-        {
-            get => _lastNonZeroDirection;
-            set
-            {
-                if (!float.IsNaN(value.X) && !float.IsNaN(value.Y))
-                    _lastNonZeroDirection = value;
-            }
-        }
 
         //SubpixelVector2 _subPixelV2 = new SubpixelVector2();
 
         Mover _mover;
         ProjectileMover _projectileMover;
+        DirectionComponent _directionComponent;
 
         public override void OnAddedToEntity()
         {
@@ -37,9 +28,12 @@ namespace Threadlock.Components
 
             if (Entity.TryGetComponent<ProjectileMover>(out var projectileMover))
                 _projectileMover = projectileMover;
+
+            if (Entity.TryGetComponent<DirectionComponent>(out var directionComponent))
+                _directionComponent = directionComponent;
         }
 
-        public void Move(Vector2 direction, float speed, bool isProjectile = false)
+        public void Move(Vector2 direction, float speed, bool isProjectile = false, bool updateDirection = true)
         {
             //check if movers are null
             if (!isProjectile && _mover == null)
@@ -60,8 +54,10 @@ namespace Threadlock.Components
 
             //update direction
             Direction = direction;
-            if (direction != Vector2.Zero)
-                LastNonZeroDirection = direction;
+
+            //update direction component if necessary
+            if (updateDirection && _directionComponent != null)
+                _directionComponent.UpdateCurrentDirection(direction);
 
             //calculate movement and move (use the mover to calculate to make sure we don't go through walls)
             var movement = Direction * speed * Time.DeltaTime;

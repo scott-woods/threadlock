@@ -168,7 +168,7 @@ namespace Threadlock.Components
             }
 
             weightedSum.Normalize();
-            _velocityComponent?.Move(weightedSum, speed);
+            _velocityComponent?.Move(weightedSum, speed, false, true);
         }
     }
 }

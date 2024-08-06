@@ -77,7 +77,7 @@ namespace Threadlock.Actions
             }
 
             //play prep animation
-            AnimatedSpriteHelper.PlayAnimation(ref animator, ChargeAnimation);
+            AnimatedSpriteHelper.PlayAnimation(animator, ChargeAnimation);
 
             //add sim player if necessary
             if (ShowSim)
@@ -97,7 +97,7 @@ namespace Threadlock.Actions
 
             IsPrepared = true;
 
-            yield return new TargetingInfo() { Position = new Vector2(50, 50) };
+            yield return new TargetingInfo() { Position = _selectedPosition };
         }
 
         bool ValidateAim(Vector2 targetPosition, Entity prepEntity, out Vector2 finalPosition)
@@ -158,6 +158,10 @@ namespace Threadlock.Actions
         bool TryConfirm()
         {
             var desiredPos = Core.Scene.Camera.MouseToWorldPoint();
+
+            if (_baseEntity.TryGetComponent<DirectionComponent>(out var directionComponent))
+                directionComponent.UpdateCurrentDirection(desiredPos - _baseEntity.Position);
+
             if (ValidateAim(desiredPos, _baseEntity, out var finalPosition))
             {
                 _selectedPosition = finalPosition;

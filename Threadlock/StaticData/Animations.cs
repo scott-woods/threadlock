@@ -183,13 +183,5 @@ namespace Threadlock.StaticData
         //directional config only
         public bool UseDirections;
         public Dictionary<string, string> DirectionalAnimations = new Dictionary<string, string>();
-        public DirectionSource DirectionSource;
-        public bool CanDirectionChange = true;
-    }
-
-    public enum DirectionSource
-    {
-        Velocity,
-        Aiming
     }
 }

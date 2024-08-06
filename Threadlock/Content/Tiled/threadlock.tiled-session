@@ -97,8 +97,8 @@
             "scale": 1.5,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 307.66666666666663,
-                "y": 218.99999999999997
+                "x": 306.66666666666663,
+                "y": 218.33333333333337
             }
         },
         "C:/Users/scott/Desktop/Game-Dev/MonoGame/Reference-Projects/Nez-Samples/Nez.Samples/Content/NinjaAdventure/map/tilemap.tmx#tileset": {
@@ -108,8 +108,8 @@
             "scale": 1.5897656249999998,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 320.48749324291117,
-                "y": 240.60150375939853
+                "x": 319.5439579340508,
+                "y": 239.97248022015827
             }
         },
         "C:/Users/scott/Desktop/Game-Dev/MonoGame/Reference-Projects/Nez-Samples/Nez.Samples/Content/Platformer/tiledMap.tmx#tileset": {
@@ -158,8 +158,8 @@
             "scale": 2,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 255.75,
-                "y": 255.25
+                "x": 256,
+                "y": 255.75
             }
         },
         "RuleMaps/forge_clutter_rules.tmx": {
@@ -265,8 +265,8 @@
             "scale": 1,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 255.5,
-                "y": 256
+                "x": 256,
+                "y": 256.5
             }
         },
         "Tilemaps/FairyForest/forest_hallway_test.tmx": {
@@ -296,8 +296,8 @@
             "scale": 1.5,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 255.66666666666663,
-                "y": 255.33333333333331
+                "x": 256,
+                "y": 255.66666666666663
             }
         },
         "Tilemaps/FairyForest/forest_test_3.tmx": {
@@ -319,8 +319,8 @@
             "scale": 4,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 39.875,
-                "y": 40
+                "x": 40,
+                "y": 40.125
             }
         },
         "Tilemaps/Forge/Doorways/forge_bottom_closed.tmx": {
@@ -338,8 +338,8 @@
             "scale": 4,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 39.875,
-                "y": 40
+                "x": 40,
+                "y": 40.125
             }
         },
         "Tilemaps/Forge/Doorways/forge_left.tmx": {
@@ -546,8 +546,8 @@
             "scale": 1,
             "selectedLayer": 9,
             "viewCenter": {
-                "x": 303.5,
-                "y": 320
+                "x": 302,
+                "y": 319.5
             }
         },
         "Tilemaps/Forge/forge_boss.tmx": {
@@ -597,8 +597,8 @@
             "scale": 1,
             "selectedLayer": 8,
             "viewCenter": {
-                "x": 303.5,
-                "y": 320
+                "x": 304,
+                "y": 320.5
             }
         },
         "Tilemaps/Forge/forge_normal_2.tmx": {
@@ -714,8 +714,8 @@
             "scale": 1,
             "selectedLayer": 8,
             "viewCenter": {
-                "x": 263.5,
-                "y": 288
+                "x": 264,
+                "y": 288.5
             }
         },
         "Tilemaps/Forge/forge_test.tmx": {
@@ -741,8 +741,8 @@
             "scale": 0.75,
             "selectedLayer": 9,
             "viewCenter": {
-                "x": 255.33333333333331,
-                "y": 272
+                "x": 256,
+                "y": 272.66666666666663
             }
         },
         "Tilemaps/enemy_test_zone.tmx": {
@@ -752,8 +752,8 @@
             "scale": 1,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 262.5,
-                "y": 310
+                "x": 264,
+                "y": 280.5
             }
         },
         "Tilemaps/test.tmx": {
@@ -834,6 +834,8 @@
     "project": "threadlock.tiled-project",
     "property.type": "string",
     "recentFiles": [
+        "C:/Users/scott/Desktop/Game-Dev/MonoGame/Reference-Projects/Nez-Samples/Nez.Samples/Content/NinjaAdventure/map/tilemap.tmx",
+        "C:/Users/scott/Desktop/Game-Dev/MonoGame/Reference-Projects/Nez-Samples/Nez.Samples/Content/Platformer/tiledMap.tmx",
         "Tilemaps/FairyForest/forest_test_2.tmx",
         "RuleMaps/stardew_leaves_rules.tmx",
         "RuleMaps/forest_walls_rules.tmx",
@@ -843,9 +845,7 @@
         "Tilemaps/HubMaps/hub.tmx",
         "Tilemaps/Forge/forge_normal_1.tmx",
         "Tilemaps/Forge/Doorways/forge_bottom.tmx",
-        "Tilemaps/Forge/Doorways/forge_bottom_open.tmx",
-        "Tilesets/forge_tileset.tsx",
-        "Tilemaps/Forge/forge_action_store.tmx"
+        "Tilemaps/Forge/Doorways/forge_bottom_open.tmx"
     ],
     "resizeMap.removeObjects": false,
     "tileset.lastUsedFilter": "Tiled tileset files (*.tsx *.xml)",

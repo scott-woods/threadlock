@@ -268,16 +268,6 @@ namespace Threadlock.Actions
 
         public IEnumerator ExecuteActionPhase(Entity entity, TargetingInfo targetingInfo)
         {
-            //retrieve animator
-            var animator = entity.GetComponent<SpriteAnimator>();
-
-            //play animation
-            var isAnimationCompleted = false;
-            if (!string.IsNullOrWhiteSpace(Animation))
-            {
-                _animationCoroutine = Core.StartCoroutine(CoroutineHelper.CoroutineWrapper(AnimatedSpriteHelper.WaitForAnimation(animator, Animation), () => isAnimationCompleted = true));
-            }
-
             //start movement
             var isMovementCompleted = false;
             if (Movement != null)
@@ -285,10 +275,19 @@ namespace Threadlock.Actions
                 _movementCoroutine = Core.StartCoroutine(CoroutineHelper.CoroutineWrapper(Movement.HandleMovement(entity, targetingInfo), () => isMovementCompleted = true));
             }
 
+            //retrieve animator
+            var animator = entity.GetComponent<SpriteAnimator>();
+
+            //play animation
+            AnimatedSpriteHelper.PlayAnimation(animator, Animation);
+            var isAnimationCompleted = false;
+
             //wait for specified duration, checking if animation or movement is done if necessary
             var timer = 0f;
             while (timer < Duration || WaitForAnimation && !isAnimationCompleted || WaitForMovement && !isMovementCompleted)
             {
+                isAnimationCompleted = !AnimatedSpriteHelper.IsAnimationPlaying(animator, Animation);
+
                 timer += Time.DeltaTime;
                 yield return null;
             }
@@ -337,12 +336,13 @@ namespace Threadlock.Actions
                 yield break;
             }
 
+            //get direction component
+            var directionComponent = entity.GetComponent<DirectionComponent>();
+
             //determine duration (use animation duration or specified)
             var duration = Duration;
-            //if (UseAnimationDuration && entity.TryGetComponent<SpriteAnimator>(out var animator))
-            //    duration = AnimatedSpriteHelper.GetAnimationDuration(animator);
 
-            var initialSpeed = 0f;
+            var initialSpeed = Speed;
             var dir = Vector2.Zero;
             switch (MovementType)
             {
@@ -356,28 +356,16 @@ namespace Threadlock.Actions
                     dir = targetingInfo.Direction != null ? targetingInfo.Direction.Value : targetingInfo.Position.Value - entity.Position;
                     break;
                 case MovementType2.Directional:
-                    initialSpeed = Math.Abs(Speed);
                     if (targetingInfo.Direction == null)
                     {
                         yield break;
                     }
                     dir = targetingInfo.Direction.Value;
                     break;
-                case MovementType2.DirectionalReverse:
-                    initialSpeed = Math.Abs(Speed);
-                    if (targetingInfo.Direction == null)
-                    {
-                        yield break;
-                    }
-                    dir = targetingInfo.Direction.Value * -1;
-                    break;
             }
 
             if (dir != Vector2.Zero)
                 dir.Normalize();
-
-            if (Speed < 0)
-                dir *= -1;
 
             var timer = 0f;
             while (timer < duration)
@@ -394,7 +382,7 @@ namespace Threadlock.Actions
                         speed = Lerps.Ease(EaseType, speed, FinalSpeed.Value, timer, timeToFinalSpeed);
                 }
 
-                velocityComponent.Move(dir, speed, true);
+                velocityComponent.Move(dir, speed, true, true);
 
                 yield return null;
             }
@@ -405,7 +393,6 @@ namespace Threadlock.Actions
     {
         ToPoint,
         Directional,
-        DirectionalReverse,
         Instant
     }
 }
