@@ -131,6 +131,8 @@ namespace Threadlock.Entities.Characters.Player
             _deathComponent.Emitter.AddObserver(DeathEventTypes.Finished, OnDeath);
 
             _directionComponent = AddComponent(new DirectionComponent());
+
+            AddComponent(new InteractableChecker());
         }
 
         #region LIFECYCLE
@@ -220,57 +222,6 @@ namespace Threadlock.Entities.Characters.Player
                     fps = 21;
                 _animator.AddAnimation(tag.Name, sprites.ToArray(), fps);
             }
-
-            //var textureWithSword = Core.Content.LoadTexture(Content.Textures.Characters.Player.Sci_fi_player_with_sword);
-            //var noSwordTexture = Core.Content.LoadTexture(Content.Textures.Characters.Player.Sci_fi_player_no_sword);
-
-            //var spritesWithSword = Sprite.SpritesFromAtlas(textureWithSword, 64, 65);
-            //var noSwordSprites = Sprite.SpritesFromAtlas(noSwordTexture, 64, 65);
-
-            //var totalCols = 13;
-            //var slashFps = 15;
-            //var thrustFps = 15;
-            //var rollFps = 20;
-
-            ////down
-            //_animator.AddAnimation($"IdleDown", AnimatedSpriteHelper.GetSpriteArrayByRow(spritesWithSword, 0, 12, totalCols));
-            //_animator.AddAnimation($"IdleDownNoSword", AnimatedSpriteHelper.GetSpriteArrayByRow(noSwordSprites, 0, 12, totalCols));
-            //_animator.AddAnimation($"WalkDown", AnimatedSpriteHelper.GetSpriteArrayByRow(spritesWithSword, 1, 8, totalCols));
-            //_animator.AddAnimation($"WalkDownNoSword", AnimatedSpriteHelper.GetSpriteArrayByRow(noSwordSprites, 1, 8, totalCols));
-            //_animator.AddAnimation($"RunDown", AnimatedSpriteHelper.GetSpriteArrayByRow(spritesWithSword, 2, 8, totalCols));
-            //_animator.AddAnimation($"RunDownNoSword", AnimatedSpriteHelper.GetSpriteArrayByRow(noSwordSprites, 2, 8, totalCols));
-            //_animator.AddAnimation($"ThrustDown", AnimatedSpriteHelper.GetSpriteArrayByRow(spritesWithSword, 3, 4, totalCols), thrustFps);
-            //_animator.AddAnimation($"SlashDown", AnimatedSpriteHelper.GetSpriteArrayFromRange(spritesWithSword, 54, 58), slashFps);
-            //_animator.AddAnimation($"RollDown", AnimatedSpriteHelper.GetSpriteArrayByRow(spritesWithSword, 5, 8, totalCols), rollFps);
-            //_animator.AddAnimation($"RollDownNoSword", AnimatedSpriteHelper.GetSpriteArrayByRow(noSwordSprites, 3, 8, totalCols), rollFps);
-
-            ////side
-            //_animator.AddAnimation($"Idle", AnimatedSpriteHelper.GetSpriteArrayByRow(spritesWithSword, 6, 12, totalCols));
-            //_animator.AddAnimation($"IdleNoSword", AnimatedSpriteHelper.GetSpriteArrayByRow(noSwordSprites, 4, 12, totalCols));
-            //_animator.AddAnimation($"Walk", AnimatedSpriteHelper.GetSpriteArrayByRow(spritesWithSword, 7, 8, totalCols));
-            //_animator.AddAnimation($"WalkNoSword", AnimatedSpriteHelper.GetSpriteArrayByRow(noSwordSprites, 5, 8, totalCols));
-            //_animator.AddAnimation($"Run", AnimatedSpriteHelper.GetSpriteArrayByRow(spritesWithSword, 8, 8, totalCols));
-            //_animator.AddAnimation($"RunNoSword", AnimatedSpriteHelper.GetSpriteArrayByRow(noSwordSprites, 6, 8, totalCols));
-            //_animator.AddAnimation($"Roll", AnimatedSpriteHelper.GetSpriteArrayByRow(spritesWithSword, 9, 6, totalCols), rollFps);
-            //_animator.AddAnimation($"RollNoSword", AnimatedSpriteHelper.GetSpriteArrayByRow(noSwordSprites, 7, 6, totalCols), rollFps);
-            //_animator.AddAnimation($"Thrust", AnimatedSpriteHelper.GetSpriteArrayByRow(spritesWithSword, 10, 4, totalCols), thrustFps);
-            //_animator.AddAnimation($"Slash", AnimatedSpriteHelper.GetSpriteArrayByRow(spritesWithSword, 11, 5, totalCols), slashFps);
-
-            ////up
-            //_animator.AddAnimation($"IdleUp", AnimatedSpriteHelper.GetSpriteArrayByRow(spritesWithSword, 12, 12, totalCols));
-            //_animator.AddAnimation($"IdleUpNoSword", AnimatedSpriteHelper.GetSpriteArrayByRow(noSwordSprites, 8, 12, totalCols));
-            //_animator.AddAnimation($"WalkUp", AnimatedSpriteHelper.GetSpriteArrayByRow(spritesWithSword, 13, 8, totalCols));
-            //_animator.AddAnimation($"WalkUpNoSword", AnimatedSpriteHelper.GetSpriteArrayByRow(noSwordSprites, 9, 8, totalCols));
-            //_animator.AddAnimation($"RunUp", AnimatedSpriteHelper.GetSpriteArrayByRow(spritesWithSword, 14, 8, totalCols));
-            //_animator.AddAnimation($"RunUpNoSword", AnimatedSpriteHelper.GetSpriteArrayByRow(noSwordSprites, 10, 8, totalCols));
-            //_animator.AddAnimation($"ThrustUp", AnimatedSpriteHelper.GetSpriteArrayByRow(spritesWithSword, 15, 4, totalCols), thrustFps);
-            //_animator.AddAnimation($"SlashUp", AnimatedSpriteHelper.GetSpriteArrayFromRange(spritesWithSword, 210, 214), slashFps);
-            //_animator.AddAnimation($"RollUp", AnimatedSpriteHelper.GetSpriteArrayByRow(spritesWithSword, 17, 8, totalCols), rollFps);
-            //_animator.AddAnimation($"RollUpNoSword", AnimatedSpriteHelper.GetSpriteArrayByRow(noSwordSprites, 11, 8, totalCols), rollFps);
-
-            ////death
-            //_animator.AddAnimation($"Die", AnimatedSpriteHelper.GetSpriteArrayByRow(spritesWithSword, 18, 13, totalCols));
-            //_animator.AddAnimation($"DieNoSword", AnimatedSpriteHelper.GetSpriteArrayByRow(noSwordSprites, 12, 13, totalCols));
         }
 
         

@@ -37,8 +37,6 @@ namespace Threadlock.Entities.Characters.Player.States
 
         bool _isCheckOnCooldown = false;
 
-        Interactable _focusedInteractable;
-
         public override void OnInitialized()
         {
             base.OnInitialized();
@@ -63,6 +61,11 @@ namespace Threadlock.Entities.Characters.Player.States
             Game1.UIManager.Emitter.AddObserver(GlobalManagers.UIEvents.MenuClosed, OnMenuClosed);
 
             _statusComponent.Emitter.AddObserver(StatusEvents.Changed, OnStatusChanged);
+        }
+
+        public override void Update(float deltaTime)
+        {
+            
         }
 
         public override void End()
@@ -115,32 +118,6 @@ namespace Threadlock.Entities.Characters.Player.States
                 _isCheckOnCooldown = false;
             });
             _machine.ChangeState<Idle>();
-        }
-
-        public override void Update(float deltaTime)
-        {
-            if (_context.TryRaycast(1 << PhysicsLayers.PromptTrigger, out var raycast))
-            {
-                if (raycast.Collider.Entity.TryGetComponent<Interactable>(out var interactable))
-                {
-                    if (interactable != _focusedInteractable && interactable.Enabled)
-                    {
-                        _focusedInteractable?.SetFocus(false);
-                        _focusedInteractable = interactable;
-                        _focusedInteractable.SetFocus(true);
-                    }
-                }
-                else
-                {
-                    _focusedInteractable?.SetFocus(false);
-                    _focusedInteractable = null;
-                }
-            }
-            else
-            {
-                _focusedInteractable?.SetFocus(false);
-                _focusedInteractable = null;
-            }
         }
 
         public override void Reason()
@@ -241,70 +218,9 @@ namespace Threadlock.Entities.Characters.Player.States
 
         public bool TryInteract()
         {
-            if (!_isCheckOnCooldown && Controls.Instance.Check.IsPressed)
+            if (Controls.Instance.Check.IsPressed && _context.TryGetComponent<InteractableChecker>(out var checker))
             {
-                if (_context.TryRaycast(1 << PhysicsLayers.PromptTrigger, out var raycast))
-                {
-                    if (raycast.Collider.Entity.TryGetComponent<Interactable>(out var interactable))
-                    {
-                        if (interactable.Enabled)
-                        {
-                            interactable.Interact();
-                            return true;
-                        }
-                    }
-                }
-
-                ////first check for button prompts
-                //if (_context.TryGetComponent<Hurtbox>(out var hurtbox))
-                //{
-                //    var colliders = Physics.BoxcastBroadphaseExcludingSelf(hurtbox.Collider, 1 << PhysicsLayers.PromptTrigger);
-                //    foreach (var collider in colliders)
-                //    {
-                //        if (collider.Entity.TryGetComponent<ButtonPrompt>(out var prompt))
-                //        {
-                //            prompt.Trigger();
-                //            return true;
-                //        }
-                //        else if (collider.Entity.TryGetComponent<Trigger>(out var trigger))
-                //        {
-                //            Game1.StartCoroutine(trigger.HandleTriggered());
-                //            return true;
-                //        }
-                //    }
-                //}
-                //var playerCollider = _context.GetComponents<Collider>().Where(c => c.PhysicsLayer == PhysicsLayers.PlayerCollider).FirstOrDefault();
-                //if (playerCollider != null)
-                //{
-                //    var colliders = Physics.BoxcastBroadphaseExcludingSelf(playerCollider, 1 << PhysicsLayers.PromptTrigger);
-                //    foreach (var collider in colliders)
-                //    {
-                //        if (collider.Entity.TryGetComponent<ButtonPrompt>(out var prompt))
-                //        {
-                //            prompt.Trigger();
-                //            return true;
-                //        }
-                //        else if (collider.Entity.TryGetComponent<Trigger>(out var trigger))
-                //        {
-                //            Game1.StartCoroutine(trigger.HandleTriggered());
-                //            return true;
-                //        }
-                //    }
-                //}
-
-                //if (_context.TryRaycast(1 << PhysicsLayers.PromptTrigger, out var raycast))
-                //{
-                //    if (raycast.Collider.Entity.TryGetComponent<ButtonPrompt>(out var prompt))
-                //    {
-                //        prompt.Trigger();
-                //        return true;
-                //    }
-                //    else if (raycast.Collider.Entity.TryGetComponent<Trigger>(out var trigger))
-                //    {
-                //        Game1.StartCoroutine(trigger.HandleTriggered());
-                //        return true;
-                //    }
-                //}
+                return checker.TryCheck();
             }
 
             return false;

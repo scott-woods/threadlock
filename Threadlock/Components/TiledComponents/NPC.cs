@@ -15,7 +15,7 @@ using Threadlock.StaticData;
 
 namespace Threadlock.Components.TiledComponents
 {
-    public class NPC : TiledComponent
+    public class NPC : TiledComponent, IInteractable
     {
         const float _interactCooldown = 1f;
 
@@ -24,7 +24,6 @@ namespace Threadlock.Components.TiledComponents
         SpriteAnimator _animator;
         BoxCollider _collider;
         OriginComponent _origin;
-        Interactable _interactable;
 
         Dictionary<string, Conversation> _dialogueDictionary;
 
@@ -60,15 +59,14 @@ namespace Threadlock.Components.TiledComponents
                     {
                         var colliderRect = key.Bounds.ToRectangle();
                         _collider = Entity.AddComponent(new BoxCollider(colliderRect.X - (_animator.Width / 2), colliderRect.Y - (_animator.Height / 2), colliderRect.Width, colliderRect.Height));
-                        Flags.SetFlagExclusive(ref _collider.PhysicsLayer, PhysicsLayers.Environment);
+                        _collider.PhysicsLayer = 0;
+                        Flags.SetFlag(ref _collider.PhysicsLayer, PhysicsLayers.Environment);
+                        Flags.SetFlag(ref _collider.PhysicsLayer, PhysicsLayers.PromptTrigger);
 
                         _origin = Entity.AddComponent(new OriginComponent(_collider));
 
                         var diff = Entity.Position - _origin.Origin;
                         Entity.Position += diff;
-
-                        _interactable = Entity.AddComponent(new Interactable(_collider));
-                        _interactable.OnInteracted += OnInteracted;
                     }
                 }
             }
@@ -87,16 +85,27 @@ namespace Threadlock.Components.TiledComponents
 
         #endregion
 
-        void OnInteracted()
+        #region IInteractable
+
+        public void OnFocusEntered()
+        {
+
+        }
+
+        public void OnFocusExited()
+        {
+
+        }
+
+        public void OnInteracted()
         {
             Game1.StartCoroutine(HandleInteraction());
         }
 
+        #endregion
+
         IEnumerator HandleInteraction()
         {
-            //disable interactable
-            _interactable.SetEnabled(false);
-
             //pick a valid conversation
             var validConversations = new List<Conversation>();
             foreach (var conversation in  _dialogueDictionary?.Values)
@@ -137,8 +146,6 @@ namespace Threadlock.Components.TiledComponents
             {
                 yield return Game1.UIManager.ShowTextboxText("Big Papa Pickle.");
             }
-
-            Game1.Schedule(_interactCooldown, timer => _interactable.SetEnabled(true));
         }
     }
 }
