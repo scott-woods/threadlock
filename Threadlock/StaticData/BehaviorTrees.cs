@@ -1,4 +1,5 @@
-﻿using Nez.AI.BehaviorTrees;
+﻿using Nez;
+using Nez.AI.BehaviorTrees;
 using System;
 using System.Collections.Generic;
 using Threadlock.Components;
@@ -32,19 +33,36 @@ namespace Threadlock.StaticData
                     //handle stunned state
                     .Sequence(AbortTypes.LowerPriority)
                         .Conditional(x => x.CheckStatus() != StatusPriority.Normal)
+                        .Action(x =>
+                        {
+                            Debug.Log("Stunned");
+                            return TaskStatus.Success;
+                        })
                     .EndComposite()
 
                     //handle pursuit
                     .ConditionalDecorator(x => x.IsPursued)
                     .Sequence(AbortTypes.LowerPriority)
-                        .Action(x => x.MoveAway(x.TargetEntity, x.BaseSpeed))
+                        .Action(x => {
+                            Debug.Log("Pursued");
+                            return x.MoveAway(x.TargetEntity, x.BaseSpeed);
+                        })
                     .EndComposite()
 
                     //attack sequence
                     .Sequence(AbortTypes.LowerPriority)
-                        .Action(x => x.TryQueueAction())
-                        .Action(x => x.ExecuteQueuedAction())
+                        .Conditional(x => x.CanExecuteAction())
+                        .Action(x => x.ExecuteAction())
+                        .UntilSuccess()
+                        .Sequence()
+                            .Conditional(x => !x.IsExecutingAction())
+                        .EndComposite()
                         .ParallelSelector()
+                            .Action(x =>
+                            {
+                                Debug.Log("Parallel Selector Started");
+                                return TaskStatus.Success;
+                            })
                             .WaitAction(1f)
                             .Action(x => x.Idle())
                         .EndComposite()

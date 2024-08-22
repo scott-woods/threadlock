@@ -66,16 +66,11 @@ namespace Threadlock.Entities.Characters.Enemies
         }
 
         BehaviorTree<Enemy> _tree;
-        List<EnemyAction> _actions;
-        EnemyAction _queuedAction;
 
         bool _spawning = false;
 
-        ICoroutine _actionCoroutine;
-        ICoroutine _handleActionCoroutine;
-        bool _isActionFinished = false;
-
         Mover _mover;
+        EnemyActionManager _actionManager;
 
         /// <summary>
         /// constructor
@@ -90,7 +85,6 @@ namespace Threadlock.Entities.Characters.Enemies
 
             //status
             var statusComponent = AddComponent(new StatusComponent(StatusPriority.Normal));
-            statusComponent.Emitter.AddObserver(StatusEvents.Changed, OnStatusChanged);
 
             //RENDERERS
             _animator = AddComponent(new SpriteAnimator());
@@ -141,17 +135,11 @@ namespace Threadlock.Entities.Characters.Enemies
 
             AddComponent(new DirectionComponent());
 
+            AddComponent(new AnimationComponent());
+
 
             //ACTIONS
-            _actions = new List<EnemyAction>();
-            foreach (var actionString in config.Actions)
-            {
-                if (AllEnemyActions.TryCreateEnemyAction(actionString, this, out var action))
-                {
-                    _actions.Add(action);
-                    action.LoadAnimations(ref _animator);
-                }
-            }
+            AddComponent(new EnemyActionManager(config.Actions));
 
             //BEHAVIOR
             _tree = BehaviorTrees.CreateBehaviorTree(this, config.BehaviorConfig.BehaviorTreeName);
@@ -166,7 +154,6 @@ namespace Threadlock.Entities.Characters.Enemies
 
             //status
             var statusComponent = AddComponent(new StatusComponent(StatusPriority.Normal));
-            statusComponent.Emitter.AddObserver(StatusEvents.Changed, OnStatusChanged);
 
             //RENDERERS
             _animator = AddComponent(new SpriteAnimator());
@@ -217,16 +204,10 @@ namespace Threadlock.Entities.Characters.Enemies
 
             AddComponent(new DirectionComponent());
 
+            AddComponent(new AnimationComponent());
+
             //ACTIONS
-            _actions = new List<EnemyAction>();
-            foreach (var actionString in config.Actions)
-            {
-                if (AllEnemyActions.TryCreateEnemyAction(actionString, this, out var action))
-                {
-                    _actions.Add(action);
-                    action.LoadAnimations(ref _animator);
-                }
-            }
+            _actionManager = AddComponent(new EnemyActionManager(config.Actions));
 
             //BEHAVIOR
             _tree = BehaviorTrees.CreateBehaviorTree(this, config.BehaviorConfig.BehaviorTreeName);
@@ -243,13 +224,6 @@ namespace Threadlock.Entities.Characters.Enemies
             Game1.StartCoroutine(Spawn());
         }
 
-        public override void OnRemovedFromScene()
-        {
-            base.OnRemovedFromScene();
-
-            ResetAction();
-        }
-
         public override void Update()
         {
             base.Update();
@@ -260,29 +234,7 @@ namespace Threadlock.Entities.Characters.Enemies
 
         #endregion
 
-        void ResetAction()
-        {
-            _queuedAction?.Abort();
-            _queuedAction = null;
-
-            _isActionFinished = false;
-
-            _handleActionCoroutine?.Stop();
-            _handleActionCoroutine = null;
-
-            _actionCoroutine?.Stop();
-            _actionCoroutine = null;
-        }
-
         #region OBSERVERS
-
-        void OnStatusChanged(StatusPriority status)
-        {
-            if (status != StatusPriority.Normal)
-            {
-                ResetAction();
-            }
-        }
 
         void OnHurtboxHit(HurtboxHit hit)
         {
@@ -325,20 +277,16 @@ namespace Threadlock.Entities.Characters.Enemies
             return true;
         }
 
-        #endregion
-
-        IEnumerator HandleAction(EnemyAction action)
+        public bool IsExecutingAction()
         {
-            if (action == null)
-                yield break;
-
-            _isActionFinished = false;
-
-            _actionCoroutine = Game1.StartCoroutine(action.Execute());
-            yield return _actionCoroutine;
-
-            _isActionFinished = true;
+            if (TryGetComponent<EnemyActionManager>(out var manager))
+            {
+                return manager.IsExecutingAction;
+            }
+            else return false;
         }
+
+        #endregion
 
         #region TASKS
 
@@ -348,17 +296,8 @@ namespace Threadlock.Entities.Characters.Enemies
             if (TryGetComponent<OriginComponent>(out var oc))
                 currentPos = oc.Origin;
 
-            var idealPositions = new List<Vector2>();
-
-            foreach (var action in _actions)
-            {
-                if (action.IsOnCooldown)
-                    continue;
-
-                idealPositions.Add(action.GetIdealPosition());
-            }
-
-            var targetPos = idealPositions.MinBy(p => Vector2.Distance(p, currentPos));
+            var actionManager = GetComponent<EnemyActionManager>();
+            var targetPos = actionManager.GetTargetPosition();
 
             if (targetPos == currentPos)
                 return Idle(true);
@@ -367,63 +306,24 @@ namespace Threadlock.Entities.Characters.Enemies
         }
 
         /// <summary>
-        /// sets the queued action if successful
+        /// check if can execute any actions
         /// </summary>
         /// <returns></returns>
-        public TaskStatus TryQueueAction()
+        public bool CanExecuteAction()
         {
             //don't queue anything if on cooldown
             if (IsOnCooldown)
-                return TaskStatus.Failure;
+                return false;
 
-            //split actions into groups by priority
-            var groups = _actions.OrderByDescending(a => a.Priority).GroupBy(a => a.Priority).Select(g => g.ToList());
-
-            //try each priority group
-            foreach (var group in groups)
-            {
-                //init valid actions list
-                var validActions = new List<EnemyAction>();
-
-                //check each action in the group
-                foreach (var action in group)
-                {
-                    //if the action can execute, add it to valid actions
-                    if (action.CanExecute())
-                        validActions.Add(action);
-                }
-
-                //if any valid actions in this group, pick a random one to do
-                if (validActions.Any())
-                {
-                    _queuedAction = validActions.RandomItem();
-                    return TaskStatus.Success;
-                }
-            }
-
-            //no valid actions found, return failure
-            return TaskStatus.Failure;
+            return _actionManager.GetValidActions().Count > 0;
         }
 
-        public TaskStatus ExecuteQueuedAction()
+        public TaskStatus ExecuteAction()
         {
-            //called the first time to start the coroutine
-            if (_handleActionCoroutine == null)
-            {
-                _handleActionCoroutine = Game1.StartCoroutine(HandleAction(_queuedAction));
-                return TaskStatus.Running;
-            }
+            if (_actionManager.TryAction())
+                return TaskStatus.Success;
             else
-            {
-                if (_isActionFinished)
-                {
-                    ResetAction();
-                    StartActionCooldown();
-                    return TaskStatus.Success;
-                }
-                else
-                    return TaskStatus.Running;
-            }
+                return TaskStatus.Failure;
         }
 
         public virtual TaskStatus MoveToTarget(Vector2 target, float speed)

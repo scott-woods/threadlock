@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Nez;
 using Nez.Sprites;
+using Nez.Systems;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,6 +17,8 @@ namespace Threadlock.Actions
 {
     public class PlayerAction2 : BasicAction, ICloneable
     {
+        public Emitter<PlayerActionEvents> Emitter = new Emitter<PlayerActionEvents>();
+
         //stats
         public string Description;
         public int ApCost;
@@ -76,8 +79,7 @@ namespace Threadlock.Actions
                 }
             }
 
-            //play prep animation
-            AnimatedSpriteHelper.PlayAnimation(animator, ChargeAnimation);
+            
 
             //add sim player if necessary
             if (ShowSim)
@@ -85,7 +87,12 @@ namespace Threadlock.Actions
 
             //wait for confirmation
             while (!TryConfirm())
+            {
+                //play prep animation
+                AnimatedSpriteHelper.PlayAnimation(animator, ChargeAnimation);
+
                 yield return null;
+            }
 
             //remove entity selector if necessary
             _entitySelector?.RemoveComponent(_entitySelector);
@@ -97,7 +104,9 @@ namespace Threadlock.Actions
 
             IsPrepared = true;
 
-            yield return new TargetingInfo() { Position = _selectedPosition };
+            Emitter.Emit(PlayerActionEvents.PrepFinished);
+
+            //yield return new TargetingInfo() { Position = _selectedPosition };
         }
 
         bool ValidateAim(Vector2 targetPosition, Entity prepEntity, out Vector2 finalPosition)
@@ -161,6 +170,9 @@ namespace Threadlock.Actions
 
             if (_baseEntity.TryGetComponent<DirectionComponent>(out var directionComponent))
                 directionComponent.UpdateCurrentDirection(desiredPos - _baseEntity.Position);
+
+            if (_simPlayer != null && _simPlayer.TryGetComponent<DirectionComponent>(out var simDirComponent))
+                simDirComponent.UpdateCurrentDirection(desiredPos - _baseEntity.Position);
 
             if (ValidateAim(desiredPos, _baseEntity, out var finalPosition))
             {
@@ -239,6 +251,12 @@ namespace Threadlock.Actions
         }
 
         #endregion
+    }
+
+    public enum PlayerActionEvents
+    {
+        PrepFinished,
+        ExecutionFinished
     }
 
     public enum ActionConfirmType

@@ -24,13 +24,6 @@ namespace Threadlock.Entities.Characters.Player
 {
     public class Player : Entity
     {
-        const float _checkRadius = 20f;
-
-        const string _idleAnimation = "Player_Idle";
-
-        public float MoveSpeed = 135f;
-        public Vector2 DefaultSpriteOffset = new Vector2(12, -2);
-
         //state machine
         public StateMachine<Player> StateMachine { get; set; }
         PlayerState _initialState = new Idle();
@@ -46,7 +39,6 @@ namespace Threadlock.Entities.Characters.Player
         Dash _dash;
         BoxCollider _collider;
         Shadow _shadow;
-        public BoxCollider Collider { get => _collider; }
         Hurtbox _hurtbox;
         KnockbackComponent _knockbackComponent;
         StatusComponent _statusComponent;
@@ -133,6 +125,7 @@ namespace Threadlock.Entities.Characters.Player
             _directionComponent = AddComponent(new DirectionComponent());
 
             AddComponent(new InteractableChecker());
+            AddComponent(new AnimationComponent());
         }
 
         #region LIFECYCLE
@@ -153,26 +146,12 @@ namespace Threadlock.Entities.Characters.Player
         {
             base.Update();
 
+            //update state machine
             if (Game1.GameStateManager.GameState != GameState.Paused)
                 StateMachine.Update(Time.DeltaTime);
         }
 
         #endregion
-
-        public void Run()
-        {
-            var dir = Controls.Instance.DirectionalInput.Value;
-            dir.Normalize();
-
-            _velocityComponent.Move(dir, MoveSpeed, false, true);
-
-            AnimatedSpriteHelper.PlayAnimation(_animator, "Player_Run");
-        }
-
-        public void Idle()
-        {
-            AnimatedSpriteHelper.PlayAnimation(_animator, "Player_Idle");
-        }
 
         #region OBSERVERS
 
@@ -224,18 +203,6 @@ namespace Threadlock.Entities.Characters.Player
             }
         }
 
-        
-        /// <summary>
-        /// get normalized direction the player is facing
-        /// </summary>
-        /// <returns></returns>
-        public Vector2 GetFacingDirection()
-        {
-            var dir = Scene.Camera.MouseToWorldPoint() - Position;
-            dir.Normalize();
-            return dir;
-        }
-
         public void PrepareForRespawn()
         {
             _healthComponent.Health = _healthComponent.MaxHealth;
@@ -245,16 +212,9 @@ namespace Threadlock.Entities.Characters.Player
             //_shadow.SetEnabled(true);
         }
 
-        public bool TryRaycast(int mask, out RaycastHit raycastHit)
+        public void ToggleCollision()
         {
-            var basePos = _originComponent.Origin;
-
-            var dir = _directionComponent.GetCurrentDirection();
-
-            var checkEnd = basePos + (dir * _checkRadius);
-
-            raycastHit = Physics.Linecast(basePos, checkEnd, mask);
-            return raycastHit.Collider != null;
+            _collider.SetEnabled(!_collider.Enabled);
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Threadlock.GlobalManagers
 
         public void Pause()
         {
-            if (Game1.Scene.FindEntity("Player") is Player player && player.StateMachine.CurrentState.GetType() == typeof(ActionState))
+            if (Game1.Scene.FindEntity("Player") is Player player && player.StateMachine.CurrentState.GetType() == typeof(ExecutingActionState))
                 return;
             
             //update state

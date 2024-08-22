@@ -12,7 +12,7 @@ using Threadlock.SceneComponents;
 
 namespace Threadlock.Actions
 {
-    public class EnemyAction : BasicAction, ICloneable
+    public class EnemyAction : BasicAction
     {
         //Requirements
         public bool RequiresLoS;
@@ -27,6 +27,32 @@ namespace Threadlock.Actions
         [JsonExclude]
         bool _isOnCooldown = false;
         public bool IsOnCooldown { get => _isOnCooldown; }
+
+        /// <summary>
+        /// clone this enemy action
+        /// </summary>
+        /// <returns></returns>
+        public EnemyAction Clone()
+        {
+            return new EnemyAction()
+            {
+                RequiresLoS = RequiresLoS,
+                MinDistance = MinDistance,
+                MaxDistance = MaxDistance,
+                MinAngle = MinAngle,
+                MaxAngle = MaxAngle,
+                Priority = Priority,
+                Cooldown = Cooldown,
+                Name = Name,
+                PreActionPhase = PreActionPhase,
+                ActionPhase = ActionPhase,
+                PostActionPhase = PostActionPhase,
+                AttackSounds = AttackSounds,
+                Projectiles = Projectiles,
+                IsCombo = IsCombo,
+                ComboActions = ComboActions,
+            };
+        }
 
         /// <summary>
         /// determine if the enemy is able to execute based on the requirements
@@ -133,15 +159,6 @@ namespace Threadlock.Actions
                 TargetEntity = enemy.TargetEntity,
                 Position = enemy.TargetEntity.Position,
             };
-        }
-
-        #endregion
-
-        #region ICLONEABLE
-
-        public object Clone()
-        {
-            return MemberwiseClone();
         }
 
         #endregion

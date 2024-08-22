@@ -67,7 +67,9 @@ namespace Threadlock.Entities.Characters
 
             _directionComponent = AddComponent(new DirectionComponent());
 
-            AnimatedSpriteHelper.PlayAnimation(_animator, _animation);
+            AddComponent(new AnimationComponent());
+
+            //AnimatedSpriteHelper.PlayAnimation(_animator, _animation);
         }
 
         public override void Update()
@@ -78,7 +80,6 @@ namespace Threadlock.Entities.Characters
             {
                 case SimPlayerType.AttachToCursor:
                     Position = _targetPosition;
-                    _directionComponent.UpdateCurrentDirection(Scene.Camera.MouseToWorldPoint() - Position);
                     AnimatedSpriteHelper.PlayAnimation(_animator, _animation);
                     break;
             }
@@ -93,13 +94,6 @@ namespace Threadlock.Entities.Characters
         public void UpdateTarget(Vector2 targetPosition)
         {
             _targetPosition = targetPosition;
-        }
-
-        public Vector2 GetFacingDirection()
-        {
-            var dir = Scene.Camera.MouseToWorldPoint() - Position;
-            dir.Normalize();
-            return dir;
         }
     }
 }

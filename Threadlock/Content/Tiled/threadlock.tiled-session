@@ -3,18 +3,17 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "C:/Users/scott/Desktop/Game-Dev/MonoGame/Reference-Projects/Nez-Samples/Nez.Samples/Content/Platformer/tiledMap.tmx",
+    "activeFile": "Tilemaps/enemy_test_zone.tmx",
     "expandedProjectPaths": [
-        "Tilemaps/HubMaps",
-        "Tilesets",
-        "Tilemaps",
-        "Tilemaps/Forge/Doorways",
-        "Tilemaps/Hub",
-        ".",
         "Tilemaps/Forge",
-        "RuleMaps",
+        "Tilesets",
+        ".",
+        "Tilemaps/HubMaps",
+        "Templates",
         "Tilemaps/FairyForest",
-        "Templates"
+        "RuleMaps",
+        "Tilemaps",
+        "Tilemaps/Hub"
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
@@ -752,8 +751,8 @@
             "scale": 1,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 264,
-                "y": 280.5
+                "x": 260,
+                "y": 309.5
             }
         },
         "Tilemaps/test.tmx": {
@@ -827,25 +826,23 @@
         "Tilemaps/Forge/Doorways/forge_bottom.tmx",
         "Tilemaps/Forge/Doorways/forge_bottom_open.tmx",
         "Tilesets/forge_tileset.tsx",
-        "Tilemaps/Forge/forge_action_store.tmx",
-        "C:/Users/scott/Desktop/Game-Dev/MonoGame/Reference-Projects/Nez-Samples/Nez.Samples/Content/NinjaAdventure/map/tilemap.tmx",
-        "C:/Users/scott/Desktop/Game-Dev/MonoGame/Reference-Projects/Nez-Samples/Nez.Samples/Content/Platformer/tiledMap.tmx"
+        "Tilemaps/Forge/forge_action_store.tmx"
     ],
     "project": "threadlock.tiled-project",
     "property.type": "string",
     "recentFiles": [
-        "C:/Users/scott/Desktop/Game-Dev/MonoGame/Reference-Projects/Nez-Samples/Nez.Samples/Content/NinjaAdventure/map/tilemap.tmx",
-        "C:/Users/scott/Desktop/Game-Dev/MonoGame/Reference-Projects/Nez-Samples/Nez.Samples/Content/Platformer/tiledMap.tmx",
         "Tilemaps/FairyForest/forest_test_2.tmx",
         "RuleMaps/stardew_leaves_rules.tmx",
         "RuleMaps/forest_walls_rules.tmx",
         "Tilesets/fairy_forest_tileset.tsx",
-        "Tilemaps/enemy_test_zone.tmx",
-        "Tilemaps/Forge/forge_start.tmx",
-        "Tilemaps/HubMaps/hub.tmx",
-        "Tilemaps/Forge/forge_normal_1.tmx",
+        "Tilemaps/Forge/forge_action_store.tmx",
+        "Tilesets/forge_tileset.tsx",
+        "Tilemaps/Forge/Doorways/forge_bottom_open.tmx",
         "Tilemaps/Forge/Doorways/forge_bottom.tmx",
-        "Tilemaps/Forge/Doorways/forge_bottom_open.tmx"
+        "Tilemaps/Forge/forge_normal_1.tmx",
+        "Tilemaps/HubMaps/hub.tmx",
+        "Tilemaps/Forge/forge_start.tmx",
+        "Tilemaps/enemy_test_zone.tmx"
     ],
     "resizeMap.removeObjects": false,
     "tileset.lastUsedFilter": "Tiled tileset files (*.tsx *.xml)",

@@ -24,6 +24,8 @@ namespace Threadlock.Entities.Characters.Player
 
         public List<ActionSlot> AllActionSlots { get => ActionDictionary.Values.ToList(); }
 
+        public ActionSlot ActiveAction { get; private set; }
+
         //components
         ApComponent _apComponent;
 
@@ -97,20 +99,6 @@ namespace Threadlock.Entities.Characters.Player
             return false;
         }
 
-        public bool TryQueueAction()
-        {
-            foreach (var pair in ActionDictionary)
-            {
-                if (pair.Value.Action != null && pair.Value.Button.IsDown && CanAffordAction(pair.Value.Action))
-                {
-                    _queuedAction = pair.Value.Action;
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
         /// <summary>
         /// see if we can perform any equipped actions, and return the necessary slot
         /// </summary>
@@ -123,6 +111,7 @@ namespace Threadlock.Entities.Characters.Player
                 if (pair.Value.Action != null && (pressedOnly ? pair.Value.Button.IsPressed : pair.Value.Button.IsDown) && CanAffordAction(pair.Value.Action))
                 {
                     actionSlot = pair.Value;
+                    ActiveAction = pair.Value;
                     return true;
                 }
                 //if (pair.Key.IsDown && CanAffordAction(pair.Value))

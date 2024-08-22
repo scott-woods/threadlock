@@ -185,10 +185,13 @@ namespace Threadlock.Entities.Characters.Player.States
         {
             if (_actionManager.TryAction(true, out var actionSlot))
             {
-                _machine.ChangeState<ActionState>();
-                var actionState = _machine.GetState<ActionState>();
-                actionState.StartAction(actionSlot);
+                _machine.ChangeState<PreparingActionState>();
                 return true;
+
+                //_machine.ChangeState<ActionState>();
+                //var actionState = _machine.GetState<ActionState>();
+                //actionState.StartAction(actionSlot);
+                //return true;
             }
 
             return false;

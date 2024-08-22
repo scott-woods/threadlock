@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
 using Threadlock.Entities.Characters.Player.BasicWeapons;
+using Threadlock.Helpers;
 using Threadlock.StaticData;
 
 namespace Threadlock.Entities.Characters.Player.States
@@ -29,7 +30,7 @@ namespace Threadlock.Entities.Characters.Player.States
         {
             base.Update(deltaTime);
 
-            _context.Idle();
+            AnimatedSpriteHelper.PlayAnimation(_animator, "Player_Idle");
         }
     }
 }

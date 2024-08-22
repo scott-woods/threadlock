@@ -107,69 +107,72 @@ namespace Threadlock.Helpers
 
         public static void PlayAnimation(SpriteAnimator animator, string animationName)
         {
-            if (string.IsNullOrWhiteSpace(animationName))
-                return;
+            if (animator.Entity.TryGetComponent<AnimationComponent>(out var animationComponent))
+                animationComponent.PlayAnimation(animationName);
 
-            //get config
-            var config = GetDirectionalAnimation(animationName, animator.Entity);
+            //if (string.IsNullOrWhiteSpace(animationName))
+            //    return;
 
-            //no config found, return
-            if (config == null)
-                return;
+            ////get config
+            //var config = GetDirectionalAnimation(animationName, animator.Entity);
 
-            //ensure animation exists on animator
-            if (!animator.Animations.ContainsKey(config.Name))
-                return;
+            ////no config found, return
+            //if (config == null)
+            //    return;
 
-            //if animation is already playing, return
-            if (animator.IsAnimationActive(config.Name))
-                return;
+            ////ensure animation exists on animator
+            //if (!animator.Animations.ContainsKey(config.Name))
+            //    return;
 
-            //handle flip
-            var renderers = animator.Entity.GetComponents<SpriteRenderer>();
-            foreach (var renderer in renderers)
-                renderer.FlipX = config.FlipX;
+            ////if animation is already playing, return
+            //if (animator.IsAnimationActive(config.Name))
+            //    return;
 
-            //play the animation
-            animator.Play(config.Name, config.Loop ?? false ? SpriteAnimator.LoopMode.Loop : SpriteAnimator.LoopMode.Once);
+            ////handle flip
+            //var renderers = animator.Entity.GetComponents<SpriteRenderer>();
+            //foreach (var renderer in renderers)
+            //    renderer.FlipX = config.FlipX;
 
-            //handle animation coroutine
-            Game1.StartCoroutine(HandleAnimation(animator, config.Name));
+            ////play the animation
+            //animator.Play(config.Name, config.Loop ?? false ? SpriteAnimator.LoopMode.Loop : SpriteAnimator.LoopMode.Once);
+
+            ////handle animation coroutine
+            //Game1.StartCoroutine(HandleAnimation(animator, config.Name));
         }
 
-        static IEnumerator HandleAnimation(SpriteAnimator animator, string animationName)
-        {
-            var config = GetDirectionalAnimation(animationName, animator.Entity);
+        //static IEnumerator HandleAnimation(SpriteAnimator animator, string animationName)
+        //{
+        //    var config = GetDirectionalAnimation(animationName, animator.Entity);
 
-            var currentFrame = -1;
+        //    var currentFrame = -1;
 
-            while (IsAnimationPlaying(animator, animationName))
-            {
-                if (currentFrame != animator.CurrentFrame)
-                {
-                    //handle frame data
-                    if (config.FrameData.TryGetValue(animator.CurrentFrame, out var frameData))
-                    {
-                        //handle sounds
-                        if (frameData.Sounds != null && frameData.Sounds.Count > 0)
-                        {
-                            if (frameData.PickRandomSound)
-                                Game1.AudioManager.PlaySound($"Content/Audio/Sounds/{frameData.Sounds.RandomItem()}.wav");
-                            else
-                            {
-                                foreach (var sound in frameData.Sounds)
-                                    Game1.AudioManager.PlaySound($"Content/Audio/Sounds/{sound}.wav");
-                            }
-                        }
-                    }
+        //    while (IsAnimationPlaying(animator, animationName))
+        //    {
+        //        if (currentFrame != animator.CurrentFrame)
+        //        {
+        //            //handle frame data
+        //            if (config.FrameData.TryGetValue(animator.CurrentFrame, out var frameData))
+        //            {
+        //                //handle sounds
+        //                if (frameData.Sounds != null && frameData.Sounds.Count > 0)
+        //                {
+        //                    if (frameData.PickRandomSound)
+        //                        Game1.AudioManager.PlaySound($"Content/Audio/Sounds/{frameData.Sounds.RandomItem()}.wav");
+        //                    else
+        //                    {
+        //                        foreach (var sound in frameData.Sounds)
+        //                            Game1.AudioManager.PlaySound($"Content/Audio/Sounds/{sound}.wav");
+        //                    }
+        //                }
+        //            }
 
-                    //update frame
-                    currentFrame = animator.CurrentFrame;
-                }
+        //            //update frame
+        //            currentFrame = animator.CurrentFrame;
+        //        }
 
-                yield return null;
-            }
-        }
+        //        yield return null;
+        //    }
+        //}
 
         //public static ICoroutine PlayAnimation(ref SpriteAnimator animator, string animationName)
         //{

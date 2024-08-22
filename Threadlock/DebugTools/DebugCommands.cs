@@ -19,7 +19,7 @@ namespace Threadlock.DebugTools
         static void TogglePlayerCollider()
         {
             if (Game1.Scene.FindEntity("Player") is Player player)
-                player.Collider.SetEnabled(!player.Collider.Enabled);
+                player.ToggleCollision();
         }
 
         [Command("tgm", "Toggle god mode (free actions, don't take damage)")]
