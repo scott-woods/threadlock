@@ -27,7 +27,7 @@ namespace Threadlock.Scenes
             frontMapRenderer.SetLayersToRender(new[] { "Front", "AboveFront" }.Where(l => map.Layers.Contains(l)).ToArray());
             frontMapRenderer.RenderLayer = RenderLayers.Front;
 
-            var ui = CreateEntity("ui").AddComponent(new CombatUI());
+            UI.AddComponent(new CombatUI());
 
             var playerSpawner = AddSceneComponent(new PlayerSpawner());
             var player = playerSpawner.SpawnPlayer();

@@ -15,7 +15,7 @@ using Threadlock.UI.Elements;
 
 namespace Threadlock.UI.Canvases
 {
-    public class CombatUI : UICanvas
+    public class CombatUI : Component
     {
         //skin
         Skin _skin;
@@ -41,13 +41,13 @@ namespace Threadlock.UI.Canvases
         {
             base.Initialize();
 
-            Stage.IsFullScreen = true;
+            //Stage.IsFullScreen = true;
 
-            SetRenderLayer(RenderLayers.ScreenSpaceRenderLayer);
+            //SetRenderLayer(RenderLayers.ScreenSpaceRenderLayer);
 
             _skin = Skins.Skins.GetDefaultSkin();
 
-            _baseTable = Stage.AddElement(new Table());
+            _baseTable = new Table();
             _baseTable.SetWidth(Game1.ResolutionManager.UIResolution.X);
             _baseTable.SetHeight(Game1.ResolutionManager.UIResolution.Y);
             _baseTable.SetFillParent(false).Pad(Value.PercentWidth(.02f));
@@ -109,6 +109,9 @@ namespace Threadlock.UI.Canvases
         {
             base.OnAddedToEntity();
 
+            if (Entity.TryGetComponent<UICanvas>(out var canvas))
+                canvas.Stage.AddElement(_baseTable);
+
             if (Entity.Scene.FindEntity("Player") is Player player)
             {
                 if (player.TryGetComponent<HealthComponent>(out var hc))
@@ -160,6 +163,8 @@ namespace Threadlock.UI.Canvases
         public override void OnRemovedFromEntity()
         {
             base.OnRemovedFromEntity();
+
+            _baseTable.Remove();
 
             if (Game1.Scene.FindEntity("Player") is Player player)
             {

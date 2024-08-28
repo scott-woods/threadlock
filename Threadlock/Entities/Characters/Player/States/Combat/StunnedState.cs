@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
 
-namespace Threadlock.Entities.Characters.Player.States
+namespace Threadlock.Entities.Characters.Player.States.Combat
 {
     public class StunnedState : PlayerState
     {

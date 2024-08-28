@@ -14,10 +14,12 @@ using System.Reflection;
 using Threadlock.Components;
 using Threadlock.Entities.Characters.Player.BasicWeapons;
 using Threadlock.Entities.Characters.Player.States;
+using Threadlock.Entities.Characters.Player.States.Shared;
 using Threadlock.GlobalManagers;
 using Threadlock.Helpers;
 using Threadlock.Models;
 using Threadlock.SaveData;
+using Threadlock.Scenes;
 using Threadlock.StaticData;
 
 namespace Threadlock.Entities.Characters.Player
@@ -111,12 +113,15 @@ namespace Threadlock.Entities.Characters.Player
             AddComponent(new WeaponManager());
 
             //init state machine
-            StateMachine = new StateMachine<Player>(this, _initialState);
-            var assembly = Assembly.GetExecutingAssembly();
-            var stateTypes = assembly.GetTypes()
-                .Where(t => t.IsSubclassOf(typeof(PlayerState)) && !t.IsAbstract && t != typeof(Idle));
-            foreach (var type in stateTypes)
-                StateMachine.AddState((PlayerState)Activator.CreateInstance(type));
+            if (Game1.Scene is FactoryTestScene factoryScene)
+                StateMachine = new PlayerFactoryStateMachine(this);
+            else
+                StateMachine = new PlayerCombatStateMachine(this);
+            //var assembly = Assembly.GetExecutingAssembly();
+            //var stateTypes = assembly.GetTypes()
+            //    .Where(t => t.IsSubclassOf(typeof(PlayerState)) && !t.IsAbstract && t != typeof(Idle));
+            //foreach (var type in stateTypes)
+            //    StateMachine.AddState((PlayerState)Activator.CreateInstance(type));
 
             Game1.SceneManager.Emitter.AddObserver(SceneManagerEvents.SceneChangeStarted, OnSceneChangeStarted);
             Game1.Emitter.AddObserver(CoreEvents.SceneChanged, OnSceneChanged);
@@ -124,7 +129,11 @@ namespace Threadlock.Entities.Characters.Player
 
             _directionComponent = AddComponent(new DirectionComponent());
 
+            var buildingPlacer = AddComponent(new BuildingPlacer());
+            buildingPlacer.SetEnabled(false);
+
             AddComponent(new InteractableChecker());
+            AddComponent(new InteractableCheckerCursor());
             AddComponent(new AnimationComponent());
         }
 

@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using Threadlock.Components;
 using Threadlock.Entities.Characters.Player.BasicWeapons;
+using Threadlock.Entities.Characters.Player.States.Combat;
+using Threadlock.Entities.Characters.Player.States.Shared;
 using Threadlock.SaveData;
 using Threadlock.StaticData;
 

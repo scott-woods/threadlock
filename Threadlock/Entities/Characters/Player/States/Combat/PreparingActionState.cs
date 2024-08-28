@@ -8,9 +8,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Actions;
+using Threadlock.Entities.Characters.Player.States.Shared;
 using Threadlock.Helpers;
 
-namespace Threadlock.Entities.Characters.Player.States
+namespace Threadlock.Entities.Characters.Player.States.Combat
 {
     public class PreparingActionState : PlayerState
     {
@@ -44,13 +45,13 @@ namespace Threadlock.Entities.Characters.Player.States
             _normalSpeedCoroutine = null;
 
             //start slow mo
-            _slowMoCoroutine = Game1.StartCoroutine(SlowMoCoroutine());
+            _slowMoCoroutine = Core.StartCoroutine(SlowMoCoroutine());
 
             //add observer for prep finished
             _actionManager.ActiveAction.Action.Emitter.AddObserver(PlayerActionEvents.PrepFinished, OnPrepFinished);
 
             //start preparing
-            _prepCoroutine = Game1.StartCoroutine(_actionManager.ActiveAction.Action.Prepare(_context));
+            _prepCoroutine = Core.StartCoroutine(_actionManager.ActiveAction.Action.Prepare(_context));
         }
 
         public override void Reason()
@@ -80,7 +81,7 @@ namespace Threadlock.Entities.Characters.Player.States
 
             _actionManager.ActiveAction?.Action.Emitter.RemoveObserver(PlayerActionEvents.PrepFinished, OnPrepFinished);
 
-            _normalSpeedCoroutine = Game1.StartCoroutine(NormalSpeedCoroutine());
+            _normalSpeedCoroutine = Core.StartCoroutine(NormalSpeedCoroutine());
         }
 
         #endregion

@@ -1,6 +1,5 @@
-﻿using Microsoft.Xna.Framework;
-using Nez;
-using Nez.Tiled;
+﻿using Nez;
+using Nez.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,15 +13,15 @@ using Threadlock.UI.Canvases;
 
 namespace Threadlock.Scenes
 {
-    public class EnemyTestZone : BaseScene
+    public class FactoryTestScene : BaseScene
     {
         public override void OnStart()
         {
             base.OnStart();
 
             var mapEntity = CreateEntity("map");
-            
-            var map = Content.LoadTiledMap(Nez.Content.Tiled.Tilemaps.Enemy_test_zone);
+
+            var map = Content.LoadTiledMap(Nez.Content.Tiled.Tilemaps.Forge.Forge_factory_test);
             TiledHelper.SetupMap(mapEntity, map);
 
             UI.AddComponent(new CombatUI());
@@ -31,8 +30,6 @@ namespace Threadlock.Scenes
             var player = playerSpawner.SpawnPlayer();
 
             var followCam = Camera.AddComponent(new CustomFollowCamera(player));
-
-            Game1.AudioManager.PlayMusic(Nez.Content.Audio.Music.Meltingidols);
         }
     }
 }

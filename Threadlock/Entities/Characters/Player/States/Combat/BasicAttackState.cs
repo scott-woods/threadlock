@@ -8,9 +8,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Entities.Characters.Player.BasicWeapons;
+using Threadlock.Entities.Characters.Player.States.Shared;
 using Threadlock.SaveData;
 
-namespace Threadlock.Entities.Characters.Player.States
+namespace Threadlock.Entities.Characters.Player.States.Combat
 {
     public class BasicAttackState : PlayerState
     {
@@ -33,7 +34,7 @@ namespace Threadlock.Entities.Characters.Player.States
         {
             base.Begin();
 
-            _performAttackCoroutine = Game1.StartCoroutine(PerformAttack());
+            _performAttackCoroutine = Core.StartCoroutine(PerformAttack());
         }
 
         //public override void Update(float deltaTime)

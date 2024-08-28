@@ -61,7 +61,7 @@ namespace Threadlock.Scenes
             var mapEntity = CreateEntity("map");
             TiledHelper.SetupMap(mapEntity, map);
 
-            var ui = CreateEntity("ui").AddComponent(new CombatUI());
+            UI.AddComponent(new CombatUI());
         }
 
         public override void OnStart()

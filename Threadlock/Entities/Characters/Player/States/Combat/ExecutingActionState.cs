@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Threadlock.Entities.Characters.Player.States.Shared;
 using Threadlock.Helpers;
 
-namespace Threadlock.Entities.Characters.Player.States
+namespace Threadlock.Entities.Characters.Player.States.Combat
 {
     public class ExecutingActionState : PlayerState
     {
@@ -25,7 +26,7 @@ namespace Threadlock.Entities.Characters.Player.States
         {
             base.Begin();
 
-            _executionCoroutine = Game1.StartCoroutine(CoroutineHelper.CoroutineWrapper(_actionManager.ActiveAction.Action.Execute(), OnExecutionFinished));
+            _executionCoroutine = Core.StartCoroutine(CoroutineHelper.CoroutineWrapper(_actionManager.ActiveAction.Action.Execute(), OnExecutionFinished));
         }
 
         public override void End()

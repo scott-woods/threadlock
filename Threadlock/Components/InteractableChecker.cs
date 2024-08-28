@@ -15,7 +15,7 @@ namespace Threadlock.Components
         OriginComponent _originComponent;
         DirectionComponent _directionComponent;
 
-        HashSet<IInteractable> _activeInteractables = new HashSet<IInteractable>();
+        Interactable _activeInteractable;
 
         public override void OnAddedToEntity()
         {
@@ -30,42 +30,35 @@ namespace Threadlock.Components
             //get raycast hits
             var hits = GetRaycastHits();
 
-            //init hashset of interactables
-            var currentFrameInteractables = new HashSet<IInteractable>();
+            //init current interactable
+            Interactable currInteractable = null;
 
             //check for interactables on each hit
             foreach (var hit in hits)
             {
                 if (hit.Collider != null)
                 {
-                    //handle each interactable
-                    var interactables = hit.Collider.Entity.GetComponents<IInteractable>();
-                    foreach (var interactable in interactables)
+                    if (hit.Collider.Entity.TryGetComponent<Interactable>(out var interactable))
                     {
-                        currentFrameInteractables.Add(interactable);
-                        if (_activeInteractables.Add(interactable))
+                        currInteractable = interactable;
+                        break;
+                        if (_activeInteractable != interactable)
                         {
-                            interactable.OnFocusEntered();
+                            _activeInteractable?.Unfocus();
+                            _activeInteractable = interactable;
+                            _activeInteractable.Focus();
+                            break;
                         }
                     }
                 }
             }
 
-            //handle removing interactables we're no longer looking at
-            var interactablesToRemove = new List<IInteractable>();
-            foreach (var interactable in _activeInteractables)
+            //handle focus
+            if (_activeInteractable != currInteractable)
             {
-                if (!currentFrameInteractables.Contains(interactable))
-                {
-                    interactable.OnFocusExited();
-                    interactablesToRemove.Add(interactable);
-                }
-            }
-
-            //remove the interactables
-            foreach (var interactable in interactablesToRemove)
-            {
-                _activeInteractables.Remove(interactable);
+                _activeInteractable?.Unfocus();
+                _activeInteractable = currInteractable;
+                _activeInteractable?.Focus();
             }
         }
 
@@ -77,12 +70,9 @@ namespace Threadlock.Components
             {
                 if (hit.Collider != null)
                 {
-                    var interactables = hit.Collider.GetComponents<IInteractable>();
-                    if (interactables.Count > 0)
+                    if (hit.Collider.Entity.TryGetComponent<Interactable>(out var interactable))
                     {
-                        foreach (var interactable in interactables)
-                            interactable.OnInteracted();
-
+                        interactable.Interact();
                         return true;
                     }
                 }
@@ -98,7 +88,7 @@ namespace Threadlock.Components
             var checkEnd = basePos + (dir * CheckDistance);
 
             var hits = new RaycastHit[10];
-            Physics.LinecastAll(basePos, checkEnd, hits, 1 << PhysicsLayers.PromptTrigger);
+            Physics.LinecastAll(basePos, checkEnd, hits, 1 << PhysicsLayers.Interactable);
 
             return hits;
         }

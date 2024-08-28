@@ -43,7 +43,7 @@ namespace Threadlock
             RegisterGlobalManager(UIManager);
 
             //misc settings
-            IsMouseVisible = false;
+            IsMouseVisible = true;
             ExitOnEscapeKeypress = false;
             DebugRenderEnabled = false;
 
@@ -68,7 +68,7 @@ namespace Threadlock
             Screen.SetSize(2560, 1440);
             Screen.ApplyChanges();
 
-            Scene = new EnemyTestZone();
+            Scene = new FactoryTestScene();
         }
     }
 }

@@ -53,7 +53,7 @@ namespace Threadlock.GlobalManagers
             var baseTable = canvas.Stage.AddElement(new Table()).Bottom().SetFillParent(false);
             baseTable.SetWidth(Game1.ResolutionManager.UIResolution.X);
             baseTable.SetHeight(Game1.ResolutionManager.UIResolution.Y);
-            //baseTable.SetFillParent(false);d
+            //baseTable.SetFillParent(false);
 
             var textbox = new Textbox(skin);
             baseTable.Add(textbox).Expand().Bottom().SetPadBottom(Value.PercentHeight(.05f, baseTable)).Width(Value.PercentWidth(1f)).Height(Value.PercentHeight(1f));

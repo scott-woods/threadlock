@@ -5,9 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Threadlock.Entities.Characters.Player;
 
-namespace Threadlock.Entities.Characters.Player.States
+namespace Threadlock.Entities.Characters.Player.States.Combat
 {
     public class DashState : PlayerState
     {
@@ -25,7 +24,7 @@ namespace Threadlock.Entities.Characters.Player.States
         {
             base.Begin();
 
-            _localCoroutine = Game1.StartCoroutine(StartDashCoroutine());
+            _localCoroutine = Core.StartCoroutine(StartDashCoroutine());
         }
 
         public override void End()
@@ -42,7 +41,7 @@ namespace Threadlock.Entities.Characters.Player.States
 
         IEnumerator StartDashCoroutine()
         {
-            _dashCoroutine = Game1.StartCoroutine(_dash.StartDash());
+            _dashCoroutine = Core.StartCoroutine(_dash.StartDash());
             yield return _dashCoroutine;
             _dashCoroutine = null;
             _localCoroutine = null;

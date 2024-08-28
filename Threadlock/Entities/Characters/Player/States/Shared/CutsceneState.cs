@@ -1,29 +1,22 @@
-﻿using Microsoft.Xna.Framework;
-using Nez.AI.FSM;
-using Nez.Sprites;
+﻿using Nez.Sprites;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Threadlock.Components;
-using Threadlock.Entities.Characters.Player.BasicWeapons;
 using Threadlock.Helpers;
-using Threadlock.StaticData;
 
-namespace Threadlock.Entities.Characters.Player.States
+namespace Threadlock.Entities.Characters.Player.States.Shared
 {
-    public class Idle : PlayerState
+    public class CutsceneState : PlayerState
     {
         SpriteAnimator _animator;
-        VelocityComponent _velocityComponent;
 
         public override void OnInitialized()
         {
             base.OnInitialized();
 
             _animator = _context.GetComponent<SpriteAnimator>();
-            _velocityComponent = _context.GetComponent<VelocityComponent>();
         }
 
         public override void Update(float deltaTime)

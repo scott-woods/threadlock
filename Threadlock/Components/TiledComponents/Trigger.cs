@@ -12,7 +12,7 @@ using Threadlock.Helpers;
 
 namespace Threadlock.Components.TiledComponents
 {
-    public class Trigger : TiledComponent, ITriggerListener, IInteractable
+    public class Trigger : TiledComponent, ITriggerListener
     {
         public Collider Collider { get; private set; }
         public TriggerType TriggerType { get; private set; } = TriggerType.None;
@@ -77,9 +77,18 @@ namespace Threadlock.Components.TiledComponents
             }
             else if (TriggerType == TriggerType.Interact)
             {
-                Flags.SetFlagExclusive(ref Collider.PhysicsLayer, PhysicsLayers.PromptTrigger);
                 Entity.AddComponent(new ButtonPrompt(PromptOffset));
+                var interactable = Entity.AddComponent(new Interactable(Collider));
+                interactable.Emitter.AddObserver(InteractableEvents.Interacted, OnInteracted);
             }
+        }
+
+        public override void OnRemovedFromEntity()
+        {
+            if (Entity.TryGetComponent<Interactable>(out var interactable))
+                interactable.Emitter.RemoveObserver(InteractableEvents.Interacted, OnInteracted);
+
+            base.OnRemovedFromEntity();
         }
 
         public IEnumerator HandleTriggered()
@@ -113,24 +122,10 @@ namespace Threadlock.Components.TiledComponents
 
         }
 
-        #region IInteractable
-
-        public void OnFocusEntered()
-        {
-
-        }
-
-        public void OnFocusExited()
-        {
-
-        }
-
         public void OnInteracted()
         {
             Game1.StartCoroutine(HandleTriggered());
         }
-
-        #endregion
     }
 
     public enum TriggerType

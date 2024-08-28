@@ -16,6 +16,7 @@ namespace Threadlock.Scenes
     {
         public virtual Color SceneColor { get => Color.Black; }
         public virtual Color AmbientLightColor { get => new Color(200, 200, 200, 255); }
+        public UICanvas UI;
 
         readonly List<int> _lightRenderLayers = new List<int>()
         {
@@ -48,6 +49,11 @@ namespace Threadlock.Scenes
             Camera.Zoom = .5f;
             var cameraShake = Camera.AddComponent(new CameraShake());
             cameraShake.SetUpdateOrder(int.MaxValue);
+
+            //add ui
+            UI = CreateEntity("ui").AddComponent(new UICanvas());
+            UI.IsFullScreen = true;
+            UI.SetRenderLayer(RenderLayers.ScreenSpaceRenderLayer);
 
             //_gameRenderer = new YSortRenderer(0, RenderLayers.ScreenSpaceRenderLayer, RenderLayers.Cursor, RenderLayers.Light);
             //var size = Game1.ResolutionManager.DesignResolution;

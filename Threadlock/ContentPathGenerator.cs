@@ -139,10 +139,13 @@ namespace Nez
 			public const string DungeonFlows5 = @"Content\Data\DungeonFlows5.json";
 			public const string DungeonFlows6 = @"Content\Data\DungeonFlows6.json";
 			public const string Enemies = @"Content\Data\Enemies.json";
-			public const string Enemies2 = @"Content\Data\Enemies2.json";
 			public const string EnemyActions = @"Content\Data\EnemyActions.json";
+			public const string EnemyData = @"Content\Data\EnemyData.json";
 			public const string FairyForestTiles = @"Content\Data\FairyForestTiles.json";
 			public const string FairyForestTiles2 = @"Content\Data\FairyForestTiles2.json";
+			public const string PlayerActions = @"Content\Data\PlayerActions.json";
+			public const string PlayerWeaponAttacks = @"Content\Data\PlayerWeaponAttacks.json";
+			public const string PlayerWeapons = @"Content\Data\PlayerWeapons.json";
 			public const string Projectiles = @"Content\Data\Projectiles.json";
 			public const string SimpleLoop = @"Content\Data\SimpleLoop.json";
 			public const string SingleRoom = @"Content\Data\SingleRoom.json";
@@ -277,10 +280,13 @@ namespace Nez
 					public const string Spitter_sheet = @"Content\Textures\Characters\Spitter\spitter_sheet.png";
 				}
 
+				public const string AssassinSprites = @"Content\Textures\Characters\AssassinSprites.png";
 				public const string ChainBotSprites = @"Content\Textures\Characters\ChainBotSprites.png";
+				public const string GhoulSprites = @"Content\Textures\Characters\GhoulSprites.png";
 				public const string OdranSpriteConfig = @"Content\Textures\Characters\OdranSpriteConfig.json";
 				public const string OdranSpritesheet = @"Content\Textures\Characters\OdranSpritesheet.png";
 				public const string OrbMageSprites = @"Content\Textures\Characters\OrbMageSprites.png";
+				public const string PlayerSprites = @"Content\Textures\Characters\PlayerSprites.png";
 				public const string Spitter_sheet = @"Content\Textures\Characters\spitter_sheet.png";
 			}
 
@@ -1197,6 +1203,7 @@ namespace Nez
 					public const string Forge_action_store = @"Content\Tiled\Tilemaps\Forge\forge_action_store.tmx";
 					public const string Forge_boss = @"Content\Tiled\Tilemaps\Forge\forge_boss.tmx";
 					public const string Forge_exit = @"Content\Tiled\Tilemaps\Forge\forge_exit.tmx";
+					public const string Forge_factory_test = @"Content\Tiled\Tilemaps\Forge\forge_factory_test.tmx";
 					public const string Forge_hub_1 = @"Content\Tiled\Tilemaps\Forge\forge_hub_1.tmx";
 					public const string Forge_normal_1 = @"Content\Tiled\Tilemaps\Forge\forge_normal_1.tmx";
 					public const string Forge_normal_2 = @"Content\Tiled\Tilemaps\Forge\forge_normal_2.tmx";

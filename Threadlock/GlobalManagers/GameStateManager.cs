@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
 using Threadlock.Entities.Characters.Player;
-using Threadlock.Entities.Characters.Player.States;
+using Threadlock.Entities.Characters.Player.States.Combat;
 using Threadlock.SaveData;
 using Threadlock.Scenes;
 using Threadlock.UI.Canvases;

@@ -21,7 +21,7 @@ namespace Threadlock.Scenes
             TiledHelper.SetupMap(mapEntity, map);
             TiledHelper.SetupLightingTiles(mapEntity, map);
 
-            var ui = CreateEntity("ui").AddComponent(new CombatUI());
+            UI.AddComponent(new CombatUI());
 
             var playerSpawner = AddSceneComponent(new PlayerSpawner());
             var player = playerSpawner.SpawnPlayer();

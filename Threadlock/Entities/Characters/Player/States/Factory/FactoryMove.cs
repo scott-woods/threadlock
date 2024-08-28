@@ -1,20 +1,16 @@
-﻿using Microsoft.Xna.Framework;
-using Nez;
-using Nez.AI.FSM;
-using Nez.Sprites;
+﻿using Nez.Sprites;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
-using Threadlock.Entities.Characters.Player.BasicWeapons;
 using Threadlock.Helpers;
 using Threadlock.SaveData;
 
-namespace Threadlock.Entities.Characters.Player.States
+namespace Threadlock.Entities.Characters.Player.States.Factory
 {
-    public class Move : PlayerState
+    public class FactoryMove : PlayerState
     {
         SpriteAnimator _animator;
         VelocityComponent _velocityComponent;
@@ -37,6 +33,14 @@ namespace Threadlock.Entities.Characters.Player.States
             _velocityComponent.Move(dir, 135f, false, true);
 
             AnimatedSpriteHelper.PlayAnimation(_animator, "Player_Run");
+        }
+
+        public override void Reason()
+        {
+            base.Reason();
+
+            if (Controls.Instance.XAxisIntegerInput.Value == 0 && Controls.Instance.YAxisIntegerInput.Value == 0)
+                _machine.ChangeState<FactoryIdle>();
         }
     }
 }

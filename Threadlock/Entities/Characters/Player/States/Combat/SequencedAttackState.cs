@@ -13,8 +13,9 @@ using Threadlock.Helpers;
 using Nez.Sprites;
 using Threadlock.StaticData;
 using Threadlock.Actions;
+using Threadlock.Entities.Characters.Player.States.Shared;
 
-namespace Threadlock.Entities.Characters.Player.States
+namespace Threadlock.Entities.Characters.Player.States.Combat
 {
     public class SequencedAttackState : PlayerState
     {
@@ -40,7 +41,7 @@ namespace Threadlock.Entities.Characters.Player.States
         {
             base.Begin();
 
-            Game1.StartCoroutine(PrepSequence());
+            Core.StartCoroutine(PrepSequence());
         }
 
         public override void End()
@@ -81,7 +82,7 @@ namespace Threadlock.Entities.Characters.Player.States
         {
             yield return null;
 
-            _slowMoCoroutine = Game1.StartCoroutine(SlowMoCoroutine());
+            _slowMoCoroutine = Core.StartCoroutine(SlowMoCoroutine());
 
             var actionManager = _context.GetComponent<ActionManager>();
             var apComponent = _context.GetComponent<ApComponent>();
@@ -104,7 +105,7 @@ namespace Threadlock.Entities.Characters.Player.States
 
                         //start preparing action
                         var request = action.Prepare(prepEntity);
-                        _prepCoroutine = Game1.StartCoroutine(request);
+                        _prepCoroutine = Core.StartCoroutine(request);
 
                         //yield while button is held and we haven't finished preparing
                         while (actionSlot.Button.IsDown && !action.IsPrepared)
@@ -165,7 +166,7 @@ namespace Threadlock.Entities.Characters.Player.States
             }
 
             //start returning to normal speed
-            _normalSpeedCoroutine = Game1.StartCoroutine(NormalSpeedCoroutine());
+            _normalSpeedCoroutine = Core.StartCoroutine(NormalSpeedCoroutine());
 
             //return cam to follow player
             cam.SetFollowTarget(_context);
@@ -178,7 +179,7 @@ namespace Threadlock.Entities.Characters.Player.States
             foreach (var action in _queuedActions)
             {
                 _currentAction = action;
-                _actionCoroutine = Game1.StartCoroutine(action.Execute());
+                _actionCoroutine = Core.StartCoroutine(action.Execute());
                 yield return _actionCoroutine;
             }
 

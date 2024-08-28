@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Actions;
+using Threadlock.Components;
 using Threadlock.SaveData;
 using Threadlock.StaticData;
 using static Nez.Content;
@@ -28,6 +29,8 @@ namespace Threadlock.Entities.Characters.Player
         List<PlayerWeaponAttack> _activeList;
         ITimer _bufferTimer;
         PlayerWeaponData _data;
+
+        DirectionComponent _dirComponent;
 
         public PlayerWeapon(PlayerWeaponData data)
         {
@@ -52,12 +55,16 @@ namespace Threadlock.Entities.Characters.Player
                 if (PlayerWeaponAttacks.TryCreatePlayerWeaponAttack(attackName, Entity, out var attack))
                     SecondaryAttack.Add(attack);
             }
+
+            if (Entity.TryGetComponent<DirectionComponent>(out var dirComponent))
+                _dirComponent = dirComponent;
         }
 
         public bool Poll()
         {
             if (PrimaryAttack != null && Controls.Instance.Melee.IsPressed)
             {
+                _dirComponent.UpdateCurrentDirection(Game1.Scene.Camera.MouseToWorldPoint() - Entity.Position);
                 _activeList = PrimaryAttack;
                 //_queuedAttack = PrimaryAttack[_nextIndex];
                 return true;

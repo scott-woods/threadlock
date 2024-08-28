@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Nez;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Threadlock.Entities.Characters.Player.States
+namespace Threadlock.UI
 {
-    public class DyingState : PlayerState
+    public class FactoryUI : Component
     {
-
     }
 }

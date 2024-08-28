@@ -25,6 +25,9 @@ namespace Threadlock.StaticData
         public const int AreaTrigger = 13;
         public const int LuteNoteExplosion = 14;
         public const int Selector = 15;
+        public const int Building = 16;
+        public const int Cursor = 17;
+        public const int Interactable = 18;
 
         public static int GetLayerByName(string name)
         {

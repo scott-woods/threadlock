@@ -15,7 +15,7 @@ using Threadlock.StaticData;
 
 namespace Threadlock.Components.TiledComponents
 {
-    public class NPC : TiledComponent, IInteractable
+    public class NPC : TiledComponent
     {
         const float _interactCooldown = 1f;
 
@@ -24,6 +24,7 @@ namespace Threadlock.Components.TiledComponents
         SpriteAnimator _animator;
         BoxCollider _collider;
         OriginComponent _origin;
+        Interactable _interactable;
 
         Dictionary<string, Conversation> _dialogueDictionary;
 
@@ -71,6 +72,9 @@ namespace Threadlock.Components.TiledComponents
                 }
             }
 
+            _interactable = Entity.AddComponent(new Interactable(_collider));
+            _interactable.Emitter.AddObserver(InteractableEvents.Interacted, OnInteracted);
+
             var dialogueJson = File.ReadAllText($"Content/Dialogue/{Name}.json");
             _dialogueDictionary = Json.FromJson<Dictionary<string, Conversation>>(dialogueJson);
         }
@@ -83,26 +87,19 @@ namespace Threadlock.Components.TiledComponents
                 _animator.Play("Idle");
         }
 
+        public override void OnRemovedFromEntity()
+        {
+            base.OnRemovedFromEntity();
+
+            _interactable.Emitter.RemoveObserver(InteractableEvents.Interacted, OnInteracted);
+        }
+
         #endregion
-
-        #region IInteractable
-
-        public void OnFocusEntered()
-        {
-
-        }
-
-        public void OnFocusExited()
-        {
-
-        }
 
         public void OnInteracted()
         {
             Game1.StartCoroutine(HandleInteraction());
         }
-
-        #endregion
 
         IEnumerator HandleInteraction()
         {

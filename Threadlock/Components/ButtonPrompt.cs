@@ -11,10 +11,12 @@ using Threadlock.StaticData;
 
 namespace Threadlock.Components
 {
-    public class ButtonPrompt : Component, IInteractable
+    public class ButtonPrompt : Component
     {
         //local components
         SpriteRenderer _promptRenderer;
+
+        Interactable _interactable;
 
         Vector2 _promptOffset;
 
@@ -27,6 +29,10 @@ namespace Threadlock.Components
         {
             base.OnAddedToEntity();
 
+            _interactable = Entity.GetComponent<Interactable>();
+            _interactable?.Emitter.AddObserver(InteractableEvents.FocusEntered, OnFocusEntered);
+            _interactable?.Emitter.AddObserver(InteractableEvents.FocusExited, OnFocusExited);
+
             //create prompt renderer
             _promptRenderer = Entity.AddComponent(new SpriteRenderer());
             _promptRenderer.SetRenderLayer(RenderLayers.AboveFront);
@@ -37,23 +43,22 @@ namespace Threadlock.Components
             _promptRenderer.SetEnabled(false);
         }
 
-        #region IInteractable
+        public override void OnRemovedFromEntity()
+        {
+            base.OnRemovedFromEntity();
 
-        public void OnFocusEntered()
+            _interactable?.Emitter.RemoveObserver(InteractableEvents.FocusEntered, OnFocusEntered);
+            _interactable?.Emitter.RemoveObserver(InteractableEvents.FocusExited, OnFocusExited);
+        }
+
+        void OnFocusEntered()
         {
             _promptRenderer.SetEnabled(true);
         }
 
-        public void OnFocusExited()
+        void OnFocusExited()
         {
             _promptRenderer.SetEnabled(false);
         }
-
-        public void OnInteracted()
-        {
-
-        }
-
-        #endregion
     }
 }
