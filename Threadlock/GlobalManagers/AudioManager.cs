@@ -160,6 +160,9 @@ namespace Threadlock.GlobalManagers
 
         public void SetFilterFrequency(float frequency, string musicName = null)
         {
+            if (_musicDictionary != null && _musicDictionary.Values.Count == 0)
+                return;
+
             var targetVoice = _musicDictionary.Values.First();
             if (!string.IsNullOrWhiteSpace(musicName) && _musicDictionary.TryGetValue(musicName, out var voice))
                 targetVoice = voice;

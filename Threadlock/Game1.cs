@@ -34,6 +34,7 @@ namespace Threadlock
             //load data
             Task.Run(() => Projectiles2.InitializeProjectileDictionaryAsync());
             Task.Run(() => Animations.InitializeAnimationDictionaryAsync()).Wait();
+            Task.Run(() => FactoryItemDatabase.LoadItemsAsync()).Wait();
 
             //global managers
             RegisterGlobalManager(ResolutionManager);

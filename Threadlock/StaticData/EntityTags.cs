@@ -9,5 +9,6 @@ namespace Threadlock.StaticData
     public static class EntityTags
     {
         public const int EnemyTarget = 1;
+        public const int Building = 2;
     }
 }

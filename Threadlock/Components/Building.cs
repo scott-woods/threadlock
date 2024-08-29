@@ -16,15 +16,11 @@ namespace Threadlock.Components
     public class Building : Component, IUpdatable
     {
         bool _isPlaced;
-        bool _isMenuOpen;
 
         string _name;
 
         SpriteRenderer _renderer;
         Collider _collider;
-        Interactable _interactable;
-
-        BuildingMenu _menu;
 
         public Building(string name)
         {
@@ -39,19 +35,6 @@ namespace Threadlock.Components
 
             _renderer = Entity.GetComponent<SpriteRenderer>();
             _collider = Entity.GetComponent<Collider>();
-
-            _interactable = Entity.GetComponent<Interactable>();
-            if (_interactable != null)
-            {
-                _interactable.Emitter.AddObserver(InteractableEvents.Interacted, OnInteracted);
-            }
-        }
-
-        public override void OnRemovedFromEntity() 
-        {
-            base.OnRemovedFromEntity();
-
-            _interactable?.Emitter.RemoveObserver(InteractableEvents.Interacted, OnInteracted);
         }
 
         #endregion
@@ -68,16 +51,6 @@ namespace Threadlock.Components
                 var y = Mathf.FastFloorToInt(mousePos.Y / 16f) * 16f;
                 Entity.SetPosition(x + (_renderer.Width / 2), y + (_renderer.Height / 2));
             }
-        }
-
-        #endregion
-
-        #region OBSERVERS
-
-        void OnInteracted()
-        {
-            var canvas = Entity.Scene.FindComponentOfType<UICanvas>();
-            canvas?.AddComponent(new BuildingMenu(_name));
         }
 
         #endregion

@@ -10,6 +10,9 @@ using Threadlock.StaticData;
 
 namespace Threadlock.Components
 {
+    /// <summary>
+    /// handles extra animation functionality, like sounds, based on json data
+    /// </summary>
     public class AnimationComponent : Component, IUpdatable
     {
         SpriteAnimator _animator;

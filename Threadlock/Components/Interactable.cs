@@ -9,6 +9,9 @@ using Threadlock.StaticData;
 
 namespace Threadlock.Components
 {
+    /// <summary>
+    /// Component to handle interactions with the player via cursor or linecast check. Has an Emitter for Focus, Unfocus, and Interact events.
+    /// </summary>
     public class Interactable : Component
     {
         public Emitter<InteractableEvents> Emitter = new Emitter<InteractableEvents>();

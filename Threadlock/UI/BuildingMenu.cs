@@ -5,19 +5,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Threadlock.Models;
 using Threadlock.SaveData;
 
 namespace Threadlock.UI
 {
     public class BuildingMenu : Component, IUpdatable
     {
+        //elements
         Window _root;
+        Label _itemNameLabel;
+        Label _itemCountLabel;
 
         string _name;
+        FactoryItemStack _itemStack;
 
-        public BuildingMenu(string buildingName)
+        public BuildingMenu(string buildingName, FactoryItemStack itemStack)
         {
             _name = buildingName;
+            _itemStack = itemStack;
         }
 
         public override void OnAddedToEntity()
@@ -30,8 +36,24 @@ namespace Threadlock.UI
             _root.SetSize(250, 250);
             _root.PadTop(50);
 
+            var table = new Table();
+            _root.Add(table).Grow();
+
+            _itemNameLabel = new Label($"{_itemStack.Item.Name}: ", skin);
+            table.Add(_itemNameLabel).Left().Top().Pad(10);
+
+            _itemCountLabel = new Label($"{_itemStack.Count}", skin);
+            table.Add(_itemCountLabel).Left().Top().Pad(10);
+
+            _itemStack.CountChanged += OnItemCountChanged;
+
             if (Entity.TryGetComponent<UICanvas>(out var canvas))
                 canvas.Stage.AddElement(_root);
+        }
+
+        void OnItemCountChanged(int itemCount)
+        {
+            _itemCountLabel.SetText(itemCount.ToString());
         }
 
         public override void OnRemovedFromEntity()
@@ -39,6 +61,8 @@ namespace Threadlock.UI
             base.OnRemovedFromEntity();
 
             _root.Remove();
+
+            _itemStack.CountChanged -= OnItemCountChanged;
         }
 
         public void Update()
