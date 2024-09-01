@@ -4,6 +4,7 @@ using Nez;
 using Nez.Sprites;
 using Nez.Textures;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,46 +26,90 @@ namespace Threadlock.Entities.Characters.Player
 
         Type _currentType = typeof(Fabricator);
 
-        Entity _entityToPlace;
+        Entity _currentBuildingEntity;
+
+        public override void OnAddedToEntity()
+        {
+            base.OnAddedToEntity();
+
+            var factoryGrid = Entity.Scene.GetSceneComponent<FactoryGrid>();
+            factoryGrid.OnBuildingAdded += OnBuildingPlaced;
+        }
+
+        public override void OnRemovedFromEntity()
+        {
+            base.OnRemovedFromEntity();
+
+            var factoryGrid = Entity.Scene.GetSceneComponent<FactoryGrid>();
+            factoryGrid.OnBuildingAdded -= OnBuildingPlaced;
+        }
 
         public override void OnEnabled()
         {
             base.OnEnabled();
 
-            _entityToPlace = Game1.Scene.AddEntity(new Fabricator());
-            if (_entityToPlace.TryGetComponent<Building>(out var building))
-                building.Pickup();
+            InstanceBuilding(_currentType);
         }
 
         public override void OnDisabled()
         {
             base.OnDisabled();
 
-            _entityToPlace?.Destroy();
+            RemoveBuilding();
         }
 
         public void Update()
         {
+            //handle switching active building
             foreach (var kvm in _buildingMap)
             {
                 if (Input.IsKeyPressed(kvm.Key))
                 {
-                    _entityToPlace?.Destroy();
                     _currentType = kvm.Value;
 
-                    _entityToPlace = Game1.Scene.AddEntity((Entity)Activator.CreateInstance(kvm.Value));
-                    if (_entityToPlace.TryGetComponent<Building>(out var building))
-                        building.Pickup();
+                    InstanceBuilding(kvm.Value);
                 }
             }
+        }
 
-            if (Controls.Instance.Melee.IsPressed)
+        void InstanceBuilding(Type type)
+        {
+            //ensure that the type is a subclass of Entity
+            if (type.BaseType != typeof(Entity))
+                return;
+
+            //get rid of existing building if exists
+            RemoveBuilding();
+
+            //create entity
+            _currentBuildingEntity = Game1.Scene.AddEntity(Activator.CreateInstance(type) as Entity);
+
+            ////ensure that the entity has a building component
+            //if (ent.TryGetComponent<Building>(out var building))
+            //{
+            //    //remove current building if exists
+            //    RemoveBuilding();
+
+            //    _currentBuilding = building;
+            //    _currentBuilding.OnPlaced += OnBuildingPlaced;
+            //    building.Pickup();
+            //}
+            //else
+            //    ent.Destroy();
+        }
+
+        void RemoveBuilding()
+        {
+            _currentBuildingEntity?.Destroy();
+            _currentBuildingEntity = null;
+        }
+
+        void OnBuildingPlaced(Building building)
+        {
+            if (building.Entity == _currentBuildingEntity)
             {
-                if (_entityToPlace.TryGetComponent<Building>(out var building))
-                {
-                    if (building.Place())
-                        _entityToPlace = Game1.Scene.AddEntity((Entity)Activator.CreateInstance(_currentType));
-                }
+                _currentBuildingEntity = null;
+                InstanceBuilding(_currentType);
             }
         }
     }

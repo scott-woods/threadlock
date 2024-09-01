@@ -31,6 +31,8 @@ namespace Threadlock.Scenes
             var player = playerSpawner.SpawnPlayer();
 
             var followCam = Camera.AddComponent(new CustomFollowCamera(player));
+
+            AddSceneComponent(new FactoryGrid());
         }
     }
 }

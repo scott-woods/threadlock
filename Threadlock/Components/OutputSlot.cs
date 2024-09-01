@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Entities;
+using Threadlock.SceneComponents;
 using Threadlock.StaticData;
 
 namespace Threadlock.Components
@@ -16,13 +17,24 @@ namespace Threadlock.Components
         public Vector2 Position;
         public Vector2 Direction;
 
+        public Vector2 GridPosition { get => _building.GridPosition + Position; }
+        public Vector2 TargetPosition { get => GridPosition + Direction; }
+
+        //components
         FactoryItemProvider _itemProvider;
+        Building _building;
+
+        //scene components
+        FactoryGrid _factoryGrid;
 
         public override void OnAddedToEntity()
         {
             base.OnAddedToEntity();
 
             _itemProvider = Entity.GetComponent<FactoryItemProvider>();
+            _building = Entity.GetComponent<Building>();
+
+            _factoryGrid = Entity.Scene.GetSceneComponent<FactoryGrid>();
         }
 
         public void Update()
@@ -30,28 +42,23 @@ namespace Threadlock.Components
             DispenseItems();
         }
 
-        public Vector2 GetWorldPosition()
-        {
-            var localTopLeft = Entity.Position - new Vector2(Entity.GetComponent<SpriteAnimator>().Width / 2, Entity.GetComponent<SpriteAnimator>().Height / 2);
-            return localTopLeft + (Position * 16);
-        }
-
         void DispenseItems()
         {
             var item = _itemProvider.GetFactoryItem();
             if (item != null && item.Count > 0)
             {
-                var worldPos = GetWorldPosition();
-                var testPos = worldPos + (Direction * 16);
-
-                var inputSlots = Entity.Scene.FindComponentsOfType<InputSlot>();
-                foreach (var inputSlot in inputSlots)
+                var targetBuilding = _factoryGrid.GetBuilding(TargetPosition);
+                if (targetBuilding != null)
                 {
-                    if (inputSlot.GetWorldPosition() == testPos)
+                    var inputSlots = targetBuilding.Entity.GetComponents<InputSlot>();
+                    foreach (var inputSlot in inputSlots)
                     {
-                        if (inputSlot.TryReceiveItem(item.Item))
+                        if (inputSlot.GridPosition == TargetPosition)
                         {
-                            item.Count--;
+                            if (inputSlot.TryReceiveItem(item.Item))
+                                item.Count--;
+
+                            break;
                         }
                     }
                 }

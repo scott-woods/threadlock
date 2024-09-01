@@ -15,15 +15,21 @@ namespace Threadlock.Components
         public Func<FactoryItem, bool> ReceiveItemHandler;
         public Vector2 Position;
 
+        public Vector2 GridPosition { get => _building.GridPosition + Position; }
+
+        //components
+        Building _building;
+
         public InputSlot(Func<FactoryItem, bool> receiveItemHandler)
         {
             ReceiveItemHandler = receiveItemHandler;
         }
 
-        public Vector2 GetWorldPosition()
+        public override void OnAddedToEntity()
         {
-            var localTopLeft = Entity.Position - new Vector2(Entity.GetComponent<SpriteAnimator>().Width / 2, Entity.GetComponent<SpriteAnimator>().Height / 2);
-            return localTopLeft + (Position * 16);
+            base.OnAddedToEntity();
+
+            _building = Entity.GetComponent<Building>();
         }
 
         public bool TryReceiveItem(FactoryItem item)

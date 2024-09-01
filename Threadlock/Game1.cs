@@ -58,7 +58,7 @@ namespace Threadlock
             Graphics.Instance.Batcher.ShouldRoundDestinations = false;
 
             //physics config
-            Physics.SpatialHashCellSize = 32;
+            Physics.SpatialHashCellSize = 16;
             Physics.RaycastsStartInColliders = true;
             Physics.RaycastsHitTriggers = true;
             Physics.Gravity = new Vector2(0, 800f);

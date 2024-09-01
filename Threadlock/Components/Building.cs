@@ -1,31 +1,41 @@
 ﻿using Microsoft.Xna.Framework;
 using Nez;
 using Nez.Sprites;
-using Nez.UI;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Threadlock.SaveData;
-using Threadlock.UI;
-using static Nez.Content.Textures;
+using Threadlock.SceneComponents;
 
 namespace Threadlock.Components
 {
     public class Building : Component, IUpdatable
     {
+        //events
+        public event Action<Vector2> OnPlaced;
+        public event Action<BuildingOrientation> OnOrientationChanged;
+
+        public Vector2 GridSize;
+        public Vector2 GridPosition { get => (Entity.Position / 16) - new Vector2(GridSize.X / 2, GridSize.Y / 2); }
+        
+        public BuildingOrientation Orientation
+        {
+            get => _orientation;
+            set
+            {
+                var oldOrientation = _orientation;
+                _orientation = value;
+
+                //call event if orientation changed
+                if (oldOrientation != _orientation)
+                    OnOrientationChanged?.Invoke(_orientation);
+            }
+        }
+        BuildingOrientation _orientation = BuildingOrientation.Down;
+
         bool _isPlaced;
 
-        string _name;
-
+        //components
         SpriteRenderer _renderer;
         Collider _collider;
-
-        public Building(string name)
-        {
-            _name = name;
-        }
 
         #region LIFECYCLE
 
@@ -43,13 +53,49 @@ namespace Threadlock.Components
 
         public void Update()
         {
-            var mousePos = Game1.Scene.Camera.MouseToWorldPoint();
-
             if (!_isPlaced)
             {
-                var x = Mathf.FastFloorToInt(mousePos.X / 16f) * 16f;
-                var y = Mathf.FastFloorToInt(mousePos.Y / 16f) * 16f;
-                Entity.SetPosition(x + (_renderer.Width / 2), y + (_renderer.Height / 2));
+                //handle rotating
+                if (Input.MouseWheelDelta < 0)
+                {
+                    //rotate left
+                    var nextOrientation = (int)_orientation - 1;
+                    if (nextOrientation < 0)
+                        nextOrientation = Enum.GetValues(typeof(BuildingOrientation)).Length - 1;
+                    Orientation = (BuildingOrientation)nextOrientation;
+                }
+                else if (Input.MouseWheelDelta > 0)
+                {
+                    //rotate right
+                    Orientation = (BuildingOrientation)Math.Max(0, ((int)Orientation + 1) % Enum.GetValues(typeof(BuildingOrientation)).Length);
+                }
+
+                //get mouse pos
+                var mousePos = Game1.Scene.Camera.MouseToWorldPoint();
+
+                var topLeft = mousePos - new Vector2(GridSize.X * 8, GridSize.Y * 8);
+
+                var x = Mathf.FastFloorToInt(topLeft.X / 16f);
+                var y = Mathf.FastFloorToInt(topLeft.Y / 16f);
+
+                var snappedGridPos = new Vector2(x, y);
+                var snappedWorldPos = snappedGridPos * 16;
+
+                //set entity position
+                Entity.SetPosition(snappedWorldPos + new Vector2(GridSize.X * 8, GridSize.Y * 8));
+
+                //get factory grid
+                var factoryGrid = Game1.Scene.GetSceneComponent<FactoryGrid>();
+
+                //validate position
+                var bounds = new Rectangle(x, y, Mathf.CeilToInt(GridSize.X), Mathf.CeilToInt(GridSize.Y));
+                var canPlace = factoryGrid.CanPlaceBuilding(bounds);
+
+                //if in valid location and confirm pressed, place building
+                if (canPlace && Controls.Instance.Melee.IsPressed)
+                {
+                    Place(bounds);
+                }
             }
         }
 
@@ -61,25 +107,23 @@ namespace Threadlock.Components
             _collider.SetEnabled(false);
         }
 
-        public bool Place()
+        void Place(Rectangle bounds)
         {
-            var buildings = Entity.Scene.FindComponentsOfType<Building>();
-            foreach (var building in buildings)
-            {
-                if (building == this)
-                    continue;
-
-                if (building.Entity.TryGetComponent<Collider>(out var collider))
-                {
-                    if (collider.Overlaps(_collider))
-                        return false;
-                }
-            }
-
             _isPlaced = true;
             _collider.SetEnabled(true);
 
-            return true;
+            var factoryGrid = Game1.Scene.GetSceneComponent<FactoryGrid>();
+            factoryGrid.RegisterBuilding(this, bounds);
+
+            OnPlaced?.Invoke(Entity.Position);
         }
+    }
+
+    public enum BuildingOrientation
+    {
+        Down,
+        Left,
+        Up,
+        Right
     }
 }

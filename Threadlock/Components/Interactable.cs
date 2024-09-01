@@ -34,11 +34,13 @@ namespace Threadlock.Components
         public void Focus()
         {
             Emitter.Emit(InteractableEvents.FocusEntered);
+            Debug.Log("focus entered");
         }
 
         public void Unfocus()
         {
             Emitter.Emit(InteractableEvents.FocusExited);
+            Debug.Log("focus lost");
         }
     }
 

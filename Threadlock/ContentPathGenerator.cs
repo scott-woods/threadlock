@@ -141,6 +141,7 @@ namespace Nez
 			public const string Enemies = @"Content\Data\Enemies.json";
 			public const string EnemyActions = @"Content\Data\EnemyActions.json";
 			public const string EnemyData = @"Content\Data\EnemyData.json";
+			public const string FactoryItems = @"Content\Data\FactoryItems.json";
 			public const string FairyForestTiles = @"Content\Data\FairyForestTiles.json";
 			public const string FairyForestTiles2 = @"Content\Data\FairyForestTiles2.json";
 			public const string PlayerActions = @"Content\Data\PlayerActions.json";
@@ -1128,6 +1129,8 @@ namespace Nez
 				public const string Orb_mage_sweep_vfxConfig = @"Content\Textures\VFX\orb_mage_sweep_vfxConfig.json";
 			}
 
+			public const string Prototype_fabricator_sheet = @"Content\Textures\prototype_fabricator_sheet.png";
+			public const string Prototype_fabricator_sheet_config = @"Content\Textures\prototype_fabricator_sheet_config.json";
 		}
 
 		public static class Tiled

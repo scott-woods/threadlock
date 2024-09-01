@@ -434,7 +434,7 @@ namespace Threadlock.Helpers
 
                 //go through frames for this tag
                 var currentFrame = tag.From;
-                while (currentFrame < tag.To)
+                while (currentFrame <= tag.To)
                 {
                     //get frame data
                     var frameData = export.Frames[currentFrame];
