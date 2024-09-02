@@ -106,7 +106,7 @@ namespace Threadlock.Entities
         void OnInteracted()
         {
             var canvas = Scene.FindComponentOfType<UICanvas>();
-            canvas?.AddComponent(new BuildingMenu("Fabricator", _itemStack));
+            canvas?.AddComponent(new BuildingMenu(GetComponent<Building>(), _itemStack));
         }
 
         void OnOrientationChanged(BuildingOrientation orientation)

@@ -33,7 +33,8 @@ namespace Threadlock.Entities.Characters.Player
             base.OnAddedToEntity();
 
             var factoryGrid = Entity.Scene.GetSceneComponent<FactoryGrid>();
-            factoryGrid.OnBuildingAdded += OnBuildingPlaced;
+            if (factoryGrid != null)
+                factoryGrid.OnBuildingAdded += OnBuildingPlaced;
         }
 
         public override void OnRemovedFromEntity()
@@ -41,7 +42,8 @@ namespace Threadlock.Entities.Characters.Player
             base.OnRemovedFromEntity();
 
             var factoryGrid = Entity.Scene.GetSceneComponent<FactoryGrid>();
-            factoryGrid.OnBuildingAdded -= OnBuildingPlaced;
+            if (factoryGrid != null)
+                factoryGrid.OnBuildingAdded -= OnBuildingPlaced;
         }
 
         public override void OnEnabled()

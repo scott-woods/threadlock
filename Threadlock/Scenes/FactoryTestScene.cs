@@ -33,6 +33,7 @@ namespace Threadlock.Scenes
             var followCam = Camera.AddComponent(new CustomFollowCamera(player));
 
             AddSceneComponent(new FactoryGrid());
+            AddSceneComponent(new SyncedAnimationPlayer());
         }
     }
 }

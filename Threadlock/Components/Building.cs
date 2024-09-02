@@ -45,6 +45,8 @@ namespace Threadlock.Components
 
             _renderer = Entity.GetComponent<SpriteRenderer>();
             _collider = Entity.GetComponent<Collider>();
+
+            Pickup();
         }
 
         #endregion
@@ -105,12 +107,21 @@ namespace Threadlock.Components
         {
             _isPlaced = false;
             _collider.SetEnabled(false);
+
+            var factoryGrid = Game1.Scene.GetSceneComponent<FactoryGrid>();
+            var existingBuilding = factoryGrid.GetBuilding(GridPosition);
+            if (existingBuilding == this)
+                factoryGrid.UnregisterBuilding(existingBuilding);
+
+            _renderer.SetColor(new Color(Color.White.R, Color.White.G, Color.White.B, 128));
         }
 
         void Place(Rectangle bounds)
         {
             _isPlaced = true;
             _collider.SetEnabled(true);
+            Physics.UpdateCollider(_collider);
+            _renderer.SetColor(Color.White);
 
             var factoryGrid = Game1.Scene.GetSceneComponent<FactoryGrid>();
             factoryGrid.RegisterBuilding(this, bounds);

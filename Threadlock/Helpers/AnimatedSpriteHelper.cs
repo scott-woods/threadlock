@@ -3,6 +3,7 @@ using Nez;
 using Nez.Persistence;
 using Nez.Sprites;
 using Nez.Textures;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -413,15 +414,39 @@ namespace Threadlock.Helpers
 
         public static void ParseAnimationFile(string folderPath, string filename, ref SpriteAnimator animator, int fps = 10)
         {
+            if (ParseConfig(folderPath, filename, out var spriteTuples))
+            {
+                foreach (var tuple in spriteTuples)
+                {
+                    animator.AddAnimation(tuple.Item1, [.. tuple.Item2], fps);
+                }
+            }
+        }
+
+        public static void ParseAnimationFile(string folderPath, string filename, ref SyncedSpriteAnimator animator, int fps = 10)
+        {
+            if (ParseConfig(folderPath, filename, out var spriteTuples))
+            {
+                foreach (var tuple in spriteTuples)
+                {
+                    animator.AddAnimation(tuple.Item1, [.. tuple.Item2], fps);
+                }
+            }
+        }
+
+        static bool ParseConfig(string folderPath, string filename, out List<Tuple<string, List<Sprite>>> spriteTuples)
+        {
+            spriteTuples = new List<Tuple<string, List<Sprite>>>();
+
             //read file
             var json = File.ReadAllText($"{folderPath}/{filename}.json");
             if (string.IsNullOrWhiteSpace(json))
-                return;
+                return false;
 
             //parse json
             var export = Json.FromJson<AsepriteExport>(json);
             if (export == null)
-                return;
+                return false;
 
             //load texture
             var texture = Game1.Scene.Content.LoadTexture($"{folderPath}/{export.Meta.Image}");
@@ -447,9 +472,11 @@ namespace Threadlock.Helpers
                     currentFrame++;
                 }
 
-                //create animation and add it to the animator
-                animator.AddAnimation(tag.Name, sprites.ToArray(), fps);
+                //create tuple
+                spriteTuples.Add(new Tuple<string, List<Sprite>>(tag.Name, sprites));
             }
+
+            return true;
         }
 
         public static bool IsAnimationPlaying(SpriteAnimator animator, string animationName, bool checkParent = true)

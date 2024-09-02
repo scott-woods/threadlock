@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Threadlock.Components;
 using Threadlock.Models;
 using Threadlock.SaveData;
 
@@ -17,12 +18,12 @@ namespace Threadlock.UI
         Label _itemNameLabel;
         Label _itemCountLabel;
 
-        string _name;
+        Building _building;
         FactoryItemStack _itemStack;
 
-        public BuildingMenu(string buildingName, FactoryItemStack itemStack)
+        public BuildingMenu(Building building, FactoryItemStack itemStack)
         {
-            _name = buildingName;
+            _building = building;
             _itemStack = itemStack;
         }
 
@@ -32,7 +33,7 @@ namespace Threadlock.UI
 
             var skin = Skin.CreateDefaultSkin();
 
-            _root = new Window(_name, skin);
+            _root = new Window("Building", skin);
             _root.SetSize(250, 250);
             _root.PadTop(50);
 
@@ -44,6 +45,16 @@ namespace Threadlock.UI
 
             _itemCountLabel = new Label($"{_itemStack.Count}", skin);
             table.Add(_itemCountLabel).Left().Top().Pad(10);
+
+            table.Row();
+
+            var moveButton = new TextButton("Move", skin);
+            moveButton.OnClicked += (button) =>
+            {
+                _building.Pickup();
+                CloseMenu();
+            };
+            table.Add(moveButton).Left().Top().Pad(10);
 
             _itemStack.CountChanged += OnItemCountChanged;
 

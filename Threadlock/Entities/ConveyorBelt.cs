@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Threadlock.Components;
 using Threadlock.Helpers;
 using Threadlock.Models;
+using Threadlock.SceneComponents;
 using Threadlock.StaticData;
 using Threadlock.UI;
 
@@ -24,7 +25,7 @@ namespace Threadlock.Entities
         float _itemRate = 5f;
 
         OutputSlot _outputSlot;
-        SpriteAnimator _animator;
+        SyncedSpriteAnimator _animator;
 
         public override void OnAddedToScene()
         {
@@ -32,7 +33,7 @@ namespace Threadlock.Entities
 
             SetTag(EntityTags.Building);
 
-            _animator = AddComponent(new SpriteAnimator());
+            _animator = AddComponent(new SyncedSpriteAnimator());
             _animator.SetRenderLayer(RenderLayers.YSort);
             AnimatedSpriteHelper.ParseAnimationFile("Content/Textures", "prototype_conveyor_config", ref _animator);
             _animator.Play("Conveyor_Moving_Down");
@@ -54,7 +55,7 @@ namespace Threadlock.Entities
 
             _outputSlot = AddComponent(new OutputSlot());
             _outputSlot.Position = Vector2.Zero;
-            _outputSlot.Direction = new Vector2(0, -1);
+            _outputSlot.Direction = new Vector2(0, 1);
 
             var interactable = AddComponent(new Interactable(collider));
             interactable.Emitter.AddObserver(InteractableEvents.Interacted, OnInteracted);
@@ -94,7 +95,7 @@ namespace Threadlock.Entities
             if (_currentItem != null)
             {
                 var canvas = Scene.FindComponentOfType<UICanvas>();
-                canvas?.AddComponent(new BuildingMenu("Conveyor Belt", _currentItem));
+                canvas?.AddComponent(new BuildingMenu(GetComponent<Building>(), _currentItem));
             }
         }
 
@@ -104,7 +105,7 @@ namespace Threadlock.Entities
             {
                 case BuildingOrientation.Up:
                     _animator.Play("Conveyor_Moving_Up");
-                    _outputSlot.Direction = new Vector2(0, 1);
+                    _outputSlot.Direction = new Vector2(0, -1);
                     break;
                 case BuildingOrientation.Right:
                     _animator.Play("Conveyor_Moving_Right");
@@ -112,7 +113,7 @@ namespace Threadlock.Entities
                     break;
                 case BuildingOrientation.Down:
                     _animator.Play("Conveyor_Moving_Down");
-                    _outputSlot.Direction = new Vector2(0, -1);
+                    _outputSlot.Direction = new Vector2(0, 1);
                     break;
                 case BuildingOrientation.Left:
                     _animator.Play("Conveyor_Moving_Left");

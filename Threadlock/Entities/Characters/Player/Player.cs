@@ -18,6 +18,7 @@ using Threadlock.Entities.Characters.Player.States.Shared;
 using Threadlock.GlobalManagers;
 using Threadlock.Helpers;
 using Threadlock.Models;
+using Threadlock.Renderers;
 using Threadlock.SaveData;
 using Threadlock.Scenes;
 using Threadlock.StaticData;
@@ -138,6 +139,11 @@ namespace Threadlock.Entities.Characters.Player
         }
 
         #region LIFECYCLE
+
+        public override void OnAddedToScene()
+        {
+            base.OnAddedToScene();
+        }
 
         public override void OnRemovedFromScene()
         {

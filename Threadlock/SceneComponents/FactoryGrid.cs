@@ -73,5 +73,14 @@ namespace Threadlock.SceneComponents
 
             OnBuildingAdded?.Invoke(building);
         }
+
+        public void UnregisterBuilding(Building building)
+        {
+            var keys = Grid.Where(x => x.Value == building).Select(x => x.Key).ToList();
+            foreach (var key in keys)
+            {
+                Grid.Remove(key);
+            }
+        }
     }
 }

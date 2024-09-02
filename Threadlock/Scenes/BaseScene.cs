@@ -55,11 +55,11 @@ namespace Threadlock.Scenes
             UI.IsFullScreen = true;
             UI.SetRenderLayer(RenderLayers.ScreenSpaceRenderLayer);
 
-            //_gameRenderer = new YSortRenderer(0, RenderLayers.ScreenSpaceRenderLayer, RenderLayers.Cursor, RenderLayers.Light);
-            //var size = Game1.ResolutionManager.DesignResolution;
-            //var mainRenderTarget = new RenderTexture(size.X, size.Y);
-            ////_gameRenderer.RenderTexture = mainRenderTarget;
-            //AddRenderer(_gameRenderer);
+            _gameRenderer = new YSortRenderer(0, RenderLayers.ScreenSpaceRenderLayer, RenderLayers.Cursor, RenderLayers.Light);
+            var size = Game1.ResolutionManager.DesignResolution;
+            var mainRenderTarget = new RenderTexture(size.X, size.Y);
+            //_gameRenderer.RenderTexture = mainRenderTarget;
+            AddRenderer(_gameRenderer);
 
             _uiRenderer = new ScreenSpaceRenderer(1, RenderLayers.ScreenSpaceRenderLayer);
             var uiSize = Game1.ResolutionManager.UIResolution;
@@ -76,9 +76,9 @@ namespace Threadlock.Scenes
             AddRenderer(_cursorRenderer);
 
             //lighting
-            _deferredLightingRenderer = AddRenderer(new YSortDeferredLightingRenderer(0, RenderLayers.Light, _lightRenderLayers.ToArray()));
-            _deferredLightingRenderer.SetClearColor(SceneColor);
-            _deferredLightingRenderer.SetAmbientColor(AmbientLightColor);
+            //_deferredLightingRenderer = AddRenderer(new YSortDeferredLightingRenderer(0, RenderLayers.Light, _lightRenderLayers.ToArray()));
+            //_deferredLightingRenderer.SetClearColor(SceneColor);
+            //_deferredLightingRenderer.SetAmbientColor(AmbientLightColor);
 
             FinalRenderDelegate = this;
         }
@@ -126,7 +126,7 @@ namespace Threadlock.Scenes
             _uiRenderer.OnSceneBackBufferSizeChanged(newWidth, newHeight);
             _cursorRenderer.OnSceneBackBufferSizeChanged(newWidth, newHeight);
             //_cursorRenderer.RenderTexture.Resize(Screen.Width, Screen.Height);
-            _deferredLightingRenderer.OnSceneBackBufferSizeChanged(newWidth, newHeight);
+            //_deferredLightingRenderer.OnSceneBackBufferSizeChanged(newWidth, newHeight);
         }
 
         public void HandleFinalRender(RenderTarget2D finalRenderTarget, Color letterboxColor, RenderTarget2D source,
@@ -152,7 +152,7 @@ namespace Threadlock.Scenes
             ////draw game
             //Graphics.Instance.Batcher.Draw(_gameRenderer.RenderTexture, finalRenderDestinationRect, Color.White);
 
-            ////Graphics.Instance.Batcher.Draw(_deferredLightingRenderer.RenderTexture, finalRenderDestinationRect, Color.White);
+            //Graphics.Instance.Batcher.Draw(_deferredLightingRenderer.RenderTexture, finalRenderDestinationRect, Color.White);
 
             //render ui
             var uiRect = new Rectangle(0, 0, finalRenderDestinationRect.Width, finalRenderDestinationRect.Height);

@@ -12,6 +12,7 @@ namespace Threadlock.StaticData
         public const int Shadow = 2;
         public const int Walls = 1;
         public const int YSort = 0;
+        public const int Transparent = -5;
         public const int Front = -10;
         public const int Light = -15;
         public const int AboveFront = -20;
