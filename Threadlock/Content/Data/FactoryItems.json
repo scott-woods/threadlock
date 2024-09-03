@@ -1,6 +1,18 @@
 {
+  "SmallNut": {
+    "Name": "Small Nut",
+    "Description": "A small nut."
+  },
   "BigNut": {
     "Name": "Big Nut",
     "Description": "A big nut."
+  },
+  "HugeNut": {
+    "Name": "Huge Nut",
+    "Description": "A huge nut."
+  },
+  "OmegaNut": {
+    "Name": "Omega Nut",
+    "Description": "The ultimate nut."
   }
 }

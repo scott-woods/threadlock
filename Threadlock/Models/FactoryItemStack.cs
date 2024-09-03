@@ -10,7 +10,7 @@ namespace Threadlock.Models
     {
         public event Action<int> CountChanged;
 
-        public FactoryItem Item { get; private set; }
+        public FactoryItem Item { get; set; }
 
         int _count;
         public int Count

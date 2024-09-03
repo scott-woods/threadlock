@@ -35,7 +35,7 @@ namespace Threadlock.UI
 
             _root = new Window("Building", skin);
             _root.SetSize(250, 250);
-            _root.PadTop(50);
+            _root.PadTop(25);
 
             var table = new Table();
             _root.Add(table).Grow();

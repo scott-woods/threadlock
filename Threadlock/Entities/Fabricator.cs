@@ -19,13 +19,33 @@ namespace Threadlock.Entities
 {
     public class Fabricator : Entity
     {
+        public event Action<ItemRecipe> OnRecipeChanged;
+
+        public List<ItemRecipe> ItemRecipes = new List<ItemRecipe>()
+        {
+            new ItemRecipe()
+            {
+                Item = FactoryItemDatabase.Items.GetValueOrDefault("BigNut"),
+                Count = 3,
+                TimeToCraft = 2f
+            },
+            new ItemRecipe()
+            {
+                Item = FactoryItemDatabase.Items.GetValueOrDefault("SmallNut"),
+                Count = 5,
+                TimeToCraft = 1f
+            }
+        };
+
+        public ItemRecipe ActiveRecipe;
+
+        //inventory
+        public FactoryItemStack ItemStack;
+
         //components
         Interactable _interactable;
         SpriteAnimator _animator;
         OutputSlot _outputSlot;
-
-        //inventory
-        FactoryItemStack _itemStack;
 
         float _productionRate = 2f;
         float _productionTimer = 0f;
@@ -40,6 +60,8 @@ namespace Threadlock.Entities
         public override void OnAddedToScene()
         {
             base.OnAddedToScene();
+
+            ItemStack = new FactoryItemStack(ItemRecipes.First().Item, 0);
 
             _animator = AddComponent(new SpriteAnimator());
             _animator.SetRenderLayer(RenderLayers.YSort);
@@ -60,9 +82,9 @@ namespace Threadlock.Entities
 
             var itemProvider = AddComponent(new FactoryItemProvider(() =>
             {
-                if (_itemStack?.Count > 0)
+                if (ItemStack?.Count > 0)
                 {
-                    return _itemStack;
+                    return ItemStack;
                 }
                 return null;
             }));
@@ -71,7 +93,7 @@ namespace Threadlock.Entities
             _outputSlot.Position = Vector2.Zero;
             _outputSlot.Direction = new Vector2(0, -1);
 
-            SetOutputItem(FactoryItemDatabase.Items.GetValueOrDefault("BigNut"));
+            SetOutputItem(ItemRecipes.First());
         }
 
         public override void OnRemovedFromScene()
@@ -90,12 +112,11 @@ namespace Threadlock.Entities
 
             //handle production
             _productionTimer += Time.DeltaTime;
-            if (_productionTimer >= _productionRate)
+            if (_productionTimer >= ActiveRecipe.TimeToCraft)
             {
                 _productionTimer = 0f;
 
-                if (_itemStack.Count < _itemStack.Item.MaxStackSize)
-                    _itemStack.Count++;
+                ItemStack.Count = Math.Clamp(ItemStack.Count + ActiveRecipe.Count, 0, ItemStack.Item.MaxStackSize);
             }
         }
 
@@ -106,7 +127,8 @@ namespace Threadlock.Entities
         void OnInteracted()
         {
             var canvas = Scene.FindComponentOfType<UICanvas>();
-            canvas?.AddComponent(new BuildingMenu(GetComponent<Building>(), _itemStack));
+            canvas?.AddComponent(new FabricatorMenu(this));
+            //canvas?.AddComponent(new BuildingMenu(GetComponent<Building>(), ItemStack));
         }
 
         void OnOrientationChanged(BuildingOrientation orientation)
@@ -138,9 +160,18 @@ namespace Threadlock.Entities
 
         #endregion
 
-        public void SetOutputItem(FactoryItem item)
+        public void SetOutputItem(ItemRecipe recipe)
         {
-            _itemStack = new FactoryItemStack(item);
+            var prevRecipe = ActiveRecipe;
+            ActiveRecipe = recipe;
+
+            if (prevRecipe != ActiveRecipe)
+                OnRecipeChanged?.Invoke(ActiveRecipe);
+
+            ItemStack.Item = recipe.Item;
+            ItemStack.Count = 0;
+
+            _productionTimer = 0f;
         }
     }
 }
