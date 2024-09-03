@@ -69,6 +69,7 @@
     <None Remove="Content\Data\Enemies.json" />
     <None Remove="Content\Data\EnemyActions.json" />
     <None Remove="Content\Data\FactoryItems.json" />
+    <None Remove="Content\Data\FactoryResources.json" />
     <None Remove="Content\Data\FairyForestTiles.json" />
     <None Remove="Content\Data\FairyForestTiles2.json" />
     <None Remove="Content\Data\PlayerActions.json" />

@@ -106,5 +106,44 @@ namespace Threadlock.Models
                 };
             }
         }
+
+        public static LootConfig Wood
+        {
+            get
+            {
+                return new LootConfig()
+                {
+                    TexturePath = Nez.Content.Textures.Drops.CollectablesSheet,
+                    PickupSoundPath = Nez.Content.Audio.Sounds.Dust_pickup,
+                    Magnetized = true,
+                    HandlePickup = () =>
+                    {
+                        PlayerData.Instance.Wood += 1;
+                    },
+                    StartCell = 52,
+                    EndCell = 59,
+                    Scale = new Vector2(.5f, .5f)
+                };
+            }
+        }
+
+        public static LootConfig Stone
+        {
+            get
+            {
+                return new LootConfig()
+                {
+                    TexturePath = Nez.Content.Textures.Tilesets.Dungeon_prison_props,
+                    PickupSoundPath = Nez.Content.Audio.Sounds.Dust_pickup,
+                    Magnetized = true,
+                    HandlePickup = () =>
+                    {
+                        PlayerData.Instance.Stone += 1;
+                    },
+                    StartCell = 286,
+                    EndCell = 286
+                };
+            }
+        }
     }
 }

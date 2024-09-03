@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
+using Threadlock.Entities;
 using Threadlock.Helpers;
 using Threadlock.SaveData;
 using Threadlock.SceneComponents;

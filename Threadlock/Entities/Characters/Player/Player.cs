@@ -112,12 +112,7 @@ namespace Threadlock.Entities.Characters.Player
             pointLight.SetRadius(100f);
 
             AddComponent(new WeaponManager());
-
-            //init state machine
-            if (Game1.Scene is FactoryTestScene factoryScene)
-                StateMachine = new PlayerFactoryStateMachine(this);
-            else
-                StateMachine = new PlayerCombatStateMachine(this);
+            
             //var assembly = Assembly.GetExecutingAssembly();
             //var stateTypes = assembly.GetTypes()
             //    .Where(t => t.IsSubclassOf(typeof(PlayerState)) && !t.IsAbstract && t != typeof(Idle));
@@ -143,6 +138,12 @@ namespace Threadlock.Entities.Characters.Player
         public override void OnAddedToScene()
         {
             base.OnAddedToScene();
+
+            //init state machine
+            if (Game1.Scene is FactoryTestScene factoryScene)
+                StateMachine = new PlayerFactoryStateMachine(this);
+            else
+                StateMachine = new PlayerCombatStateMachine(this);
         }
 
         public override void OnRemovedFromScene()

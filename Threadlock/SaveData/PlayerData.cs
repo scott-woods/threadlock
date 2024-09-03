@@ -13,6 +13,9 @@ namespace Threadlock.SaveData
 {
     public class PlayerData
     {
+        public event Action<int> OnWoodChanged;
+        public event Action<int> OnStoneChanged;
+
         [JsonExclude]
         public Emitter<PlayerDataEvents> Emitter = new Emitter<PlayerDataEvents>();
 
@@ -57,6 +60,32 @@ namespace Threadlock.SaveData
             {
                 _dust = value;
                 Emitter.Emit(PlayerDataEvents.DustChanged);
+            }
+        }
+
+        [JsonExclude]
+        int _wood;
+        [JsonInclude]
+        public int Wood
+        {
+            get => _wood;
+            set
+            {
+                _wood = value;
+                OnWoodChanged?.Invoke(Wood);
+            }
+        }
+
+        [JsonExclude]
+        int _stone;
+        [JsonInclude]
+        public int Stone
+        {
+            get => _stone;
+            set
+            {
+                _stone = value;
+                OnStoneChanged?.Invoke(Stone);
             }
         }
 

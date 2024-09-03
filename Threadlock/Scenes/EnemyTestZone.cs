@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Threadlock.Components;
+using Threadlock.Entities;
 using Threadlock.Helpers;
 using Threadlock.SceneComponents;
 using Threadlock.StaticData;
@@ -32,7 +33,15 @@ namespace Threadlock.Scenes
 
             var followCam = Camera.AddComponent(new CustomFollowCamera(player));
 
-            Game1.AudioManager.PlayMusic(Nez.Content.Audio.Music.Meltingidols);
+            var crateCount = Nez.Random.Range(10, 30);
+            for (int i = 0; i < crateCount; i++)
+            {
+                var crate = new Crate();
+                crate.Position = new Microsoft.Xna.Framework.Vector2(Nez.Random.Range(0, map.WorldWidth), Nez.Random.Range(0, map.WorldHeight));
+                AddEntity(crate);
+            }
+
+            //Game1.AudioManager.PlayMusic(Nez.Content.Audio.Music.Meltingidols);
         }
     }
 }

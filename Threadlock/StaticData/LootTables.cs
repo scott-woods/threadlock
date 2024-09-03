@@ -23,5 +23,17 @@ namespace Threadlock.StaticData
                 };
             }
         }
+
+        public static List<LootDrop> Crate
+        {
+            get
+            {
+                return new List<LootDrop>()
+                {
+                    new LootDrop(LootConfig.Wood, 1f, 3, 10),
+                    new LootDrop(LootConfig.Stone, 1f, 3, 10)
+                };
+            }
+        }
     }
 }
