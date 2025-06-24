@@ -125,9 +125,6 @@ namespace Threadlock.Entities.Characters.Player
 
             _directionComponent = AddComponent(new DirectionComponent());
 
-            var buildingPlacer = AddComponent(new BuildingPlacer());
-            buildingPlacer.SetEnabled(false);
-
             AddComponent(new InteractableChecker());
             AddComponent(new InteractableCheckerCursor());
             AddComponent(new AnimationComponent());
@@ -139,11 +136,7 @@ namespace Threadlock.Entities.Characters.Player
         {
             base.OnAddedToScene();
 
-            //init state machine
-            if (Game1.Scene is FactoryTestScene factoryScene)
-                StateMachine = new PlayerFactoryStateMachine(this);
-            else
-                StateMachine = new PlayerCombatStateMachine(this);
+            StateMachine = new PlayerCombatStateMachine(this);
         }
 
         public override void OnRemovedFromScene()
