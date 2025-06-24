@@ -118,7 +118,7 @@ namespace Threadlock.Models
                     Magnetized = true,
                     HandlePickup = () =>
                     {
-                        PlayerData.Instance.Wood += 1;
+                        PlayerData.Instance.Resources["Wood"] += 1;
                     },
                     StartCell = 52,
                     EndCell = 59,
@@ -138,7 +138,7 @@ namespace Threadlock.Models
                     Magnetized = true,
                     HandlePickup = () =>
                     {
-                        PlayerData.Instance.Stone += 1;
+                        PlayerData.Instance.Resources["Stone"] += 1;
                     },
                     StartCell = 286,
                     EndCell = 286

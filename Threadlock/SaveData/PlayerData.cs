@@ -13,9 +13,6 @@ namespace Threadlock.SaveData
 {
     public class PlayerData
     {
-        public event Action<int> OnWoodChanged;
-        public event Action<int> OnStoneChanged;
-
         [JsonExclude]
         public Emitter<PlayerDataEvents> Emitter = new Emitter<PlayerDataEvents>();
 
@@ -63,31 +60,11 @@ namespace Threadlock.SaveData
             }
         }
 
-        [JsonExclude]
-        int _wood;
-        [JsonInclude]
-        public int Wood
+        public Dictionary<string, int> Resources = new Dictionary<string, int>()
         {
-            get => _wood;
-            set
-            {
-                _wood = value;
-                OnWoodChanged?.Invoke(Wood);
-            }
-        }
-
-        [JsonExclude]
-        int _stone;
-        [JsonInclude]
-        public int Stone
-        {
-            get => _stone;
-            set
-            {
-                _stone = value;
-                OnStoneChanged?.Invoke(Stone);
-            }
-        }
+            { "Wood", 0 },
+            { "Stone", 0 }
+        };
 
         private PlayerData()
         {

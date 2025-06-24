@@ -14,6 +14,7 @@ namespace Threadlock.SceneComponents
         public event Action<Building> OnBuildingAdded;
 
         public Dictionary<Vector2, Building> Grid = new Dictionary<Vector2, Building>();
+        public List<Building> Buildings { get => Grid.Values.ToList(); }
 
         /// <summary>
         /// get building by its grid position

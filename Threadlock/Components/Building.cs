@@ -2,6 +2,8 @@
 using Nez;
 using Nez.Sprites;
 using System;
+using System.Collections.Generic;
+using Threadlock.Models;
 using Threadlock.SaveData;
 using Threadlock.SceneComponents;
 
@@ -12,6 +14,10 @@ namespace Threadlock.Components
         //events
         public event Action<Vector2> OnPlaced;
         public event Action<BuildingOrientation> OnOrientationChanged;
+
+        public string Name;
+        public string Description;
+        public Dictionary<string, int> Cost;
 
         public Vector2 GridSize;
         public Vector2 GridPosition { get => (Entity.Position / 16) - new Vector2(GridSize.X / 2, GridSize.Y / 2); }
@@ -32,6 +38,7 @@ namespace Threadlock.Components
         BuildingOrientation _orientation = BuildingOrientation.Down;
 
         bool _isPlaced;
+        bool _initialPlacementFinished;
 
         //components
         SpriteRenderer _renderer;
@@ -46,7 +53,18 @@ namespace Threadlock.Components
             _renderer = Entity.GetComponent<SpriteRenderer>();
             _collider = Entity.GetComponent<Collider>();
 
-            Pickup();
+            //only pickup if we're not already registered with the grid
+            var factoryGrid = Entity.Scene.GetSceneComponent<FactoryGrid>();
+            if (factoryGrid != null && !factoryGrid.Buildings.Contains(this))
+            {
+                _initialPlacementFinished = false;
+                Pickup();
+            }
+            else
+            {
+                _isPlaced = true;
+                _initialPlacementFinished = true;
+            }
         }
 
         #endregion
@@ -86,18 +104,21 @@ namespace Threadlock.Components
                 //set entity position
                 Entity.SetPosition(snappedWorldPos + new Vector2(GridSize.X * 8, GridSize.Y * 8));
 
-                //get factory grid
-                var factoryGrid = Game1.Scene.GetSceneComponent<FactoryGrid>();
-
-                //validate position
+                //get bounds
                 var bounds = new Rectangle(x, y, Mathf.CeilToInt(GridSize.X), Mathf.CeilToInt(GridSize.Y));
-                var canPlace = factoryGrid.CanPlaceBuilding(bounds);
 
-                //if in valid location and confirm pressed, place building
-                if (canPlace && Controls.Instance.Melee.IsPressed)
+                //validate placement
+                var canPlace = CanBePlaced(bounds);
+
+                //handle placement
+                if (canPlace)
                 {
-                    Place(bounds);
+                    _renderer.SetColor(new Color(Color.White.R, Color.White.G, Color.White.B, 128));
+                    if (Controls.Instance.Melee.IsPressed)
+                        Place(bounds);
                 }
+                else
+                    _renderer.SetColor(new Color(Color.Red.R, Color.Red.G, Color.Red.B, 128));
             }
         }
 
@@ -108,6 +129,7 @@ namespace Threadlock.Components
             _isPlaced = false;
             _collider.SetEnabled(false);
 
+            //unregister from grid
             var factoryGrid = Game1.Scene.GetSceneComponent<FactoryGrid>();
             var existingBuilding = factoryGrid.GetBuilding(GridPosition);
             if (existingBuilding == this)
@@ -126,7 +148,45 @@ namespace Threadlock.Components
             var factoryGrid = Game1.Scene.GetSceneComponent<FactoryGrid>();
             factoryGrid.RegisterBuilding(this, bounds);
 
+            //handle cost
+            if (!_initialPlacementFinished)
+            {
+                _initialPlacementFinished = true;
+                foreach (var kvp in Cost)
+                    PlayerData.Instance.Resources[kvp.Key] -= kvp.Value;
+            }
+
             OnPlaced?.Invoke(Entity.Position);
+        }
+
+        /// <summary>
+        /// checks that position and cost requirements are met
+        /// </summary>
+        /// <returns></returns>
+        bool CanBePlaced(Rectangle bounds)
+        {
+            //get factory grid
+            var factoryGrid = Game1.Scene.GetSceneComponent<FactoryGrid>();
+
+            //validate position
+            
+            if (!factoryGrid.CanPlaceBuilding(bounds))
+                return false;
+
+            //validate cost
+            if (Cost != null && !_initialPlacementFinished)
+            {
+                foreach (var kvp in Cost)
+                {
+                    var resourceName = kvp.Key;
+                    var resourceQuantity = kvp.Value;
+
+                    if (!PlayerData.Instance.Resources.TryGetValue(resourceName, out var playerResourceQuantity) || playerResourceQuantity < resourceQuantity)
+                        return false;
+                }
+            }
+
+            return true;
         }
     }
 

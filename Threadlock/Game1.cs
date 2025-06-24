@@ -69,7 +69,7 @@ namespace Threadlock
             Screen.SetSize(2560, 1440);
             Screen.ApplyChanges();
 
-            Scene = new FactoryTestScene();
+            Scene = new Hub();
         }
     }
 }

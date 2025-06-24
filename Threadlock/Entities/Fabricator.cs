@@ -73,7 +73,16 @@ namespace Threadlock.Entities
             Flags.SetFlagExclusive(ref collider.PhysicsLayer, PhysicsLayers.Environment);
             Flags.SetFlagExclusive(ref collider.CollidesWithLayers, PhysicsLayers.Cursor);
 
-            var building = AddComponent(new Building());
+            var building = AddComponent(new Building()
+            {
+                Name = "Fabricator",
+                Description = "Crafts items",
+                Cost = new Dictionary<string, int>()
+                {
+                    { "Wood", 100 },
+                    { "Stone", 50 }
+                }
+            });
             building.GridSize = new Vector2(2, 2);
             building.OnOrientationChanged += OnOrientationChanged;
 
