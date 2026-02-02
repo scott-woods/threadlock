@@ -110,6 +110,11 @@
     <None Remove="Content\Tiled\Tilesets\prototype_tileset.tsx" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Externals\FNA\FNA.Core.csproj" />
+    <ProjectReference Include="..\Externals\Nez\Nez.FarseerPhysics\Nez.FNA.Core.FarseerPhysics.csproj" />
+    <ProjectReference Include="..\Externals\Nez\Nez.ImGui\Nez.FNA.Core.ImGui.csproj" />
+    <ProjectReference Include="..\Externals\Nez\Nez.Persistence\Nez.FNA.Core.Persistence.csproj" />
+    <ProjectReference Include="..\Externals\Nez\Nez.Portable\Nez.FNA.Core.csproj" />
     <ProjectReference Include="..\FNA\FNA.Core.csproj">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </ProjectReference>
